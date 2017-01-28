@@ -1,0 +1,12 @@
+.ng2-pagination .pagination-next {
+  font-size: 18px;
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.row {
+  padding: 2px;
+}
