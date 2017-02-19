@@ -1,2 +1,5 @@
-<input type="radio" name="gender" value="male"> Male<br>
-<input type="radio" name="gender" value="male"> Female<br>
+<div class="btn-group-vertical" role="choices">
+  <div *ngFor="let ch of question.choices; let i=index">
+    <input type="radio"> {{ch}}
+  </div>
+</div>

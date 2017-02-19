@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-class NavState {
-  constructor(public done = false, public selected = false) { }
-}
-
 export class Question {
   public display: string
   public answer: number
-  public choices: string[] = [] //zeroth is answer
+  public choices: string[] = [] //zeroth is the answer
   constructor() { }
   public done(): boolean {
     return this.answer !== null || this.answer !== undefined
@@ -49,23 +45,6 @@ export class StudentService {
 
   public exams$
   public results$
-
-  public selected = 0
-  public qs: NavState[] = [
-    new NavState(false, true),
-    new NavState(),
-    new NavState(),
-    new NavState(true),
-    new NavState(),
-    new NavState(true),
-    new NavState(true),
-    new NavState(),
-    new NavState(),
-    new NavState(true),
-    new NavState(true),
-    new NavState(true),
-    new NavState(),
-  ]
 
   private examNames = [
     'NMTC Junior Scr.',
