@@ -3,12 +3,12 @@
 
   <h3>Available Exams</h3>
   <div class="container-fluid">
-    <div class="row" *ngFor="let ex of service.exams$ | async | paginate: { id:'exam', itemsPerPage: 5, currentPage: pageExam }">
+    <div class="row" *ngFor="let ex of service.exams$ | async | paginate: { id:'exams', itemsPerPage: 5, currentPage: pageExam }">
       <div class="col-xs-1">
         <span>{{ex.id}}</span>
       </div>
       <div class="col-xs-7">
-        <button type="button" (click)="takeExam(ex)" class="btn btn-info">{{ex.exam}}</button>
+        <button type="button" (click)="takeExam(ex)" class="btn btn-info">{{ex.name}}</button>
       </div>
       <div class="col-xs-4">
         <span>{{showWhen(ex.when)}}</span>
@@ -17,7 +17,7 @@
     <div class="row">
       <div class="col-xs-12" style="padding-top: 10px;">
         <div class="has-text-centered">
-          <pagination-controls id='exam' (pageChange)="pageExam = $event"></pagination-controls>
+          <pagination-controls id='exams' (pageChange)="pageExam = $event"></pagination-controls>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
         <span >{{rs.id}}</span>
       </div>
       <div class="col-xs-5">
-        <button type="button" (click)="takeExam(rs)" class="btn btn-success">{{rs.exam}}</button>
+        <button type="button" (click)="takeExam(rs)" class="btn btn-success">{{rs.exam.name}}</button>
       </div>
       <div class="col-xs-2">
         <button type="button" (click)="showExamResult(rs)" class="btn btn-warning">{{rs.percent}}%</button>

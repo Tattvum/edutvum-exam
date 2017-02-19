@@ -10,9 +10,8 @@ import { Ng2PaginationModule } from 'ng2-pagination';
 import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { StudentService } from './student.service';
+import { StudentService } from './model/student.service';
 import { ExamComponent } from './exam/exam.component';
-import { ExamQaComponent } from './exam-qa/exam-qa.component';
 import { NavComponent } from './nav/nav.component';
 import { DisplayComponent } from './display/display.component';
 import { ChoiceInputComponent } from './choice-input/choice-input.component';
@@ -30,7 +29,6 @@ import { ChoiceInputComponent } from './choice-input/choice-input.component';
     StudentDashComponent,
     PageNotFoundComponent,
     ExamComponent,
-    ExamQaComponent,
     NavComponent,
     DisplayComponent,
     ChoiceInputComponent,

@@ -3,6 +3,6 @@
   color: white;
 }
 .selected {
-  border-color: red;
   color: red;
+  background-color: lightgoldenrodyellow
 }

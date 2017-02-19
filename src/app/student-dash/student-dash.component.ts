@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //http://momentjs.com/docs/
 import * as moment from 'moment';
-import { StudentService } from '../student.service';
+import { StudentService } from '../model/student.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,11 +20,11 @@ export class StudentDashComponent {
   }
 
   takeExam(ex) {
-    console.log(ex.exam)
-    this.router.navigate(['/exam', ex.id, 0])
+    console.log(ex.name)
+    this.router.navigate(['/question', ex.id, 0])
   }
   showExamResult(ex) {
-    console.log(ex.exam + " " + ex.percent)
+    console.log(ex.name + " " + ex.percent)
     this.router.navigate(['/exam-result', ex.id, 0])
   }
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { StudentService } from '../student.service';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { StudentService, Exam } from '../model/student.service';
 
 @Component({
   selector: 'app-nav',
@@ -8,15 +9,24 @@ import { StudentService } from '../student.service';
 })
 export class NavComponent implements OnInit {
 
-  constructor(private service: StudentService) { }
-
-  ngOnInit() {
-  }
+  exam: Exam
 
   select(i: number) {
-    console.log(this.service.qs.length)
-    this.service.qs[this.service.selected].selected = false
-    this.service.selected = i
-    this.service.qs[this.service.selected].selected = true
+    this.router.navigate(['/question', this.exam.id, i])
   }
+
+  constructor(private route: ActivatedRoute,
+      private router: Router,
+      private service: StudentService) { }
+
+  ngOnInit() {
+    this.route.params
+      .subscribe((params: Params) => {
+        let eid = params['eid']
+        let qid = params['qid']
+        this.exam = this.service.getExam(eid)
+        this.exam.select(qid)
+      })
+  }
+
 }
