@@ -25,6 +25,6 @@ export class StudentDashComponent {
   }
   showExamResult(ex) {
     console.log(ex.exam + " " + ex.percent)
-    this.router.navigate(['/exam-result', ex.id])
+    this.router.navigate(['/exam-result', ex.id, 0])
   }
 }

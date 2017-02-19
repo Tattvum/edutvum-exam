@@ -11,9 +11,11 @@ import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { StudentService } from './student.service';
-import { ExamResultComponent } from './exam-result/exam-result.component';
 import { ExamComponent } from './exam/exam.component';
-import { ExamDashComponent } from './exam-dash/exam-dash.component';
+import { ExamQaComponent } from './exam-qa/exam-qa.component';
+import { NavComponent } from './nav/nav.component';
+import { DisplayComponent } from './display/display.component';
+import { ChoiceInputComponent } from './choice-input/choice-input.component';
 
 @NgModule({
   imports: [
@@ -27,9 +29,11 @@ import { ExamDashComponent } from './exam-dash/exam-dash.component';
     AppComponent,
     StudentDashComponent,
     PageNotFoundComponent,
-    ExamResultComponent,
     ExamComponent,
-    ExamDashComponent,
+    ExamQaComponent,
+    NavComponent,
+    DisplayComponent,
+    ChoiceInputComponent,
   ],
   providers: [
     StudentService,

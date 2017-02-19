@@ -1,0 +1,8 @@
+.done {
+  background-color: limegreen;
+  color: white;
+}
+.selected {
+  border-color: red;
+  color: red;
+}

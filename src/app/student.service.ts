@@ -1,11 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
+class NavState {
+  constructor(public done = false,
+      public selected = false){}
+}
+
 @Injectable()
 export class StudentService {
 
   public results$
   public exams$
+  public qas$
+
+  public selected = 0
+  public qs: NavState[] = [
+    new NavState(false, true),
+    new NavState(),
+    new NavState(),
+    new NavState(true),
+    new NavState(),
+    new NavState(true),
+    new NavState(true),
+    new NavState(),
+    new NavState(),
+    new NavState(true),
+    new NavState(true),
+    new NavState(true),
+    new NavState(),
+  ]
 
   private examNames = [
     'NMTC Junior Scr.',
