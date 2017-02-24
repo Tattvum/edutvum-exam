@@ -1,5 +1,14 @@
 <div class="btn-group-vertical" role="choices">
+  ({{question.correct}} correct answers)<br><br>
   <div *ngFor="let ch of question.choices; let i=index">
-    <input type="radio"> {{ch}}
+    <input *ngIf="question.correct==1"
+        type="radio" name="options"
+        (click)="model.options = item"
+        [checked]="item === model.options">
+    <input *ngIf="question.correct>1"
+        type="checkbox" name="options"
+        (click)="model.options = item"
+        [checked]="item === model.options">
+      {{ch}}
   </div>
 </div>

@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 export class Question {
-  public display: string
-  public answer: number
-  public choices: string[] = [] //zeroth is the answer
+  public html: string
+  public answers: number[] = []
+  public correct: number = 1 // minimum  one
+  public choices: string[] = []
   constructor() { }
   public done(): boolean {
-    return this.answer !== null || this.answer !== undefined
+    return this.answers.length == 0
   }
   public selected: boolean
 }
 
-class Id {
+export class Id {
   protected static _count = 0
   public readonly id: string
   constructor(prefix: string) {
@@ -34,7 +35,7 @@ export class Exam extends Id {
   }
 }
 
-class ExamResult extends Id {
+export class ExamResult extends Id {
   constructor(public exam: Exam, public percent: number, public when: Date = new Date()) {
     super("rr")
   }
@@ -63,9 +64,18 @@ export class StudentService {
     return Math.floor(rndi) + nmin
   }
 
-  private rndb(): boolean {
-    return this.rndn(2) == 0
+  //default is 50% probability
+  private toss(b: number = 2, a: number = 1): boolean {
+    return this.rndn(b) < a
   }
+
+  /*
+  private tosses(n: number, b: number = 2, a: number = 1): Tosses {
+    let arr = []
+    for (var i = 0; i < n; i++) arr[i] = this.toss(b, a);
+    return new Tosses(arr)
+  }
+  */
 
   private rndExamName(): string {
     let name = this.examNames[this.rndn(this.examNames.length)]
@@ -84,15 +94,12 @@ export class StudentService {
 
   private rndQuestion(): Question {
     let q = new Question()
-    let i = this.rndn(5, 2)
-    q.display = "some \\(\\frac{(n^{" + i + "}+n)(2n+" + i + ")}{" + i + "}\\)test"
-    q.choices[0] = "choice X (psst.) \\(\\frac{0}{1}\\)"
-    q.choices[1] = "choice A is \\(\\frac{1}{2}\\)"
-    q.choices[2] = "choice B is \\(\\frac{2}{3}\\)"
-    q.choices[3] = "choice C is \\(\\frac{3}{4}\\)"
-    if (this.rndb()) {
-      q.answer = this.rndn(q.choices.length)
+    let n = this.rndn(5, 2)
+    q.html = "some <b>bold</b> \\(\\frac{(n^{" + n + "}+n)(2n+" + n + ")}{" + n + "}\\)test"
+    for (var i = 0; i < n; i++) {
+      q.choices[i] = "choice " + i + " \\(\\frac{0}{1}\\)"
     }
+    q.correct = this.rndn(n, 1)
     return q
   }
 
