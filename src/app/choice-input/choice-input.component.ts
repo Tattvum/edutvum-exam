@@ -17,10 +17,6 @@ export class ChoiceInputComponent implements OnInit {
 
   question: Question
 
-  radioItems = 'one two three'.split(' ');
-  model = { options: 'two' };
-  get debug() { return JSON.stringify(this.model); }
-
   constructor(private route: ActivatedRoute,
     private router: Router,
     private service: StudentService) { }

@@ -1,9 +1,16 @@
-<div class="btn-toolbar" role="toolbar">
-  <div *ngFor="let q of exam.qs; let i=index"
+<div id="container" class="btn-toolbar" role="toolbar">
+  <span *ngFor="let q of exam.qs; let i=index"
       class="btn-group btn btn-info" role="group"
-      [ngClass]="q"
+      [class.done]="q.done()"
+      [class.selected]="q.selected"
       (click)="select(i)"
       type="button">
       {{i}}
-  </div>
+  </span>
 </div>
+<br>
+<button class="btn btn-primary btn-sm"
+    (click)="next()">
+  Ok, continue
+  <span class="glyphicon glyphicon-arrow-right"></span>
+</button>

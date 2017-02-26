@@ -9,24 +9,34 @@ import { StudentService, Exam } from '../model/student.service';
 })
 export class NavComponent implements OnInit {
 
-  exam: Exam
-
-  select(i: number) {
-    this.router.navigate(['/question', this.exam.id, i])
-  }
-
   constructor(private route: ActivatedRoute,
-      private router: Router,
-      private service: StudentService) { }
+    private router: Router,
+    private service: StudentService) { }
+
+  exam: Exam
 
   ngOnInit() {
     this.route.params
       .subscribe((params: Params) => {
         let eid = params['eid']
         let qid = params['qid']
+        if(qid == undefined) qid = 0
         this.exam = this.service.getExam(eid)
         this.exam.select(qid)
       })
+  }
+
+  select(i: number) {
+    this.router.navigate(['/question', this.exam.id, i])
+  }
+
+  next() {
+    let qid = this.exam.next()
+    if (qid === null) {
+      this.router.navigate(
+        ['/results', this.exam.id])
+    } else this.router.navigate(
+      ['/question', this.exam.id, qid])
   }
 
 }

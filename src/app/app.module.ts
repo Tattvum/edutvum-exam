@@ -15,6 +15,7 @@ import { ExamComponent } from './exam/exam.component';
 import { NavComponent } from './nav/nav.component';
 import { DisplayComponent } from './display/display.component';
 import { ChoiceInputComponent } from './choice-input/choice-input.component';
+import { ResultComponent } from './result/result.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { ChoiceInputComponent } from './choice-input/choice-input.component';
     NavComponent,
     DisplayComponent,
     ChoiceInputComponent,
+    ResultComponent,
   ],
   providers: [
     StudentService,
