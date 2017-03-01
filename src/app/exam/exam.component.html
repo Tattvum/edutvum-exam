@@ -1,13 +1,18 @@
 <div class="container-fluid">
   <h1>Exam Question Screen</h1>
   <nav>
-    <a routerLink="/student-dash" routerLinkActive="active">Student Dashboard</a>
+    <a (click)="gotoDash()">Student Dashboard</a>
   </nav>
   <hr>
   <app-nav></app-nav>
   <hr>
-  <app-display></app-display>
-  <hr>
-  <app-choice-input></app-choice-input>
+  <div *ngIf="!isResultsPage">
+    <app-display></app-display>
+    <hr>
+    <app-choice-input></app-choice-input>
+  </div>
+  <div *ngIf="isResultsPage">
+    <app-result></app-result>
+  </div>
   <hr>
 </div>

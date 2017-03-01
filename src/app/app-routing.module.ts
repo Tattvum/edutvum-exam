@@ -10,7 +10,7 @@ import { ResultComponent } from './result/result.component';
 const appRoutes: Routes = [
   { path: 'student-dash', component: StudentDashComponent },
   { path: 'question/:eid/:qid', component: ExamComponent },
-  { path: 'results/:eid', component: ResultComponent },
+  { path: 'results/:eid', component: ExamComponent },
   { path: '', redirectTo: '/student-dash', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];

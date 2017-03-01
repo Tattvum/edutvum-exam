@@ -20,6 +20,7 @@ export class StudentDashComponent {
   }
 
   takeExam(ex) {
+    if(!confirm("Ready to start the exam?!")) return
     console.log(ex.name)
     this.router.navigate(['/question', ex.id, 0])
   }

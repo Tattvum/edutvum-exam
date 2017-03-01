@@ -16,6 +16,7 @@ import { NavComponent } from './nav/nav.component';
 import { DisplayComponent } from './display/display.component';
 import { ChoiceInputComponent } from './choice-input/choice-input.component';
 import { ResultComponent } from './result/result.component';
+import { ModalComponent } from './extra/modal/modal.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { ResultComponent } from './result/result.component';
     DisplayComponent,
     ChoiceInputComponent,
     ResultComponent,
+    ModalComponent,
   ],
   providers: [
     StudentService,

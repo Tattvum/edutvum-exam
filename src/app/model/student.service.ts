@@ -69,6 +69,9 @@ export class Exam extends Id {
     this.selected = null
     this.qs.forEach(q => q.isSelected = false)
   }
+  public isResultsPage(): boolean {
+    return this.selected == null
+  }
   public next(): number {
     if (this.selected == null) return 0
     if (this.selected < this.qs.length - 1) {

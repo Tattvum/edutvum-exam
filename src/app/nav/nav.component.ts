@@ -23,17 +23,19 @@ export class NavComponent implements OnInit {
         this.exam = this.service.getExam(eid)
         let qid = params['qid']
         this.isResultsPage = (qid == null)
-        if (!this.isResultsPage) {
-          this.exam.select(qid)
-        }
+        if(!this.isResultsPage) this.exam.select(qid)
       })
   }
 
-  select(i: number) {
-    this.router.navigate(['/question', this.exam.id, i])
+  select(qid: number) {
+    this.exam.select(qid)
+    this.router.navigate(['/question', this.exam.id, qid])
   }
 
   results() {
+    if(!this.exam.inAnswerMode
+        && !confirm("Done with the exam?!"))
+        return
     this.exam.inAnswerMode = true
     this.exam.selectNone()
     this.router.navigate(['/results', this.exam.id])
@@ -42,7 +44,7 @@ export class NavComponent implements OnInit {
   next() {
     let qid = this.exam.next()
     if (qid == null) this.results()
-    else this.router.navigate(['/question', this.exam.id, qid])
+    else this.select(qid)
   }
 
 }
