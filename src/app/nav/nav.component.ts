@@ -14,15 +14,18 @@ export class NavComponent implements OnInit {
     private service: StudentService) { }
 
   exam: Exam
+  isResultsPage = false
 
   ngOnInit() {
     this.route.params
       .subscribe((params: Params) => {
         let eid = params['eid']
-        let qid = params['qid']
-        if(qid == undefined) qid = 0
         this.exam = this.service.getExam(eid)
-        this.exam.select(qid)
+        let qid = params['qid']
+        this.isResultsPage = (qid == null)
+        if (!this.isResultsPage) {
+          this.exam.select(qid)
+        }
       })
   }
 
@@ -30,13 +33,16 @@ export class NavComponent implements OnInit {
     this.router.navigate(['/question', this.exam.id, i])
   }
 
+  results() {
+    this.exam.inAnswerMode = true
+    this.exam.selectNone()
+    this.router.navigate(['/results', this.exam.id])
+  }
+
   next() {
     let qid = this.exam.next()
-    if (qid === null) {
-      this.router.navigate(
-        ['/results', this.exam.id])
-    } else this.router.navigate(
-      ['/question', this.exam.id, qid])
+    if (qid == null) this.results()
+    else this.router.navigate(['/question', this.exam.id, qid])
   }
 
 }

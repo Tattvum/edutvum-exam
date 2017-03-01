@@ -2,8 +2,19 @@
   <h1>Exam Result Screen</h1>
   <nav>
     <a routerLink="/student-dash" routerLinkActive="active">Student Dashboard</a>
+    &lt;
+    <a routerLink="/question//ee0/0" routerLinkActive="active">Exam</a>
   </nav>
   <hr>
   <app-nav></app-nav>
   <hr>
+  <div>
+    You scored...!
+    <div id="marks">{{results.correct}}/{{results.total}}</div>
+    <div id="correct"><span>{{results.correct}}</span> Correct</div>
+    <div id="wrong"><span>{{results.wrong}}</span> Wrong</div>
+    <div id="missed"><span>{{results.leftout}}</span> Not Attempted</div>
+    <hr>
+    <div id="total"><span>{{results.total}}</span> Total</div>
+  </div>
 </div>

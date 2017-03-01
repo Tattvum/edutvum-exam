@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { StudentService, Exam } from '../model/student.service';
+import { StudentService, Exam, Results } from '../model/student.service';
 
 @Component({
   selector: 'app-result',
@@ -9,12 +9,19 @@ import { StudentService, Exam } from '../model/student.service';
 })
 export class ResultComponent implements OnInit {
 
+  exam: Exam
+  results: Results
+
   constructor(private route: ActivatedRoute,
     private router: Router,
     private service: StudentService) { }
 
   ngOnInit() {
-    console.log(this.router.url, this.router.url.indexOf("results"))
+    this.route.params.subscribe((params: Params) => {
+      let eid = params['eid']
+      this.exam = this.service.getExam(eid)
+      this.results = this.exam.scoreResults()
+    })
   }
 
 }

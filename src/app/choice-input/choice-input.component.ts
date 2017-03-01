@@ -15,6 +15,7 @@ declare var MathJax: {
 })
 export class ChoiceInputComponent implements OnInit {
 
+  exam: Exam
   question: Question
 
   constructor(private route: ActivatedRoute,
@@ -25,6 +26,7 @@ export class ChoiceInputComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       let eid = params['eid']
       let qid = params['qid']
+      this.exam = this.service.getExam(eid)
       this.question = this.service.getQuestion(eid, qid)
       MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
     })

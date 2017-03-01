@@ -1,16 +1,42 @@
-<div id="container" class="btn-toolbar" role="toolbar">
-  <span *ngFor="let q of exam.qs; let i=index"
-      class="btn-group btn btn-info" role="group"
-      [class.done]="q.done()"
-      [class.selected]="q.selected"
-      (click)="select(i)"
-      type="button">
-      {{i}}
-  </span>
+<div>
+  <div *ngIf="!exam.inAnswerMode"
+      id="container" class="btn-toolbar" role="toolbar">
+    <span *ngFor="let q of exam.qs; let i=index"
+        class="btn-group btn btn-info" role="group"
+        [class.done]="q.isDone()"
+        [class.selected]="q.isSelected"
+        (click)="select(i)"
+        type="button">
+        {{i}}
+    </span>
+    <span id="results" type="button"
+        (click)="results()"
+        class="btn btn-info">
+      Results
+    </span>
+  </div>
+  <div *ngIf="exam.inAnswerMode == true"
+      id="container" class="btn-toolbar" role="toolbar">
+    <span *ngFor="let q of exam.qs; let i=index"
+        class="btn-group btn btn-info" role="group"
+        [class.done]="q.isDone()"
+        [class.wrong]="q.isWrong()"
+        [class.selected]="q.isSelected"
+        (click)="select(i)"
+        type="button">
+        {{i}}
+    </span>
+    <span id="results" type="button"
+        [class.bingo]="isResultsPage"
+        (click)="results()"
+        class="btn-group btn btn-info" role="group">
+      Results
+    </span>
+  </div>
+  <br>
+  <button class="btn btn-primary btn-sm"
+      (click)="next()">
+    Continue
+    <span class="glyphicon glyphicon-arrow-right"></span>
+  </button>
 </div>
-<br>
-<button class="btn btn-primary btn-sm"
-    (click)="next()">
-  Ok, continue
-  <span class="glyphicon glyphicon-arrow-right"></span>
-</button>

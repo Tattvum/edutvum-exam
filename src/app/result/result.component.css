@@ -1,0 +1,20 @@
+#marks {
+  font-size: 128px;
+}
+#correct {
+  color: limegreen;
+}
+#wrong {
+  color: red;
+}
+#missed {
+  color: dodgerblue;
+}
+#total {
+  color: black;
+}
+div > span {
+  font-weight: bold;
+  font-size: 24px;
+  color: black;
+}

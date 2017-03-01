@@ -1,0 +1,10 @@
+.correct {
+  color: lightseagreen;
+}
+.notcorrect {
+  color: red;
+}
+.done {
+  color: green;
+  font-weight: bold;
+}

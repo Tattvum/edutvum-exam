@@ -1,18 +1,48 @@
 <form #f="ngForm" novalidate>
-  <div class="btn-group-vertical" role="choices">
+  <div *ngIf="!exam.inAnswerMode"
+      class="btn-group-vertical" role="choices">
     <div *ngFor="let ch of question.choices; let i=index">
-      <label [ngSwitch]="question.type">
+      <label [ngSwitch]="question.type"
+          [class.correct]="question.solutions[i]"
+          >
         <input *ngSwitchCase="0" type="radio" name="choices"
-            (click)="question.answers[i] = true"
+            (click)="question.setAnswer(i)"
             [checked]="question.answers[i]"
             />
         <input *ngSwitchCase="1" type="radio" name="choices"
-            (click)="question.answers[i] = true"
+            (click)="question.setAnswer(i)"
             [checked]="question.answers[i]"
             />
         <input *ngSwitchCase="2" type="checkbox" name="choices"
-            (click)="question.answers[i] = true"
+            (click)="question.setAnswer(i)"
             [checked]="question.answers[i]"
+            />
+        {{ch}}
+      </label>
+    </div>
+  </div>
+  <div *ngIf="exam.inAnswerMode"
+      class="btn-group-vertical" role="choices">
+    <div *ngFor="let ch of question.choices; let i=index">
+      <label [ngSwitch]="question.type"
+          [class.correct]="question.solutions[i]"
+          [class.done]="question.answers[i] && question.solutions[i]"
+          [class.notcorrect]="question.answers[i] && !question.solutions[i]"
+          >
+        <input *ngSwitchCase="0" type="radio" name="choices"
+            (click)="question.setAnswer(i)"
+            [checked]="question.answers[i]"
+            [disabled]="true"
+            />
+        <input *ngSwitchCase="1" type="radio" name="choices"
+            (click)="question.setAnswer(i)"
+            [checked]="question.answers[i]"
+            [disabled]="true"
+            />
+        <input *ngSwitchCase="2" type="checkbox" name="choices"
+            (click)="question.setAnswer(i)"
+            [checked]="question.answers[i]"
+            [disabled]="true"
             />
         {{ch}}
       </label>

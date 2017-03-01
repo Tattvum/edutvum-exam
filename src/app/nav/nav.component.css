@@ -7,6 +7,14 @@ span {
   font-size: smaller;
 }
 
+#results {
+  width: unset;
+  background-color: slategray;
+  padding: 1px 6px;
+  border-color: slategray;
+  color: white;
+}
+
 button {
   white-space: nowrap;
   height: 30px;
@@ -17,8 +25,20 @@ button {
   color: white;
 }
 
+.wrong {
+  background-color: red;
+  color: white;
+}
+
 .selected {
-  color: red;
+  color: black;
   font-weight: bold;
-  border: 1px solid red
+  border: 1px solid black
+}
+
+.bingo {
+  background-color: steelblue;
+  color: black;
+  font-weight: bold;
+  border: 1px solid black
 }
