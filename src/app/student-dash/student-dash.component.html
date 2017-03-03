@@ -30,10 +30,10 @@
         <span >{{rs.id}}</span>
       </div>
       <div class="col-xs-5">
-        <button type="button" (click)="takeExam(rs)" class="btn btn-success">{{rs.exam.name}}</button>
+        <button type="button" (click)="showExamResult(rs)" class="btn btn-success">{{rs.exam.name}}</button>
       </div>
       <div class="col-xs-2">
-        <button type="button" (click)="showExamResult(rs)" class="btn btn-warning">{{rs.percent}}%</button>
+        <button type="button" (click)="showExamResult(rs)" class="btn btn-warning">{{rs.percent()}}%</button>
       </div>
       <div class="col-xs-4">
         <span>{{showWhen(rs.when)}}</span>
