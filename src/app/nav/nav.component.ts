@@ -33,10 +33,11 @@ export class NavComponent implements OnInit {
   }
 
   results() {
-    if(!this.exam.inAnswerMode
-        && !confirm("Done with the exam?!"))
-        return
-    this.exam.inAnswerMode = true
+    if(!this.exam.inAnswerMode) {
+      if(!confirm("Done with the exam?!")) return
+      this.exam.inAnswerMode = true
+      this.exam = this.service.saveExam(this.exam)
+    }
     this.exam.selectNone()
     this.router.navigate(['/results', this.exam.id])
   }

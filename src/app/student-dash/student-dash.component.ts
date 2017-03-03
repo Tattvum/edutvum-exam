@@ -19,13 +19,14 @@ export class StudentDashComponent {
     return moment(dt).fromNow();
   }
 
-  takeExam(ex) {
+  takeExam(exam) {
     if(!confirm("Ready to start the exam?!")) return
-    console.log(ex.name)
-    this.router.navigate(['/question', ex.id, 0])
+    console.log(exam.name)
+    this.router.navigate(['/question', exam.id, 0])
   }
-  showExamResult(ex) {
-    console.log(ex.name + " " + ex.percent)
-    this.router.navigate(['/exam-result', ex.id, 0])
+
+  showExamResult(exam) {
+    console.log(exam.name + " " + exam.percent())
+    this.router.navigate(['/question', exam.id, 0])
   }
 }
