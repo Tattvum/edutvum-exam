@@ -55,7 +55,6 @@ export class Results {
   wrong: number = 0
   percent(): number {
     let pc = Math.ceil((this.correct / this.total) * 100)
-    console.log("pc: " + pc);
     return pc
   }
 }
@@ -136,7 +135,7 @@ export class ExamResult extends Exam {
     Exam.copy(exam, this)
   }
   percent(): number {
-    return this.exam.scoreResults().percent()
+    return this.scoreResults().percent()
   }
 }
 
@@ -254,6 +253,6 @@ export class StudentService {
     exam.reset()
     this._rs.push(examResult)
     this.cache[examResult.id] = examResult
-    return exam
+    return examResult
   }
 }
