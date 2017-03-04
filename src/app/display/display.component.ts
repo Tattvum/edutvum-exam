@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { StudentService } from '../model/student.service';
+import { DataService } from '../model/data.service';
 
 declare var MathJax: {
   Hub: {
@@ -18,7 +18,7 @@ export class DisplayComponent implements OnInit {
 
   private qstring = ''
 
-  constructor(private route: ActivatedRoute, private service: StudentService) { }
+  constructor(private route: ActivatedRoute, private service: DataService) { }
 
   ngOnInit() {
     this.route.params

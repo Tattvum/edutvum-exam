@@ -7,10 +7,12 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
 
+import { DataService } from './model/data.service';
+import { MockDataService } from './model/mock-data.service';
+
 import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { StudentService } from './model/student.service';
 import { ExamComponent } from './exam/exam.component';
 import { NavComponent } from './nav/nav.component';
 import { DisplayComponent } from './display/display.component';
@@ -38,7 +40,7 @@ import { ModalComponent } from './extra/modal/modal.component';
     ModalComponent,
   ],
   providers: [
-    StudentService,
+    {provide: DataService, useClass: MockDataService},
   ],
   bootstrap: [AppComponent]
 })

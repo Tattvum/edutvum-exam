@@ -139,120 +139,45 @@ export class ExamResult extends Exam {
   }
 }
 
-class Lib {
+export class Lib {
   static times(n: number): number[] {
     let arr = []
     for (var i = 0; i < n; i++) arr[i] = i
     return arr
   }
+  static rndn(ncount: number, nmin: number = 0): number {
+    let rndi = Math.random() * ncount
+    return Math.floor(rndi) + nmin
+  }
+  //default is 50% probability
+  static toss(b: number = 2, a: number = 1): boolean {
+    return Lib.rndn(b) < a
+  }
+  static rndDate(): Date {
+    let y = Lib.rndn(2, 2015)
+    let m = Lib.rndn(12, 1)
+    let d = Lib.rndn(28, 1)
+    return new Date(y + '-' + m + '-' + d)
+  }
+  static rndArray<T extends Id>(total: number,
+    fcreate: () => T, fuse: (T) => void): T[] {
+    let arr: T[] = []
+    for (var i = 0; i < total; i++) {
+      let t = fcreate()
+      arr.push(t)
+      fuse(t)
+    }
+    return arr;
+  }
 }
 
 @Injectable()
-export class StudentService {
+export abstract class DataService {
 
   public exams$: Observable<Exam[]>
   public results$: Observable<ExamResult[]>
 
-  private examNames = [
-    'NMTC Junior Scr.',
-    'NMTC Junior Final',
-    'NMTC Sub-Junior Scr.',
-    'NMTC Sub-Junior Final',
-    'NMTC Primary Scr.',
-    'NMTC Primary Final',
-    'NSEJS',
-    'NIOS Maths',
-    'NIOS Science',
-  ]
-
-  private rndn(ncount: number, nmin: number = 0): number {
-    let rndi = Math.random() * ncount
-    return Math.floor(rndi) + nmin
-  }
-
-  //default is 50% probability
-  private toss(b: number = 2, a: number = 1): boolean {
-    return this.rndn(b) < a
-  }
-
-  private rndExamName(): string {
-    let name = this.examNames[this.rndn(this.examNames.length)]
-    let year = this.rndn(10, 2009)
-    return name + " " + year
-  }
-
-  private rndDate(): Date {
-    let y = this.rndn(2, 2015)
-    let m = this.rndn(12, 1)
-    let d = this.rndn(28, 1)
-    return new Date(y + '-' + m + '-' + d)
-  }
-
-  cache = {}
-
-  private rndQuestion(): Question {
-    let q = new Question()
-    q.type = this.rndn(AnswerType.UNKNOWN_LAST)
-    let n = (q.type === AnswerType.TFQ) ? 2 : this.rndn(5, 2)
-    q.html = "some <b>bold</b> \\(\\frac{(n^{" + n + "}+n)(2n+" + n + ")}{" + n + "}\\)test"
-    for (var i = 0; i < n; i++) {
-      q.choices[i] = "choice " + i + " \\(\\frac{0}{1}\\)"
-    }
-    //anyway there will be one solution
-    //    q.solutions[0] = true
-    q.solutions[this.rndn(n)] = true
-    switch (q.type) {
-      case AnswerType.MAQ:
-        Lib.times(n).forEach(i => q.solutions[i] = this.toss())
-    }
-    return q
-  }
-
-  private rndExam(qcount = 10): Exam {
-    let e = new Exam(this.rndExamName(), this.rndDate())
-    let n = this.rndn(qcount, 5)
-    for (var i = 0; i < n; i++) {
-      e.qs[i] = this.rndQuestion()
-    }
-    return e
-  }
-
-  private rndArray<T extends Id>(total: number, f: () => T): T[] {
-    let arr: T[] = []
-    for (var i = 0; i < total; i++) {
-      let t = f()
-      this.cache[t.id] = t
-      arr.push(t)
-    }
-    return arr;
-  }
-
-  _es: Exam[]
-  _rs: ExamResult[]
-
-  constructor() {
-    this._es = this.rndArray<Exam>(10, () => this.rndExam(3))
-    this.exams$ = Observable.of(this._es)
-
-    this._rs = []
-    this.results$ = Observable.of(this._rs);
-  }
-
-  public getExam(eid: string): Exam {
-    let e: Exam = this.cache[eid]
-    return e
-  }
-
-  public getQuestion(eid: string, qid: string): Question {
-    let q = this.getExam(eid).qs[qid]
-    return q
-  }
-
-  public saveExam(exam: Exam) {
-    let examResult = new ExamResult(exam)
-    exam.reset()
-    this._rs.push(examResult)
-    this.cache[examResult.id] = examResult
-    return examResult
-  }
+  public abstract getExam(eid: string): Exam
+  public abstract getQuestion(eid: string, qid: string): Question
+  public abstract saveExam(exam: Exam)
 }

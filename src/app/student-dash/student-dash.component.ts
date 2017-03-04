@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //http://momentjs.com/docs/
 import * as moment from 'moment';
-import { StudentService } from '../model/student.service';
+import { DataService } from '../model/data.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class StudentDashComponent {
 
   constructor(
-    private service: StudentService,
+    private service: DataService,
     private router: Router) { }
 
   showWhen(dt: Date): string {

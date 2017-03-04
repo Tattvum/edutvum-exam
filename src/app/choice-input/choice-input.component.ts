@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { StudentService, Exam, Question } from '../model/student.service';
+import { DataService, Exam, Question } from '../model/data.service';
 
 declare var MathJax: {
   Hub: {
@@ -20,7 +20,7 @@ export class ChoiceInputComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private service: StudentService) { }
+    private service: DataService) { }
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {

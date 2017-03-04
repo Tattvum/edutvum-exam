@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { StudentService, Exam } from '../model/student.service';
+import { DataService, Exam } from '../model/data.service';
 
 @Component({
   selector: 'app-nav',
@@ -11,7 +11,7 @@ export class NavComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private service: StudentService) { }
+    private service: DataService) { }
 
   exam: Exam
   isResultsPage = false

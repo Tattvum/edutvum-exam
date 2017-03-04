@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { StudentService, Exam, Results } from '../model/student.service';
+import { DataService, Exam, Results } from '../model/data.service';
 
 @Component({
   selector: 'app-result',
@@ -14,7 +14,7 @@ export class ResultComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private service: StudentService) { }
+    private service: DataService) { }
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
