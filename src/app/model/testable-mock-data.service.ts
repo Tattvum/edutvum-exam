@@ -7,18 +7,13 @@ import {
 } from './data.service'
 
 @Injectable()
-export class MockDataService extends DataService {
+export class TestableMockDataService extends DataService {
 
   private examNames = [
-    'NMTC Junior Scr.',
-    'NMTC Junior Final',
-    'NMTC Sub-Junior Scr.',
-    'NMTC Sub-Junior Final',
-    'NMTC Primary Scr.',
-    'NMTC Primary Final',
-    'NSEJS',
-    'NIOS Maths',
-    'NIOS Science',
+    'Test1',
+    'Test2',
+    'Test3',
+    'Test4',
   ]
 
   private rndExamName(): string {

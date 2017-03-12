@@ -15,13 +15,13 @@ export class Question {
     this.answers.forEach(a => done = done || a)
     return done
   }
-  public setAnswer(n: number) {
-    if (this.type !== AnswerType.MAQ)
-      this.choices.forEach((_, i) => this.answers[i] = false)
-    this.answers[n] = true
+  public clearAllAnswers() {
+    this.choices.forEach((_, i) => this.answers[i] = false)
   }
-  public hasAnswer(i: number): boolean {
-    return this.answers[i] == true
+  public setAnswer(n: number) {
+    if (this.type !== AnswerType.MAQ) this.clearAllAnswers()
+    this.answers[n] = true
+    //console.log(this.answers)
   }
   public isWrong(): boolean {
     let wrong = false
@@ -60,6 +60,7 @@ export class Results {
 }
 
 export class Exam extends Id {
+  public readonly ARRAY_OUT_OF_BOUNDS = "Array out of bounds."
   public qs: Question[] = []
   public inAnswerMode = false
   private selected: number = 0
@@ -98,6 +99,7 @@ export class Exam extends Id {
   }
 
   public select(n: number) {
+    if (n < 0 || n >= this.qs.length) throw this.ARRAY_OUT_OF_BOUNDS
     if (this.selected != null) this.qs[this.selected].isSelected = false
     this.selected = n
     this.qs[this.selected].isSelected = true
@@ -114,6 +116,7 @@ export class Exam extends Id {
     if (this.selected < this.qs.length - 1) {
       return this.selected * 1 + 1// WHY?!
     }
+    return null
   }
   public scoreResults(): Results {
     let results = new Results();
@@ -176,6 +179,10 @@ export abstract class DataService {
 
   public exams$: Observable<Exam[]>
   public results$: Observable<ExamResult[]>
+
+  public testMe(n: number): number {
+    return n * 2
+  }
 
   public abstract getExam(eid: string): Exam
   public abstract getQuestion(eid: string, qid: string): Question
