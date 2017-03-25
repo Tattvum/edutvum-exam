@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {
-  DataService,
-  Exam, ExamResult, Question, AnswerType,
-  Lib
+  DataService, Exam, ExamResult, Question, AnswerType, Lib
 } from './data.service'
+import {
+  QuestionImpl, AbstractMockDataService
+} from './abstract-mock-data.service'
 
 @Injectable()
-export class MockDataService extends DataService {
+export class MockDataService extends AbstractMockDataService {
 
   private examNames = [
     'NMTC Junior Scr.',
@@ -30,7 +31,7 @@ export class MockDataService extends DataService {
   cache = {}
 
   private rndQuestion(): Question {
-    let q = new Question()
+    let q = new QuestionImpl()
     q.type = Lib.rndn(AnswerType.UNKNOWN_LAST)
     let n = (q.type === AnswerType.TFQ) ? 2 : Lib.rndn(5, 2)
     q.html = "some <b>bold</b> \\(\\frac{(n^{" + n + "}+n)(2n+" + n + ")}{" + n + "}\\)test"

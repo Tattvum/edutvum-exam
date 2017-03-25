@@ -3,6 +3,10 @@
 # compiled output
 /dist
 /tmp
+/_
+
+#secret
+/src/app/firebase-config.ts
 
 # dependencies
 /node_modules

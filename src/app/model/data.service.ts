@@ -9,6 +9,7 @@ export class Question {
   public solutions: boolean[] = []
   public answers: boolean[] = []
   public choices: string[] = []
+  public isSelected = false
   constructor() { }
   public isDone(): boolean {
     let done = false
@@ -36,14 +37,19 @@ export class Question {
     }
     return wrong
   }
-  public isSelected = false
 }
 
 export class Id {
   protected static _count = 0
-  public readonly id: string
+  private _id: string
+  public get id(): string {
+    return this._id
+  }
+  public set id(val: string) {
+    this._id = val
+  }
   constructor(private prefix: string) {
-    this.id = prefix + Id._count
+    this._id = prefix + Id._count
     Id._count++
   }
 }
@@ -62,6 +68,9 @@ export class Results {
 export class Exam extends Id {
   public readonly ARRAY_OUT_OF_BOUNDS = "Array out of bounds."
   public qs: Question[] = []
+  public idd(): string {
+    return this.id +"%"
+  }
   public inAnswerMode = false
   private selected: number = 0
   constructor(public name: string = null, public when: Date = new Date()) {
