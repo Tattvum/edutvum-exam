@@ -3,7 +3,6 @@
       class="btn-group-vertical" role="choices">
     <div *ngFor="let ch of question.choices; let i=index">
       <label [ngSwitch]="question.type"
-          [class.correct]="question.solutions[i]"
           >
         <input *ngSwitchCase="0" type="radio" name="choices"
             (click)="question.setAnswer(i)"
@@ -17,7 +16,7 @@
             (click)="question.setAnswer(i)"
             [checked]="question.answers[i]"
             />
-        {{ch}}
+        <label [innerHTML]="ch"></label>
       </label>
     </div>
   </div>
@@ -44,7 +43,7 @@
             [checked]="question.answers[i]"
             [disabled]="true"
             />
-        {{ch}}
+          <label [innerHTML]="ch"></label>
       </label>
     </div>
   </div>

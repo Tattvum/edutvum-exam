@@ -70,11 +70,13 @@ export class MockDataService extends AbstractMockDataService {
   }
 
   public getExam(eid: string): Exam {
+    console.log("getExam", eid)
     let e: Exam = this.cache[eid]
     return e
   }
 
   public getQuestion(eid: string, qid: string): Question {
+    console.log("getQuestion", eid, qid)
     let q = this.getExam(eid).qs[qid]
     return q
   }

@@ -4,10 +4,7 @@
   <h3>Available Exams</h3>
   <div class="container-fluid">
     <div class="row" *ngFor="let ex of service.exams$ | async | paginate: { id:'exams', itemsPerPage: 5, currentPage: pageExam }">
-      <div class="col-xs-1">
-        <span>{{ex.id}}</span>
-      </div>
-      <div class="col-xs-7">
+      <div class="col-xs-8">
         <button type="button" (click)="takeExam(ex)" class="btn btn-info">{{ex.name}}</button>
       </div>
       <div class="col-xs-4">
@@ -26,11 +23,8 @@
   <h3>Recent Exams Taken</h3>
   <div class="container-fluid">
     <div class="row" *ngFor="let rs of service.results$ | async | paginate: { id:'result', itemsPerPage: 3, currentPage: pageResult }">
-      <div class="col-xs-1">
-        <span >{{rs.id}}</span>
-      </div>
-      <div class="col-xs-5">
-        <button type="button" (click)="showExamResult(rs)" class="btn btn-success">{{rs.exam.name}}</button>
+      <div class="col-xs-6">
+        <button type="button" (click)="showExamResult(rs)" class="btn btn-success">{{rs.name}}</button>
       </div>
       <div class="col-xs-2">
         <button type="button" (click)="showExamResult(rs)" class="btn btn-warning">{{rs.percent()}}%</button>

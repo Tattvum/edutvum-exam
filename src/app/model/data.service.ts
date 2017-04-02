@@ -141,10 +141,9 @@ export class Exam extends Id {
 }
 
 export class ExamResult extends Exam {
-  constructor(readonly exam: Exam,
-    readonly when: Date = new Date()) {
+  constructor(readonly exam: Exam = null, readonly when: Date = new Date()) {
     super("rr")
-    Exam.copy(exam, this)
+    if(exam !== null) Exam.copy(exam, this)
   }
   percent(): number {
     return this.scoreResults().percent()
@@ -186,8 +185,8 @@ export class Lib {
 @Injectable()
 export abstract class DataService {
 
-  public exams$: Observable<Exam[]>
-  public results$: Observable<ExamResult[]>
+  public exams$: Observable<any[]>
+  public results$: Observable<any[]>
 
   public testMe(n: number): number {
     return n * 2

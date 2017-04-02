@@ -12,6 +12,7 @@ import { Ng2PaginationModule } from 'ng2-pagination';
 
 import { DataService } from './model/data.service';
 import { MockDataService } from './model/mock-data.service';
+import { FirebaseData1Service } from './model/firebase-data1.service';
 import { FirebaseDataService } from './model/firebase-data.service';
 
 import { AppComponent } from './app.component';
