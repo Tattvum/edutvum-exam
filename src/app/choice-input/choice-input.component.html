@@ -4,6 +4,7 @@
     <div *ngFor="let ch of question.choices; let i=index">
       <label [ngSwitch]="question.type"
           >
+        <label class="lighter" [innerHTML]="AAA[i]+'.'"></label>
         <input *ngSwitchCase="0" type="radio" name="choices"
             (click)="question.setAnswer(i)"
             [checked]="question.answers[i]"
@@ -28,6 +29,7 @@
           [class.done]="question.answers[i] && question.solutions[i]"
           [class.notcorrect]="question.answers[i] && !question.solutions[i]"
           >
+        <label class="lighter" [innerHTML]="AAA[i]+'.'"></label>
         <input *ngSwitchCase="0" type="radio" name="choices"
             (click)="question.setAnswer(i)"
             [checked]="question.answers[i]"
@@ -43,7 +45,7 @@
             [checked]="question.answers[i]"
             [disabled]="true"
             />
-          <label [innerHTML]="ch"></label>
+        <label [innerHTML]="ch"></label>
       </label>
     </div>
   </div>

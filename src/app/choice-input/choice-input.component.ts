@@ -17,6 +17,7 @@ export class ChoiceInputComponent implements OnInit {
 
   exam: Exam
   question: Question
+  AAA = ['a', "b", "c", "d", "e", "f", "g", "h"]
 
   constructor(private route: ActivatedRoute,
     private router: Router,
