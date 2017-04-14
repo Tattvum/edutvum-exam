@@ -88,14 +88,15 @@ export class FirebaseDataService extends DataService {
 
     console.log("LISTTTTT---")
 
-    this.exams$ = af.database.list(EXAMS_URL).map(arr => {
+    let eQuery = {query: {orderByChild: 'when'}}
+    this.exams$ = af.database.list(EXAMS_URL, eQuery).map(arr => {
       console.log('exams map *')
-      return arr.map(o => this.cacheObj(new ExamImpl(o)))
+      return arr.map((o, i) => this.cacheObj(new ExamImpl(o)))
     })
 
     this.results$ = af.database.list(RESULTS_URL).map(arr => {
       console.log('results map *')
-      return arr.map(o => this.cacheObj(new ResultImpl(o)))
+      return arr.map((o, i) => this.cacheObj(new ResultImpl(o)))
     })
 
     console.log(QUESTION_URL);
