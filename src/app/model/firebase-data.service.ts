@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
+
 import { Subject, Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map'
+import 'rxjs/Rx';
+
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import {
   DataService, Id, Exam, ExamResult, Question, AnswerType, Lib
 } from './data.service'
 
 class ExamImpl extends Exam {
+  public questions = []
   constructor(e: any) {
     super()
     this.name = e.name
     this.id = e.$key
-    e.questions.forEach(qid => this.qs.push(new QuestionImpl(qid)))
+    this.questions = e.questions
   }
 }
 
@@ -19,12 +22,19 @@ class QuestionImpl extends Question {
   constructor(public qid: string) {
     super()
   }
-  setObj(q: any) {
-    this.html = q.display
-    this.type = AnswerType["" + q.type]
-    this.choices = q.choices
-    q.solutions.forEach(n => this.solutions[n] = true)
+  static setObj(qsrc, qtarget: any) {
+    qtarget.html = qsrc.display
+    qtarget.type = AnswerType["" + qsrc.type]
+    qtarget.choices = qsrc.choices
+    qsrc.solutions.forEach(n => qtarget.solutions[n] = true)
   }
+}
+
+let qs = {}
+function cacheQuestion(qo) {
+  let q = new QuestionImpl(qo.$key)
+  QuestionImpl.setObj(qo, q)
+  qs[q.qid] = q
 }
 
 class ResultImpl extends ExamResult {
@@ -41,7 +51,7 @@ class ResultImpl extends ExamResult {
 
 const URL_VER = "ver3/"
 const EXAMS_URL = URL_VER + "exams"
-const RESULTS_URL = URL_VER + "results/u1"
+const RESULTS_URL = URL_VER + "results/common"
 const QUESTION_URL = URL_VER + "questions"
 
 @Injectable()
@@ -50,13 +60,15 @@ export class FirebaseDataService extends DataService {
   cache = {}
 
   private cacheObj(i: Id): any {
-    if(this.cache[i.id] == undefined) this.cache[i.id] = i
+    if (this.cache[i.id] == undefined) this.cache[i.id] = i
+    this.cache[i.id].seal += " cache"
     return this.cache[i.id]
   }
 
-  private copy(src, target: Exam) {
+  private updateResult(src, target: Exam) {
     target.name = src.name
-    target.inAnswerMode = src.inAnswerMode
+    target.inAnswerMode = true
+    console.log("copy: " + src.qs.length);
     src.qs.forEach((q, i) => {
       target.qs[i] = new Question()
       let thisq = target.qs[i]
@@ -75,6 +87,7 @@ export class FirebaseDataService extends DataService {
     this.af = af
 
     console.log("LISTTTTT---")
+
     this.exams$ = af.database.list(EXAMS_URL).map(arr => {
       console.log('exams map *')
       return arr.map(o => this.cacheObj(new ExamImpl(o)))
@@ -85,32 +98,26 @@ export class FirebaseDataService extends DataService {
       return arr.map(o => this.cacheObj(new ResultImpl(o)))
     })
 
-    this.exams$.subscribe(es => {
-      console.log("computing exams... " + es.length)
-      es.forEach(e => {
-        //console.log("- exam question... ", e.qs.length)
-        e.qs.forEach((q, i) => {
-          af.database.object(QUESTION_URL + "/" + q.qid).subscribe(o => {
-            e.qs[i].setObj(o)
-            //console.log("- - exam question id " + q.qid, e.qs[i].answers.length)
+    console.log(QUESTION_URL);
+
+    af.database.list(QUESTION_URL).subscribe(qsos => {
+      qsos.forEach(qo => cacheQuestion(qo))
+      console.log('global qs: ', Object.keys(qs).length);
+      this.exams$.subscribe(es => {
+        console.log("computing exams... ", es.length)
+        es.forEach(e => e.questions.forEach(qid => e.qs.push(qs[qid])))
+        this.results$.subscribe(rs => {
+          rs.forEach(r => {
+            console.log("result0:", r.eid, r.name);
+            let e = this.cache[r.eid]
+            this.updateResult(e, r)
+            console.log("result1:", r.id, r.name)
+            r.answers.forEach((ans, i) => {
+              ans.forEach(j => r.qs[i].answers[j] = true)
+            })
           })
         })
       })
-
-      //console.log(this.cache)
-      this.results$.subscribe(rs => {
-        console.log("computing results... " + rs.length)
-        rs.forEach(r => {
-          let e = this.cache[r.eid]
-          this.copy(e, r)
-          //console.log(r)
-          r.answers.forEach((ans, i) => {
-            ans.forEach(j => r.qs[i].answers[j] = true)
-          })
-          //console.log(e.name, "-", r.name)
-        })
-      },null,()=>console.log("results completed"))
-
     })
 
   }
@@ -127,12 +134,29 @@ export class FirebaseDataService extends DataService {
     return q
   }
 
-  public saveExam(exam: Exam) {
+  private saveResultInFirebase(exam: Exam): ExamResult {
     let examResult = new ExamResult(exam)
-    exam.reset()
-    //this._rs.push(examResult)
-    this.cache[examResult.id] = examResult
+    let ro = {}
+    ro['exam'] = exam.id
+    let anss = []
+    exam.qs.forEach(q => {
+      let ans = []
+      q.answers.forEach((a, i) => {
+        if(a) ans.push(i)
+      })
+      anss.push(ans)
+    })
+    ro['answers'] = anss
+    console.log("saveResult", ro)
+    this.af.database.list(RESULTS_URL).push(ro)
     return examResult
+  }
+
+  public saveExam(exam: Exam) {
+    let er = this.saveResultInFirebase(exam)
+    exam.reset()
+    this.cache[er.id] = er
+    return er
   }
 
 }
