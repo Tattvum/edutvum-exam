@@ -1,3 +1,9 @@
+<div id="clear-all"
+    (click)="clearAll()"
+    [class.disabled]="exam.inAnswerMode"
+    class="btn">
+  Clear answers
+</div>
 <form #f="ngForm" novalidate class="bg">
   <div *ngIf="!exam.inAnswerMode"
       class="btn-group-vertical" role="choices">
@@ -53,9 +59,3 @@
     </div>
   </div>
 </form>
-<div id="clear-all" type="button"
-    (click)="clearAll()"
-    [class.disabled]="exam.inAnswerMode"
-    class="btn btn-info">
-  Clear all
-</div>
