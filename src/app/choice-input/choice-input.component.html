@@ -55,6 +55,7 @@
 </form>
 <div id="clear-all" type="button"
     (click)="clearAll()"
+    [class.disabled]="exam.inAnswerMode"
     class="btn btn-info">
   Clear all
 </div>

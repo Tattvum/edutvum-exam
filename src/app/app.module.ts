@@ -45,7 +45,7 @@ import { ModalComponent } from './extra/modal/modal.component';
     ModalComponent,
   ],
   providers: [
-    { provide: DataService, useClass: FirebaseDataService },
+    { provide: DataService, useClass: MockDataService },
   ],
   bootstrap: [AppComponent]
 })

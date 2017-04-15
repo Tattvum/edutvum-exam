@@ -34,6 +34,8 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   clearAll() {
-    this.question.clearAllAnswers()
+    if(!this.exam.inAnswerMode) {
+      this.question.clearAllAnswers()
+    }
   }
 }

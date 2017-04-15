@@ -17,6 +17,10 @@
   color: royalblue;
 }
 
+.disabled {
+  color: grey;
+}
+
 #clear-all {
   width: 30px;
   height: 20px;
