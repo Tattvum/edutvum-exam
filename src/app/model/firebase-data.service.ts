@@ -5,7 +5,8 @@ import 'rxjs/Rx';
 
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import {
-  DataService, Id, Exam, ExamResult, Question, AnswerType, Lib
+  DataService, Id, Exam, ExamResult,
+  Question, AnswerType, UserInfo, Lib
 } from './data.service'
 
 class ExamImpl extends Exam {
@@ -58,6 +59,7 @@ const QUESTION_URL = URL_VER + "questions"
 export class FirebaseDataService extends DataService {
   af: AngularFire
   cache = {}
+  userInfo: UserInfo = new UserInfo('00', '[empty]', '--')
 
   private cacheObj(i: Id): any {
     if (this.cache[i.id] == undefined) this.cache[i.id] = i
@@ -85,6 +87,18 @@ export class FirebaseDataService extends DataService {
   constructor(af: AngularFire) {
     super()
     this.af = af
+
+    this.af.auth.subscribe(auth => {
+      console.log(auth)
+      if(auth) {
+        console.log(auth.uid)
+        console.log(auth.auth.displayName)
+        console.log(auth.auth.email)
+        this.userInfo.setAll(
+          auth.uid, auth.auth.displayName, auth.auth.email
+        )
+      } else this.userInfo.clearAll()
+    });
 
     console.log("LISTTTTT---")
 
@@ -158,6 +172,18 @@ export class FirebaseDataService extends DataService {
     exam.reset()
     this.cache[er.id] = er
     return er
+  }
+
+  public login(): Promise<any> {
+    return Promise.resolve(this.af.auth.login())
+  }
+
+  public logout(): Promise<void> {
+    return Promise.resolve(this.af.auth.logout())
+  }
+
+  public auth(): Promise<UserInfo> {
+    return Promise.resolve(this.userInfo)
   }
 
 }

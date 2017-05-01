@@ -150,6 +150,22 @@ export class ExamResult extends Exam {
   }
 }
 
+export class UserInfo {
+  constructor(public uid: string,
+      public name: string,
+      public email: string) {}
+  setAll(uid: string, name: string, email: string) {
+    this.uid = uid
+    this.name = name
+    this.email = email
+  }
+  clearAll() {
+    this.uid = null
+    this.name = null
+    this.email = null
+  }
+}
+
 export class Lib {
   static times(n: number): number[] {
     let arr = []
@@ -195,4 +211,8 @@ export abstract class DataService {
   public abstract getExam(eid: string): Exam
   public abstract getQuestion(eid: string, qid: string): Question
   public abstract saveExam(exam: Exam)
+
+  public abstract login(): Promise<any>
+  public abstract logout(): Promise<void>
+  public abstract auth(): Promise<UserInfo>
 }

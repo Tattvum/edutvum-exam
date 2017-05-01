@@ -1,0 +1,12 @@
+#top-bar {
+  text-align: right;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  height: 20px;
+}
+
+#top-bar > span {
+  background-color: yellow;
+  width: 100%;
+  height: 100%;
+}
