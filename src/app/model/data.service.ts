@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-export enum AnswerType { TFQ, MCQ, MAQ, UNKNOWN_LAST }
+export enum AnswerType { TFQ, MCQ, MAQ, ARQ, UNKNOWN_LAST }
 
 export class Question {
   public html: string

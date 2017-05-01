@@ -26,7 +26,12 @@
             (click)="question.setAnswer(i)"
             [checked]="question.answers[i]"
             />
-        <label [for]="'rd'+i" [innerHTML]="ch"></label>
+        <input *ngSwitchCase="3" type="radio" name="choices"
+            [id]="'rd'+i"
+            (click)="question.setAnswer(i)"
+            [checked]="question.answers[i]"
+            />
+        <label class="opt" [for]="'rd'+i" [innerHTML]="ch"></label>
       </label>
     </div>
   </div>
@@ -54,7 +59,12 @@
             [checked]="question.answers[i]"
             [disabled]="true"
             />
-        <label [innerHTML]="ch"></label>
+        <input *ngSwitchCase="3" type="radio" name="choices"
+            [id]="'rd'+i"
+            (click)="question.setAnswer(i)"
+            [checked]="question.answers[i]"
+            />
+        <label class="opt" [innerHTML]="ch"></label>
       </label>
     </div>
   </div>
