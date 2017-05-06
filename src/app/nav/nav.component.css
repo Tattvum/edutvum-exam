@@ -15,6 +15,20 @@ span {
   color: white;
 }
 
+#eid {
+  width: unset;
+  font-size: smaller;
+  background-color: white;
+  padding: 1px 6px;
+  border-color: lightgray;
+  color: black;
+}
+
+#ename {
+  color: maroon;
+  font-size: larger;
+}
+
 button {
   white-space: nowrap;
   height: 30px;
