@@ -14,11 +14,13 @@ export class LoginComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    this.service.isLoggedIn().then(auth => {
+      this.router.navigate(['/student-dash'])
+    })
   }
 
   login() {
     this.service.login().then(auth => {
-      console.log("LOGGED IN!")
       this.router.navigate(['/student-dash'])
     })
   }

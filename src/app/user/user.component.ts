@@ -9,22 +9,17 @@ import { Router } from '@angular/router';
 })
 export class UserComponent implements OnInit {
 
-  user = '='
-
   constructor(
     private service: DataService,
     private router: Router) { }
 
   ngOnInit() {
-    this.service.auth().then(ui => {
-      this.user =  ui.name? ui.name: '---'
-    })
+    this.service.ensureAuth()
   }
 
   logout() {
     this.service.logout().then(()=> {
-      this.user = "---"
-      this.router.navigateByUrl('')
+      console.log('Logging out!');
     })
   }
 }

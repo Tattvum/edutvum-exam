@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import { Router } from '@angular/router';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import {
   DataService, Id, Exam, ExamResult,
@@ -77,8 +78,8 @@ const QUESTION_URL = URL_VER + "questions"
 @Injectable()
 export class FirebaseDataService extends DataService {
   af: AngularFire
+  router: Router
   cache = {}
-  userInfo: UserInfo = new UserInfo('00', '[empty]', '--')
 
   private cacheObj(i: Id): any {
     if (this.cache[i.id] == undefined) this.cache[i.id] = i
@@ -103,9 +104,10 @@ export class FirebaseDataService extends DataService {
     })
   }
 
-  constructor(af: AngularFire) {
+  constructor(af: AngularFire, private _router: Router) {
     super()
     this.af = af
+    this.router = _router
 
     this.af.auth.subscribe(auth => {
       console.log(auth)
@@ -193,6 +195,11 @@ export class FirebaseDataService extends DataService {
     return er
   }
 
+  public isLoggedIn(): Promise<boolean> {
+    console.log("IS LOGGED IN called!")
+    return Promise.resolve(this.userInfo.uid!==null)
+  }
+
   public login(): Promise<any> {
     return Promise.resolve(this.af.auth.login())
   }
@@ -201,8 +208,12 @@ export class FirebaseDataService extends DataService {
     return Promise.resolve(this.af.auth.logout())
   }
 
-  public auth(): Promise<UserInfo> {
-    return Promise.resolve(this.userInfo)
+  public ensureAuth() {
+    this.af.auth.subscribe(auth => {
+      console.log('Ensuring Auth!!')
+      if(!auth) {
+        this.router.navigateByUrl('')
+      }
+    })
   }
-
 }

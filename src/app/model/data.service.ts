@@ -203,6 +203,10 @@ export abstract class DataService {
 
   public exams$: Observable<any[]>
   public results$: Observable<any[]>
+  protected userInfo: UserInfo = new UserInfo('00', '[empty]', '--')
+  public get userName(): string {
+    return this.userInfo.name
+  }
 
   public testMe(n: number): number {
     return n * 2
@@ -212,7 +216,8 @@ export abstract class DataService {
   public abstract getQuestion(eid: string, qid: string): Question
   public abstract saveExam(exam: Exam)
 
+  public abstract isLoggedIn(): Promise<boolean>
   public abstract login(): Promise<any>
   public abstract logout(): Promise<void>
-  public abstract auth(): Promise<UserInfo>
+  public abstract ensureAuth()
 }

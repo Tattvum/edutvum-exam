@@ -8,10 +8,10 @@ export class AuthGuard implements CanActivate {
   constructor(private service: DataService) { }
 
   canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.service.auth().then(ui => {
-      return Promise.resolve(ui.name !== null)
-    })
+      next: ActivatedRouteSnapshot,
+      state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+
+    console.log('AuthGuard CHECK LOGIN');
+    return this.service.isLoggedIn();
   }
 }
