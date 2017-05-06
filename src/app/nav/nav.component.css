@@ -20,8 +20,7 @@ span {
   font-size: smaller;
   background-color: white;
   padding: 1px 6px;
-  border-color: lightgray;
-  color: black;
+  color: gray;
 }
 
 #ename {
