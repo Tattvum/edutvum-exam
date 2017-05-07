@@ -22,8 +22,9 @@ export class NavComponent implements OnInit {
         let eid = params['eid']
         this.exam = this.service.getExam(eid)
         let qid = params['qid']
+        console.log('NEW NAV', eid, qid, this.exam)
         this.isResultsPage = (qid == null)
-        if(!this.isResultsPage) this.exam.select(qid)
+        if (!this.isResultsPage) this.exam.select(qid)
       })
   }
 
@@ -33,8 +34,8 @@ export class NavComponent implements OnInit {
   }
 
   results() {
-    if(!this.exam.inAnswerMode) {
-      if(!confirm("Done with the exam?!")) return
+    if (!this.exam.inAnswerMode) {
+      if (!confirm("Done with the exam?!")) return
       this.exam.inAnswerMode = true
       this.exam = this.service.saveExam(this.exam)
     }

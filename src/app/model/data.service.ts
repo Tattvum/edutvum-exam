@@ -166,6 +166,37 @@ export class UserInfo {
   }
 }
 
+export const TFQChoices: string[] = ["True", "False"]
+export const ARQChoices: string[] = [
+  "Both <b>A</b> and <b>R</b> are CORRECT and <b>R</b> is the CORRECT explanation of the <b>A</b>.",
+  "Both <b>A</b> and <b>R</b> are CORRECT, but <b>R</b> is NOT THE CORRECT explanation of the <b>A</b>.",
+  "<b>A</b> is CORRECT, but <b>R</b> is INCORRECT.",
+  "<b>A</b> is INCORRECT, but <b>R</b> is CORRECT",
+  "Both <b>A</b> and <b>R</b> are INCORRECT."
+]
+
+export class EmptyQuestionImpl extends Question {
+  constructor() {
+    super()
+    this.html = '---'
+    this.type = AnswerType.TFQ
+    this.choices = TFQChoices.slice(0)
+    this.solutions = [false, false]
+  }
+}
+
+export class EmptyExamImpl extends Exam {
+  public questions = []
+  constructor() {
+    super()
+    this.name = '----'
+    this.id = '00'
+    this.qs = [new EmptyQuestionImpl()]
+  }
+}
+
+export const EMPTY_EXAM = new EmptyExamImpl()
+
 export class Lib {
   static times(n: number): number[] {
     let arr = []

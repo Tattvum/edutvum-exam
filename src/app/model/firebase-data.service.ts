@@ -7,7 +7,9 @@ import { Router } from '@angular/router';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import {
   DataService, Id, Exam, ExamResult,
-  Question, AnswerType, UserInfo, Lib
+  Question, AnswerType, UserInfo, Lib,
+  TFQChoices, ARQChoices,
+  EmptyExamImpl, EmptyQuestionImpl, EMPTY_EXAM
 } from './data.service'
 
 class ExamImpl extends Exam {
@@ -19,15 +21,6 @@ class ExamImpl extends Exam {
     this.questions = e.questions
   }
 }
-
-const TFQChoices: string[] = ["True", "False"]
-const ARQChoices: string[] = [
-  "Both <b>A</b> and <b>R</b> are CORRECT and <b>R</b> is the CORRECT explanation of the <b>A</b>.",
-  "Both <b>A</b> and <b>R</b> are CORRECT, but <b>R</b> is NOT THE CORRECT explanation of the <b>A</b>.",
-  "<b>A</b> is CORRECT, but <b>R</b> is INCORRECT.",
-  "<b>A</b> is INCORRECT, but <b>R</b> is CORRECT",
-  "Both <b>A</b> and <b>R</b> are INCORRECT."
-]
 
 class QuestionImpl extends Question {
   constructor(public qid: string) {
@@ -160,13 +153,12 @@ export class FirebaseDataService extends DataService {
 
   public getExam(eid: string): Exam {
     let e: Exam = this.cache[eid]
-    //console.log("getExam", eid, e)
-    return e
+    if(e == null) return EMPTY_EXAM
+    else return e
   }
 
   public getQuestion(eid: string, qid: string): Question {
     let q = this.getExam(eid).qs[qid]
-    //console.log("getQuestion", eid, qid, q)
     return q
   }
 
