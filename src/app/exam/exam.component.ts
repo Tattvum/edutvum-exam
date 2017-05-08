@@ -21,7 +21,7 @@ export class ExamComponent implements OnInit {
       .subscribe((params: Params) => {
         let eid = params['eid']
         this.exam = this.service.getExam(eid)
-        console.log('BASE EXAM', eid, this.exam)
+        //console.log('BASE EXAM', eid, this.exam)
         this.isResultsPage = this.exam.isResultsPage()
       })
   }

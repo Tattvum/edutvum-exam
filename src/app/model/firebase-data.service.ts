@@ -4,7 +4,10 @@ import { Subject, Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import { Router } from '@angular/router';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import {
+  AngularFire, FirebaseListObservable, FirebaseAuthState
+} from 'angularfire2';
+
 import {
   DataService, Id, Exam, ExamResult,
   Question, AnswerType, UserInfo, Lib,
@@ -65,7 +68,7 @@ class ResultImpl extends ExamResult {
 
 const URL_VER = "ver3/"
 const EXAMS_URL = URL_VER + "exams"
-const RESULTS_URL = URL_VER + "results/common"
+const RESULTS_URL = URL_VER + "results/"
 const QUESTION_URL = URL_VER + "questions"
 
 @Injectable()
@@ -97,38 +100,25 @@ export class FirebaseDataService extends DataService {
     })
   }
 
-  constructor(af: AngularFire, private _router: Router) {
-    super()
-    this.af = af
-    this.router = _router
+  private resultsUrl(): string {
+    return RESULTS_URL + this.userInfo.uid + '/'
+  }
 
-    this.af.auth.subscribe(auth => {
-      console.log(auth)
-      if(auth) {
-        console.log(auth.uid)
-        console.log(auth.auth.displayName)
-        console.log(auth.auth.email)
-        this.userInfo.setAll(
-          auth.uid, auth.auth.displayName, auth.auth.email
-        )
-      } else this.userInfo.clearAll()
-    });
-
-    console.log("LISTTTTT---")
-
-    let eQuery = {query: {orderByChild: 'when'}}
+  private init(af: AngularFire) {
+    console.log(EXAMS_URL)
+    let eQuery = { query: { orderByChild: 'when' } }
     this.exams$ = af.database.list(EXAMS_URL, eQuery).map(arr => {
       console.log('exams map *')
       return arr.map((o, i) => this.cacheObj(new ExamImpl(o)))
     })
 
-    this.results$ = af.database.list(RESULTS_URL).map(arr => {
+    console.log(this.resultsUrl())
+    this.results$ = af.database.list(this.resultsUrl()).map(arr => {
       console.log('results map *')
       return arr.map((o, i) => this.cacheObj(new ResultImpl(o)))
     })
 
     console.log(QUESTION_URL);
-
     af.database.list(QUESTION_URL).subscribe(qsos => {
       qsos.forEach(qo => cacheQuestion(qo))
       console.log('global qs: ', Object.keys(qs).length);
@@ -148,12 +138,40 @@ export class FirebaseDataService extends DataService {
         })
       })
     })
+  }
+
+  private loginSucceeded(af: AngularFire, auth: FirebaseAuthState) {
+    console.log(auth.uid)
+    console.log(auth.auth.displayName)
+    console.log(auth.auth.email)
+    this.userInfo.setAll(
+      auth.uid, auth.auth.displayName, auth.auth.email
+    )
+    this.init(af)
+  }
+
+  private loginFailed() {
+    this.userInfo.clearAll()
+  }
+
+  constructor(af: AngularFire, private _router: Router) {
+    super()
+    this.af = af
+    this.router = _router
+
+    console.log("START...!")
+    this.af.auth.subscribe(auth => {
+      qs = {} //reset: throw out all old data!!
+      console.log(auth)
+      if (auth) this.loginSucceeded(af, auth)
+      else this.loginFailed()
+    });
 
   }
 
   public getExam(eid: string): Exam {
     let e: Exam = this.cache[eid]
-    if(e == null) return EMPTY_EXAM
+    if (e == null) return EMPTY_EXAM
     else return e
   }
 
@@ -170,13 +188,16 @@ export class FirebaseDataService extends DataService {
     exam.qs.forEach(q => {
       let ans = []
       q.answers.forEach((a, i) => {
-        if(a) ans.push(i)
+        if (a) ans.push(i)
       })
       anss.push(ans)
     })
     ro['answers'] = anss
     console.log("saveResult", ro)
-    this.af.database.list(RESULTS_URL).push(ro)
+    console.log(this.resultsUrl())
+    this.af.database.list(this.resultsUrl()).push(ro).then((call) => {
+      console.log(call)
+    })
     return examResult
   }
 
@@ -188,8 +209,8 @@ export class FirebaseDataService extends DataService {
   }
 
   public isLoggedIn(): Promise<boolean> {
-    console.log("IS LOGGED IN called!")
-    return Promise.resolve(this.userInfo.uid!==null)
+    console.log("IS LOGGED IN - called!")
+    return Promise.resolve(this.userInfo.uid !== null)
   }
 
   public login(): Promise<any> {
@@ -203,9 +224,7 @@ export class FirebaseDataService extends DataService {
   public ensureAuth() {
     this.af.auth.subscribe(auth => {
       console.log('Ensuring Auth!!')
-      if(!auth) {
-        this.router.navigateByUrl('')
-      }
+      if (!auth) this.router.navigateByUrl('')
     })
   }
 }

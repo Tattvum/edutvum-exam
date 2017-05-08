@@ -22,7 +22,7 @@ export class NavComponent implements OnInit {
         let eid = params['eid']
         this.exam = this.service.getExam(eid)
         let qid = params['qid']
-        console.log('NEW NAV', eid, qid, this.exam)
+        //console.log('NEW NAV', eid, qid, this.exam)
         this.isResultsPage = (qid == null)
         if (!this.isResultsPage) this.exam.select(qid)
       })
