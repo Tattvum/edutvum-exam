@@ -2,6 +2,7 @@
   <div>
     <span id="ename">{{exam.name}}</span>
     <span *ngIf="exam.inAnswerMode" id="eid"> ({{exam.eid}}) </span>
+    <span *ngIf="exam.inAnswerMode" id="ewhen"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
     <span *ngIf="!exam.inAnswerMode" id="eid"> ({{exam.id}}) </span>
     <br><br>
   </div>
