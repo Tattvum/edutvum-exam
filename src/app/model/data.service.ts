@@ -141,9 +141,13 @@ export class Exam extends Id {
 }
 
 export class ExamResult extends Exam {
+  public eid = null
   constructor(readonly exam: Exam = null, readonly when: Date = new Date()) {
     super("rr")
-    if(exam !== null) Exam.copy(exam, this)
+    if(exam !== null) {
+      this.eid = exam.id
+      Exam.copy(exam, this)
+    }
   }
   percent(): number {
     return this.scoreResults().percent()

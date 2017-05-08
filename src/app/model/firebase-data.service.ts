@@ -56,7 +56,6 @@ function cacheQuestion(qo) {
 
 class ResultImpl extends ExamResult {
   public answers = []
-  public eid = null
   constructor(r: any) {
     super()
     this.id = r.$key

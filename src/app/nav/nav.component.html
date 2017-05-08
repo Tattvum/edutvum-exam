@@ -1,7 +1,8 @@
 <div>
   <div>
     <span id="ename">{{exam.name}}</span>
-    <span id="eid"> ({{exam.id}}) </span>
+    <span *ngIf="exam.inAnswerMode" id="eid"> ({{exam.eid}}) </span>
+    <span *ngIf="!exam.inAnswerMode" id="eid"> ({{exam.id}}) </span>
     <br><br>
   </div>
   <div *ngIf="!exam.inAnswerMode"

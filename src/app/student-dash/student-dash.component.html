@@ -28,7 +28,7 @@
   <div class="container-fluid">
     <div class="row" *ngFor="let rs of service.results$ | async | paginate: { id:'result', itemsPerPage: 3, currentPage: pageResult }">
       <div class="col-xs-1">
-        <span style="display:none">{{rs.id}}</span>
+        <span >{{rs.eid}}</span>
       </div>
       <div class="col-xs-5">
         <button type="button" (click)="showExamResult(rs)" class="btn btn-success">{{rs.name}}</button>
