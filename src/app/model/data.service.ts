@@ -78,6 +78,7 @@ export class Exam extends Id {
   }
   static copy(src, target: Exam) {
     target.name = src.name
+    target.when = src.when
     target.inAnswerMode = src.inAnswerMode
     src.qs.forEach((q, i) => {
       target.qs[i] = new Question()
@@ -142,7 +143,7 @@ export class Exam extends Id {
 
 export class ExamResult extends Exam {
   public eid = null
-  constructor(readonly exam: Exam = null, readonly when: Date = new Date()) {
+  constructor(readonly exam: Exam = null, public when: Date = new Date()) {
     super("rr")
     if(exam !== null) {
       this.eid = exam.id

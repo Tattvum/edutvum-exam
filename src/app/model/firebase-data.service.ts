@@ -22,6 +22,7 @@ class ExamImpl extends Exam {
     this.name = e.name
     this.id = e.$key
     this.questions = e.questions
+    this.when = new Date(e.when)
   }
 }
 
@@ -54,14 +55,23 @@ function cacheQuestion(qo) {
   qs[q.qid] = q
 }
 
+function fbObjToArr(obj): any[] {
+  let arr = []
+  Object.keys(obj).forEach(function(key,index) {
+    arr[+key] = obj[key]
+  })
+  return arr
+}
+
 class ResultImpl extends ExamResult {
   public answers = []
   constructor(r: any) {
-    super()
+    super(null, new Date(r.when))
     this.id = r.$key
     this.eid = r.exam
     this.name = "Result for " + this.id + ":" + this.eid
-    this.answers = r.answers
+    this.answers = fbObjToArr(r.answers)
+    this.when = new Date(r.when)
   }
 }
 
@@ -85,7 +95,7 @@ export class FirebaseDataService extends DataService {
   private updateResult(src, target: Exam) {
     target.name = src.name
     target.inAnswerMode = true
-    console.log("copy: " + src.qs.length);
+    console.log("Questions count: " + src.qs.length);
     src.qs.forEach((q, i) => {
       target.qs[i] = new Question()
       let thisq = target.qs[i]
@@ -104,15 +114,16 @@ export class FirebaseDataService extends DataService {
   }
 
   private init(af: AngularFire) {
+    let revwhen = { query: { orderByChild: 'revwhen' } }
+
     console.log(EXAMS_URL)
-    let eQuery = { query: { orderByChild: 'when' } }
-    this.exams$ = af.database.list(EXAMS_URL, eQuery).map(arr => {
+    this.exams$ = af.database.list(EXAMS_URL, revwhen).map(arr => {
       console.log('exams map *')
       return arr.map((o, i) => this.cacheObj(new ExamImpl(o)))
     })
 
     console.log(this.resultsUrl())
-    this.results$ = af.database.list(this.resultsUrl()).map(arr => {
+    this.results$ = af.database.list(this.resultsUrl(), revwhen).map(arr => {
       console.log('results map *')
       return arr.map((o, i) => this.cacheObj(new ResultImpl(o)))
     })
@@ -126,7 +137,7 @@ export class FirebaseDataService extends DataService {
         es.forEach(e => e.questions.forEach(qid => e.qs.push(qs[qid])))
         this.results$.subscribe(rs => {
           rs.forEach(r => {
-            console.log("result0:", r.eid, r.name);
+            //console.log("result0:", r.eid, r.name, r);
             let e = this.cache[r.eid]
             this.updateResult(e, r)
             console.log("result1:", r.id, r.name)
@@ -192,6 +203,8 @@ export class FirebaseDataService extends DataService {
       anss.push(ans)
     })
     ro['answers'] = anss
+    ro['when'] = Date.now()
+    ro['revwhen'] = -Date.now()
     console.log("saveResult", ro)
     console.log(this.resultsUrl())
     this.af.database.list(this.resultsUrl()).push(ro).then((call) => {
