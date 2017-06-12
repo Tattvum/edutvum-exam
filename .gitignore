@@ -9,7 +9,10 @@
 /src/app/firebase-config.ts
 
 # dependencies
-/node_modules
+**/node_modules
+
+#firebase cloud-functions
+functions/index.js
 
 # IDEs and editors
 /.idea

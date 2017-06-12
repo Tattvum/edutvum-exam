@@ -29,3 +29,13 @@ Run `ng github-pages:deploy` to deploy to Github Pages.
 ## Further help
 
 To get more help on the `angular-cli` use `ng help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+## Cloud functions
+https://firebase.google.com/docs/functions/get-started
+
+https://medium.com/@AllanHasegawa/firebase-cloud-functions-with-typescript-and-webpack-7781c882a05b
+
+./functions $ webpack
+`creates/changes index.js`
+./functions $ firebase deploy --only functions
