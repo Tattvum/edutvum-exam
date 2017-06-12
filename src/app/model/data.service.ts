@@ -155,20 +155,10 @@ export class ExamResult extends Exam {
   }
 }
 
-export class UserInfo {
-  constructor(public uid: string,
-      public name: string,
-      public email: string) {}
-  setAll(uid: string, name: string, email: string) {
-    this.uid = uid
-    this.name = name
-    this.email = email
-  }
-  clearAll() {
-    this.uid = null
-    this.name = null
-    this.email = null
-  }
+export interface User {
+  readonly uid: string
+  readonly name: string
+  readonly email: string
 }
 
 export const TFQChoices: string[] = ["True", "False"]
@@ -237,12 +227,12 @@ export class Lib {
 @Injectable()
 export abstract class DataService {
 
+  constructor() {
+    console.clear()
+  }
+
   public exams$: Observable<any[]>
   public results$: Observable<any[]>
-  protected userInfo: UserInfo = new UserInfo('00', '[empty]', '--')
-  public get userName(): string {
-    return this.userInfo.name
-  }
 
   public testMe(n: number): number {
     return n * 2
@@ -252,8 +242,8 @@ export abstract class DataService {
   public abstract getQuestion(eid: string, qid: string): Question
   public abstract saveExam(exam: Exam)
 
-  public abstract isLoggedIn(): Promise<boolean>
+  public abstract user(): User
+  public abstract isLoggedIn(): boolean
   public abstract login(): Promise<any>
   public abstract logout(): Promise<void>
-  public abstract ensureAuth()
 }

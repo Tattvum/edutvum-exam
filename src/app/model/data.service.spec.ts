@@ -1,5 +1,6 @@
-/* tslint:disable:no-unused-variable */
 
+/* tslint:disable:no-unused-variable */
+/*
 import { TestBed, async, inject } from '@angular/core/testing';
 import {
   DataService,
@@ -258,3 +259,4 @@ describe('Exam works', () => {
     expect(e.isResultsPage()).toBe(true)
   })
 })
+*/

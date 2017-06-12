@@ -4,13 +4,14 @@ import { Subject, Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import { Router } from '@angular/router';
-import {
-  AngularFire, FirebaseListObservable, FirebaseAuthState
-} from 'angularfire2';
+
+import * as firebase from 'firebase/app';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 import {
   DataService, Id, Exam, ExamResult,
-  Question, AnswerType, UserInfo, Lib,
+  Question, AnswerType, User, Lib,
   TFQChoices, ARQChoices,
   EmptyExamImpl, EmptyQuestionImpl, EMPTY_EXAM
 } from './data.service'
@@ -57,7 +58,7 @@ function cacheQuestion(qo) {
 
 function fbObjToArr(obj): any[] {
   let arr = []
-  Object.keys(obj).forEach(function(key,index) {
+  Object.keys(obj).forEach(function (key, index) {
     arr[+key] = obj[key]
   })
   return arr
@@ -75,6 +76,22 @@ class ResultImpl extends ExamResult {
   }
 }
 
+class UserFbImpl implements User {
+  constructor(private fbUser: firebase.User) { }
+  get uid() {
+    return this.fbUser.uid
+  }
+  get name() {
+    return this.fbUser.displayName
+  }
+  get email() {
+    return this.fbUser.email
+  }
+  public toString = (): string => {
+    return this.name
+  }
+}
+
 const URL_VER = "ver3/"
 const EXAMS_URL = URL_VER + "exams"
 const RESULTS_URL = URL_VER + "results/"
@@ -82,9 +99,12 @@ const QUESTION_URL = URL_VER + "questions"
 
 @Injectable()
 export class FirebaseDataService extends DataService {
-  af: AngularFire
-  router: Router
-  cache = {}
+  private afAuth: AngularFireAuth
+  private afDb: AngularFireDatabase
+  private afUser: UserFbImpl
+
+  private router: Router
+  private cache = {}
 
   private cacheObj(i: Id): any {
     if (this.cache[i.id] == undefined) this.cache[i.id] = i
@@ -110,26 +130,26 @@ export class FirebaseDataService extends DataService {
   }
 
   private resultsUrl(): string {
-    return RESULTS_URL + this.userInfo.uid + '/'
+    return RESULTS_URL + this.user().uid + '/'
   }
 
-  private init(af: AngularFire) {
+  private init(afDb: AngularFireDatabase) {
     let revwhen = { query: { orderByChild: 'revwhen' } }
 
     console.log(EXAMS_URL)
-    this.exams$ = af.database.list(EXAMS_URL, revwhen).map(arr => {
+    this.exams$ = afDb.list(EXAMS_URL, revwhen).map(arr => {
       console.log('exams map *')
       return arr.map((o, i) => this.cacheObj(new ExamImpl(o)))
     })
 
     console.log(this.resultsUrl())
-    this.results$ = af.database.list(this.resultsUrl(), revwhen).map(arr => {
+    this.results$ = afDb.list(this.resultsUrl(), revwhen).map(arr => {
       console.log('results map *')
       return arr.map((o, i) => this.cacheObj(new ResultImpl(o)))
     })
 
     console.log(QUESTION_URL);
-    af.database.list(QUESTION_URL).subscribe(qsos => {
+    afDb.list(QUESTION_URL).subscribe(qsos => {
       qsos.forEach(qo => cacheQuestion(qo))
       console.log('global qs: ', Object.keys(qs).length);
       this.exams$.subscribe(es => {
@@ -141,42 +161,40 @@ export class FirebaseDataService extends DataService {
             let e = this.cache[r.eid]
             this.updateResult(e, r)
             console.log("result1:", r.id, r.name)
-            r.answers.forEach((ans, i) => {
-              ans.forEach(j => r.qs[i].answers[j] = true)
-            })
+            console.log(r.answers.length)
+            if (r.answers) {
+              r.answers.forEach((ans, i) => {
+                ans.forEach(j => r.qs[i].answers[j] = true)
+              })
+            }
           })
         })
       })
     })
   }
 
-  private loginSucceeded(af: AngularFire, auth: FirebaseAuthState) {
-    console.log(auth.uid)
-    console.log(auth.auth.displayName)
-    console.log(auth.auth.email)
-    this.userInfo.setAll(
-      auth.uid, auth.auth.displayName, auth.auth.email
-    )
-    this.init(af)
-  }
-
-  private loginFailed() {
-    this.userInfo.clearAll()
-  }
-
-  constructor(af: AngularFire, private _router: Router) {
+  constructor(afDb: AngularFireDatabase, afAuth: AngularFireAuth, private _router: Router) {
     super()
-    this.af = af
+    this.afAuth = afAuth
+    this.afDb = afDb
     this.router = _router
 
     console.log("START...!")
-    this.af.auth.subscribe(auth => {
-      qs = {} //reset: throw out all old data!!
-      console.log(auth)
-      if (auth) this.loginSucceeded(af, auth)
-      else this.loginFailed()
-    });
+    qs = {} //reset: throw out all old data!!
 
+    this.afAuth.auth.onAuthStateChanged(user => {
+      console.log(user)
+      if (user) {
+        this.init(afDb)
+        console.log("init done!")
+        this.router.navigate(['/student-dash'])
+      } else {
+        console.log('LOGGED OUT!')
+        //TBD - avoid the permission error when signing out!
+        //this.exams$
+        //this.results$
+      }
+    })
   }
 
   public getExam(eid: string): Exam {
@@ -207,7 +225,7 @@ export class FirebaseDataService extends DataService {
     ro['revwhen'] = -Date.now()
     console.log("saveResult", ro)
     console.log(this.resultsUrl())
-    this.af.database.list(this.resultsUrl()).push(ro).then((call) => {
+    this.afDb.list(this.resultsUrl()).push(ro).then((call) => {
       console.log(call)
     })
     return examResult
@@ -220,23 +238,25 @@ export class FirebaseDataService extends DataService {
     return er
   }
 
-  public isLoggedIn(): Promise<boolean> {
-    console.log("IS LOGGED IN - called!")
-    return Promise.resolve(this.userInfo.uid !== null)
+  //Used only in user.component.html
+  public user(): User {
+    let user: firebase.User = this.afAuth.auth.currentUser
+    if (user) return new UserFbImpl(user)
+    else return null
   }
 
+  //Used only in URL AuthGaurd
+  public isLoggedIn(): boolean {
+    return this.user() !== null
+  }
+
+  //Used only in Login component
   public login(): Promise<any> {
-    return Promise.resolve(this.af.auth.login())
+    return Promise.resolve(this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()))
   }
 
+  //Used only in user component
   public logout(): Promise<void> {
-    return Promise.resolve(this.af.auth.logout())
-  }
-
-  public ensureAuth() {
-    this.af.auth.subscribe(auth => {
-      console.log('Ensuring Auth!!')
-      if (!auth) this.router.navigateByUrl('')
-    })
+    return Promise.resolve(this.afAuth.auth.signOut())
   }
 }

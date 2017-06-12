@@ -1,3 +1,4 @@
+/*
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {
@@ -82,3 +83,4 @@ export class TestableMockDataService extends DataService {
   }
 
 }
+*/
