@@ -1,5 +1,10 @@
-<div id="top-bar" class="container-fluid">
-  <span>EduTvum Exam</span>
-  <button type="button" (click)="logout()"
-      class="btn">{{service.user() + ''}}</button>
-</div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <span class="navbar-brand" >Edutvum Exam</span>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li title="Logout" (click)="logout()"><a href="#">{{service.user() + ''}}</a></li>
+    </ul>
+  </div>
+</nav>

@@ -4,6 +4,10 @@
     <span *ngIf="exam.inAnswerMode" id="eid"> ({{exam.eid}}) </span>
     <span *ngIf="exam.inAnswerMode" id="ewhen"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
     <span *ngIf="!exam.inAnswerMode" id="eid"> ({{exam.id}}) </span>
+  </div>
+  <div>
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    <a (click)="gotoDash()">Student Dashboard</a>
     <br><br>
   </div>
   <div *ngIf="!exam.inAnswerMode"

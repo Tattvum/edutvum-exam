@@ -149,13 +149,13 @@ export class FirebaseDataService extends DataService {
     })
 
     console.log(QUESTION_URL);
-    afDb.list(QUESTION_URL).subscribe(qsos => {
+    afDb.list(QUESTION_URL).first().subscribe(qsos => {
       qsos.forEach(qo => cacheQuestion(qo))
       console.log('global qs: ', Object.keys(qs).length);
-      this.exams$.subscribe(es => {
+      this.exams$.first().subscribe(es => {
         console.log("computing exams... ", es.length)
         es.forEach(e => e.questions.forEach(qid => e.qs.push(qs[qid])))
-        this.results$.subscribe(rs => {
+        this.results$.first().subscribe(rs => {
           rs.forEach(r => {
             //console.log("result0:", r.eid, r.name, r);
             let e = this.cache[r.eid]

@@ -49,4 +49,10 @@ export class NavComponent implements OnInit {
     else this.select(qid)
   }
 
+  gotoDash() {
+    if (!this.exam.inAnswerMode
+      && !confirm("Cancel the exam: Sure?!"))
+      return
+    this.router.navigate(['/student-dash'])
+  }
 }

@@ -16,8 +16,6 @@ declare var MathJax: {
 export class DisplayComponent implements OnInit {
   @ViewChild('question') question: ElementRef;
 
-  private qstring = ''
-
   constructor(private route: ActivatedRoute, private service: DataService) { }
 
   ngOnInit() {
@@ -25,9 +23,9 @@ export class DisplayComponent implements OnInit {
       .subscribe((params: Params) => {
         let eid = params['eid']
         let qid = params['qid']
-        this.qstring = this.service.getQuestion(eid, qid).html
+        let question = this.service.getQuestion(eid, qid)
 
-        this.question.nativeElement.innerHTML = this.qstring;
+        this.question.nativeElement.innerHTML = question.html
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.question.nativeElement]);
       })
   }

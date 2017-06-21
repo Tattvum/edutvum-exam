@@ -25,11 +25,4 @@ export class ExamComponent implements OnInit {
         this.isResultsPage = this.exam.isResultsPage()
       })
   }
-
-  gotoDash() {
-    if (!this.exam.inAnswerMode
-      && !confirm("Cancel the exam: Sure?!"))
-      return
-    this.router.navigate(['/student-dash'])
-  }
 }
