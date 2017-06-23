@@ -11,8 +11,11 @@ import { Router } from '@angular/router';
 })
 export class StudentDashComponent {
 
+  public pageExam
+  public pageResult
+
   constructor(
-    private service: DataService,
+    public service: DataService,
     private router: Router) { }
 
   showWhen(dt: Date): string {

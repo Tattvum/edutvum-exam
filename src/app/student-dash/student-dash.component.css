@@ -1,3 +1,7 @@
+a {
+  cursor: pointer;
+}
+
 .ng2-pagination .pagination-next {
   font-size: 18px;
 }

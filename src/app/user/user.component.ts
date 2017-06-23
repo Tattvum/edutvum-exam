@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class UserComponent {
 
   constructor(
-    private service: DataService,
+    public service: DataService,
     private router: Router) { }
 
   logout() {
