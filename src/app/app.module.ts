@@ -25,7 +25,6 @@ import { NavComponent } from './nav/nav.component';
 import { DisplayComponent } from './display/display.component';
 import { ChoiceInputComponent } from './choice-input/choice-input.component';
 import { ResultComponent } from './result/result.component';
-import { ModalComponent } from './extra/modal/modal.component';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
 
@@ -49,7 +48,6 @@ import { UserComponent } from './user/user.component';
     DisplayComponent,
     ChoiceInputComponent,
     ResultComponent,
-    ModalComponent,
     LoginComponent,
     UserComponent,
   ],

@@ -108,7 +108,6 @@ export class FirebaseDataService extends DataService {
 
   private cacheObj(i: Id): any {
     if (this.cache[i.id] == undefined) this.cache[i.id] = i
-    this.cache[i.id].seal += " cache"
     return this.cache[i.id]
   }
 
@@ -155,7 +154,7 @@ export class FirebaseDataService extends DataService {
       this.exams$.first().subscribe(es => {
         console.log("computing exams... ", es.length)
         es.forEach(e => e.questions.forEach(qid => e.qs.push(qs[qid])))
-        this.results$.first().subscribe(rs => {
+        this.results$.subscribe(rs => {
           rs.forEach(r => {
             //console.log("result0:", r.eid, r.name, r);
             let e = this.cache[r.eid]
