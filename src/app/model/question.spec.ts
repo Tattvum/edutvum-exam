@@ -2,6 +2,7 @@ import { AnswerType } from './answer-type';
 import { Question } from './question';
 
 describe('Question - declaration tests:', () => {
+  let choices0: string[] = []
   let choices1: string[] = ["choice 1"]
   let choices2: string[] = ["choice 1", "choice 2"]
   let choices3: string[] = ["choice 1", "choice 2", "choice 3"]
@@ -10,9 +11,9 @@ describe('Question - declaration tests:', () => {
   let sols0: number[] = []
   let sols1: number[] = [0]
   let sols2: number[] = [0, 2]
-  let createQ = function (type: AnswerType, choices: string[], sols: number[], title = "TEST...") {
-    let q = new Question(title, type, choices, sols)
-    return q
+  let sols3: number[] = [1, 2, 3]
+  let createQ = (type: AnswerType, choices: string[], sols: number[], title = "TEST...", answers: number[] = []) => {
+    return new Question(title, type, choices, sols, answers)
   }
 
   it('Question should have title', () => {
@@ -23,6 +24,7 @@ describe('Question - declaration tests:', () => {
     expect(() => createQ(null, choices2, sols1)).toThrow()
     expect(() => createQ(AnswerType.TFQ, choices2, sols1)).not.toThrow()
   })
+
   it('Every solution should be a choice', () => {
     expect(() => createQ(AnswerType.TFQ, choices2, [1])).not.toThrow()
     expect(() => createQ(AnswerType.TFQ, choices2, [2])).toThrow()
@@ -30,6 +32,10 @@ describe('Question - declaration tests:', () => {
     expect(() => createQ(AnswerType.MCQ, choices3, [3])).toThrow()
     expect(() => createQ(AnswerType.MAQ, choices5, [1, 4])).not.toThrow()
     expect(() => createQ(AnswerType.MAQ, choices6, [6])).toThrow()
+  })
+
+  it('Question should atleast one choice', () => {
+    expect(() => createQ(AnswerType.TFQ, choices0, sols1)).toThrow()
   })
 
   it('TFQ can have only two choices', () => {
@@ -40,10 +46,10 @@ describe('Question - declaration tests:', () => {
   it('TFQ can have only one solution', () => {
     expect(() => createQ(AnswerType.TFQ, choices2, sols0)).toThrow()
     expect(() => createQ(AnswerType.TFQ, choices2, sols1)).not.toThrow()
-    expect(() => createQ(AnswerType.TFQ, choices2, sols2)).toThrow()
+    expect(() => createQ(AnswerType.TFQ, choices2, [0, 1])).toThrow()
   })
 
-  it('MCQ hould have more than one choice', () => {
+  it('MCQ should have more than one choice', () => {
     expect(() => createQ(AnswerType.MCQ, choices1, sols1)).toThrow()
     expect(() => createQ(AnswerType.MCQ, choices2, sols1)).not.toThrow()
     expect(() => createQ(AnswerType.MCQ, choices3, sols1)).not.toThrow()
@@ -51,10 +57,10 @@ describe('Question - declaration tests:', () => {
   it('MCQ can have only one solution', () => {
     expect(() => createQ(AnswerType.MCQ, choices2, sols0)).toThrow()
     expect(() => createQ(AnswerType.MCQ, choices2, sols1)).not.toThrow()
-    expect(() => createQ(AnswerType.MCQ, choices2, sols2)).toThrow()
+    expect(() => createQ(AnswerType.MCQ, choices2, [0, 1])).toThrow()
   })
 
-  it('ARQ hould have exactly 5 choices', () => {
+  it('ARQ should have exactly 5 choices', () => {
     expect(() => createQ(AnswerType.ARQ, choices1, sols1)).toThrow()
     expect(() => createQ(AnswerType.ARQ, choices3, sols1)).toThrow()
     expect(() => createQ(AnswerType.ARQ, choices5, sols1)).not.toThrow()
@@ -66,7 +72,7 @@ describe('Question - declaration tests:', () => {
     expect(() => createQ(AnswerType.ARQ, choices5, sols2)).toThrow()
   })
 
-  it('MAQ hould have more than one choice', () => {
+  it('MAQ should have more than one choice', () => {
     expect(() => createQ(AnswerType.MAQ, choices1, sols1)).toThrow()
     expect(() => createQ(AnswerType.MAQ, choices2, sols1)).not.toThrow()
     expect(() => createQ(AnswerType.MAQ, choices6, sols1)).not.toThrow()
@@ -77,6 +83,43 @@ describe('Question - declaration tests:', () => {
     expect(() => createQ(AnswerType.MAQ, choices6, sols2)).not.toThrow()
     expect(() => createQ(AnswerType.MAQ, choices2, [0, 1])).not.toThrow()
   })
+  it('MAQ cannot have more solutions than choices', () => {
+    expect(() => createQ(AnswerType.MAQ, choices2, [0, 1, 1])).toThrow()
+    expect(() => createQ(AnswerType.MAQ, choices3, [0, 1, 1, 2])).toThrow()
+  })
+
+  it('Answers are checked fine', () => {
+    expect(() => createQ(AnswerType.TFQ, choices2, [0], "ANS", [2])).toThrow()
+    expect(() => createQ(AnswerType.TFQ, choices2, [0], "ANS", [1])).not.toThrow()
+    expect(() => createQ(AnswerType.TFQ, choices2, [0], "ANS", [1, 1])).toThrow()
+    expect(() => createQ(AnswerType.MCQ, choices3, [0], "ANS", [1])).not.toThrow()
+    expect(() => createQ(AnswerType.MCQ, choices3, [0], "ANS", [1, 1])).toThrow()
+    expect(() => createQ(AnswerType.ARQ, choices5, [0], "ANS", [1])).not.toThrow()
+    expect(() => createQ(AnswerType.ARQ, choices5, [0], "ANS", [1, 1])).toThrow()
+    expect(() => createQ(AnswerType.MAQ, choices2, [0, 1], "ANS", [1, 1])).not.toThrow()
+    expect(() => createQ(AnswerType.MAQ, choices2, [0, 1], "ANS", [1, 1, 0])).toThrow()
+  })
+
+  it('Lock works on create', () => {
+    let q = new Question("TEST", AnswerType.MAQ, choices6, sols1, [], true)
+    expect(q.isLocked()).toBeTruthy()
+    expect(() => q.clearAnswers()).toThrow()
+    expect(() => q.addAnswer(1729)).toThrow()
+    expect(() => q.removeAnswer(1729)).toThrow()
+  })
+
+  it('Lock works after create', () => {
+    let q = createQ(AnswerType.MAQ, choices6, sols1)
+    expect(() => q.clearAnswers()).not.toThrow()
+    expect(q.isLocked()).toBeFalsy()
+    q.lock()
+    expect(() => q.lock()).not.toThrow()//Repeated lock is ignored
+    expect(q.isLocked()).toBeTruthy()
+    expect(() => q.clearAnswers()).toThrow()
+    expect(() => q.addAnswer(1729)).toThrow()
+    expect(() => q.removeAnswer(1729)).toThrow()
+  })
+
 })
 
 describe('Question - single sol tests:', () => {
@@ -131,6 +174,9 @@ describe('Question - many sol tests:', () => {
   it('All right but one wrong answer too, so not correct', () => {
     q.addAnswer(1)
     expect(q.isCorrect()).toBeFalsy()
+  })
+  it('Remove Answer exception - working', () => {
+    expect(q.removeAnswer(21)).toBeFalsy()
   })
   it('All and only right answers, so correct - remove working', () => {
     q.removeAnswer(1)
