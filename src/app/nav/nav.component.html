@@ -1,7 +1,7 @@
 <div>
   <div>
     <span id="ename">{{exam.title}}</span>
-    <span id="eid"> ({{exam.id}}) </span>
+    <span id="eid"> ({{exam.exam.id}}) </span>
     <span *ngIf="exam.isLocked()" id="ewhen"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
   </div>
   <div>
