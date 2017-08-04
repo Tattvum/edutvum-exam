@@ -56,8 +56,10 @@ import { UserComponent } from './user/user.component';
     UserComponent,
   ],
   providers: [
-    { provide: DataSource, useClass: FirebaseDataSource },
-    { provide: SecuritySource, useClass: FirebaseSecuritySource },
+//    { provide: DataSource, useClass: FirebaseDataSource },
+//    { provide: SecuritySource, useClass: FirebaseSecuritySource },
+    { provide: DataSource, useClass: MockDataSource },
+    { provide: SecuritySource, useClass: MockSecuritySource },
     { provide: DataService, useClass: DataService },
     AuthGuard
   ],

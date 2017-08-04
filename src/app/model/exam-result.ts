@@ -1,3 +1,4 @@
+import { AnswerType } from "./answer-type";
 import { Exam, EMPTY_EXAM } from './exam';
 import { Question, EMPTY_QUESTION } from './question';
 import { Score, EMPTY_SCORE } from "app/model/score";
@@ -9,8 +10,37 @@ export class ExamResult extends Exam {
     protected _isLocked: boolean = false,
   ) {
     super(id, title, exam.questions, when)
+
+    if (answers != undefined) {
+      answers.forEach((qans, i) => {
+        let q = this.questions[i]
+        let len = q.choices.length
+        if (qans != undefined) {
+          qans.forEach((ans, j) => {
+            if (ans > len - 1 || ans < 0) throw new Error('q:' + i + ', a[' + j + ']=' + ans + ', len:' + len)
+          })
+          this.checkAnsType(q.type, qans.length, q.choices.length)
+        }
+      })
+    }
   }
 
+  private checkAnsType(type: AnswerType, alen: number, chlen: number) {
+    switch (type) {
+      case AnswerType.TFQ:
+        if (alen > 1) throw new Error("TFQ cannot have more than one answer")
+        break
+      case AnswerType.MCQ:
+        if (alen > 1) throw new Error("MCQ cannot have more than one answer")
+        break
+      case AnswerType.ARQ:
+        if (alen > 1) throw new Error("ARQ cannot have more than one answer")
+        break
+      case AnswerType.MAQ:
+        if (alen > chlen) throw new Error("MAQ cannot have more answers than choices")
+        break
+    }
+  }
 
   public isLocked(): boolean {
     return this._isLocked;

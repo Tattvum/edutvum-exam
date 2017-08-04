@@ -8,7 +8,7 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { SecuritySource } from "./data2.service";
+import { SecuritySource } from "./data.service";
 import { User } from "./user";
 import { Lib } from "./lib";
 

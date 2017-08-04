@@ -44,6 +44,10 @@ export class DataService {
   public exams: Exam[] = []
   public results: ExamResult[] = []
 
+  public testMe(n: number): number {
+    return n * 2
+  }
+
   constructor(private dataSource: DataSource, private securitySource: SecuritySource) {
     console.clear()
     this.userWait().then(user => {

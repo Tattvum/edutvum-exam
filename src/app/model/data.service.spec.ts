@@ -1,23 +1,25 @@
 import { TestBed, async, inject } from '@angular/core/testing';
-import { DataService, isin } from './data.service';
+import { DataService, DataSource, SecuritySource, isin } from './data.service';
+import { MockDataSource } from './mock-data-source.service';
+import { MockSecuritySource } from './mock-security-source.service';
 
-/*
-describe('DataService2', () => {
+describe('DataService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: DataService2, useClass: DataService2 },
+        { provide: DataSource, useClass: MockDataSource },
+        { provide: SecuritySource, useClass: MockSecuritySource },
+        { provide: DataService, useClass: DataService },
       ]
     });
   });
 
-  it('Hello mic. testing... Hello!!', inject([DataService2], (service: DataService2) => {
+  it('Hello mic. testing... Hello!!', inject([DataService], (service: DataService) => {
     expect(service).toBeTruthy();
     expect(service.testMe(3)).toBe(6)
     expect(service.testMe(2)).toBe(4)
   }));
 })
-*/
 
 describe('isin tests:', () => {
 

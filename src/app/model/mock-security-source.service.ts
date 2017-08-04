@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 
-import { SecuritySource } from "./data2.service";
+import { SecuritySource } from "./data.service";
 import { User } from "./user";
 
 class UserImpl implements User {
@@ -24,9 +23,8 @@ class UserImpl implements User {
 export class MockSecuritySource implements SecuritySource {
   private _user = new UserImpl('00', 'Mock User', 'mock@example.com')
 
-  constructor(protected router: Router) {
-    console.log(this._user)
-    this.router.navigate(['/student-dash'])
+  constructor() {
+    //console.log(this._user)
   }
 
   public user(): User {

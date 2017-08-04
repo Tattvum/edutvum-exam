@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { DataSource, Holders} from './data2.service'
+import { DataSource, Holders} from './data.service'
 
 import { Lib } from "./lib";
 
@@ -66,6 +66,6 @@ export class MockDataSource implements DataSource {
   }
 
   public saveExam(user: User, result: ExamResult): Promise<void> {
-    return null // TBD!
+    return Promise.resolve(null)
   }
 }
