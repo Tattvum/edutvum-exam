@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
-import { AngularFireModule} from 'angularfire2';
+import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
@@ -13,9 +13,13 @@ import { firebaseConfig } from './firebase-config';
 import { Ng2PaginationModule } from 'ng2-pagination';
 
 import { AuthGuard } from './auth.guard';
-import { DataService } from './model/data.service';
-//import { MockDataService } from './model/mock-data.service';
-import { FirebaseDataService } from './model/firebase-data.service';
+import { DataService, DataSource, SecuritySource } from './model/data.service';
+
+import { MockDataSource } from './model/mock-data-source.service';
+import { MockSecuritySource } from './model/mock-security-source.service';
+
+import { FirebaseSecuritySource } from './model/firebase-security-source.service';
+import { FirebaseDataSource } from './model/firebase-data-source.service';
 
 import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
@@ -52,7 +56,9 @@ import { UserComponent } from './user/user.component';
     UserComponent,
   ],
   providers: [
-    { provide: DataService, useClass: FirebaseDataService },
+    { provide: DataSource, useClass: FirebaseDataSource },
+    { provide: SecuritySource, useClass: FirebaseSecuritySource },
+    { provide: DataService, useClass: DataService },
     AuthGuard
   ],
   bootstrap: [AppComponent]

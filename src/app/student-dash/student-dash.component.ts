@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 //http://momentjs.com/docs/
 import * as moment from 'moment';
-import { DataService } from '../model/data.service';
 import { Router } from '@angular/router';
+
+import { Exam } from "../model/exam";
+import { ExamResult } from "../model/exam-result";
+import { DataService } from '../model/data.service';
 
 @Component({
   selector: 'app-student-dash',
@@ -22,14 +25,13 @@ export class StudentDashComponent {
     return moment(dt).fromNow();
   }
 
-  takeExam(exam) {
+  takeExam(exam: Exam) {
     if(!confirm("Ready to start the exam?!")) return
-    console.log(exam.name)
-    this.router.navigate(['/question', exam.id, 0])
+    let rid = this.service.startExam(exam.id)
+    this.router.navigate(['/question', rid, 0])
   }
 
-  showExamResult(exam) {
-    console.log(exam.name + " " + exam.percent())
-    this.router.navigate(['/question', exam.id, 0])
+  showExamResult(result: ExamResult) {
+    this.router.navigate(['/question', result.id, 0])
   }
 }

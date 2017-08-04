@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService, Exam, Question } from '../model/data.service';
+import { DataService } from '../model/data.service';
+import { AnswerType } from '../model/answer-type';
+import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
+import { Question, EMPTY_QUESTION } from '../model/question';
 
 declare var MathJax: {
   Hub: {
@@ -15,8 +18,9 @@ declare var MathJax: {
 })
 export class ChoiceInputComponent implements OnInit {
 
-  exam: Exam
-  question: Question
+  qid: string
+  question: Question = EMPTY_QUESTION
+  exam: ExamResult = EMPTY_EXAM_RESULT
   AAA = ['a', "b", "c", "d", "e", "f", "g", "h"]
 
   constructor(private route: ActivatedRoute,
@@ -26,16 +30,15 @@ export class ChoiceInputComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
       let eid = params['eid']
-      let qid = params['qid']
+      this.qid = params['qid']
+      if(eid == undefined || this.qid == undefined) return
       this.exam = this.service.getExam(eid)
-      this.question = this.service.getQuestion(eid, qid)
+      this.question = this.service.getQuestion(eid, this.qid)
       MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
     })
   }
 
   clearAll() {
-    if(!this.exam.inAnswerMode) {
-      this.question.clearAllAnswers()
-    }
+    if (!this.exam.isLocked()) this.exam.clearAnswers(+this.qid)
   }
 }

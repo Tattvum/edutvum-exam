@@ -5,6 +5,9 @@
 /tmp
 /_
 
+# code coverage
+/coverage
+
 #secret
 /src/app/firebase-config.ts
 

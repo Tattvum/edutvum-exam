@@ -54,45 +54,6 @@ export class Question {
       }
     }
   }
-
-  public isLocked(): boolean {
-    return this._isLocked;
-  }
-  // NOTE: no unlock for now
-  public lock() {
-    if (this._isLocked) return
-    this._isLocked = true
-  }
-
-  public isAttempted(): boolean {
-    return this.answers.length > 0
-  }
-  public clearAnswers() {
-    if (this._isLocked) throw new Error("Locked question cannot be cleared")
-    this.answers.length = 0
-    // this.answers.splice(0)
-  }
-  public addAnswer(n: number) {
-    if (this._isLocked) throw new Error("Locked question cannot add answer")
-    this.answers.push(n)
-  }
-  public removeAnswer(n: number): boolean {
-    if (this._isLocked) throw new Error("Locked question cannot remove answer")
-    let index = this.answers.indexOf(n);
-    let removed = index > -1
-    if (removed) this.answers.splice(index, 1)
-    // else console.log("WARNING: Answer not available")
-    return removed
-  }
-  public isCorrect(): boolean {
-    // no answers so not correct (also, solutions can never be empty)
-    if (!this.isAttempted()) return false
-    // given answers are correct
-    // CAUTION: donot use return inside forEach - does not return
-    for (let ans of this.answers) if (!this.solutions.includes(ans)) return false
-    //all answers are given
-    for (let ans of this.solutions) if (!this.answers.includes(ans)) return false
-    return true
-  }
 }
 
+export const EMPTY_QUESTION = new Question('Qbing', AnswerType.TFQ, ['A', 'B'], [0])

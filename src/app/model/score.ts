@@ -14,3 +14,5 @@ export class Score {
   }
 }
 
+export const EMPTY_SCORE = new Score(1, 0, 0)
+

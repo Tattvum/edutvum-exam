@@ -1,38 +1,29 @@
 import { AnswerType } from './answer-type';
-import { Question } from './question';
+import { Question, EMPTY_QUESTION } from './question';
 import { Score } from './score';
+import { AbstractThing } from './abstract-thing';
 
-export class Exam {
+export class Exam extends AbstractThing {
   constructor(
-    public readonly title: string,
-    public readonly questions: Question[]
+    id: string,
+    title: string,
+    public readonly questions: Question[],
+    when: Date = new Date()
   ) {
-    if (title == undefined) throw Error("Exam title cannot be undefined")
+    super(id, title, when)
     if (questions == undefined) throw Error("Exam questions cannot be undefined")
     if (questions.length < 1) throw Error("Exam questions should be atleaset one")
   }
 
-  private _isLocked: boolean = false;
-  public isLocked(): boolean {
-    return this._isLocked;
+  protected get qcount(): number {
+    return this.questions.length
   }
-  //NOTE: no unlock for now
-  public lock() {
-    if(this._isLocked) return
-    this._isLocked = true
-    this.questions.forEach(q => q.lock())
+  public nextq(qidn: number): number {
+    if (qidn == undefined || qidn < 0) return 0
+    if (qidn >= this.qcount - 1) return null
+    return qidn + 1
   }
 
-  public score(): Score {
-    let correct = 0
-    let wrong = 0
-    this.questions.forEach(q => {
-      if (q.isAttempted()) {
-        if (q.isCorrect()) correct++
-        else wrong++
-      }
-    })
-    let total = this.questions.length
-    return new Score(total, correct, wrong)
-  }
 }
+
+export const EMPTY_EXAM = new Exam('00', 'Bingo', [EMPTY_QUESTION])

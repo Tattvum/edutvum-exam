@@ -1,8 +1,7 @@
 import { TestBed, async, inject } from '@angular/core/testing';
-import {
-  DataService2, isin
-} from './data2.service';
+import { DataService, isin } from './data.service';
 
+/*
 describe('DataService2', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,6 +17,7 @@ describe('DataService2', () => {
     expect(service.testMe(2)).toBe(4)
   }));
 })
+*/
 
 describe('isin tests:', () => {
 

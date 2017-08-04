@@ -23,9 +23,15 @@ export class DisplayComponent implements OnInit {
       .subscribe((params: Params) => {
         let eid = params['eid']
         let qid = params['qid']
-        let question = this.service.getQuestion(eid, qid)
-
-        this.question.nativeElement.innerHTML = question.html
+        if (eid == undefined || qid == undefined) return
+        let question = null
+        try {
+          question = this.service.getQuestion(eid, qid)
+        } catch (e) {
+          console.log(e)
+        }
+        if (question == undefined) return
+        this.question.nativeElement.innerHTML = question.title
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.question.nativeElement]);
       })
   }

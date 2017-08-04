@@ -1,6 +1,8 @@
-<div>
+<div *ngIf="results">
   You scored...!
+  <div id="percent">{{results.percent()}}%</div>
   <div id="marks">{{results.correct}}/{{results.total}}</div>
+  <br>
   <div id="correct"><span>{{results.correct}}</span> Correct</div>
   <div id="wrong"><span>{{results.wrong}}</span> Wrong</div>
   <div id="missed"><span>{{results.leftout}}</span> Not Attempted</div>

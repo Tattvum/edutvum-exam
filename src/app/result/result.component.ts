@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService, Exam, Results } from '../model/data.service';
+import { DataService } from '../model/data.service';
+import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
+import { Score } from '../model/score';
 
 @Component({
   selector: 'app-result',
@@ -9,8 +11,8 @@ import { DataService, Exam, Results } from '../model/data.service';
 })
 export class ResultComponent implements OnInit {
 
-  exam: Exam
-  results: Results
+  exam: ExamResult = EMPTY_EXAM_RESULT
+  results: Score
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -19,8 +21,11 @@ export class ResultComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
       let eid = params['eid']
-      this.exam = this.service.getExam(eid)
-      this.results = this.exam.scoreResults()
+      let exam = this.service.getExam(eid)
+      this.results = null
+      if(exam == undefined) return
+      this.exam = exam
+      this.results = this.exam.score()
     })
   }
 

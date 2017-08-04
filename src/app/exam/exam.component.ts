@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { DataService, Exam } from '../model/data.service';
+import { DataService } from '../model/data.service';
 
 @Component({
   selector: 'app-exam',
@@ -9,20 +9,15 @@ import { DataService, Exam } from '../model/data.service';
 })
 export class ExamComponent implements OnInit {
 
-  exam: Exam
   isResultsPage = false
 
-  constructor(private route: ActivatedRoute,
-    private router: Router,
-    private service: DataService) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.params
       .subscribe((params: Params) => {
-        let eid = params['eid']
-        this.exam = this.service.getExam(eid)
-        //console.log('BASE EXAM', eid, this.exam)
-        this.isResultsPage = this.exam.isResultsPage()
+        let qid = params['qid']
+        this.isResultsPage = (qid == undefined)
       })
   }
 }

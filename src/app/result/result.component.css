@@ -1,5 +1,9 @@
-#marks {
+#percent {
   font-size: 128px;
+}
+#marks {
+  color: gray;
+  font-size: 36px;
 }
 #correct {
   color: limegreen;
