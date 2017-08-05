@@ -9,21 +9,21 @@ import { AngularFireDatabase } from 'angularfire2/database';
 
 import { DataSource, Holders } from './data.service'
 
-import { Lib } from "./lib";
+import { Lib } from './lib';
 
-import { AnswerType, TFQChoices, ARQChoices } from "./answer-type";
-import { Question } from "./question";
-import { Exam } from "./exam";
-import { ExamResult } from "./exam-result";
-import { User } from "./user";
+import { AnswerType, TFQChoices, ARQChoices } from './answer-type';
+import { Question } from './question';
+import { Exam } from './exam';
+import { ExamResult } from './exam-result';
+import { User } from './user';
 
-const URL_VER = "ver3/"
-const EXAMS_URL = URL_VER + "exams"
-const RESULTS_URL = URL_VER + "results/"
-const QUESTION_URL = URL_VER + "questions"
+const URL_VER = 'ver3/'
+const EXAMS_URL = URL_VER + 'exams'
+const RESULTS_URL = URL_VER + 'results/'
+const QUESTION_URL = URL_VER + 'questions'
 
 function fbObjToArr(obj): any[] {
-  if (obj == undefined) return []
+  if (Lib.isNil(obj)) return []
   let arr = []
   Object.keys(obj).forEach(function (key, index) {
     arr[+key] = obj[key]
@@ -46,9 +46,9 @@ function createA(type: AnswerType, given): string[] {
 
 function createQ(obj): Question {
   let title = obj.display
-  let type = AnswerType["" + obj.type]
+  let type = AnswerType['' + obj.type]
   let choices = createA(type, obj.choices)
-  //console.log('question:', obj.$key, type, obj.solutions.length)
+  // console.log('question:', obj.$key, type, obj.solutions.length)
   let solutions = fbObjToArr(obj.solutions)
   return new Question(title, type, choices, solutions)
 }
@@ -68,7 +68,7 @@ function createR(obj, es): ExamResult {
   let title = exam.title
   let when = new Date(obj.when)
   let answers: number[][] = fbObjToArr(obj.answers)
-  //console.log(id, answers.length)
+  // console.log(id, answers.length)
   return new ExamResult(id, title, when, exam, answers, true)
 }
 
@@ -77,10 +77,14 @@ function createR(obj, es): ExamResult {
 export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
 
+  private readonly revwhen = { query: { orderByChild: 'revwhen' } }
+  private allqs = {}
+  private alles = {}
+
   constructor(private afDb: AngularFireDatabase) { }
 
   getHolders(user: User): Promise<Holders> {
-    Lib.assert(user == undefined, 'User should be authenticated')
+    Lib.assert(Lib.isNil(user), 'User should be authenticated')
     return this.fetchAll(user).then(() => {
       return Promise.resolve(this.holders)
     })
@@ -90,18 +94,14 @@ export class FirebaseDataSource implements DataSource {
     return RESULTS_URL + user.uid + '/'
   }
 
-  private readonly revwhen = { query: { orderByChild: 'revwhen' } }
-  private allqs = {}
-  private alles = {}
-
   private fetch(title: string, url: string,
     doit: (thing: any) => void,
     sayit: () => void): Observable<void> {
-    //console.log(title, '-------', url);
+    // console.log(title, '-------', url);
     return this.afDb.list(url, this.revwhen).first().map(things => {
-      //console.log('computing ' + title + '... ', things.length)
+      // console.log('computing ' + title + '... ', things.length)
       things.forEach(thing => doit(thing))
-      //console.log('all ' + title + ': ', sayit())
+      // console.log('all ' + title + ': ', sayit())
     })
   }
 
@@ -142,7 +142,7 @@ export class FirebaseDataSource implements DataSource {
   private fetchR(user: User): Observable<void> {
     return this.afDb.list(this.resultsUrl(user), this.revwhen).first().map(userRs => {
       fbObjToArr(userRs).forEach(r => this.holders.results.push(createR(r, this.alles)))
-      //console.log('all ' + 'results' + ': ', this.holders.results.length)
+      // console.log('all ' + 'results' + ': ', this.holders.results.length)
     })
   }
 
@@ -152,7 +152,7 @@ export class FirebaseDataSource implements DataSource {
     ro['answers'] = result.answers
     ro['when'] = Date.now()
     ro['revwhen'] = -Date.now()
-    console.log("saveResult", ro, this.resultsUrl(user))
+    console.log('saveResult', ro, this.resultsUrl(user))
     return new Promise<void>(resolve => {
       this.afDb.list(this.resultsUrl(user)).push(ro).then((call) => {
         console.log(call)

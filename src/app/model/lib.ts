@@ -1,18 +1,18 @@
 export class Lib {
   static times(n: number): number[] {
     let arr = []
-    for (var i = 0; i < n; i++) arr[i] = i
+    for (let i = 0; i < n; i++) arr[i] = i
     return arr
   }
-  static rndn(ncount: number, nmin: number = 0): number {
+  static rndn(ncount: number, nmin = 0): number {
     let rndi = Math.random() * ncount
     return Math.floor(rndi) + nmin
   }
   static rnd<T>(arr: Array<T>): T {
     return arr[Lib.rndn(arr.length)]
   }
-  //default is 50% probability
-  static toss(b: number = 2, a: number = 1): boolean {
+  // default is 50% probability
+  static toss(b = 2, a = 1): boolean {
     return Lib.rndn(b) < a
   }
   static rndDate(): Date {
@@ -27,5 +27,10 @@ export class Lib {
       console.log('Assertion failed: ', message, ...things)
       throw new Error('Assertion failed: ' + message)
     }
+  }
+
+  static isNil(obj): boolean {
+    // tslint:disable-next-line:triple-equals
+    return obj == undefined
   }
 }

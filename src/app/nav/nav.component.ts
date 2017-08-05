@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
+import { Lib } from '../model/lib';
 
 @Component({
   selector: 'app-nav',
@@ -10,13 +11,13 @@ import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 })
 export class NavComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute,
-    private router: Router,
-    private service: DataService) { }
-
   exam: ExamResult = EMPTY_EXAM_RESULT
   isResultsPage = false
   qidn: number
+
+  constructor(private route: ActivatedRoute,
+    private router: Router,
+    private service: DataService) { }
 
   ngOnInit() {
     this.route.params
@@ -26,10 +27,10 @@ export class NavComponent implements OnInit {
         this.qidn = -1
         let eid = params['eid']
         let exam = this.service.getExam(eid)
-        if (exam == undefined) return
+        if (Lib.isNil(exam)) return
         this.exam = exam
         let qid = params['qid']
-        this.isResultsPage = (qid == undefined)
+        this.isResultsPage = (Lib.isNil(qid))
         if (this.isResultsPage) return
         this.qidn = +qid
         this.isResultsPage = false
@@ -47,16 +48,16 @@ export class NavComponent implements OnInit {
   }
 
   results() {
-    if (this.exam == undefined) return
+    if (Lib.isNil(this.exam)) return
     if (!this.exam.isLocked()) {
-      if (!confirm("Done with the exam?!")) return
+      if (!confirm('Done with the exam?!')) return
       this.exam = this.service.saveExam()
     }
     this.router.navigate(['/results', this.exam.id])
   }
 
   gotoDash() {
-    if (!this.exam.isLocked() && !confirm("Cancel the exam: Sure?!")) return
+    if (!this.exam.isLocked() && !confirm('Cancel the exam: Sure?!')) return
     this.router.navigate(['/student-dash'])
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { Lib } from "./lib";
-import { Question } from "./question";
-import { Exam } from "./exam";
-import { ExamResult } from "./exam-result";
-import { User } from "./user";
+import { Lib } from './lib';
+import { Question } from './question';
+import { Exam } from './exam';
+import { ExamResult } from './exam-result';
+import { User } from './user';
 
-//NOTE: Not used anywhere but in tests, just for sample testing
+// NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
   return arr.indexOf(val) > -1
 }
@@ -44,6 +44,8 @@ export class DataService {
   public exams: Exam[] = []
   public results: ExamResult[] = []
 
+  private pendingResult: ExamResult
+
   public testMe(n: number): number {
     return n * 2
   }
@@ -51,7 +53,7 @@ export class DataService {
   constructor(private dataSource: DataSource, private securitySource: SecuritySource) {
     console.clear()
     this.userWait().then(user => {
-      Lib.assert(user == undefined, 'user cannot be null')
+      Lib.assert(Lib.isNil(user), 'user cannot be null')
       dataSource.getHolders(user).then(hs => {
         this.exams = hs.exams
         this.exams.forEach(e => this.cache[e.id] = e)
@@ -62,23 +64,21 @@ export class DataService {
     })
   }
 
-  private pendingResult: ExamResult
-
   public startExam(eid: string): string {
     console.log('starting exam!', eid)
-    Lib.assert(eid == undefined, 'eid cannot be undefined')
+    Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
     let exam = this.cache[eid]
-    Lib.assert(exam == undefined, 'exam cannot be undefined', eid)
-    this.pendingResult = new ExamResult('r'+eid, exam.title, new Date(), exam)
+    Lib.assert(Lib.isNil(exam), 'exam cannot be undefined', eid)
+    this.pendingResult = new ExamResult('r' + eid, exam.title, new Date(), exam)
     return this.pendingResult.id
   }
 
   public getExam(eid: string): ExamResult {
-    Lib.assert(eid == undefined, 'eid cannot be undefined')
-    if(this.pendingResult && this.pendingResult.id === eid) return this.pendingResult
+    Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
+    if (this.pendingResult && this.pendingResult.id === eid) return this.pendingResult
 
     let result = <ExamResult>this.cache[eid]
-    Lib.assert(result == undefined, 'exam result cannot be undefined', eid)
+    Lib.assert(Lib.isNil(result), 'exam result cannot be undefined', eid)
     Lib.assert(!(result instanceof ExamResult), 'Either pendingResult of ExamResult', result)
     return result
   }
@@ -91,7 +91,7 @@ export class DataService {
     this.pendingResult.lock()
     this.results.push(this.pendingResult)
     this.userWait().then(user => {
-      Lib.assert(user == undefined, 'user cannot be null')
+      Lib.assert(Lib.isNil(user), 'user cannot be null')
       this.dataSource.saveExam(user, this.pendingResult).then(() => {
         console.log('saved in server!')
       })

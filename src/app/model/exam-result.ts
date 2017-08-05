@@ -1,21 +1,22 @@
-import { AnswerType } from "./answer-type";
+import { AnswerType } from './answer-type';
 import { Exam, EMPTY_EXAM } from './exam';
 import { Question, EMPTY_QUESTION } from './question';
-import { Score, EMPTY_SCORE } from "app/model/score";
+import { Score, EMPTY_SCORE } from 'app/model/score';
+import { Lib } from '../model/lib';
 
 export class ExamResult extends Exam {
   constructor(id: string, title: string, when: Date,
     readonly exam: Exam,
     public answers: number[][] = [],
-    protected _isLocked: boolean = false,
+    protected _isLocked = false,
   ) {
     super(id, title, exam.questions, when)
 
-    if (answers != undefined) {
+    if (!Lib.isNil(answers)) {
       answers.forEach((qans, i) => {
         let q = this.questions[i]
         let len = q.choices.length
-        if (qans != undefined) {
+        if (!Lib.isNil(qans)) {
           qans.forEach((ans, j) => {
             if (ans > len - 1 || ans < 0) throw new Error('q:' + i + ', a[' + j + ']=' + ans + ', len:' + len)
           })
@@ -28,16 +29,16 @@ export class ExamResult extends Exam {
   private checkAnsType(type: AnswerType, alen: number, chlen: number) {
     switch (type) {
       case AnswerType.TFQ:
-        if (alen > 1) throw new Error("TFQ cannot have more than one answer")
+        if (alen > 1) throw new Error('TFQ cannot have more than one answer')
         break
       case AnswerType.MCQ:
-        if (alen > 1) throw new Error("MCQ cannot have more than one answer")
+        if (alen > 1) throw new Error('MCQ cannot have more than one answer')
         break
       case AnswerType.ARQ:
-        if (alen > 1) throw new Error("ARQ cannot have more than one answer")
+        if (alen > 1) throw new Error('ARQ cannot have more than one answer')
         break
       case AnswerType.MAQ:
-        if (alen > chlen) throw new Error("MAQ cannot have more answers than choices")
+        if (alen > chlen) throw new Error('MAQ cannot have more answers than choices')
         break
     }
   }
@@ -58,11 +59,11 @@ export class ExamResult extends Exam {
     return this.questions[qid].solutions.indexOf(n) > -1
   }
   public clearAnswers(qid: number) {
-    if (this._isLocked) throw new Error("Locked question cannot be cleared")
+    if (this._isLocked) throw new Error('Locked question cannot be cleared')
     this.answers[qid] = []
   }
   public addAnswer(qid: number, n: number) {
-    if (this._isLocked) throw new Error("Locked question cannot add answer")
+    if (this._isLocked) throw new Error('Locked question cannot add answer')
     if (!this.answers[qid]) this.answers[qid] = []
     this.answers[qid].push(n)
   }
@@ -71,7 +72,7 @@ export class ExamResult extends Exam {
     return ans && ans.indexOf(n) > -1
   }
   public removeAnswer(qid: number, n: number): boolean {
-    if (this._isLocked) throw new Error("Locked question cannot remove answer")
+    if (this._isLocked) throw new Error('Locked question cannot remove answer')
     if (!this.answers[qid]) this.answers[qid] = []
     let index = this.answers[qid].indexOf(n);
     let removed = index > -1
@@ -86,7 +87,7 @@ export class ExamResult extends Exam {
     // CAUTION: donot use return inside forEach - does not return
     let sols = this.questions[qid].solutions
     for (let ans of this.answers[qid]) if (!sols.includes(ans)) return false
-    //all answers are given
+    // all answers are given
     for (let ans of sols) if (!this.answers[qid].includes(ans)) return false
     return true
   }

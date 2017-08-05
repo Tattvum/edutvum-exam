@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
+import { Lib } from '../model/lib';
 
 declare var MathJax: {
   Hub: {
@@ -23,16 +24,16 @@ export class DisplayComponent implements OnInit {
       .subscribe((params: Params) => {
         let eid = params['eid']
         let qid = params['qid']
-        if (eid == undefined || qid == undefined) return
+        if (Lib.isNil(eid) || Lib.isNil(qid)) return
         let question = null
         try {
           question = this.service.getQuestion(eid, qid)
         } catch (e) {
           console.log(e)
         }
-        if (question == undefined) return
+        if (Lib.isNil(question)) return
         this.question.nativeElement.innerHTML = question.title
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.question.nativeElement]);
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.question.nativeElement]);
       })
   }
 

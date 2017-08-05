@@ -1,3 +1,5 @@
+import { Lib } from './lib'
+
 export interface Thing {
   id: string
   title: string
@@ -10,8 +12,8 @@ export abstract class AbstractThing implements Thing {
     public readonly title: string,
     public readonly when: Date = new Date()
   ) {
-    if (_id == undefined) throw Error("id cannot be undefined")
-    if (title == undefined) throw Error("title cannot be undefined")
+    if (Lib.isNil(_id)) throw Error('id cannot be undefined')
+    if (Lib.isNil(title)) throw Error('title cannot be undefined')
   }
 
   public get id(): string {

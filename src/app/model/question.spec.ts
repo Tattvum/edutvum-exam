@@ -3,22 +3,22 @@ import { Question } from './question';
 
 describe('Question - declaration tests:', () => {
   let choices0: string[] = []
-  let choices1: string[] = ["choice 1"]
-  let choices2: string[] = ["choice 1", "choice 2"]
-  let choices3: string[] = ["choice 1", "choice 2", "choice 3"]
-  let choices5: string[] = ["choice 1", "choice 2", "choice 3", "choice 4", "choice 5"]
-  let choices6: string[] = ["choice 1", "choice 2", "choice 3", "choice 4", "choice 5", "choice 6"]
+  let choices1: string[] = ['choice 1']
+  let choices2: string[] = ['choice 1', 'choice 2']
+  let choices3: string[] = ['choice 1', 'choice 2', 'choice 3']
+  let choices5: string[] = ['choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5']
+  let choices6: string[] = ['choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5', 'choice 6']
   let sols0: number[] = []
   let sols1: number[] = [0]
   let sols2: number[] = [0, 2]
   let sols3: number[] = [1, 2, 3]
-  let createQ = (type: AnswerType, choices: string[], sols: number[], title = "TEST...") => {
+  let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST...') => {
     return new Question(title, type, choices, sols)
   }
 
   it('Question should have title', () => {
     expect(() => createQ(AnswerType.TFQ, choices2, sols1, null)).toThrow()
-    expect(() => createQ(AnswerType.TFQ, choices2, sols1, "Not null")).not.toThrow()
+    expect(() => createQ(AnswerType.TFQ, choices2, sols1, 'Not null')).not.toThrow()
   })
   it('Question should have type', () => {
     expect(() => createQ(null, choices2, sols1)).toThrow()

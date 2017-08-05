@@ -4,10 +4,10 @@ import { Exam } from './exam';
 import { ExamResult } from './exam-result';
 import { Score } from './score';
 
-let createQ = (type: AnswerType, choices: string[], sols: number[], title = "TEST Q..."): Question => {
+let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question(title, type, choices, sols)
 }
-let createR = (questions: Question[], title = "TEST E...", id: string = '00'): ExamResult => {
+let createR = (questions: Question[], title = 'TEST E...', id = '00'): ExamResult => {
   let e = new Exam(id, title, questions)
   return new ExamResult(e.id, e.title, new Date(), e)
 }
@@ -16,30 +16,30 @@ let doR = (questions: Question[], answers: number[][]): ExamResult => {
   return new ExamResult(e.id, e.title, new Date(), e, answers)
 }
 
-let tfq = () => createQ(AnswerType.TFQ, ["C1", "C2"], [0])
-let mcq = () => createQ(AnswerType.MCQ, ["C1", "C2", "C3"], [2])
-let arq = () => createQ(AnswerType.ARQ, ["C1", "C2", "C3", "C4", "C5"], [3])
-let maq = () => createQ(AnswerType.MAQ, ["C1", "C2", "C3"], [0, 2])
+let tfq = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
+let mcq = () => createQ(AnswerType.MCQ, ['C1', 'C2', 'C3'], [2])
+let arq = () => createQ(AnswerType.ARQ, ['C1', 'C2', 'C3', 'C4', 'C5'], [3])
+let maq = () => createQ(AnswerType.MAQ, ['C1', 'C2', 'C3'], [0, 2])
 let questions0 = () => []
 let questions1 = () => [tfq()]
 let questions2 = () => [tfq(), maq()]
 let questions8 = () => [tfq(), tfq(), mcq(), mcq(), arq(), arq(), maq(), maq()]
 
 let choices0: string[] = []
-let choices1: string[] = ["choice 1"]
-let choices2: string[] = ["choice 1", "choice 2"]
-let choices3: string[] = ["choice 1", "choice 2", "choice 3"]
-let choices5: string[] = ["choice 1", "choice 2", "choice 3", "choice 4", "choice 5"]
-let choices6: string[] = ["choice 1", "choice 2", "choice 3", "choice 4", "choice 5", "choice 6"]
+let choices1: string[] = ['choice 1']
+let choices2: string[] = ['choice 1', 'choice 2']
+let choices3: string[] = ['choice 1', 'choice 2', 'choice 3']
+let choices5: string[] = ['choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5']
+let choices6: string[] = ['choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5', 'choice 6']
 let sols0: number[] = []
 let sols1: number[] = [0]
 let sols2: number[] = [0, 2]
 let sols3: number[] = [1, 2, 3]
 
 let create1QR = (type: AnswerType, choices: string[], sols: number[], ans: number[] = [],
-  isLocked: boolean = false): ExamResult => {
+  isLocked = false): ExamResult => {
   let q = [new Question('TEST Q...', type, choices, sols)]
-  let e = new Exam('00', "TEST E", q)
+  let e = new Exam('00', 'TEST E', q)
   return new ExamResult(e.id, e.title, new Date(), e, [ans], isLocked)
 }
 
@@ -57,7 +57,7 @@ describe('ExamResult:', () => {
     expect(() => r.clearAnswers(0)).not.toThrow()
     expect(r.isLocked()).toBeFalsy()
     r.lock()
-    expect(() => r.lock()).not.toThrow()//Repeated lock is ignored
+    expect(() => r.lock()).not.toThrow()// Repeated lock is ignored
     expect(r.isLocked()).toBeTruthy()
     expect(() => r.clearAnswers(0)).toThrow()
     expect(() => r.addAnswer(0, 1729)).toThrow()
@@ -117,7 +117,7 @@ describe('ExamResult - Question - declaration tests:', () => {
 })
 
 describe('Question - single sol tests:', () => {
-  let choices: string[] = ["choice 1", "choice 2"]
+  let choices: string[] = ['choice 1', 'choice 2']
   let sols: number[] = [0]
   let r = create1QR(AnswerType.TFQ, choices, sols)
 
@@ -155,7 +155,7 @@ describe('Question - single sol tests:', () => {
 })
 
 describe('Question - many sol tests:', () => {
-  let choices: string[] = ["choice 1", "choice 2", "choice 3"]
+  let choices: string[] = ['choice 1', 'choice 2', 'choice 3']
   let sols: number[] = [0, 2]
   let r = create1QR(AnswerType.MAQ, choices, sols)
 

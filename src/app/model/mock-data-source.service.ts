@@ -2,26 +2,26 @@ import { Injectable } from '@angular/core';
 
 import { DataSource, Holders} from './data.service'
 
-import { Lib } from "./lib";
+import { Lib } from './lib';
 
-import { AnswerType } from "./answer-type";
-import { Question } from "./question";
-import { Exam } from "./exam";
-import { User } from "./user";
-import { ExamResult } from "./exam-result";
+import { AnswerType } from './answer-type';
+import { Question } from './question';
+import { Exam } from './exam';
+import { User } from './user';
+import { ExamResult } from './exam-result';
 
-let createQ = (type: AnswerType, choices: string[], sols: number[], title = "TEST Q..."): Question => {
+let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question(title, type, choices, sols)
 }
-let createE = (questions: Question[], title = "TEST E...", id = "99"): Exam => {
+let createE = (questions: Question[], title = 'TEST E...', id = '99'): Exam => {
   return new Exam(id, title, questions)
 }
 
 const Q: (() => Question)[] = []
-Q[0] = () => createQ(AnswerType.TFQ, ["C1", "C2"], [0])
-Q[1] = () => createQ(AnswerType.MCQ, ["C1", "C2", "C3"], [2])
-Q[2] = () => createQ(AnswerType.ARQ, ["C1", "C2", "C3", "C4", "C5"], [3])
-Q[3] = () => createQ(AnswerType.MAQ, ["C1", "C2", "C3"], [0, 2])
+Q[0] = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
+Q[1] = () => createQ(AnswerType.MCQ, ['C1', 'C2', 'C3'], [2])
+Q[2] = () => createQ(AnswerType.ARQ, ['C1', 'C2', 'C3', 'C4', 'C5'], [3])
+Q[3] = () => createQ(AnswerType.MAQ, ['C1', 'C2', 'C3'], [0, 2])
 
 const ADJ = [
   'Clean',
@@ -41,7 +41,7 @@ const NOUN = [
 
 let makeExamRnd = (qs: number): Exam => {
   let questions = []
-  for (var i = 0; i < qs; i++) questions.push(Lib.rnd(Q)())
+  for (let i = 0; i < qs; i++) questions.push(Lib.rnd(Q)())
   let title = Lib.rnd(ADJ) + ' ' + Lib.rnd(NOUN)
   let exam = new Exam('' + Lib.rndn(100, 500), title, questions)
   return exam
@@ -49,7 +49,7 @@ let makeExamRnd = (qs: number): Exam => {
 
 let makeExamsRnd = (es: number): Exam[] => {
   let examHolders = []
-  for (var i = 0; i < es; i++) examHolders.push(makeExamRnd(Lib.rndn(5, 5)))
+  for (let i = 0; i < es; i++) examHolders.push(makeExamRnd(Lib.rndn(5, 5)))
   return examHolders
 }
 

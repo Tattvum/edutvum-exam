@@ -4,6 +4,7 @@ import { DataService } from '../model/data.service';
 import { AnswerType } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
+import { Lib } from '../model/lib';
 
 declare var MathJax: {
   Hub: {
@@ -21,7 +22,7 @@ export class ChoiceInputComponent implements OnInit {
   qid: string
   question: Question = EMPTY_QUESTION
   exam: ExamResult = EMPTY_EXAM_RESULT
-  AAA = ['a', "b", "c", "d", "e", "f", "g", "h"]
+  AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -31,10 +32,10 @@ export class ChoiceInputComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       let eid = params['eid']
       this.qid = params['qid']
-      if(eid == undefined || this.qid == undefined) return
+      if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
       this.exam = this.service.getExam(eid)
       this.question = this.service.getQuestion(eid, this.qid)
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+      MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
     })
   }
 

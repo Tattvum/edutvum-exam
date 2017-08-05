@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Score } from '../model/score';
+import { Lib } from '../model/lib';
 
 @Component({
   selector: 'app-result',
@@ -23,7 +24,7 @@ export class ResultComponent implements OnInit {
       let eid = params['eid']
       let exam = this.service.getExam(eid)
       this.results = null
-      if(exam == undefined) return
+      if (Lib.isNil(exam)) return
       this.exam = exam
       this.results = this.exam.score()
     })

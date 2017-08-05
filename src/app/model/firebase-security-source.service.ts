@@ -8,9 +8,9 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { SecuritySource } from "./data.service";
-import { User } from "./user";
-import { Lib } from "./lib";
+import { SecuritySource } from './data.service';
+import { User } from './user';
+import { Lib } from './lib';
 
 class UserFbImpl implements User {
   constructor(private fbUser: firebase.User) { }
@@ -42,7 +42,7 @@ export class FirebaseSecuritySource implements SecuritySource {
     })
   }
 
-  //Used only in user.component.html
+  // Used only in user.component.html
   public user(): User {
     let user: firebase.User = this.afAuth.auth.currentUser
     if (user) return new UserFbImpl(user)
@@ -61,17 +61,17 @@ export class FirebaseSecuritySource implements SecuritySource {
     }
   }
 
-  //Used only in URL AuthGaurd
+  // Used only in URL AuthGaurd
   public isLoggedIn(): boolean {
     return this.user() !== null
   }
 
-  //Used only in Login component
+  // Used only in Login component
   public login(): Promise<any> {
     return Promise.resolve(this.afAuth.auth.signInWithPopup(this.fbProvider))
   }
 
-  //Used only in user component
+  // Used only in user component
   public logout(): Promise<void> {
     return Promise.resolve(this.afAuth.auth.signOut())
   }

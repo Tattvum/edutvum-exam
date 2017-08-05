@@ -3,10 +3,10 @@ import { Question } from './question';
 import { Exam } from './exam';
 import { Score } from './score';
 
-let createQ = (type: AnswerType, choices: string[], sols: number[], title = "TEST Q..."): Question => {
+let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question(title, type, choices, sols)
 }
-let createE = (questions: Question[], title = "TEST E...", id: string = '00'): Exam => {
+let createE = (questions: Question[], title = 'TEST E...', id = '00'): Exam => {
   return new Exam(id, title, questions)
 }
 let doE = (questions: Question[]): Exam => {
@@ -14,10 +14,10 @@ let doE = (questions: Question[]): Exam => {
   return e
 }
 
-let tfq = () => createQ(AnswerType.TFQ, ["C1", "C2"], [0])
-let mcq = () => createQ(AnswerType.MCQ, ["C1", "C2", "C3"], [2])
-let arq = () => createQ(AnswerType.ARQ, ["C1", "C2", "C3", "C4", "C5"], [3])
-let maq = () => createQ(AnswerType.MAQ, ["C1", "C2", "C3"], [0, 2])
+let tfq = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
+let mcq = () => createQ(AnswerType.MCQ, ['C1', 'C2', 'C3'], [2])
+let arq = () => createQ(AnswerType.ARQ, ['C1', 'C2', 'C3', 'C4', 'C5'], [3])
+let maq = () => createQ(AnswerType.MAQ, ['C1', 'C2', 'C3'], [0, 2])
 let questions0 = () => []
 let questions1 = () => [tfq()]
 let questions2 = () => [tfq(), maq()]
