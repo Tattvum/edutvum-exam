@@ -8,7 +8,6 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 import { AppRoutingModule } from './app-routing.module';
-import { firebaseConfig } from './firebase-config';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
 
@@ -31,6 +30,12 @@ import { ChoiceInputComponent } from './choice-input/choice-input.component';
 import { ResultComponent } from './result/result.component';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
+
+import { environment } from '../environments/environment';
+export const firebaseConfig = environment.firebaseConfig;
+
+let DATA_SOURCE = environment.firebase ? FirebaseDataSource : MockDataSource
+let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuritySource
 
 @NgModule({
   imports: [
@@ -56,11 +61,9 @@ import { UserComponent } from './user/user.component';
     UserComponent,
   ],
   providers: [
-    { provide: DataSource, useClass: FirebaseDataSource },
-    { provide: SecuritySource, useClass: FirebaseSecuritySource },
-//    { provide: DataSource, useClass: MockDataSource },
-//    { provide: SecuritySource, useClass: MockSecuritySource },
-    { provide: DataService, useClass: DataService },
+    { provide: DataSource, useClass: DATA_SOURCE },
+    { provide: SecuritySource, useClass: SECURITY_SOURCE },
+    DataService,
     AuthGuard
   ],
   bootstrap: [AppComponent]

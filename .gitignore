@@ -9,7 +9,8 @@
 /coverage
 
 #secret
-/src/app/firebase-config.ts
+src/environments/environment.prod.ts
+src/environments/environment.stage.ts
 
 # dependencies
 **/node_modules
