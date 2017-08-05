@@ -1,3 +1,6 @@
+import 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
+
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
@@ -14,6 +17,7 @@ export class NavComponent implements OnInit {
   exam: ExamResult = EMPTY_EXAM_RESULT
   isResultsPage = false
   qidn: number
+  whatTime = Observable.interval(1000).map(x => new Date()).share();
 
   constructor(private route: ActivatedRoute,
     private router: Router,

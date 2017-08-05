@@ -69,7 +69,7 @@ export class DataService {
     Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
     let exam = this.cache[eid]
     Lib.assert(Lib.isNil(exam), 'exam cannot be undefined', eid)
-    this.pendingResult = new ExamResult('r' + eid, exam.title, new Date(), exam)
+    this.pendingResult = new ExamResult(eid, exam.title, new Date(), exam)
     return this.pendingResult.id
   }
 
