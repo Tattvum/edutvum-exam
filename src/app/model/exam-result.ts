@@ -13,14 +13,16 @@ export class ExamResult extends Exam {
     super(id, title, exam.questions, when)
 
     if (!Lib.isNil(answers)) {
+      Lib.assure(answers.length > this.questions.length, 'Too many answers', answers.length, this.questions.length)
       answers.forEach((qans, i) => {
         let q = this.questions[i]
         let len = q.choices.length
         if (!Lib.isNil(qans)) {
           qans.forEach((ans, j) => {
-            if (ans > len - 1 || ans < 0) throw new Error('q:' + i + ', a[' + j + ']=' + ans + ', len:' + len)
+            // if (ans > len - 1 || ans < 0) throw new Error('q:' + i + ', a[' + j + ']=' + ans + ', len:' + len)
+            if (ans > len - 1 || ans < 0) console.log('q:' + i + ', a[' + j + ']=' + ans + ', len:' + len)
           })
-          this.checkAnsType(q.type, qans.length, q.choices.length)
+          // this.checkAnsType(q.type, qans.length, q.choices.length)
         }
       })
     }
@@ -29,16 +31,16 @@ export class ExamResult extends Exam {
   private checkAnsType(type: AnswerType, alen: number, chlen: number) {
     switch (type) {
       case AnswerType.TFQ:
-        if (alen > 1) throw new Error('TFQ cannot have more than one answer')
+        Lib.assure(alen > 1, 'TFQ cannot have more than one answer')
         break
       case AnswerType.MCQ:
-        if (alen > 1) throw new Error('MCQ cannot have more than one answer')
+        Lib.assure(alen > 1, 'MCQ cannot have more than one answer')
         break
       case AnswerType.ARQ:
-        if (alen > 1) throw new Error('ARQ cannot have more than one answer')
+        Lib.assure(alen > 1, 'ARQ cannot have more than one answer')
         break
       case AnswerType.MAQ:
-        if (alen > chlen) throw new Error('MAQ cannot have more answers than choices')
+        Lib.assure(alen > chlen, 'MAQ cannot have more answers than choices')
         break
     }
   }

@@ -7,12 +7,15 @@ import { Score } from './score';
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question(title, type, choices, sols)
 }
-let createR = (questions: Question[], title = 'TEST E...', id = '00'): ExamResult => {
-  let e = new Exam(id, title, questions)
-  return new ExamResult(e.id, e.title, new Date(), e)
+let createE = (questions: Question[], title = 'TEST E...', id = '00'): Exam => {
+  return new Exam(id, title, questions)
 }
-let doR = (questions: Question[], answers: number[][]): ExamResult => {
-  let e = createR(questions)
+let createR = (questions: Question[], title = 'TEST E...', id = '00', answers: number[][] = []): ExamResult => {
+  let e = createE(questions, title, id)
+  return new ExamResult(e.id, e.title, new Date(), e, answers)
+}
+let createR2 = (questions: Question[], answers: number[][]): ExamResult => {
+  let e = createE(questions)
   return new ExamResult(e.id, e.title, new Date(), e, answers)
 }
 
@@ -52,6 +55,37 @@ let checkScore = (s: Score, t: number, c: number, w: number, l: number, p: numbe
 }
 
 describe('ExamResult:', () => {
+  it('TFQ Creation checks works', () => {
+    expect(() => createR2([tfq()], [])).not.toThrow()
+    expect(() => createR2([tfq()], [[0, 1]])).toThrow()
+    expect(() => createR2([tfq()], [[2]])).toThrow()
+    expect(() => createR2([tfq()], [[0]])).not.toThrow()
+    expect(() => createR2([tfq()], [[1]])).not.toThrow()
+  })
+  it('MCQ Creation checks works', () => {
+    expect(() => createR2([mcq()], [])).not.toThrow()
+    expect(() => createR2([mcq()], [[0, 1]])).toThrow()
+    expect(() => createR2([mcq()], [[3]])).toThrow()
+    expect(() => createR2([mcq()], [[1], []])).toThrow()
+    expect(() => createR2([mcq()], [[2]])).not.toThrow()
+  })
+  it('MAQ Creation checks works', () => {
+    expect(() => createR2([maq()], [])).not.toThrow()
+    expect(() => createR2([maq()], [[3]])).toThrow()
+    expect(() => createR2([maq()], [[1], []])).toThrow()
+    expect(() => createR2([maq()], [[2]])).not.toThrow()
+    expect(() => createR2([maq()], [[0, 1, 2]])).not.toThrow()
+  })
+  it('ARQ Creation checks works', () => {
+    expect(() => createR2([arq()], [])).not.toThrow()
+    expect(() => createR2([arq()], [[0, 1]])).toThrow()
+    expect(() => createR2([arq()], [[5]])).toThrow()
+    expect(() => createR2([arq()], [[1], []])).toThrow()
+    expect(() => createR2([arq()], [[4]])).not.toThrow()
+  })
+})
+
+describe('ExamResult:', () => {
   it('Lock works', () => {
     let r = createR(questions1())
     expect(() => r.clearAnswers(0)).not.toThrow()
@@ -74,22 +108,22 @@ describe('ExamResult:', () => {
 
   it('none attempted so zero', () => {
     let answersNull = [[], [], [], [], [], [], [], []]
-    checkScore(doR(questions8(), answersNull).score(), 8, 0, 0, 8, 0)
+    checkScore(createR2(questions8(), answersNull).score(), 8, 0, 0, 8, 0)
   })
 
   it('none correct so zero', () => {
     let answers0 = [[1], [1], [0], [1], [1], [2], [0, 2, 1], [0]]
-    checkScore(doR(questions8(), answers0).score(), 8, 0, 8, 0, 0)
+    checkScore(createR2(questions8(), answers0).score(), 8, 0, 8, 0, 0)
   })
 
   it('all correct so full', () => {
     let answers8 = [[0], [0], [2], [2], [3], [3], [0, 2], [0, 2]]
-    checkScore(doR(questions8(), answers8).score(), 8, 8, 0, 0, 100)
+    checkScore(createR2(questions8(), answers8).score(), 8, 8, 0, 0, 100)
   })
 
   it('some correct so mixed', () => {
     let answers3 = [[0], [], [2], [1], [], [2], [0, 2], [0, 2, 1]]
-    checkScore(doR(questions8(), answers3).score(), 8, 3, 3, 2, 38)
+    checkScore(createR2(questions8(), answers3).score(), 8, 3, 3, 2, 38)
   })
 })
 

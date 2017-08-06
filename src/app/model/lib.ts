@@ -28,6 +28,9 @@ export class Lib {
       throw new Error('Assertion failed: ' + message)
     }
   }
+  static assure(condition: boolean, message: string, ...things) {
+    if (condition) throw new Error('Assertion failed: ' + message)
+  }
 
   static isNil(obj): boolean {
     // tslint:disable-next-line:triple-equals
