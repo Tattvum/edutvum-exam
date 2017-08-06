@@ -148,10 +148,8 @@ export class FirebaseDataSource implements DataSource {
     ro['answers'] = result.answers
     ro['when'] = Date.now()
     ro['revwhen'] = -Date.now()
-    console.log('saveResult', ro, this.resultsUrl(user))
     return new Promise<void>(resolve => {
       this.afDb.list(this.resultsUrl(user)).push(ro).then((call) => {
-        console.log(call)
         resolve()
       })
     })
