@@ -17,16 +17,10 @@ import { Exam } from './exam';
 import { ExamResult } from './exam-result';
 import { User } from './user';
 
-const URL_VER = 'ver4/'
+const URL_VER = 'ver3/'
 const EXAMS_URL = URL_VER + 'exams'
 const RESULTS_URL = URL_VER + 'results/'
-
-function fbObjToArr2(obj): any[] {
-  if (Lib.isNil(obj)) return []
-  let arr = []
-  Object.keys(obj).forEach(key => arr.push(obj[key]))
-  return arr
-}
+const QUESTION_URL = URL_VER + 'questions'
 
 function fbObjToArr(obj): any[] {
   if (Lib.isNil(obj)) return []
@@ -59,13 +53,12 @@ function createQ(obj): Question {
   return new Question(title, type, choices, solutions)
 }
 
-function createE(obj): Exam {
+function createE(obj, qs): Exam {
   let id = obj.$key
   let title = obj.name
   let when = new Date(obj.when)
   let questions = []
-  // console.log(id, obj.questions, fbObjToArr(obj.questions))
-  fbObjToArr2(obj.questions).forEach(q => questions.push(createQ(q)))
+  obj.questions.forEach(qid => questions.push(qs[qid]))
   return new Exam(id, title, questions, when)
 }
 
@@ -75,15 +68,17 @@ function createR(obj, es): ExamResult {
   let title = exam.title
   let when = new Date(obj.when)
   let answers: number[][] = fbObjToArr(obj.answers)
+  // console.log(id, answers.length)
   return new ExamResult(id, title, when, exam, answers, true)
 }
 
 
 @Injectable()
-export class FirebaseDataSource implements DataSource {
+export class FirebaseDataV3Source implements DataSource {
   private holders = new Holders()
 
   private readonly revwhen = { query: { orderByChild: 'revwhen' } }
+  private allqs = {}
   private alles = {}
 
   constructor(private afDb: AngularFireDatabase) { }
@@ -111,16 +106,25 @@ export class FirebaseDataSource implements DataSource {
   }
 
   private fetchAll(user: User): Promise<void> {
+    this.allqs = {}
     this.alles = {}
-    return this.fetchE().flatMap(() => {
+    return this.fetchQ().flatMap(() => {
+      return this.fetchE()
+    }).flatMap(() => {
       return this.fetchR(user)
     }).toPromise()
+  }
+
+  private fetchQ(): Observable<void> {
+    return this.fetch('questions', QUESTION_URL,
+      q => this.allqs[q.$key] = createQ(q),
+      () => Object.keys(this.allqs).length)
   }
 
   private fetchE(): Observable<void> {
     return this.fetch('exams', EXAMS_URL,
       e => {
-        let exam = createE(e)
+        let exam = createE(e, this.allqs)
         this.alles[e.$key] = exam
         this.holders.exams.push(exam)
       },

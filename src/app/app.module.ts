@@ -19,6 +19,7 @@ import { MockSecuritySource } from './model/mock-security-source.service';
 
 import { FirebaseSecuritySource } from './model/firebase-security-source.service';
 import { FirebaseDataSource } from './model/firebase-data-source.service';
+import { FirebaseDataV3Source } from './model/firebase-data-v3-source.service';
 
 import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
