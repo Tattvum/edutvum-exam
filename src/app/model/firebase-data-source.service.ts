@@ -143,15 +143,15 @@ export class FirebaseDataSource implements DataSource {
     })
   }
 
-  public saveExam(user: User, result: ExamResult): Promise<void> {
+  public saveExam(user: User, result: ExamResult): Promise<string> {
     let ro = {}
     ro['exam'] = result.exam.id
     ro['answers'] = result.answers
     ro['when'] = Date.now()
     ro['revwhen'] = -Date.now()
-    return new Promise<void>(resolve => {
+    return new Promise<string>(resolve => {
       this.afDb.list(this.resultsUrl(user)).push(ro).then((call) => {
-        resolve()
+        resolve(call.key)
       })
     })
   }

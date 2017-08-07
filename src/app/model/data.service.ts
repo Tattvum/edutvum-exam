@@ -20,7 +20,7 @@ export class Holders {
 
 export abstract class DataSource {
   abstract getHolders(user: User): Promise<Holders>
-  abstract saveExam(user: User, result: ExamResult): Promise<void>
+  abstract saveExam(user: User, result: ExamResult): Promise<string>
 }
 
 export abstract class SecuritySource {
@@ -87,16 +87,21 @@ export class DataService {
     return this.getExam(eid).questions[+qid]
   }
 
-  public saveExam() {
+  public saveExam(): Promise<ExamResult> {
     this.pendingResult.lock()
-    this.results.push(this.pendingResult)
-    this.userWait().then(user => {
-      Lib.assert(Lib.isNil(user), 'user cannot be null')
-      this.dataSource.saveExam(user, this.pendingResult).then(() => {
-        console.log('saved in server!')
+    return new Promise<ExamResult>(resolve => {
+      this.userWait().then(user => {
+        Lib.assert(Lib.isNil(user), 'user cannot be null')
+        this.dataSource.saveExam(user, this.pendingResult).then(key => {
+          console.log(key + ' saved in server!')
+          let o = this.pendingResult
+          let result = new ExamResult(key, o.title, o.when, o.exam, o.answers, true)
+          this.cache[key] = result
+          this.results.splice(0, 0, result)
+          resolve(result)
+        })
       })
     })
-    return this.pendingResult
   }
 
   public user(): User {

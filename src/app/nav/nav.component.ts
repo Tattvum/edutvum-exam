@@ -55,9 +55,11 @@ export class NavComponent implements OnInit {
     if (Lib.isNil(this.exam)) return
     if (!this.exam.isLocked()) {
       if (!confirm('Done with the exam?!')) return
-      this.exam = this.service.saveExam()
+      this.service.saveExam().then(er => {
+        this.exam = er
+        this.router.navigate(['/results', er.exam.id])
+      })
     }
-    this.router.navigate(['/results', this.exam.id])
   }
 
   gotoDash() {
