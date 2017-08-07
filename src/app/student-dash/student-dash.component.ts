@@ -32,6 +32,6 @@ export class StudentDashComponent {
   }
 
   showExamResult(result: ExamResult) {
-    this.router.navigate(['/question', result.id, 0])
+    this.router.navigate(['/results', result.id])
   }
 }
