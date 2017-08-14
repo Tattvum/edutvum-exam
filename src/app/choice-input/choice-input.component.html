@@ -1,72 +1,28 @@
-<div id="clear-all"
-    (click)="clearAll()"
-    [class.disabled]="exam.isLocked()"
-    class="btn">
+<div id="clear-all" class="btn"
+    (click)="clearAll()" [class.disabled]="exam.isLocked()"
+    >
   Clear answers
 </div>
 <form #f="ngForm" novalidate class="bg">
-  <div *ngIf="!exam.isLocked()"
-      class="btn-group-vertical" role="choices">
+  <div class="btn-group-vertical" role="choices">
     <div *ngFor="let ch of question.choices; let i=index">
-      <label [ngSwitch]="question.type"
-          >
+      <label [ngClass]="colors(i)">
         <label class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
-        <input *ngSwitchCase="0" type="radio" name="choices"
-            [id]="'rd'+i"
-            (click)="exam.addAnswer(qid, i)"
-            [checked]="exam.isAnswer(qid, i)"
-            />
-        <input *ngSwitchCase="1" type="radio" name="choices"
-            [id]="'rd'+i"
-            (click)="exam.addAnswer(qid, i)"
-            [checked]="exam.isAnswer(qid, i)"
-            />
-        <input *ngSwitchCase="2" type="checkbox" name="choices"
-            [id]="'rd'+i"
-            (click)="exam.addAnswer(qid, i)"
-            [checked]="exam.isAnswer(qid, i)"
-            />
-        <input *ngSwitchCase="3" type="radio" name="choices"
-            [id]="'rd'+i"
-            (click)="exam.addAnswer(qid, i)"
+        <input [type]="ctype" name="choices" [id]="'rd'+i"
+            (click)="exam.setAnswer(qid, i)" [disabled]="exam.isLocked()"
             [checked]="exam.isAnswer(qid, i)"
             />
         <label class="opt" [for]="'rd'+i" [innerHTML]="ch"></label>
       </label>
     </div>
-  </div>
-  <div *ngIf="exam.isLocked()"
-      class="btn-group-vertical" role="choices">
-    <div *ngFor="let ch of question.choices; let i=index">
-      <label [ngSwitch]="question.type"
-          [class.correct]="exam.isSolution(qid, i)"
-          [class.done]="exam.isAnswer(qid, i) && exam.isSolution(qid, i)"
-          [class.notcorrect]="exam.isAnswer(qid, i) && !exam.isSolution(qid, i)"
-          >
-        <label class="lighter" [innerHTML]="AAA[i]+'.'"></label>
-        <input *ngSwitchCase="0" type="radio" name="choices"
-            (click)="exam.addAnswer(qid, i)"
-            [checked]="exam.isAnswer(qid, i)"
-            [disabled]="true"
-            />
-        <input *ngSwitchCase="1" type="radio" name="choices"
-            (click)="exam.addAnswer(qid, i)"
-            [checked]="exam.isAnswer(qid, i)"
-            [disabled]="true"
-            />
-        <input *ngSwitchCase="2" type="checkbox" name="choices"
-            (click)="exam.addAnswer(qid, i)"
-            [checked]="exam.isAnswer(qid, i)"
-            [disabled]="true"
-            />
-        <input *ngSwitchCase="3" type="radio" name="choices"
-            [id]="'rd'+i"
-            (click)="exam.addAnswer(qid, i)"
-            [checked]="exam.isAnswer(qid, i)"
-            [disabled]="true"
-            />
-        <label class="opt" [innerHTML]="ch"></label>
-      </label>
+    <div class="ncq" *ngIf="question.type == 4">
+      <div>Type your answer here:</div>
+      <input [(ngModel)]="ncqtext" type="number" name="choices"
+          [ngClass]="colors()" [disabled]="exam.isLocked()"
+        />
+      <div *ngIf="exam.isLocked()" [class.correct]="true">
+      ({{exam.questions[qid].solutions[0]}})
+      </div>
     </div>
   </div>
 </form>

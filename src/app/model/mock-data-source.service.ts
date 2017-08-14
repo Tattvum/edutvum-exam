@@ -22,6 +22,7 @@ Q[0] = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
 Q[1] = () => createQ(AnswerType.MCQ, ['C1', 'C2', 'C3'], [2])
 Q[2] = () => createQ(AnswerType.ARQ, ['C1', 'C2', 'C3', 'C4', 'C5'], [3])
 Q[3] = () => createQ(AnswerType.MAQ, ['C1', 'C2', 'C3'], [0, 2])
+Q[4] = () => createQ(AnswerType.NCQ, [], [-3.141])
 
 const ADJ = [
   'Clean',

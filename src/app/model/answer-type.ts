@@ -3,6 +3,7 @@ export enum AnswerType {
   MCQ, // Multiple Choice Question
   MAQ, // Multiple Answer Question
   ARQ, // Assertion and Reasoning Question
+  NCQ, // No Choice Question = give input text
   UNKNOWN_LAST // Just tag the end?
 }
 

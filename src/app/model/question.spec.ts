@@ -9,6 +9,7 @@ describe('Question - declaration tests:', () => {
   let choices5: string[] = ['choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5']
   let choices6: string[] = ['choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5', 'choice 6']
   let sols0: number[] = []
+  let solsX: number[] = [-3.14]
   let sols1: number[] = [0]
   let sols2: number[] = [0, 2]
   let sols3: number[] = [1, 2, 3]
@@ -25,7 +26,7 @@ describe('Question - declaration tests:', () => {
     expect(() => createQ(AnswerType.TFQ, choices2, sols1)).not.toThrow()
   })
 
-  it('Every solution should be a choice', () => {
+  it('Every solution should be a choice, but for NCQ', () => {
     expect(() => createQ(AnswerType.TFQ, choices2, [1])).not.toThrow()
     expect(() => createQ(AnswerType.TFQ, choices2, [2])).toThrow()
     expect(() => createQ(AnswerType.MCQ, choices3, [2])).not.toThrow()
@@ -34,8 +35,12 @@ describe('Question - declaration tests:', () => {
     expect(() => createQ(AnswerType.MAQ, choices6, [6])).toThrow()
   })
 
-  it('Question should have atleast one choice', () => {
+  it('Question should have atleast one choice, but for NCQ', () => {
     expect(() => createQ(AnswerType.TFQ, choices0, sols1)).toThrow()
+    expect(() => createQ(AnswerType.MCQ, choices0, sols1)).toThrow()
+    expect(() => createQ(AnswerType.ARQ, choices0, sols1)).toThrow()
+    expect(() => createQ(AnswerType.MAQ, choices0, sols1)).toThrow()
+    expect(() => createQ(AnswerType.NCQ, choices0, [1])).not.toThrow()
   })
 
   it('TFQ can have only two choices', () => {
@@ -86,6 +91,11 @@ describe('Question - declaration tests:', () => {
   it('MAQ cannot have more solutions than choices', () => {
     expect(() => createQ(AnswerType.MAQ, choices2, [0, 1, 1])).toThrow()
     expect(() => createQ(AnswerType.MAQ, choices3, [0, 1, 1, 2])).toThrow()
+  })
+  it('NCQ cannot have any choice and only one solutions', () => {
+    expect(() => createQ(AnswerType.NCQ, choices0, [-3.14])).not.toThrow()
+    expect(() => createQ(AnswerType.NCQ, choices0, [1, 2])).toThrow()
+    expect(() => createQ(AnswerType.NCQ, choices0, [])).toThrow()
   })
 
 })

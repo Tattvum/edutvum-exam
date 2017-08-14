@@ -7,14 +7,20 @@ div {
 }
 
 .correct {
-  color: lightseagreen;
+  color: #37CF34;
 }
 .notcorrect {
   color: red;
 }
 .done {
-  color: green;
-  font-weight: bold;
+  color: lightseagreen;
+}
+
+.ncq {
+  padding: 4px;
+}
+.ncq input {
+  padding: 4px;
 }
 
 .lighter {

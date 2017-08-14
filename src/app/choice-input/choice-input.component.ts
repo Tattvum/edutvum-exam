@@ -42,4 +42,49 @@ export class ChoiceInputComponent implements OnInit {
   clearAll() {
     if (!this.exam.isLocked()) this.exam.clearAnswers(+this.qid)
   }
+
+  get ctype(): string {
+    switch (this.question.type) {
+      case AnswerType.NCQ: return 'number'
+      case AnswerType.MAQ: return 'checkbox'
+      default: return 'radio'
+    }
+  }
+
+  choiceClicked(event, cid: number) {
+    if (event.target.checked) this.exam.setAnswer(+this.qid, cid)
+    else this.exam.removeAnswer(+this.qid, cid)
+  }
+
+  getAnswer(i: number): number {
+    let q = this.exam.answers[+this.qid]
+    let ans = 0
+    if (q != null && q.length > 0) ans = q[i]
+    return ans
+  }
+
+  colors(i: number) {
+    if (!this.exam.isLocked()) return {}
+    let qidn = +this.qid
+    let ans = (i != null) ? i : this.getAnswer(0)
+    let isans = this.exam.isAnswer(qidn, ans)
+    let issol = this.exam.isSolution(qidn, ans)
+    let result = {
+      'correct': issol,
+      'done': isans && issol,
+      'notcorrect': isans && !issol
+    }
+    return result
+  }
+
+  debug(obj) {
+    console.log(obj)
+  }
+
+  get ncqtext(): string {
+    return this.getAnswer(0) + ''
+  }
+  set ncqtext(t: string) {
+    this.exam.setAnswer(+this.qid, +t)
+  }
 }

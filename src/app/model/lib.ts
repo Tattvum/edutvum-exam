@@ -28,8 +28,8 @@ export class Lib {
       throw new Error('Assertion failed: ' + message)
     }
   }
-  static assure(condition: boolean, message: string, ...things) {
-    if (condition) throw new Error('Assertion failed: ' + message)
+  static failif(condition: boolean, message: string, ...things) {
+    if (condition) throw new Error('Assertion failed: ' + message + ': ' + things.join(', '))
   }
 
   static isNil(obj): boolean {

@@ -10,12 +10,14 @@ export class Question {
   ) {
     if (Lib.isNil(title)) throw Error('title cannot be undefined')
     if (Lib.isNil(type)) throw Error('Type cannot be undefined')
-    if (choices.length < 1) throw new Error('There should be atleast one choice')
     if (solutions.length < 1) throw new Error('There should be atleast one solution')
 
-    solutions.forEach((sol, i) => {
-      if (sol > choices.length - 1 || sol < 0) throw new Error('solution (' + i + ') out of bounds')
-    })
+    if (type !== AnswerType.NCQ) {
+      if (choices.length < 1) throw new Error('There should be atleast one choice')
+      solutions.forEach((sol, i) => {
+        if (sol > choices.length - 1 || sol < 0) throw new Error('solution (' + i + ') out of bounds')
+      })
+    }
 
     switch (type) {
       case AnswerType.TFQ:
@@ -33,6 +35,10 @@ export class Question {
       case AnswerType.MAQ:
         if (choices.length < 2) throw new Error('MAQ should have more than one choice')
         if (solutions.length > choices.length) throw new Error('MAQ cannot have more solutions than choices')
+        break
+      case AnswerType.NCQ:
+        if (choices.length !== 0) throw new Error('NCQ should have no choice')
+        if (solutions.length !== 1) throw new Error('NCQ should have only one solution')
         break
     }
   }

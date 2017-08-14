@@ -13,7 +13,7 @@ export class ExamResult extends Exam {
     super(id, title, exam.questions, when)
 
     if (!Lib.isNil(answers)) {
-      Lib.assure(answers.length > this.questions.length, 'Too many answers', answers.length, this.questions.length)
+      Lib.failif(answers.length > this.questions.length, 'Too many answers', answers.length, this.questions.length)
       answers.forEach((qans, i) => {
         let q = this.questions[i]
         let len = q.choices.length
@@ -31,16 +31,16 @@ export class ExamResult extends Exam {
   private checkAnsType(type: AnswerType, alen: number, chlen: number) {
     switch (type) {
       case AnswerType.TFQ:
-        Lib.assure(alen > 1, 'TFQ cannot have more than one answer')
+        Lib.failif(alen > 1, 'TFQ cannot have more than one answer')
         break
       case AnswerType.MCQ:
-        Lib.assure(alen > 1, 'MCQ cannot have more than one answer')
+        Lib.failif(alen > 1, 'MCQ cannot have more than one answer')
         break
       case AnswerType.ARQ:
-        Lib.assure(alen > 1, 'ARQ cannot have more than one answer')
+        Lib.failif(alen > 1, 'ARQ cannot have more than one answer')
         break
       case AnswerType.MAQ:
-        Lib.assure(alen > chlen, 'MAQ cannot have more answers than choices')
+        Lib.failif(alen > chlen, 'MAQ cannot have more answers than choices')
         break
     }
   }
@@ -61,25 +61,48 @@ export class ExamResult extends Exam {
     return this.questions[qid].solutions.indexOf(n) > -1
   }
   public clearAnswers(qid: number) {
-    if (this._isLocked) throw new Error('Locked question cannot be cleared')
+    Lib.failif(this._isLocked, 'Locked question cannot be cleared')
     this.answers[qid] = []
   }
-  public addAnswer(qid: number, n: number) {
-    if (this._isLocked) throw new Error('Locked question cannot add answer')
-    if (!this.answers[qid]) this.answers[qid] = []
-    this.answers[qid].push(n)
+  public setAnswer(qid: number, n: number) {
+    Lib.failif(this._isLocked, 'Locked question cannot set answer')
+    let q = this.questions[qid]
+    switch (q.type) {
+      case AnswerType.TFQ:
+      case AnswerType.MCQ:
+      case AnswerType.ARQ:
+        Lib.failif(n >= q.choices.length, 'Answer out-of-bounds', n, q.choices.length)
+        // previous answers thrown away
+        this.answers[qid] = [n]
+        break;
+      case AnswerType.MAQ:
+        // console.log(this.isAnswer(qid, n))
+        Lib.failif(n >= q.choices.length, 'Answer out-of-bounds', n, q.choices.length)
+        Lib.failif(this.isAnswer(qid, n), 'Duplicate answer', qid, n, '' + this.answers[qid])
+        if (!this.answers[qid]) this.answers[qid] = []
+        this.answers[qid].push(n)
+        break;
+      case AnswerType.NCQ:
+        this.answers[qid] = [n]
+        break;
+      default:
+        Lib.failif(true, 'This should never execute!')
+        break;
+    }
+    // console.log('setAnswer', qid, n, '' + this.answers[qid])
   }
   public isAnswer(qid: number, n: number): boolean {
     let ans = this.answers[qid]
     return ans && ans.indexOf(n) > -1
   }
   public removeAnswer(qid: number, n: number): boolean {
-    if (this._isLocked) throw new Error('Locked question cannot remove answer')
+    Lib.failif(this._isLocked, 'Locked question cannot remove answer')
     if (!this.answers[qid]) this.answers[qid] = []
     let index = this.answers[qid].indexOf(n);
     let removed = index > -1
     if (removed) this.answers[qid].splice(index, 1)
     // else console.log("WARNING: Answer not available")
+    // console.log('removeAnswer', qid, n, '' + this.answers[qid])
     return removed
   }
   public isCorrect(qid: number): boolean {
