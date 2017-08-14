@@ -191,13 +191,6 @@ describe('ExamResult - single sol tests:', () => {
     expect(r.isCorrect(0)).toBeFalsy()
     r.clearAnswers(0)
   })
-  it('isAnswer working', () => {
-    expect(r.isAnswer(0, 0)).toBeFalsy()
-    r.setAnswer(0, 0)
-    expect(r.isAnswer(0, 1)).toBeFalsy()
-    expect(r.isAnswer(0, 0)).toBeTruthy()
-    r.clearAnswers(0)
-  })
 })
 
 describe('ExamResult - many sol tests:', () => {

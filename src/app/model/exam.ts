@@ -25,6 +25,9 @@ export class Exam extends AbstractThing {
     return qidn + 1
   }
 
+  public isSolution(qid: number, n: number): boolean {
+    return this.questions[qid].isSolution(n)
+  }
 }
 
 export const EMPTY_EXAM = new Exam('00', 'Bingo', [EMPTY_QUESTION])

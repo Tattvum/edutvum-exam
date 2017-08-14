@@ -9,15 +9,12 @@ let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TES
 let createE = (questions: Question[], title = 'TEST E...', id = '00'): Exam => {
   return new Exam(id, title, questions)
 }
-let doE = (questions: Question[]): Exam => {
-  let e = createE(questions)
-  return e
-}
 
 let tfq = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
 let mcq = () => createQ(AnswerType.MCQ, ['C1', 'C2', 'C3'], [2])
 let arq = () => createQ(AnswerType.ARQ, ['C1', 'C2', 'C3', 'C4', 'C5'], [3])
 let maq = () => createQ(AnswerType.MAQ, ['C1', 'C2', 'C3'], [0, 2])
+let ncq = () => createQ(AnswerType.NCQ, [], [-3.141])
 let questions0 = () => []
 let questions1 = () => [tfq()]
 let questions2 = () => [tfq(), maq()]
@@ -57,6 +54,20 @@ describe('Exam:', () => {
     expect(e.nextq(0)).toBe(1)
     expect(e.nextq(1)).toBe(null)
     expect(e.nextq(3)).toBe(null)
+  })
+
+  it('isSolution works', () => {
+    expect(createE([tfq()]).isSolution(0, 0)).toBeTruthy()
+    expect(createE([tfq()]).isSolution(0, 1)).toBeFalsy()
+    expect(createE([mcq()]).isSolution(0, 2)).toBeTruthy()
+    expect(createE([mcq()]).isSolution(0, 1)).toBeFalsy()
+    expect(createE([arq()]).isSolution(0, 3)).toBeTruthy()
+    expect(createE([arq()]).isSolution(0, 6)).toBeFalsy()
+    expect(createE([maq()]).isSolution(0, 2)).toBeTruthy()
+    expect(createE([maq()]).isSolution(0, 0)).toBeTruthy()
+    expect(createE([maq()]).isSolution(0, 4)).toBeFalsy()
+    expect(createE([ncq()]).isSolution(0, -3.141)).toBeTruthy()
+    expect(createE([ncq()]).isSolution(0, 4)).toBeFalsy()
   })
 
 })

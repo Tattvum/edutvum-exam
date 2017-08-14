@@ -86,5 +86,6 @@ export class ChoiceInputComponent implements OnInit {
   }
   set ncqtext(t: string) {
     this.exam.setAnswer(+this.qid, +t)
+    // console.log('' + this.exam.answers[+this.qid])
   }
 }

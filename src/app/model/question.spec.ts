@@ -13,6 +13,12 @@ describe('Question - declaration tests:', () => {
   let sols1: number[] = [0]
   let sols2: number[] = [0, 2]
   let sols3: number[] = [1, 2, 3]
+  let tfq = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
+  let mcq = () => createQ(AnswerType.MCQ, ['C1', 'C2', 'C3'], [2])
+  let arq = () => createQ(AnswerType.ARQ, ['C1', 'C2', 'C3', 'C4', 'C5'], [3])
+  let maq = () => createQ(AnswerType.MAQ, ['C1', 'C2', 'C3'], [0, 2])
+  let ncq = () => createQ(AnswerType.NCQ, [], [-3.141])
+
   let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST...') => {
     return new Question(title, type, choices, sols)
   }
@@ -96,6 +102,21 @@ describe('Question - declaration tests:', () => {
     expect(() => createQ(AnswerType.NCQ, choices0, [-3.14])).not.toThrow()
     expect(() => createQ(AnswerType.NCQ, choices0, [1, 2])).toThrow()
     expect(() => createQ(AnswerType.NCQ, choices0, [])).toThrow()
+    expect(() => createQ(AnswerType.NCQ, choices1, [1])).toThrow()
+  })
+
+  it('isSolution works', () => {
+    expect(tfq().isSolution(0)).toBeTruthy()
+    expect(tfq().isSolution(1)).toBeFalsy()
+    expect(mcq().isSolution(2)).toBeTruthy()
+    expect(mcq().isSolution(1)).toBeFalsy()
+    expect(arq().isSolution(3)).toBeTruthy()
+    expect(arq().isSolution(6)).toBeFalsy()
+    expect(maq().isSolution(2)).toBeTruthy()
+    expect(maq().isSolution(0)).toBeTruthy()
+    expect(maq().isSolution(4)).toBeFalsy()
+    expect(ncq().isSolution(-3.141)).toBeTruthy()
+    expect(ncq().isSolution(4)).toBeFalsy()
   })
 
 })

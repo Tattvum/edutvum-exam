@@ -49,6 +49,7 @@ export class ExamResult extends Exam {
     return this._isLocked;
   }
   public lock() {
+    // Repeated lock is ignored
     if (this._isLocked) return
     this._isLocked = true
   }
@@ -56,9 +57,6 @@ export class ExamResult extends Exam {
   public isAttempted(qid: number): boolean {
     let qans = this.answers[qid]
     return qans && qans.length > 0
-  }
-  public isSolution(qid: number, n: number): boolean {
-    return this.questions[qid].solutions.indexOf(n) > -1
   }
   public clearAnswers(qid: number) {
     Lib.failif(this._isLocked, 'Locked question cannot be cleared')

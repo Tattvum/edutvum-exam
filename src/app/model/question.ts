@@ -42,6 +42,10 @@ export class Question {
         break
     }
   }
+
+  public isSolution(n: number): boolean {
+    return this.solutions.indexOf(n) > -1
+  }
 }
 
 export const EMPTY_QUESTION = new Question('Qbing', AnswerType.TFQ, ['A', 'B'], [0])
