@@ -46,6 +46,9 @@ function createA(type: AnswerType, given): string[] {
     case AnswerType.ARQ:
       choices = ARQChoices.slice(0)
       break;
+    case AnswerType.NCQ:
+      choices = []
+      break;
   }
   return choices
 }
@@ -73,7 +76,7 @@ function createR(obj, es): ExamResult {
   let id = obj.$key
   let exam = es[obj.exam]
   let title = exam.title
-  console.log(id, exam.id, title)
+  // console.log(id, exam.id, title)
   let when = new Date(obj.when)
   let answers: number[][] = fbObjToArr(obj.answers)
   return new ExamResult(id, title, when, exam, answers, true)
