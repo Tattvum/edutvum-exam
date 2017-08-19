@@ -20,7 +20,7 @@ describe('Question - declaration tests:', () => {
   let ncq = () => createQ(AnswerType.NCQ, [], [-3.141])
 
   let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST...') => {
-    return new Question(title, type, choices, sols)
+    return new Question('00', title, type, choices, sols)
   }
 
   it('Question should have title', () => {

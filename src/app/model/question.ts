@@ -3,11 +3,13 @@ import { Lib } from './lib';
 
 export class Question {
   constructor(
+    public readonly id: string,
     public readonly title: string,
     public readonly type: AnswerType,
     public readonly choices: string[],
     public readonly solutions: number[],
   ) {
+    if (Lib.isNil(id)) throw Error('id cannot be undefined')
     if (Lib.isNil(title)) throw Error('title cannot be undefined')
     if (Lib.isNil(type)) throw Error('Type cannot be undefined')
     if (solutions.length < 1) throw new Error('There should be atleast one solution')
@@ -48,4 +50,4 @@ export class Question {
   }
 }
 
-export const EMPTY_QUESTION = new Question('Qbing', AnswerType.TFQ, ['A', 'B'], [0])
+export const EMPTY_QUESTION = new Question('00', 'Qbing', AnswerType.TFQ, ['A', 'B'], [0])

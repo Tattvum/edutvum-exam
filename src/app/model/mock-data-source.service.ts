@@ -11,7 +11,7 @@ import { User } from './user';
 import { ExamResult } from './exam-result';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
-  return new Question(title, type, choices, sols)
+  return new Question('00', title, type, choices, sols)
 }
 let createE = (questions: Question[], title = 'TEST E...', id = '99'): Exam => {
   return new Exam(id, title, questions)

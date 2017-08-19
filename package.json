@@ -6,9 +6,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
+    "test": "ng test --code-coverage",
+    "stage": "ng serve -e stage",
+    "prod": "ng serve -e prod",
+    "build": "ng build -e prod",
     "lint": "ng lint",
+    "deploy": "ng build --prod && firebase deploy --only hosting",
     "e2e": "ng e2e"
   },
   "private": true,

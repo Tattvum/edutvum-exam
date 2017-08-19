@@ -17,9 +17,16 @@ import { Exam } from './exam';
 import { ExamResult } from './exam-result';
 import { User } from './user';
 
-const URL_VER = 'ver5/'
+const URL_VER = 'ver4/'
 const EXAMS_URL = URL_VER + 'exams'
 const RESULTS_URL = URL_VER + 'results/'
+
+function fbObjToArr2(obj): any[] {
+  if (Lib.isNil(obj)) return []
+  let arr = []
+  Object.keys(obj).forEach(key => arr.push(obj[key]))
+  return arr
+}
 
 function fbObjToArr(obj): any[] {
   if (Lib.isNil(obj)) return []
@@ -46,13 +53,13 @@ function createA(type: AnswerType, given): string[] {
   return choices
 }
 
-function createQ(obj, key: string): Question {
-  let id = key
+function createQ(obj): Question {
   let title = obj.display
   let type = AnswerType['' + obj.type]
   let choices = createA(type, obj.choices)
+  // console.log('question:', obj.$key, type, obj.solutions.length)
   let solutions = fbObjToArr(obj.solutions)
-  return new Question(id, title, type, choices, solutions)
+  return new Question('00', title, type, choices, solutions)
 }
 
 function createE(obj): Exam {
@@ -60,29 +67,28 @@ function createE(obj): Exam {
   let title = obj.name
   let when = new Date(obj.when)
   let questions = []
-  let qobj = obj.questions
-  let qkeys = Object.keys(qobj).sort()
-  qkeys.forEach(key => questions.push(createQ(qobj[key], key)))
+  // console.log(id, obj.questions, fbObjToArr(obj.questions))
+  fbObjToArr2(obj.questions).forEach(q => questions.push(createQ(q)))
   return new Exam(id, title, questions, when)
 }
 
-function createR(obj, es: { [key: string]: Exam }): ExamResult {
+function createR(obj, es): ExamResult {
   let id = obj.$key
   let exam = es[obj.exam]
   let title = exam.title
+  // console.log(id, exam.id, title)
   let when = new Date(obj.when)
-  let aobj = obj.answers
-  let answers: number[][] = []
-  exam.questions.forEach((q, i) => answers[i] = aobj[q.id])
+  let answers: number[][] = fbObjToArr(obj.answers)
   return new ExamResult(id, title, when, exam, answers, true)
 }
+
 
 @Injectable()
 export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
 
   private readonly revwhen = { query: { orderByChild: 'revwhen' } }
-  private alles: { [key: string]: Exam } = {}
+  private alles = {}
 
   constructor(private afDb: AngularFireDatabase) { }
 
@@ -125,19 +131,25 @@ export class FirebaseDataSource implements DataSource {
       () => this.holders.exams.length)
   }
 
+  private fetchR00(user: User): Observable<void> {
+    return this.fetch('results', this.resultsUrl(user),
+      userRs => {
+        fbObjToArr(userRs).forEach(r => this.holders.results.push(createR(r, this.alles)))
+      },
+      () => this.holders.results.length)
+  }
+
   private fetchR(user: User): Observable<void> {
     return this.afDb.list(this.resultsUrl(user), this.revwhen).first().map(userRs => {
       fbObjToArr(userRs).forEach(r => this.holders.results.push(createR(r, this.alles)))
+      // console.log('all ' + 'results' + ': ', this.holders.results.length)
     })
   }
 
   public saveExam(user: User, result: ExamResult): Promise<string> {
     let ro = {}
     ro['exam'] = result.exam.id
-    let roanss = ro['answers'] = {}
-    let qs = result.exam.questions
-    result.answers.forEach((ans: number[], i) => roanss[qs[i].id] = ans)
-    // ro['answers'] = result.answers
+    ro['answers'] = result.answers
     ro['when'] = Date.now()
     ro['revwhen'] = -Date.now()
     return new Promise<string>(resolve => {

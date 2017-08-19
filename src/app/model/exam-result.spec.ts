@@ -5,7 +5,7 @@ import { ExamResult } from './exam-result';
 import { Score } from './score';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
-  return new Question(title, type, choices, sols)
+  return new Question('00', title, type, choices, sols)
 }
 let createE = (questions: Question[], title = 'TEST E...', id = '00'): Exam => {
   return new Exam(id, title, questions)
@@ -41,7 +41,7 @@ let sols3: number[] = [1, 2, 3]
 
 let create1QR = (type: AnswerType, choices: string[], sols: number[], ans: number[] = [],
   isLocked = false): ExamResult => {
-  let q = [new Question('TEST Q...', type, choices, sols)]
+  let q = [new Question('00', 'TEST Q...', type, choices, sols)]
   let e = new Exam('00', 'TEST E', q)
   return new ExamResult(e.id, e.title, new Date(), e, [ans], isLocked)
 }

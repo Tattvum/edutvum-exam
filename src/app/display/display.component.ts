@@ -15,7 +15,10 @@ declare var MathJax: {
   styleUrls: ['./display.component.css']
 })
 export class DisplayComponent implements OnInit {
-  @ViewChild('question') question: ElementRef;
+  @ViewChild('question') qref: ElementRef;
+
+  qid
+  qidshow = ''
 
   constructor(private route: ActivatedRoute, private service: DataService) { }
 
@@ -23,17 +26,18 @@ export class DisplayComponent implements OnInit {
     this.route.params
       .subscribe((params: Params) => {
         let eid = params['eid']
-        let qid = params['qid']
-        if (Lib.isNil(eid) || Lib.isNil(qid)) return
+        this.qid = params['qid']
+        if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
         let question = null
         try {
-          question = this.service.getQuestion(eid, qid)
+          question = this.service.getQuestion(eid, this.qid)
         } catch (e) {
           console.log(e)
         }
         if (Lib.isNil(question)) return
-        this.question.nativeElement.innerHTML = question.title
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.question.nativeElement]);
+        this.qidshow = question.id
+        this.qref.nativeElement.innerHTML = question.title
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.qref.nativeElement]);
       })
   }
 
