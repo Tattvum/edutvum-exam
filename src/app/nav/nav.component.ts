@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
+import { GeneralContext } from '../model/general-context';
 import { Lib } from '../model/lib';
 
 @Component({
@@ -21,24 +22,25 @@ export class NavComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
+    private context: GeneralContext,
     private service: DataService) { }
 
   ngOnInit() {
-    this.route.params
-      .subscribe((params: Params) => {
-        this.exam = EMPTY_EXAM_RESULT
-        this.isResultsPage = false
-        this.qidn = -1
-        let eid = params['eid']
-        let exam = this.service.getExam(eid)
-        if (Lib.isNil(exam)) return
-        this.exam = exam
-        let qid = params['qid']
-        this.isResultsPage = (Lib.isNil(qid))
-        if (this.isResultsPage) return
-        this.qidn = +qid
-        this.isResultsPage = false
-      })
+    //    console.log('ngOnInit')
+    this.route.params.subscribe((params: Params) => {
+      this.exam = EMPTY_EXAM_RESULT
+      this.isResultsPage = false
+      this.qidn = -1
+      let eid = params['eid']
+      let exam = this.service.getExam(eid)
+      if (Lib.isNil(exam)) return
+      this.exam = exam
+      let qid = params['qid']
+      this.isResultsPage = (Lib.isNil(qid))
+      if (this.isResultsPage) return
+      this.qidn = +qid
+      this.isResultsPage = false
+    })
   }
 
   next() {
@@ -54,7 +56,7 @@ export class NavComponent implements OnInit {
   results() {
     if (Lib.isNil(this.exam)) return
     if (!this.exam.isLocked()) {
-      if (!confirm('Done with the exam?!')) return
+      if (!this.context.confirm('Done with the exam?!')) return
       this.service.saveExam().then(er => {
         this.exam = er
         this.router.navigate(['/results', this.exam.id])
@@ -65,7 +67,7 @@ export class NavComponent implements OnInit {
   }
 
   gotoDash() {
-    if (!this.exam.isLocked() && !confirm('Cancel the exam: Sure?!')) return
+    if (!this.exam.isLocked() && !this.context.confirm('Cancel the exam: Sure?!')) return
     this.router.navigate(['/student-dash'])
   }
 }

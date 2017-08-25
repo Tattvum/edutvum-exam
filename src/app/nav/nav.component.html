@@ -3,52 +3,30 @@
     <span id="ename">{{exam.title}}</span>
     <span class="eid"> ({{exam.id}})</span>
     <span *ngIf="exam.isLocked()" class="eid">({{exam.exam.id}}) </span>
-    <span *ngIf="exam.isLocked()" id="ewhen"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
-    <span *ngIf="!exam.isLocked()" id="ewhen"> {{ whatTime | async | date: 'yyyy-MMM-dd H:mm EEE' }} </span>
+    <span *ngIf="exam.isLocked()"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
+    <span *ngIf="!exam.isLocked()" class="active"> {{ whatTime | async | date: 'yyyy-MMM-dd H:mm EEE' }} </span>
   </div>
   <div>
     <span class="glyphicon glyphicon-arrow-left"></span>
     <a (click)="gotoDash()">Student Dashboard</a>
     <br><br>
   </div>
-  <div *ngIf="!exam.isLocked()"
-      id="container" class="btn-toolbar" role="toolbar">
+  <div class="btn-toolbar" role="toolbar">
     <span *ngFor="let q of exam.questions; let i=index"
         class="btn-group btn btn-info" role="group"
         [class.done]="exam.isAttempted(i)"
+        [class.wrong]="exam.isLocked() && !exam.isCorrect(i) && exam.isAttempted(i)"
         [class.selected]="i == qidn"
         (click)="select(i)"
         type="button">
         {{i+1}}
     </span>
-    <span id="results" type="button"
-        (click)="results()"
-        class="btn btn-info">
+    <button id="results" (click)="results()" class="btn btn-info">
       Results
-    </span>
-  </div>
-  <div *ngIf="exam.isLocked() == true"
-      id="container" class="btn-toolbar" role="toolbar">
-    <span *ngFor="let q of exam.questions; let i=index"
-        class="btn-group btn btn-info" role="group"
-        [class.done]="exam.isAttempted(i)"
-        [class.wrong]="!exam.isCorrect(i) && exam.isAttempted(i)"
-        [class.selected]="i == qidn"
-        (click)="select(i)"
-        type="button">
-        {{i+1}}
-    </span>
-    <span id="results" type="button"
-        [class.bingo]="isResultsPage"
-        (click)="results()"
-        class="btn-group btn btn-info" role="group">
-      Results
-    </span>
+    </button>
   </div>
   <br>
-  <button class="btn btn-primary btn-sm"
-      (click)="next()">
-    Continue
-    <span class="glyphicon glyphicon-arrow-right"></span>
+  <button id="continue" class="btn btn-primary btn-sm" (click)="next()">
+    Continue <span class="glyphicon glyphicon-arrow-right"></span>
   </button>
 </div>

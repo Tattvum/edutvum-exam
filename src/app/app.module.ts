@@ -13,6 +13,7 @@ import { Ng2PaginationModule } from 'ng2-pagination';
 
 import { AuthGuard } from './auth.guard';
 import { DataService, DataSource, SecuritySource } from './model/data.service';
+import { GeneralContext, GeneralContextImpl } from './model/general-context';
 
 import { MockDataSource } from './model/mock-data-source.service';
 import { MockSecuritySource } from './model/mock-security-source.service';
@@ -61,6 +62,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     UserComponent,
   ],
   providers: [
+    { provide: GeneralContext, useClass: GeneralContextImpl },
     { provide: DataSource, useClass: DATA_SOURCE },
     { provide: SecuritySource, useClass: SECURITY_SOURCE },
     DataService,
