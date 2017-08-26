@@ -74,7 +74,12 @@ function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let aobj = obj.answers
   let answers: number[][] = []
   exam.questions.forEach((q, i) => answers[i] = aobj[q.id])
-  return new ExamResult(id, title, when, exam, answers, true)
+  let gobj = obj.guessings
+  let guessings: boolean[] = []
+  if (gobj) {
+    exam.questions.forEach((q, i) => guessings[i] = gobj[q.id])
+  }
+  return new ExamResult(id, title, when, exam, answers, true, guessings)
 }
 
 @Injectable()
@@ -122,13 +127,18 @@ export class FirebaseDataSource implements DataSource {
         this.alles[e.$key] = exam
         this.holders.exams.push(exam)
       },
-      () => this.holders.exams.length)
+      () => this.holders.exams.length
+    )
   }
 
   private fetchR(user: User): Observable<void> {
-    return this.afDb.list(this.resultsUrl(user), this.revwhen).first().map(userRs => {
-      fbObjToArr(userRs).forEach(r => this.holders.results.push(createR(r, this.alles)))
-    })
+    return this.afDb.list(this.resultsUrl(user), this.revwhen).first().map(
+      userRs => {
+        fbObjToArr(userRs).forEach(
+          r => this.holders.results.push(createR(r, this.alles))
+        )
+      }
+    )
   }
 
   public saveExam(user: User, result: ExamResult): Promise<string> {
@@ -137,7 +147,8 @@ export class FirebaseDataSource implements DataSource {
     let roanss = ro['answers'] = {}
     let qs = result.exam.questions
     result.answers.forEach((ans: number[], i) => roanss[qs[i].id] = ans)
-    // ro['answers'] = result.answers
+    let roguss = ro['guessings'] = {}
+    result.guessings.forEach((isGuess: boolean, i) => roguss[qs[i].id] = isGuess)
     ro['when'] = Date.now()
     ro['revwhen'] = -Date.now()
     return new Promise<string>(resolve => {

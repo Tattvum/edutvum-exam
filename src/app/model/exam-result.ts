@@ -9,6 +9,7 @@ export class ExamResult extends Exam {
     readonly exam: Exam,
     public answers: number[][] = [],
     protected _isLocked = false,
+    public guessings: boolean[] = []
   ) {
     super(id, title, exam.questions, when)
 

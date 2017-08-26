@@ -1,8 +1,32 @@
-<div id="clear-all" class="btn"
-    (click)="clearAll()" [class.disabled]="exam.isLocked()"
-    >
-  Clear answers
-</div>
+<table width="100%">
+  <tr>
+    <td width="20%" align="left">
+      <span (click)="clearAll()"
+          [class.disabled]="exam.isLocked()"
+          id="clear-all"
+          class="btn" >
+        Clear answers
+      </span>
+    </td>
+    <td width="80%" align="right">
+      <button (click)="markGuess(false)"
+          [disabled]="!exam.isAttempted(qid) || exam.isLocked()"
+          [class.sure-true]="!exam.guessings[qid]"
+          [class.sure-false]="exam.guessings[qid]"
+          class="btn btn-small" >
+        I'm sure
+      </button>
+      <button (click)="markGuess(true)"
+          [disabled]="!exam.isAttempted(qid) || exam.isLocked()"
+          [class.guess-true]="exam.guessings[qid]"
+          [class.guess-false]="!exam.guessings[qid]"
+          class="btn  btn-small" >
+        I'm guessing
+      </button>
+    </td>
+  </tr>
+</table>
+
 <form #f="ngForm" novalidate class="bg">
   <div class="btn-group-vertical" role="choices">
     <div *ngFor="let ch of question.choices; let i=index">

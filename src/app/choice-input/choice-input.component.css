@@ -31,6 +31,36 @@ div {
   color: lightgrey;
 }
 
+.guess-false {
+  background-color: white;
+  color: lightcoral
+}
+.guess-true {
+  background-color: lightcoral;
+  color: white;
+}
+
+.sure-false {
+  background-color: white;
+  color: lightseagreen
+}
+.sure-true {
+  background-color: lightseagreen;
+  color: white;
+}
+
+.btn-small {
+  border-color: white;
+  height: 24px;
+  padding: 1px 6px;
+  text-align: center;
+  padding: 1px 6px;
+  font-size: smaller;
+  margin: 6px;
+  width: 30px;
+  width: unset;
+}
+
 #clear-all {
   width: 30px;
   height: 20px;

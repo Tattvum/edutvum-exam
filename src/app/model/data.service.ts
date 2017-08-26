@@ -95,7 +95,7 @@ export class DataService {
         this.dataSource.saveExam(user, this.pendingResult).then(key => {
           console.log(key + ' saved in server!')
           let o = this.pendingResult
-          let result = new ExamResult(key, o.title, o.when, o.exam, o.answers, true)
+          let result = new ExamResult(key, o.title, o.when, o.exam, o.answers, true, o.guessings)
           this.cache[key] = result
           this.results.splice(0, 0, result)
           resolve(result)

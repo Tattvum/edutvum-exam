@@ -86,6 +86,11 @@ export class ChoiceInputComponent implements OnInit {
   }
   set ncqtext(t: string) {
     this.exam.setAnswer(+this.qid, +t)
-    // console.log('' + this.exam.answers[+this.qid])
   }
+
+  markGuess(guessed: boolean) {
+    if (this.exam.isLocked()) return
+    this.exam.guessings[+this.qid] = guessed
+  }
+
 }
