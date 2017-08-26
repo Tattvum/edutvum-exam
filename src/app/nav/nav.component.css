@@ -2,23 +2,14 @@ a {
   cursor: pointer;
 }
 
-span {
-  width: 30px;
-  height: 20px;
-  margin: 1px;
-  padding: 1px;
-  text-align: center;
-  font-size: smaller;
+button {
+  white-space: nowrap;
+  height: 30px;
 }
 
-#results {
-  width: unset;
-  background-color: slategray;
-  padding: 1px 6px;
-  border-color: slategray;
-  color: white;
-  font-size: smaller;
-  height: 20px;
+#ename {
+  color: maroon;
+  font-size: larger;
 }
 
 .eid {
@@ -29,14 +20,32 @@ span {
   color: gray;
 }
 
-#ename {
-  color: maroon;
-  font-size: larger;
+.when {
+  font-size: smaller;
 }
 
-button {
-  white-space: nowrap;
-  height: 30px;
+.active {
+  color: lightcoral
+}
+
+.nav-button {
+  font-size: smaller;
+  height: 20px;
+}
+
+.nav-number {
+  width: 30px;
+  margin: 1px;
+  padding: 1px;
+  text-align: center;
+}
+
+#results {
+  width: unset;
+  background-color: slategray;
+  padding: 1px 6px;
+  border-color: slategray;
+  color: white;
 }
 
 .done {
@@ -53,15 +62,4 @@ button {
   color: black;
   font-weight: bold;
   border: 1px solid black
-}
-
-.bingo {
-  background-color: steelblue;
-  color: black;
-  font-weight: bold;
-  border: 1px solid black
-}
-
-.active {
-  color: lightcoral
 }

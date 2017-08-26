@@ -9,12 +9,7 @@ export abstract class GeneralContext {
 
 @Injectable()
 export class GeneralContextImpl extends GeneralContext {
-  public confirmx(msg: string): boolean {
-    console.log('GeneralContextImpl', msg)
-    return confirm(msg)
-  }
   public confirm(msg: string): boolean {
-    console.log('GeneralContextImpl2', msg)
-    return true
+    return confirm(msg)
   }
 }

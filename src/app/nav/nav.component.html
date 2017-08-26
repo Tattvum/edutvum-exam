@@ -3,25 +3,26 @@
     <span id="ename">{{exam.title}}</span>
     <span class="eid"> ({{exam.id}})</span>
     <span *ngIf="exam.isLocked()" class="eid">({{exam.exam.id}}) </span>
-    <span *ngIf="exam.isLocked()"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
-    <span *ngIf="!exam.isLocked()" class="active"> {{ whatTime | async | date: 'yyyy-MMM-dd H:mm EEE' }} </span>
+    <span *ngIf="exam.isLocked()" class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
+    <span *ngIf="!exam.isLocked()" class="when active"> {{ whatTime | async | date: 'yyyy-MMM-dd H:mm EEE' }} </span>
   </div>
   <div>
     <span class="glyphicon glyphicon-arrow-left"></span>
-    <a (click)="gotoDash()">Student Dashboard</a>
+    <a id="back" (click)="gotoDash()">Student Dashboard</a>
     <br><br>
   </div>
   <div class="btn-toolbar" role="toolbar">
-    <span *ngFor="let q of exam.questions; let i=index"
-        class="btn-group btn btn-info" role="group"
+    <button *ngFor="let q of exam.questions; let i=index"
+        class="btn-group btn btn-info nav-button nav-number" role="group"
         [class.done]="exam.isAttempted(i)"
         [class.wrong]="exam.isLocked() && !exam.isCorrect(i) && exam.isAttempted(i)"
         [class.selected]="i == qidn"
         (click)="select(i)"
+        id="b{{i}}"
         type="button">
         {{i+1}}
-    </span>
-    <button id="results" (click)="results()" class="btn btn-info">
+    </button>
+    <button id="results" (click)="results()" class="btn btn-info nav-button">
       Results
     </button>
   </div>
