@@ -39,6 +39,10 @@ export class ChoiceInputComponent implements OnInit {
     })
   }
 
+  get qidn(): number {
+    return +this.qid
+  }
+
   clearAll() {
     if (!this.exam.isLocked()) this.exam.clearAnswers(+this.qid)
   }

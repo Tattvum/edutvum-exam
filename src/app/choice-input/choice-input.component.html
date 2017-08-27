@@ -10,19 +10,19 @@
     </td>
     <td width="80%" align="right">
       <span (click)="markGuess(false)"
-          [class.disabled]="!exam.isAttempted(qid) || exam.isLocked()"
-          [class.sure-true]="!exam.guessings[qid]"
-          [class.sure-false]="exam.guessings[qid]"
+          [class.disabled]="!exam.isAttempted(qidn) || exam.isLocked()"
+          [class.sure-true]="!exam.guessings[qidn]"
+          [class.sure-false]="exam.guessings[qidn]"
           class="btn btn-small" >
         I'm sure
       </span>
       <span (click)="markGuess(true)"
-          [class.disabled]="!exam.isAttempted(qid) || exam.isLocked()"
-          [class.guess-true]="exam.guessings[qid]"
-          [class.guess-false]="!exam.guessings[qid]"
+          [class.disabled]="!exam.isAttempted(qidn) || exam.isLocked()"
+          [class.guess-true]="exam.guessings[qidn]"
+          [class.guess-false]="!exam.guessings[qidn]"
           class="btn  btn-small" >
         I'm guessing
-    </span>
+      </span>
     </td>
   </tr>
 </table>
