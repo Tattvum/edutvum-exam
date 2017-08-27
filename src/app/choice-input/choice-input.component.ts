@@ -89,7 +89,7 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   markGuess(guessed: boolean) {
-    if (this.exam.isLocked()) return
+    if (!this.exam.isAttempted(+this.qid) || this.exam.isLocked()) return
     this.exam.guessings[+this.qid] = guessed
   }
 

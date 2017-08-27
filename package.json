@@ -9,9 +9,9 @@
     "test": "ng test --code-coverage",
     "stage": "ng serve -e stage",
     "prod": "ng serve -e prod",
-    "build": "ng build -e prod",
+    "build": "ng build --prod -e prod",
     "lint": "ng lint",
-    "deploy": "ng build -e prod && firebase deploy --only hosting",
+    "deploy": "ng build --prod -e prod && firebase deploy --only hosting",
     "e2e": "ng e2e"
   },
   "private": true,
