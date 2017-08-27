@@ -12,7 +12,7 @@
     <br><br>
   </div>
   <div class="btn-toolbar" role="toolbar">
-    <button *ngFor="let q of exam.questions; let i=index"
+    <span *ngFor="let q of exam.questions; let i=index"
         class="btn-group btn btn-info nav-button nav-number" role="group"
         [class.done]="exam.isAttempted(i)"
         [class.wrong]="exam.isLocked() && !exam.isCorrect(i) && exam.isAttempted(i)"
@@ -21,10 +21,10 @@
         id="b{{i}}"
         type="button">
         {{i+1}}
-    </button>
-    <button id="results" (click)="results()" class="btn btn-info nav-button">
+  </span>
+    <span id="results" (click)="results()" class="btn btn-info nav-button">
       Results
-    </button>
+    </span>
   </div>
   <br>
   <button id="continue" class="btn btn-primary btn-sm" (click)="next()">

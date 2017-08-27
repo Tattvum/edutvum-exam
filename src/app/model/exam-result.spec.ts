@@ -54,7 +54,7 @@ let checkScore = (s: Score, t: number, c: number, w: number, l: number, p: numbe
   expect(s.percent()).toBe(p)
 }
 
-xdescribe('ExamResult:', () => {
+describe('ExamResult:', () => {
   it('TFQ Creation checks works', () => {
     expect(() => createR2([tfq()], [])).not.toThrow()
     expect(() => createR2([tfq()], [[0, 1]])).toThrow()
@@ -129,7 +129,7 @@ describe('ExamResult:', () => {
 
 describe('ExamResult - Question - declaration tests:', () => {
 
-  xit('Answers are checked fine', () => {
+  it('Answers are checked fine', () => {
     expect(() => create1QR(AnswerType.TFQ, choices2, [0], [2])).toThrow()
     expect(() => create1QR(AnswerType.TFQ, choices2, [0], [1])).not.toThrow()
     expect(() => create1QR(AnswerType.TFQ, choices2, [0], [1, 1])).toThrow()

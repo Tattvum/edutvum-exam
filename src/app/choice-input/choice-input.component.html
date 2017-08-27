@@ -9,20 +9,20 @@
       </span>
     </td>
     <td width="80%" align="right">
-      <button (click)="markGuess(false)"
-          [disabled]="!exam.isAttempted(qid) || exam.isLocked()"
+      <span (click)="markGuess(false)"
+          [class.disabled]="!exam.isAttempted(qid) || exam.isLocked()"
           [class.sure-true]="!exam.guessings[qid]"
           [class.sure-false]="exam.guessings[qid]"
           class="btn btn-small" >
         I'm sure
-      </button>
-      <button (click)="markGuess(true)"
-          [disabled]="!exam.isAttempted(qid) || exam.isLocked()"
+      </span>
+      <span (click)="markGuess(true)"
+          [class.disabled]="!exam.isAttempted(qid) || exam.isLocked()"
           [class.guess-true]="exam.guessings[qid]"
           [class.guess-false]="!exam.guessings[qid]"
           class="btn  btn-small" >
         I'm guessing
-      </button>
+    </span>
     </td>
   </tr>
 </table>
@@ -33,7 +33,7 @@
       <label [ngClass]="colors(i)">
         <label class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
         <input [type]="ctype" name="choices" [id]="'rd'+i"
-            (click)="exam.setAnswer(qid, i)" [disabled]="exam.isLocked()"
+            (click)="choiceClicked($event, i)" [disabled]="exam.isLocked()"
             [checked]="exam.isAnswer(qid, i)"
             />
         <label class="opt" [for]="'rd'+i" [innerHTML]="ch"></label>

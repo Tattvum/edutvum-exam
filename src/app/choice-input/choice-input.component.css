@@ -50,15 +50,15 @@ div {
 }
 
 .btn-small {
-  border-color: white;
-  height: 24px;
-  padding: 1px 6px;
-  text-align: center;
-  padding: 1px 6px;
-  font-size: smaller;
-  margin: 6px;
   width: 30px;
+  height: 20px;
+  margin: 1px;
+  padding: 1px;
+  text-align: center;
+  font-size: smaller;
   width: unset;
+  padding: 1px 6px;
+  border-color: white;
 }
 
 #clear-all {

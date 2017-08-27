@@ -34,6 +34,8 @@ button {
 }
 
 .nav-number {
+  white-space: nowrap;
+  height: 20px;
   width: 30px;
   margin: 1px;
   padding: 1px;
@@ -41,6 +43,8 @@ button {
 }
 
 #results {
+  white-space: nowrap;
+  height: 20px;
   width: unset;
   background-color: slategray;
   padding: 1px 6px;

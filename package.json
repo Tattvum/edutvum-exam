@@ -11,7 +11,7 @@
     "prod": "ng serve -e prod",
     "build": "ng build -e prod",
     "lint": "ng lint",
-    "deploy": "ng build --prod && firebase deploy --only hosting",
+    "deploy": "ng build -e prod && firebase deploy --only hosting",
     "e2e": "ng e2e"
   },
   "private": true,

@@ -12,33 +12,40 @@ export class ExamResult extends Exam {
     public guessings: boolean[] = []
   ) {
     super(id, title, exam.questions, when)
-
     if (!Lib.isNil(answers)) {
       Lib.failif(answers.length > this.questions.length, 'Too many answers', answers.length, this.questions.length)
+      let ctx = this.id + ' ' + this.exam.id
       answers.forEach((qans, i) => {
-        let q = this.questions[i]
-        let len = q.choices.length
-        if (!Lib.isNil(qans)) {
-          qans.forEach((ans, j) => {
-            // if (ans > len - 1 || ans < 0) throw new Error('q:' + i + ', a[' + j + ']=' + ans + ', len:' + len)
-            if (ans > len - 1 || ans < 0) console.log('q:' + i + ', a[' + j + ']=' + ans + ', len:' + len)
-          })
-          // this.checkAnsType(q.type, qans.length, q.choices.length)
-        }
+        if (!Lib.isNil(qans)) this.checkAnsInChoice(qans, this.questions[i], ctx)
       })
     }
   }
 
-  private checkAnsType(type: AnswerType, alen: number, chlen: number) {
+  private checkAnsInChoice(qans: any[], q: Question, ctx: string) {
+    let chlen = q.choices.length
+    ctx += '.' + q.id
+    if (q.type !== AnswerType.NCQ) {
+      qans.forEach((ans, j) => {
+        let error = ctx + ', a[' + j + ']=' + ans + ', len:' + chlen
+        Lib.failif(ans > chlen - 1 || ans < 0, 'Ans out-of-choice', ctx)
+      })
+    }
+    this.checkAnsByType(q.type, qans.length, chlen, ctx)
+  }
+
+  private checkAnsByType(type: AnswerType, alen: number, chlen: number, ctx: string) {
     switch (type) {
       case AnswerType.TFQ:
-        Lib.failif(alen > 1, 'TFQ cannot have more than one answer')
+        Lib.failif(alen > 1, 'TFQ cannot have more than one answer', ctx)
         break
       case AnswerType.MCQ:
-        Lib.failif(alen > 1, 'MCQ cannot have more than one answer')
+        Lib.failif(alen > 1, 'MCQ cannot have more than one answer', ctx)
         break
       case AnswerType.ARQ:
-        Lib.failif(alen > 1, 'ARQ cannot have more than one answer')
+        Lib.failif(alen > 1, 'ARQ cannot have more than one answer', ctx)
+        break
+      case AnswerType.NCQ:
+        Lib.failif(alen > 1, 'NCQ cannot have more than one answer', ctx)
         break
       case AnswerType.MAQ:
         Lib.failif(alen > chlen, 'MAQ cannot have more answers than choices')
