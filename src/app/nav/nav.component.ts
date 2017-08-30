@@ -43,6 +43,12 @@ export class NavComponent implements OnInit {
     })
   }
 
+  markGuess(guessed: boolean) {
+    if (!this.exam.isAttempted(this.qidn) || this.exam.isLocked()) return
+    this.exam.guessings[this.qidn] = guessed
+    this.next()
+  }
+
   next() {
     let qid = this.exam.nextq(this.qidn)
     if (qid == null) this.results()

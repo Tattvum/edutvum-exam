@@ -39,10 +39,6 @@ export class ChoiceInputComponent implements OnInit {
     })
   }
 
-  get qidn(): number {
-    return +this.qid
-  }
-
   clearAll() {
     if (!this.exam.isLocked()) this.exam.clearAnswers(+this.qid)
   }
@@ -90,11 +86,6 @@ export class ChoiceInputComponent implements OnInit {
   }
   set ncqtext(t: string) {
     this.exam.setAnswer(+this.qid, +t)
-  }
-
-  markGuess(guessed: boolean) {
-    if (!this.exam.isAttempted(+this.qid) || this.exam.isLocked()) return
-    this.exam.guessings[+this.qid] = guessed
   }
 
 }

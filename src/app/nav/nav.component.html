@@ -14,20 +14,39 @@
   <div class="btn-toolbar" role="toolbar">
     <span *ngFor="let q of exam.questions; let i=index"
         class="btn-group btn btn-info nav-button nav-number" role="group"
-        [class.done]="exam.isAttempted(i)"
-        [class.wrong]="exam.isLocked() && !exam.isCorrect(i) && exam.isAttempted(i)"
+        [class.locked]="exam.isLocked()"
+        [class.correct]="exam.isCorrect(i)"
+        [class.guessing]="exam.guessings[i]"
+        [class.attempted]="exam.isAttempted(i)"
         [class.selected]="i == qidn"
         (click)="select(i)"
         id="b{{i}}"
         type="button">
         {{i+1}}
-  </span>
+    </span>
     <span id="results" (click)="results()" class="btn btn-info nav-button">
       Results
     </span>
   </div>
   <br>
-  <button id="continue" class="btn btn-primary btn-sm" (click)="next()">
-    Continue <span class="glyphicon glyphicon-arrow-right"></span>
-  </button>
+  <span id="continue" (click)="next()"
+      [class.locked]="exam.isLocked()"
+      [class.attempted]="exam.isAttempted(qidn)"
+      class="btn btn-small btn-primary btn-sm" >
+    Continue <span class="glyphicon glyphicon-arrow-right glyph-span"></span>
+  </span>
+  <span (click)="markGuess(false)" id="btn-sure"
+      [class.disabled]="exam.isLocked()"
+      [class.attempted]="exam.isAttempted(qidn)"
+      [class.selected]="!exam.guessings[qidn]"
+      class="btn btn-small btn-sm btn-doubt" >
+    I'm sure
+  </span>
+  <span (click)="markGuess(true)" id="btn-guess"
+      [class.disabled]="exam.isLocked()"
+      [class.attempted]="exam.isAttempted(qidn)"
+      [class.selected]="exam.guessings[qidn]"
+      class="btn  btn-small btn-sm btn-doubt" >
+    I'm guessing
+  </span>
 </div>

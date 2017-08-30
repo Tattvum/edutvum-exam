@@ -1,31 +1,9 @@
-<table width="100%">
-  <tr>
-    <td width="20%" align="left">
-      <span (click)="clearAll()"
-          [class.disabled]="exam.isLocked()"
-          id="clear-all"
-          class="btn" >
-        Clear answers
-      </span>
-    </td>
-    <td width="80%" align="right">
-      <span (click)="markGuess(false)"
-          [class.disabled]="!exam.isAttempted(qidn) || exam.isLocked()"
-          [class.sure-true]="!exam.guessings[qidn]"
-          [class.sure-false]="exam.guessings[qidn]"
-          class="btn btn-small" >
-        I'm sure
-      </span>
-      <span (click)="markGuess(true)"
-          [class.disabled]="!exam.isAttempted(qidn) || exam.isLocked()"
-          [class.guess-true]="exam.guessings[qidn]"
-          [class.guess-false]="!exam.guessings[qidn]"
-          class="btn  btn-small" >
-        I'm guessing
-      </span>
-    </td>
-  </tr>
-</table>
+<span (click)="clearAll()"
+    [class.disabled]="exam.isLocked()"
+    id="clear-all"
+    class="btn" >
+  Clear answers
+</span>
 
 <form #f="ngForm" novalidate class="bg">
   <div class="btn-group-vertical" role="choices">
