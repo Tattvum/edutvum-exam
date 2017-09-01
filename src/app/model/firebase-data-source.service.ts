@@ -73,7 +73,7 @@ function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let when = new Date(obj.when)
   let aobj = obj.answers
   let answers: number[][] = []
-  exam.questions.forEach((q, i) => answers[i] = aobj[q.id])
+  if (aobj) exam.questions.forEach((q, i) => answers[i] = aobj[q.id])
   let gobj = obj.guessings
   let guessings: boolean[] = []
   if (gobj) {
