@@ -1,0 +1,123 @@
+a {
+  cursor: pointer;
+}
+
+#ename {
+  color: maroon;
+  font-size: larger;
+}
+
+.eid {
+  width: unset;
+  font-size: smaller;
+  background-color: white;
+  padding: 1px 6px;
+  color: gray;
+}
+
+.when {
+  font-size: smaller;
+}
+
+.active {
+  color: lightcoral
+}
+
+.nav-button {
+  font-size: smaller;
+  height: 20px;
+}
+
+.nav-number {
+  white-space: nowrap;
+  height: 20px;
+  width: 30px;
+  margin: 1px;
+  padding: 1px;
+  text-align: center;
+}
+
+#results {
+  white-space: nowrap;
+  height: 20px;
+  width: unset;
+  background-color: slategray;
+  padding: 1px 6px;
+  border-color: slategray;
+  color: white;
+}
+
+.nav-number.selected, #results.selected {
+  color: black;
+  font-weight: bold;
+  border: 1px solid black
+}
+
+/*---- number button ----*/
+
+@mixin bgfg($bg, $fg) {
+  background-color: $bg;
+  color: $fg;
+}
+
+.nav-number.attempted {
+  &:not(.locked) {
+    &.guessing {
+      @include bgfg(lightcoral, white);
+    }
+    &:not(.guessing) {
+      @include bgfg(lightseagreen, white);
+    }
+  }
+  &.locked {
+    &.guessing {
+      &.correct {
+        @include bgfg(green, white);
+      }
+      &:not(.correct) {
+        @include bgfg(red, white);
+      }
+    }
+  }
+}
+
+//---- guessing button ----
+
+.btn-doubt:not(.attempted),
+.btn-doubt.disabled:not(.selected),
+#contsinue.attempted:not(.locked)  {
+  display: none;
+}
+.btn-doubt.locked  {
+  border: 1px solid yellow
+}
+
+@each $kind, $color in ('sure', lightseagreen), ('guess' lightcoral) {
+  #btn-#{$kind} {
+    &.selected {
+      @include bgfg(#{$color}, white);
+    }
+    &:not(.selected) {
+      border: 1px solid #{$color};
+      @include bgfg(white, #{$color});
+
+      &:not(.disabled):hover {
+        @include bgfg(#{$color}, white);
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+//---- ---- ----
+
+.btn-small {
+  height: 30px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.glyph-span {
+  line-height: 100%;
+  vertical-align: middle;
+}

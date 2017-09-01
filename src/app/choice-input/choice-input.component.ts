@@ -15,7 +15,7 @@ declare var MathJax: {
 @Component({
   selector: 'app-choice-input',
   templateUrl: './choice-input.component.html',
-  styleUrls: ['./choice-input.component.css']
+  styleUrls: ['./choice-input.component.scss']
 })
 export class ChoiceInputComponent implements OnInit {
 
