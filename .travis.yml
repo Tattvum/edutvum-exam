@@ -4,7 +4,7 @@ node_js:
 addons:
   chrome: stable
 script:
-  - npm test:ci
+  - npm run test:ci
 before_install:
   - npm i -g @angular/cli
 cache:
