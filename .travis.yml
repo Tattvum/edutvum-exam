@@ -1,10 +1,12 @@
 language: node_js
 node_js:
   - "6"
+addons:
+  chrome: stable
+script:
+  - npm test:ci
 before_install:
   - npm i -g @angular/cli
 cache:
   directories:
     - "node_modules"
-addons:
-  chrome: stable

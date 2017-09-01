@@ -54,6 +54,6 @@ module.exports = function (config) {
         ],
       }
     },
-    singleRun: true
+    singleRun: false
   });
 };
