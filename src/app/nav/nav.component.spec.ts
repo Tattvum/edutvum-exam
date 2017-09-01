@@ -154,11 +154,11 @@ describe('Nav Component Tests:', () => {
     })
   }))
 
-  function b0Check(done: boolean, wrong: boolean, selected = true) {
+  function b0Check(attempted: boolean, correct: boolean, selected = true) {
     ensureOnInit(fixture)
     let button = fixture.debugElement.query(By.css('#b0'));
-    expect(button.classes['done']).toBe(done)
-    expect(button.classes['wrong']).toBe(wrong)
+    expect(button.classes['attempted']).toBe(attempted)
+    expect(button.classes['correct']).toBe(correct)
     expect(button.classes['selected']).toBe(selected)
   }
 
@@ -171,17 +171,17 @@ describe('Nav Component Tests:', () => {
   }))
   it('Number button classes working - attempted right', fakeAsync(() => {
     NAV_EXAM_RESULT.setAnswer(0, 0)
-    b0Check(true, false)
+    b0Check(true, true)
   }))
   it('Number button classes working - done wrong', fakeAsync(() => {
     NAV_EXAM_RESULT.setAnswer(0, 1)
     NAV_EXAM_RESULT.lock()
-    b0Check(true, true)
+    b0Check(true, false)
   }))
   it('Number button classes working - done right', fakeAsync(() => {
     NAV_EXAM_RESULT.setAnswer(0, 0)
     NAV_EXAM_RESULT.lock()
-    b0Check(true, false)
+    b0Check(true, true)
   }))
 })
 
