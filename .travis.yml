@@ -3,7 +3,6 @@ node_js:
   - "6"
 before_install:
   - npm i -g @angular/cli
-  - google-chrome-stable --headless --disable-gpu
 cache:
   directories:
     - "node_modules"
