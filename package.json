@@ -8,6 +8,7 @@
     "start": "ng serve",
     "test": "ng test --code-coverage",
     "test:ci": "ng test --single-run",
+    "dev": "ng serve -e dev",
     "stage": "ng serve -e stage",
     "prod": "ng serve -e prod",
     "build": "ng build --prod -e prod",

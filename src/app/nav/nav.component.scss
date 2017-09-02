@@ -50,7 +50,8 @@ a {
 .nav-number.selected, #results.selected {
   color: black;
   font-weight: bold;
-  border: 1px solid black
+  border: 1px solid black;
+  border-width: 2px 1px 2px;
 }
 
 /*---- number button ----*/
@@ -62,21 +63,18 @@ a {
 
 .nav-number.attempted {
   &:not(.locked) {
+    @include bgfg(lightseagreen, white);
     &.guessing {
       @include bgfg(lightcoral, white);
-    }
-    &:not(.guessing) {
-      @include bgfg(lightseagreen, white);
     }
   }
   &.locked {
     &.guessing {
-      &.correct {
-        @include bgfg(green, white);
-      }
-      &:not(.correct) {
-        @include bgfg(red, white);
-      }
+      opacity: 0.7;
+    }
+    @include bgfg(red, white);
+    &.correct {
+      @include bgfg(green, white);
     }
   }
 }

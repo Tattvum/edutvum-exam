@@ -154,34 +154,39 @@ describe('Nav Component Tests:', () => {
     })
   }))
 
-  function b0Check(attempted: boolean, correct: boolean, selected = true) {
-    ensureOnInit(fixture)
-    let button = fixture.debugElement.query(By.css('#b0'));
-    expect(button.classes['attempted']).toBe(attempted)
-    expect(button.classes['correct']).toBe(correct)
-    expect(button.classes['selected']).toBe(selected)
-  }
+  describe('Number button classes working:', () => {
 
-  it('Number button classes working - scratch', fakeAsync(() => {
-    b0Check(false, false)
-  }))
-  it('Number button classes working - attempted wrong', fakeAsync(() => {
-    NAV_EXAM_RESULT.setAnswer(0, 1)
-    b0Check(true, false)
-  }))
-  it('Number button classes working - attempted right', fakeAsync(() => {
-    NAV_EXAM_RESULT.setAnswer(0, 0)
-    b0Check(true, true)
-  }))
-  it('Number button classes working - done wrong', fakeAsync(() => {
-    NAV_EXAM_RESULT.setAnswer(0, 1)
-    NAV_EXAM_RESULT.lock()
-    b0Check(true, false)
-  }))
-  it('Number button classes working - done right', fakeAsync(() => {
-    NAV_EXAM_RESULT.setAnswer(0, 0)
-    NAV_EXAM_RESULT.lock()
-    b0Check(true, true)
-  }))
+    function b0Check(attempted: boolean, correct: boolean, guessing: boolean, locked: boolean) {
+      ensureOnInit(fixture)
+      let button = fixture.debugElement.query(By.css('#b0'));
+      expect(button.classes['attempted']).toBe(attempted)
+      expect(button.classes['correct']).toBe(correct)
+      expect(button.classes['guessing']).toBe(guessing)
+      expect(button.classes['locked']).toBe(locked)
+      expect(button.classes['selected']).toBe(true)
+    }
+
+    function cgl(correct: boolean, guessing = false, locked = false) {
+      NAV_EXAM_RESULT.setAnswer(0, correct ? 0 : 1)
+      // default is sure
+      if (guessing) NAV_EXAM_RESULT.guessings[0] = true
+      if (locked) NAV_EXAM_RESULT.lock()
+      // guessing will not be seen until locked
+      b0Check(true, correct, guessing, locked)
+    }
+
+    it('De Nuevo', fakeAsync(() => {
+      b0Check(false, false, false, false)
+    }))
+
+    it('Wrong Surity Attempted', fakeAsync(() => cgl(false)))
+    it('Wrong Guess Attempted', fakeAsync(() => cgl(false, true)))
+    it('Wrong Surity Locked', fakeAsync(() => cgl(false, false, true)))
+    it('Wrong Guess Locked', fakeAsync(() => cgl(false, true, true)))
+    it('Right Surity Attempted', fakeAsync(() => cgl(true)))
+    it('Right Guess Attempted', fakeAsync(() => cgl(true, true)))
+    it('Right Surity Locked', fakeAsync(() => cgl(true, false, true)))
+    it('Right Guess Locked', fakeAsync(() => cgl(true, true, true)))
+  })
 })
 
