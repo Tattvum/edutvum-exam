@@ -12,8 +12,8 @@ export class Exam extends AbstractThing {
     when: Date = new Date()
   ) {
     super(id, title, when)
-    if (Lib.isNil(questions)) throw Error('Exam questions cannot be undefined')
-    if (questions.length < 1) throw Error('Exam questions should be atleaset one')
+    Lib.failif(Lib.isNil(questions), 'Exam questions cannot be undefined')
+    Lib.failif(questions.length < 1, 'Exam questions should be atleaset one')
   }
 
   protected get qcount(): number {

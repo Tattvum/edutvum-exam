@@ -12,8 +12,8 @@ export abstract class AbstractThing implements Thing {
     public readonly title: string,
     public readonly when: Date = new Date()
   ) {
-    if (Lib.isNil(_id)) throw Error('id cannot be undefined')
-    if (Lib.isNil(title)) throw Error('title cannot be undefined')
+    Lib.failif(Lib.isNil(_id), 'id cannot be undefined')
+    Lib.failif(Lib.isNil(title), 'title cannot be undefined')
   }
 
   public get id(): string {
