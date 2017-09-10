@@ -14,7 +14,8 @@
     "build": "ng build --prod -e prod",
     "lint": "ng lint",
     "deploy": "ng build --prod -e prod && firebase deploy --only hosting",
-    "e2e": "ng e2e"
+    "export": "firebase database:get / edutvum-exam | ./node_modules/jsonpp/jsonpp.js | tee cmd-line/edutvum-exam.prod.export-$(date +%Y%m%d_%H).json >> cmd-line/edutvum-exam.prod.import.json",
+    "verify": "reset && tsc cmd-line/verify-v5.ts && node cmd-line/verify-v5.js cmd-line/edutvum-exam.prod.import.json"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +34,8 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "firebase": "^4.1.2",
+    "jsonfile": "^3.0.1",
+    "jsonschema": "^1.2.0",
     "moment": "^2.17.1",
     "ng2-pagination": "^2.0.1",
     "rxjs": "^5.0.1",
@@ -47,6 +50,7 @@
     "codelyzer": "~3.0.1",
     "jasmine-core": "2.6.3",
     "jasmine-spec-reporter": "4.1.0",
+    "jsonpp": "^1.0.2",
     "karma": "1.7.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-cli": "^1.0.1",
