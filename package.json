@@ -14,8 +14,8 @@
     "build": "ng build --prod -e prod",
     "lint": "ng lint",
     "deploy": "ng build --prod -e prod && firebase deploy --only hosting",
-    "export": "firebase database:get / edutvum-exam | ./node_modules/jsonpp/jsonpp.js | tee cmd-line/edutvum-exam.prod.export-$(date +%Y%m%d_%H).json >> cmd-line/edutvum-exam.prod.import.json",
-    "verify": "reset && tsc cmd-line/verify-v5.ts && node cmd-line/verify-v5.js cmd-line/edutvum-exam.prod.import.json"
+    "export": "firebase database:get / edutvum-exam > cmd-line/edutvum-exam-export-$(date +%Y%m%d_%H).json",
+    "verify": "tsc cmd-line/verify.ts && node cmd-line/verify.js cmd-line/edutvum-exam-import.json"
   },
   "private": true,
   "dependencies": {

@@ -1,9 +1,9 @@
-import * as fs from 'jsonfile';
+const Validator = require('jsonschema').Validator
+const validator = new Validator()
 
-let Validator = require('jsonschema').Validator;
-let v = new Validator();
+let ok = true
 
-let questionSchema = {
+const questionSchema = {
   'id': '/QuestionSchema',
   'type': 'object',
   'properties': {
@@ -13,12 +13,15 @@ let questionSchema = {
     'solutions': { 'type': 'array', 'items': { 'type': 'number' } },
     'notes': { 'type': 'string' },
   },
+  'dependencies': {
+    'choices': { 'properties': { 'type': { 'enum': ['MCQ', 'MAQ'] } } }
+  },
   'additionalProperties': false,
   'required': ['display', 'type', 'solutions']
 }
-v.addSchema(questionSchema, '/QuestionSchema');
+validator.addSchema(questionSchema, '/QuestionSchema');
 
-let examSchema = {
+const examSchema = {
   'id': '/ExamSchema',
   'type': 'object',
   'properties': {
@@ -38,9 +41,9 @@ let examSchema = {
   'additionalProperties': false,
   'required': ['name', 'by', 'when', 'revwhen', 'questions']
 }
-v.addSchema(examSchema, '/ExamSchema');
+validator.addSchema(examSchema, '/ExamSchema')
 
-let resultSchema = {
+export const resultSchema = {
   'id': '/ResultSchema',
   'type': 'object',
   'properties': {
@@ -65,9 +68,9 @@ let resultSchema = {
   'additionalProperties': false,
   'required': ['exam', 'when', 'revwhen']
 }
-v.addSchema(resultSchema, '/ResultSchema');
+validator.addSchema(resultSchema, '/ResultSchema')
 
-let ver5Schema = {
+const ver5Schema = {
   'id': '/ver5Schema',
   'type': 'object',
   'properties': {
@@ -102,74 +105,12 @@ let ver5Schema = {
   'required': ['ver5']
 }
 
-let __JSON_FILE__ = process.argv[2]
-console.log('reading...', __JSON_FILE__)
-let data: any = fs.readFileSync(__JSON_FILE__, 'utf8')
-let errors = v.validate(data, ver5Schema).errors
-errors.forEach(err => {
-  console.log(err.stack)
-});
-
-// ----- ----- ----- -----
-
-function drill(f, o, n = 0, ...xs) {
-  if (n >= f.t.length) { f.last(...xs); return }
-  if (o) Object.keys(o).forEach((p, i) =>
-    drill(f, f.t[n](o[p]), n + 1, ...xs, i, p, ...f.e[n](o[p])))
+export class SchemaValidations {
+  public static validate(data): boolean {
+    let errors = validator.validate(data, ver5Schema).errors
+    errors.forEach(err => {
+      console.log(err.stack)
+    })
+    return (errors == null || errors.length <= 0)
+  }
 }
-
-let n2s = (n: number) => {
-  return ('0' + n).slice(-2);
-}
-
-let n9 = (d: string) => {
-  if (d === '-') return d
-  else return 9 - (+d)
-}
-
-let d2rev = (d: string) => {
-  let dd = []
-  d.split('').forEach(c => dd.push(n9(c)));
-  return dd.join('')
-}
-
-// ----- ----- ----- -----
-
-function checkQid(qid: string, ...ctx) {
-  let regex = new RegExp('(.+)q([0-9]+)(.*)')
-  let part = regex.exec(qid)
-  if (part && part.length >= 3) {
-    if (n2s(+part[2]) !== part[2]) console.log('BAD 1 qid ---- ', qid, ' -- ', ctx.join(', '))
-  } else console.log('BAD 2 qid ---- ', qid, ' -- ', ctx.join(', '))
-}
-
-function drillQid(note, root, rfn, i) {
-  console.log(note)
-  drill({
-    t: [o => o, rfn, o => o],
-    e: [o => [], o => [o.exam], o => []],
-    last: (...x) => checkQid(x[i], ...x),
-  }, root)
-}
-
-if (!(errors && errors.length > 0)) {
-  console.log('No structural errors. Yay!!')
-  console.log('.')
-
-  drillQid('results answers', data.ver5.results, o => o.answers, 6)
-  console.log('.')
-
-  drillQid('results guessings', data.ver5.results, o => o.guessings, 6)
-  console.log('.')
-
-  console.log('exams questions')
-  drill({
-    t: [o => o.questions, o => o],
-    e: [o => [], o => []],
-    last: (...x) => checkQid(x[3], ...x),
-  }, data.ver5.exams)
-  console.log('.')
-
-  console.log('done.')
-}
-
