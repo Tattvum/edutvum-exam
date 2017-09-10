@@ -1,10 +1,17 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { AnswerType } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { Lib } from '../model/lib';
+
+export enum KEY_CODE {
+  UP_ARROW = 38,
+  DOWN_ARROW = 40,
+  ESCAPE = 27,
+  ENTER = 13,
+}
 
 declare var MathJax: {
   Hub: {
@@ -23,6 +30,16 @@ export class ChoiceInputComponent implements OnInit {
   question: Question = EMPTY_QUESTION
   exam: ExamResult = EMPTY_EXAM_RESULT
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+  @ViewChild('first') private elementRef: ElementRef;
+
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    console.log(event);
+    if (event.keyCode === KEY_CODE.UP_ARROW) this.elementRef.nativeElement.focus()
+    if (event.keyCode === KEY_CODE.DOWN_ARROW) this.elementRef.nativeElement.focus()
+    if (event.keyCode === KEY_CODE.ESCAPE) this.clearAll()
+  }
 
   constructor(private route: ActivatedRoute,
     private router: Router,

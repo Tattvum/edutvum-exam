@@ -1,12 +1,19 @@
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Rx';
 
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { Lib } from '../model/lib';
+
+export enum KEY_CODE {
+  RIGHT_ARROW = 39,
+  LEFT_ARROW = 37,
+  ESCAPE = 27,
+  ENTER = 13,
+}
 
 @Component({
   selector: 'app-nav',
@@ -19,6 +26,23 @@ export class NavComponent implements OnInit {
   isResultsPage = false
   qidn: number
   whatTime = Observable.interval(1000).map(x => new Date()).share();
+
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    console.log(event);
+    if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
+      this.next()
+    }
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.markGuess(event.altKey === true)
+    }
+    if (event.keyCode === KEY_CODE.ENTER && event.ctrlKey === true) {
+      this.results()
+    }
+    if (event.keyCode === KEY_CODE.ESCAPE && event.ctrlKey === true) {
+      this.gotoDash()
+    }
+  }
 
   constructor(private route: ActivatedRoute,
     private router: Router,
