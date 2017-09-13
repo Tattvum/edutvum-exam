@@ -10,7 +10,7 @@
     <div *ngFor="let ch of question.choices; let i=index">
       <label [ngClass]="colors(i)">
         <label class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
-        <input [type]="ctype" name="choices" [id]="'rd'+i"
+        <input [type]="ctype" name="choices" [id]="'rd'+i" #first
             (click)="choiceClicked($event, i)" [disabled]="exam.isLocked()"
             [checked]="exam.isAnswer(qid, i)"
             />

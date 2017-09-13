@@ -4,14 +4,7 @@ import { DataService } from '../model/data.service';
 import { AnswerType } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
-import { Lib } from '../model/lib';
-
-export enum KEY_CODE {
-  UP_ARROW = 38,
-  DOWN_ARROW = 40,
-  ESCAPE = 27,
-  ENTER = 13,
-}
+import { Lib, KEY_CODE } from '../model/lib';
 
 declare var MathJax: {
   Hub: {
@@ -35,10 +28,9 @@ export class ChoiceInputComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event);
-    if (event.keyCode === KEY_CODE.UP_ARROW) this.elementRef.nativeElement.focus()
-    if (event.keyCode === KEY_CODE.DOWN_ARROW) this.elementRef.nativeElement.focus()
-    if (event.keyCode === KEY_CODE.ESCAPE) this.clearAll()
+    if (Lib.noExtra(event, KEY_CODE.UP_ARROW)) this.elementRef.nativeElement.focus()
+    else if (Lib.noExtra(event, KEY_CODE.DOWN_ARROW)) this.elementRef.nativeElement.focus()
+    else if (event.keyCode === KEY_CODE.ESCAPE) this.clearAll()
   }
 
   constructor(private route: ActivatedRoute,

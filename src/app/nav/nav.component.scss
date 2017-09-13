@@ -47,11 +47,20 @@ a {
   color: white;
 }
 
-.nav-number.selected, #results.selected {
-  color: black;
+@mixin selHigh() {
   font-weight: bold;
   border: 1px solid black;
   border-width: 2px 1px 2px;
+}
+
+.nav-number.selected {
+  @include selHigh();
+  color: black;
+}
+
+#results.selected {
+  @include selHigh();
+  background-color: black;
 }
 
 /*---- number button ----*/

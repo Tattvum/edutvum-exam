@@ -6,14 +6,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
-import { Lib } from '../model/lib';
-
-export enum KEY_CODE {
-  RIGHT_ARROW = 39,
-  LEFT_ARROW = 37,
-  ESCAPE = 27,
-  ENTER = 13,
-}
+import { Lib, KEY_CODE } from '../model/lib';
 
 @Component({
   selector: 'app-nav',
@@ -29,17 +22,12 @@ export class NavComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event);
-    if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
-      this.next()
-    }
-    if (event.keyCode === KEY_CODE.ENTER) {
-      this.markGuess(event.altKey === true)
-    }
-    if (event.keyCode === KEY_CODE.ENTER && event.ctrlKey === true) {
-      this.results()
-    }
-    if (event.keyCode === KEY_CODE.ESCAPE && event.ctrlKey === true) {
+    if (Lib.noExtra(event, KEY_CODE.RIGHT_ARROW)) this.next()
+    else if (Lib.noExtra(event, KEY_CODE.LEFT_ARROW)) this.prev()
+    else if (event.keyCode === KEY_CODE.ENTER) {
+      if (event.ctrlKey === true) this.results()
+      else this.markGuess(event.altKey === true)
+    } if (event.keyCode === KEY_CODE.ESCAPE && event.ctrlKey === true) {
       this.gotoDash()
     }
   }
@@ -75,6 +63,12 @@ export class NavComponent implements OnInit {
 
   next() {
     let qid = this.exam.nextq(this.qidn)
+    if (qid == null) this.results()
+    else this.select(+qid)
+  }
+
+  prev() {
+    let qid = this.exam.prevq(this.qidn)
     if (qid == null) this.results()
     else this.select(+qid)
   }

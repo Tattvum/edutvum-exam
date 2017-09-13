@@ -1,3 +1,12 @@
+export enum KEY_CODE {
+  ENTER = 13,
+  ESCAPE = 27,
+  LEFT_ARROW = 37,
+  UP_ARROW = 38,
+  RIGHT_ARROW = 39,
+  DOWN_ARROW = 40,
+}
+
 export class Lib {
   static times(n: number): number[] {
     let arr = []
@@ -35,5 +44,10 @@ export class Lib {
   static isNil(obj): boolean {
     // tslint:disable-next-line:triple-equals
     return obj == undefined
+  }
+
+  static noExtra(ev: KeyboardEvent, kc: KEY_CODE): boolean {
+    return ev.keyCode === kc && ev.metaKey === false
+      && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === false
   }
 }

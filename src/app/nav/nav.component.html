@@ -24,7 +24,8 @@
         type="button">
         {{i+1}}
     </span>
-    <span id="results" (click)="results()" class="btn btn-info nav-button">
+    <span id="results" (click)="results()" [class.selected]="isResultsPage"
+        class="btn btn-info nav-button">
       Results
     </span>
   </div>

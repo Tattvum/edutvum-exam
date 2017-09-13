@@ -17,12 +17,14 @@ export class StudentDashComponent {
   public pageExam
   public pageResult
 
-  constructor(
-    public service: DataService,
-    private router: Router) { }
+  constructor(public service: DataService, private router: Router) { }
 
   showWhen(dt: Date): string {
     return moment(dt).fromNow();
+  }
+
+  listResults(eid: string): ExamResult[] {
+    return this.service.results.filter(r => r.exam.id === eid)
   }
 
   takeExam(exam: Exam) {

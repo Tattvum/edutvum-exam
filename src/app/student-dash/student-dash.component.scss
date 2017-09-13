@@ -7,10 +7,23 @@ a {
 }
 
 .vcenter {
-    display: inline-block;
-    vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.row {
-  padding: 2px;
+.title {
+  cursor: pointer;
+  color: green;
+}
+.title:hover {
+  color: maroon;
+}
+
+.badge {
+  margin-left: 4px;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
+.badge:hover {
+  background-color: #5cb85c;
 }

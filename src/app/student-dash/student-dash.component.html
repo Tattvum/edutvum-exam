@@ -1,52 +1,28 @@
 <app-user></app-user>
 <div class="container-fluid">
-  <h1>Student Dashboard</h1>
+  <h1>Exam Dashboard</h1>
 
-  <h3>Available Exams</h3>
+  <br>
   <div class="container-fluid">
-    <div class="row" *ngFor="let ex of service.exams | paginate: { id:'exams', itemsPerPage: 5, currentPage: pageExam }">
-      <div class="col-xs-1">
-        <span>{{ex.id}}</span>
-      </div>
-      <div class="col-xs-7">
-        <button type="button" (click)="takeExam(ex)" class="btn btn-info">{{ex.title}}</button>
-      </div>
-      <div class="col-xs-4">
-        <span>{{showWhen(ex.when)}}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12" style="padding-top: 10px;">
-        <div class="has-text-centered">
-          <pagination-controls id='exams' (pageChange)="pageExam = $event"></pagination-controls>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3>Recent Exams Taken</h3>
-  <div class="container-fluid">
-    <div class="row" *ngFor="let rs of service.results | paginate: { id:'result', itemsPerPage: 3, currentPage: pageResult }">
-      <div class="col-xs-1">
-        <span >{{rs.eid}}</span>
-      </div>
-      <div class="col-xs-5">
-        <button type="button" (click)="showExamResult(rs)" class="btn btn-success">{{rs.title}}</button>
-      </div>
-      <div class="col-xs-2">
-        <button type="button" (click)="showExamResult(rs)" class="btn btn-warning">{{rs.score().percent()}}%</button>
-      </div>
-      <div class="col-xs-4">
-        <span>{{showWhen(rs.when)}}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12" style="padding-top: 10px;">
-        <div class="has-text-centered">
-          <pagination-controls id='result' (pageChange)="pageResult = $event"></pagination-controls>
-        </div>
-      </div>
-    </div>
+    <table class="table table-hover">
+      <tbody *ngFor="let ex of service.exams | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }">
+        <tr class="row">
+          <td class="col-3">{{ex.id}}</td>
+          <td class="col-6 active title" (click)="takeExam(ex)">
+            {{ex.title}}
+            <span *ngFor="let rs of listResults(ex.id); let j=index">
+                <span data-toggle="tooltip" class="badge pull-right"
+                    (click)="showExamResult(rs)"
+                    title="{{showWhen(rs.when)}}">
+                  {{rs.score().percent()}}%
+                </span>
+            </span>
+          </td>
+          <td class="col-3">{{showWhen(ex.when)}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls id='exams' (pageChange)="pageExam = $event"></pagination-controls>
   </div>
 
 </div>

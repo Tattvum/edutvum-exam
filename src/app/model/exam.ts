@@ -20,9 +20,14 @@ export class Exam extends AbstractThing {
     return this.questions.length
   }
   public nextq(qidn: number): number {
-    if (Lib.isNil(qidn) || qidn < 0) return 0
-    if (qidn >= this.qcount - 1) return null
+    if (Lib.isNil(qidn) || qidn < 0 || qidn > this.qcount - 1) return 0
+    if (qidn === this.qcount - 1) return null
     return qidn + 1
+  }
+  public prevq(qidn: number): number {
+    if (Lib.isNil(qidn) || qidn < 0 || qidn > this.qcount - 1) return this.qcount - 1
+    if (qidn === 0) return null
+    return qidn - 1
   }
 
   public isSolution(qid: number, n: number): boolean {

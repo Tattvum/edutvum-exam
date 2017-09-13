@@ -47,13 +47,22 @@ describe('Exam:', () => {
     expect(() => createE(questions1())).not.toThrow()
   })
 
-  it('q nav works', () => {
+  it('q nav next works', () => {
     let e = createE(questions2())
     expect(e.nextq(null)).toBe(0)
     expect(e.nextq(-1)).toBe(0)
+    expect(e.nextq(3)).toBe(0)
     expect(e.nextq(0)).toBe(1)
     expect(e.nextq(1)).toBe(null)
-    expect(e.nextq(3)).toBe(null)
+  })
+
+  it('q nav prev works', () => {
+    let e = createE(questions2())
+    expect(e.prevq(null)).toBe(1)
+    expect(e.prevq(-1)).toBe(1)
+    expect(e.prevq(3)).toBe(1)
+    expect(e.prevq(0)).toBe(null)
+    expect(e.prevq(1)).toBe(0)
   })
 
   it('isSolution works', () => {
