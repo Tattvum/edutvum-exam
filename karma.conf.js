@@ -13,6 +13,7 @@ module.exports = function (config) {
       require('karma-jasmine-html-reporter'),
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
+      require('karma-coveralls'),
       require('karma-coverage-istanbul-reporter'),
       require('@angular/cli/plugins/karma')
     ],
@@ -23,7 +24,7 @@ module.exports = function (config) {
       { pattern: './src/test.ts', watched: false }
     ],
     preprocessors: {
-      './src/test.ts': ['@angular/cli']
+      './src/test.ts': ['@angular/cli'],
     },
     mime: {
       'text/x-typescript': ['ts', 'tsx']
