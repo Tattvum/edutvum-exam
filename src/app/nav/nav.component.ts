@@ -27,7 +27,7 @@ export class NavComponent implements OnInit {
     else if (event.keyCode === KEY_CODE.ENTER) {
       if (event.ctrlKey === true) this.results()
       else this.markGuess(event.altKey === true)
-    } if (event.keyCode === KEY_CODE.ESCAPE && event.ctrlKey === true) {
+    } if (event.keyCode === KEY_CODE.ESCAPE) {
       this.gotoDash()
     }
   }
@@ -58,6 +58,7 @@ export class NavComponent implements OnInit {
   markGuess(guessed: boolean) {
     if (!this.exam.isAttempted(this.qidn) || this.exam.isLocked()) return
     this.exam.guessings[this.qidn] = guessed
+    this.service.saveExam()
     this.next()
   }
 
@@ -87,6 +88,13 @@ export class NavComponent implements OnInit {
       })
     } else {
       this.router.navigate(['/results', this.exam.id])
+    }
+  }
+
+  pauseExam() {
+    if (!this.exam.isLocked()) {
+      this.context.alert('The exam will be paused now. \nYou can resume from the dashboard.')
+      this.router.navigate(['/student-dash'])
     }
   }
 

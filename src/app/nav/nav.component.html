@@ -1,16 +1,33 @@
 <div>
   <div>
     <span id="ename">{{exam.title}}</span>
+    <span class="eid">({{exam.exam.id}}) </span>
     <span class="eid"> ({{exam.id}})</span>
-    <span *ngIf="exam.isLocked()" class="eid">({{exam.exam.id}}) </span>
     <span *ngIf="exam.isLocked()" class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
     <span *ngIf="!exam.isLocked()" class="when active"> {{ whatTime | async | date: 'yyyy-MMM-dd H:mm EEE' }} </span>
   </div>
+  <br>
   <div>
-    <span class="glyphicon glyphicon-arrow-left"></span>
-    <a id="back" (click)="gotoDash()">Student Dashboard</a>
-    <br><br>
+    <span id="pause" (click)="pauseExam()"
+        [class.locked]="exam.isLocked()"
+        data-toggle="tooltip" title="Pause Exam"
+        class="btn btn-small btn-danger btn-sm" >
+      <span class="glyphicon glyphicon-pause"></span>
+    </span>
+    <span id="cancel" (click)="gotoDash()"
+        [class.locked]="exam.isLocked()"
+        class="btn btn-small btn-danger btn-sm" >
+      <span *ngIf="!exam.isLocked()">Cancel</span>
+      <span *ngIf="exam.isLocked()">Back</span>
+    </span>
+    <span id="done" (click)="results()"
+        [class.locked]="exam.isLocked()"
+        class="btn btn-small btn-success btn-sm" >
+      <span *ngIf="!exam.isLocked()">Done</span>
+      <span *ngIf="exam.isLocked()">Results</span>
+    </span>
   </div>
+  <br>
   <div class="btn-toolbar" role="toolbar">
     <span *ngFor="let q of exam.questions; let i=index"
         class="btn-group btn btn-info nav-button nav-number" role="group"

@@ -146,12 +146,12 @@ describe('Nav Component Tests:', () => {
   it('Back to dash link click working - confirm false', fakeAsync(() => {
     navigateTest(fixture, 0, null, () => {
       CONFIRMATION = false
-      clickButton(fixture, '#back')
+      clickButton(fixture, '#cancel')
     })
   }))
   it('Back to dash link click working - confirm true', fakeAsync(() => {
     navigateTest(fixture, 1, [DASHBOARD_URL], () => {
-      clickButton(fixture, '#back')
+      clickButton(fixture, '#cancel')
     })
   }))
 

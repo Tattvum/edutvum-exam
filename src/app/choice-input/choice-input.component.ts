@@ -30,7 +30,6 @@ export class ChoiceInputComponent implements OnInit {
   keyEvent(event: KeyboardEvent) {
     if (Lib.noExtra(event, KEY_CODE.UP_ARROW)) this.elementRef.nativeElement.focus()
     else if (Lib.noExtra(event, KEY_CODE.DOWN_ARROW)) this.elementRef.nativeElement.focus()
-    else if (event.keyCode === KEY_CODE.ESCAPE) this.clearAll()
   }
 
   constructor(private route: ActivatedRoute,

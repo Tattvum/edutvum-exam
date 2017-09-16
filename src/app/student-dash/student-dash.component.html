@@ -11,13 +11,15 @@
           <td class="col-6 active title" (click)="takeExam(ex)">
             {{ex.title}}
             <span *ngFor="let rs of listResults(ex.id); let j=index">
-                <span data-toggle="tooltip" class="badge pull-right"
+                <span data-toggle="tooltip"
+                    class="badge pull-right"
                     (click)="showExamResult(rs)"
                     [class.locked]="rs.isLocked()"
                     title="{{showWhen(rs.when)}}">
-                  {{rs.score().percent()}}%
+                  <span *ngIf="rs.isLocked()">{{rs.score().percent()}}%</span>
+                  <span *ngIf="!rs.isLocked()" class="glyphicon glyphicon-play"></span>
                 </span>
-            </span>
+          </span>
           </td>
           <td class="col-3">{{showWhen(ex.when)}}</td>
         </tr>

@@ -63,6 +63,18 @@ a {
   background-color: black;
 }
 
+#pause.locked {
+  display: none;
+}
+#cancel.locked {
+  background-color: lightslategrey;
+  border-color: transparent;
+}
+#done.locked {
+  background-color: lightslategrey;
+  border-color: transparent;
+}
+
 /*---- number button ----*/
 
 @mixin bgfg($bg, $fg) {

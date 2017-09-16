@@ -25,8 +25,8 @@ export class StudentDashComponent {
 
   listResults(eid: string): ExamResult[] {
     return this.service.results
-        .filter(r => r.exam.id === eid)
-        .sort((a, b) =>  b.when.getTime() - a.when.getTime())
+      .filter(r => r.exam.id === eid)
+      .sort((a, b) => b.when.getTime() - a.when.getTime())
   }
 
   takeExam(exam: Exam) {
@@ -37,6 +37,8 @@ export class StudentDashComponent {
   }
 
   showExamResult(result: ExamResult) {
-    this.router.navigate(['/results', result.id])
+    let er = this.service.getExam(result.id)
+    if (er.isLocked()) this.router.navigate(['/results', result.id])
+    else this.router.navigate(['/question', result.id, 0])
   }
 }
