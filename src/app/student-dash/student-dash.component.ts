@@ -24,13 +24,16 @@ export class StudentDashComponent {
   }
 
   listResults(eid: string): ExamResult[] {
-    return this.service.results.filter(r => r.exam.id === eid)
+    return this.service.results
+        .filter(r => r.exam.id === eid)
+        .sort((a, b) =>  b.when.getTime() - a.when.getTime())
   }
 
   takeExam(exam: Exam) {
     if (!confirm('Ready to start the exam?!')) return
-    let rid = this.service.startExam(exam.id)
-    this.router.navigate(['/question', rid, 0])
+    this.service.startExam(exam.id).then(rid => {
+      this.router.navigate(['/question', rid, 0])
+    })
   }
 
   showExamResult(result: ExamResult) {

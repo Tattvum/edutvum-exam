@@ -60,11 +60,6 @@ export class ChoiceInputComponent implements OnInit {
     }
   }
 
-  choiceClicked(event, cid: number) {
-    if (event.target.checked) this.exam.setAnswer(+this.qid, cid)
-    else this.exam.removeAnswer(+this.qid, cid)
-  }
-
   getAnswer(i: number): number {
     let q = this.exam.answers[+this.qid]
     let ans = 0
@@ -93,8 +88,16 @@ export class ChoiceInputComponent implements OnInit {
   get ncqtext(): string {
     return this.getAnswer(0) + ''
   }
+
   set ncqtext(t: string) {
     this.exam.setAnswer(+this.qid, +t)
+    this.service.saveExam()
+  }
+
+  choiceClicked(event, cid: number) {
+    if (event.target.checked) this.exam.setAnswer(+this.qid, cid)
+    else this.exam.removeAnswer(+this.qid, cid)
+    this.service.saveExam()
   }
 
 }

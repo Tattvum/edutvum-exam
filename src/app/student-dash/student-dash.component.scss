@@ -23,7 +23,12 @@ a {
   margin-left: 4px;
   background-color: #f0ad4e;
   border-color: #eea236;
+  &:not(.locked) {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
 }
 .badge:hover {
-  background-color: #5cb85c;
+  background-color: #0069d9;
+  border-color: #0062cc;
 }

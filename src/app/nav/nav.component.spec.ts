@@ -36,7 +36,8 @@ let NAV_EXAM = EMPTY_EXAM
 let NAV_EXAM_RESULT = EMPTY_EXAM_RESULT
 let dataServiceMock = {
   getExam: (eid) => NAV_EXAM_RESULT,
-  saveExam: () => Promise.resolve(NAV_EXAM_RESULT)
+  finishExam: () => Promise.resolve(NAV_EXAM_RESULT),
+  cancelExam: () => Promise.resolve(true)
 }
 
 let routerMock = {

@@ -81,7 +81,7 @@ export class NavComponent implements OnInit {
     if (Lib.isNil(this.exam)) return
     if (!this.exam.isLocked()) {
       if (!this.context.confirm('Done with the exam?!')) return
-      this.service.saveExam().then(er => {
+      this.service.finishExam().then(er => {
         this.exam = er
         this.router.navigate(['/results', this.exam.id])
       })
@@ -91,7 +91,12 @@ export class NavComponent implements OnInit {
   }
 
   gotoDash() {
-    if (!this.exam.isLocked() && !this.context.confirm('Cancel the exam: Sure?!')) return
-    this.router.navigate(['/student-dash'])
+    if (this.exam.isLocked()) {
+      this.router.navigate(['/student-dash'])
+    } else if (this.context.confirm('Cancel the exam: Sure?!')) {
+      this.service.cancelExam().then(ok => {
+        this.router.navigate(['/student-dash'])
+      })
+    }
   }
 }

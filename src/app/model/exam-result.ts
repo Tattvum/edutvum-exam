@@ -4,12 +4,17 @@ import { Question, EMPTY_QUESTION } from './question';
 import { Score, EMPTY_SCORE } from 'app/model/score';
 import { Lib } from '../model/lib';
 
+export enum ExamResultStatus {
+  PENDING, DONE
+}
+
 export class ExamResult extends Exam {
   constructor(id: string, title: string, when: Date,
     readonly exam: Exam,
     public answers: number[][] = [],
-    protected _isLocked = false,
-    public guessings: boolean[] = []
+    protected status: ExamResultStatus = ExamResultStatus.PENDING,
+    public guessings: boolean[] = [],
+    readonly moments: Date[] = [],
   ) {
     super(id, title, exam.questions, when)
     if (!Lib.isNil(answers)) {
@@ -54,12 +59,12 @@ export class ExamResult extends Exam {
   }
 
   public isLocked(): boolean {
-    return this._isLocked;
+    return this.status === ExamResultStatus.DONE;
   }
   public lock() {
     // Repeated lock is ignored
-    if (this._isLocked) return
-    this._isLocked = true
+    if (this.isLocked()) return
+    this.status = ExamResultStatus.DONE
   }
 
   public isAttempted(qid: number): boolean {
@@ -67,11 +72,11 @@ export class ExamResult extends Exam {
     return qans && qans.length > 0
   }
   public clearAnswers(qid: number) {
-    Lib.failif(this._isLocked, 'Locked question cannot be cleared')
+    Lib.failif(this.isLocked(), 'Locked question cannot be cleared')
     this.answers[qid] = []
   }
   public setAnswer(qid: number, n: number) {
-    Lib.failif(this._isLocked, 'Locked question cannot set answer')
+    Lib.failif(this.isLocked(), 'Locked question cannot set answer')
     let q = this.questions[qid]
     switch (q.type) {
       case AnswerType.TFQ:
@@ -95,20 +100,22 @@ export class ExamResult extends Exam {
         Lib.failif(true, 'This should never execute!')
         break;
     }
-    // console.log('setAnswer', qid, n, '' + this.answers[qid])
+    this.moments[qid] = new Date()
+    // console.log('setAnswer', this.exam.id, qid, ':', n, this.answers[qid], this.moments[qid])
   }
   public isAnswer(qid: number, n: number): boolean {
     let ans = this.answers[qid]
     return ans && ans.indexOf(n) > -1
   }
   public removeAnswer(qid: number, n: number): boolean {
-    Lib.failif(this._isLocked, 'Locked question cannot remove answer')
+    Lib.failif(this.isLocked(), 'Locked question cannot remove answer')
     if (!this.answers[qid]) this.answers[qid] = []
     let index = this.answers[qid].indexOf(n);
     let removed = index > -1
-    if (removed) this.answers[qid].splice(index, 1)
-    // else console.log("WARNING: Answer not available")
-    // console.log('removeAnswer', qid, n, '' + this.answers[qid])
+    if (removed) {
+      this.answers[qid].splice(index, 1)
+      console.log('removeAnswer', this.exam.id, qid, ':', n, this.answers[qid], this.moments[qid])
+    }
     return removed
   }
   public isCorrect(qid: number): boolean {

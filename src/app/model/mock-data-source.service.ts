@@ -40,11 +40,14 @@ const NOUN = [
   'Donkey'
 ]
 
+let alles: { [key: string]: Exam } = {}
+
 let makeExamRnd = (qs: number): Exam => {
   let questions = []
   for (let i = 0; i < qs; i++) questions.push(Lib.rnd(Q)())
   let title = Lib.rnd(ADJ) + ' ' + Lib.rnd(NOUN)
   let exam = new Exam('' + Lib.rndn(100, 500), title, questions)
+  alles[exam.id] = exam
   return exam
 }
 
@@ -66,7 +69,21 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(this.holders)
   }
 
-  public saveExam(user: User, result: ExamResult): Promise<string> {
-    return Promise.resolve('#' + result.id)
+  public createExam(user: User, eid: string): Promise<ExamResult> {
+    console.log('starting exam!', eid)
+    Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
+    let exam = alles[eid]
+    Lib.assert(Lib.isNil(exam), 'exam cannot be undefined', eid)
+    let result = new ExamResult(eid, exam.title, new Date(), exam)
+    return Promise.resolve(result)
   }
+
+  public updateExam(user: User, result: ExamResult): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
+  public deleteExam(user: User, rid: string): Promise<boolean> {
+    return Promise.resolve(true) // TBD
+  }
+
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Lib } from './lib';
 import { Question } from './question';
 import { Exam } from './exam';
-import { ExamResult } from './exam-result';
+import { ExamResult, ExamResultStatus } from './exam-result';
 import { User } from './user';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
@@ -20,7 +20,9 @@ export class Holders {
 
 export abstract class DataSource {
   abstract getHolders(user: User): Promise<Holders>
-  abstract saveExam(user: User, result: ExamResult): Promise<string>
+  abstract createExam(user: User, eid: string): Promise<ExamResult>
+  abstract updateExam(user: User, result: ExamResult): Promise<boolean>
+  abstract deleteExam(user: User, rid: string): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -64,15 +66,6 @@ export class DataService {
     })
   }
 
-  public startExam(eid: string): string {
-    console.log('starting exam!', eid)
-    Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
-    let exam = this.cache[eid]
-    Lib.assert(Lib.isNil(exam), 'exam cannot be undefined', eid)
-    this.pendingResult = new ExamResult(eid, exam.title, new Date(), exam)
-    return this.pendingResult.id
-  }
-
   public getExam(eid: string): ExamResult {
     Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
     if (this.pendingResult && this.pendingResult.id === eid) return this.pendingResult
@@ -80,6 +73,7 @@ export class DataService {
     let result = <ExamResult>this.cache[eid]
     Lib.assert(Lib.isNil(result), 'exam result cannot be undefined', eid)
     Lib.assert(!(result instanceof ExamResult), 'Either pendingResult of ExamResult', result)
+    this.pendingResult = result
     return result
   }
 
@@ -87,20 +81,54 @@ export class DataService {
     return this.getExam(eid).questions[+qid]
   }
 
-  public saveExam(): Promise<ExamResult> {
-    this.pendingResult.lock()
-    return new Promise<ExamResult>(resolve => {
+  private withUserPromise<A, B>(call: (u: User) => Promise<A>, act: (a: A) => B): Promise<B> {
+    return new Promise<B>(resolve => {
       this.userWait().then(user => {
         Lib.assert(Lib.isNil(user), 'user cannot be null')
-        this.dataSource.saveExam(user, this.pendingResult).then(key => {
-          console.log(key + ' saved in server!')
-          let o = this.pendingResult
-          let result = new ExamResult(key, o.title, o.when, o.exam, o.answers, true, o.guessings)
-          this.cache[key] = result
-          this.results.splice(0, 0, result)
-          resolve(result)
-        })
+        call(user).then((a: A) => resolve(act(a)))
       })
+    })
+  }
+
+  public startExam(eid: string): Promise<string> {
+    let call = u => this.dataSource.createExam(u, eid)
+    return this.withUserPromise(call, result => {
+      console.log(result.id, 'exam started!')
+      this.cache[result.id] = result
+      this.results.splice(0, 0, result)
+      this.pendingResult = result
+      return this.pendingResult.id
+    })
+  }
+
+  public finishExam(): Promise<ExamResult> {
+    this.pendingResult.lock()
+    let call = u => this.dataSource.updateExam(u, this.pendingResult)
+    return this.withUserPromise(call, ok => {
+      console.log(this.pendingResult.id,  'exam finished!')
+      return this.pendingResult
+    })
+  }
+
+  public saveExam(): Promise<ExamResult> {
+    // DO NOT LOCK!
+    let call = u => this.dataSource.updateExam(u, this.pendingResult)
+    return this.withUserPromise(call, ok => {
+      console.log(this.pendingResult.id,  'exam saved!')
+      return this.pendingResult
+    })
+  }
+
+  public cancelExam(): Promise<boolean> {
+    let rid = this.pendingResult.id
+    let call = u => this.dataSource.deleteExam(u, rid)
+    return this.withUserPromise(call, ok => {
+      console.log(rid, 'exam canceled!')
+      this.pendingResult = null
+      delete this.cache[rid]
+      let i = this.results.findIndex(er => er.id === rid)
+      this.results.splice(i, 1)
+      return true
     })
   }
 

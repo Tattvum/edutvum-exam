@@ -13,6 +13,7 @@
             <span *ngFor="let rs of listResults(ex.id); let j=index">
                 <span data-toggle="tooltip" class="badge pull-right"
                     (click)="showExamResult(rs)"
+                    [class.locked]="rs.isLocked()"
                     title="{{showWhen(rs.when)}}">
                   {{rs.score().percent()}}%
                 </span>
