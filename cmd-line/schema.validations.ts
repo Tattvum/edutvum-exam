@@ -50,6 +50,7 @@ export const resultSchema = {
     'exam': { 'type': 'string' },
     'when': { 'type': 'number' },
     'revwhen': { 'type': 'number' },
+    'status': { 'type': { 'enum': ['DONE', 'PENDING'] } },
     'answers': {
       'type': 'object',
       'patternProperties': {
