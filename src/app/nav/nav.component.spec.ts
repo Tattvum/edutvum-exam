@@ -25,7 +25,8 @@ const DASHBOARD_URL = '/student-dash'
 
 let CONFIRMATION = true
 let contextMock = {
-  confirm: (msg: string) => CONFIRMATION
+  confirm: (msg: string) => CONFIRMATION,
+  alert: (msg: string) => null
 }
 
 let EXMRSLT0 = {
@@ -37,7 +38,9 @@ let NAV_EXAM_RESULT = EMPTY_EXAM_RESULT
 let dataServiceMock = {
   getExam: (eid) => NAV_EXAM_RESULT,
   finishExam: () => Promise.resolve(NAV_EXAM_RESULT),
-  cancelExam: () => Promise.resolve(true)
+  cancelExam: () => Promise.resolve(true),
+  pauseExam: () => Promise.resolve(NAV_EXAM_RESULT),
+  timerOnlyMe: (fn) => null
 }
 
 let routerMock = {
@@ -66,6 +69,12 @@ function clickButton(fixture: ComponentFixture<NavComponent>, id: string) {
   tick()
 }
 
+function keyDown(fixture: ComponentFixture<NavComponent>, key: string) {
+  const event = new KeyboardEvent('keydown', { 'key': key, });
+  fixture.nativeElement.dispatchEvent(event)
+  tick()
+}
+
 function ensureOnInit(fixture: ComponentFixture<NavComponent>): jasmine.Spy {
   let spy = makeSpy(DataService, 'getExam')
   fixture.detectChanges()
@@ -87,13 +96,13 @@ function baseTest(fixture: ComponentFixture<NavComponent>,
 function navigateTest(fixture: ComponentFixture<NavComponent>,
   n: number, arr: any[], body: () => void): jasmine.Spy {
   let navigateSpy = baseTest(fixture, body, n)
-  if (n > 0) expect(navigateSpy).toHaveBeenCalledWith(arr);
+  if (arr && n > 0) expect(navigateSpy).toHaveBeenCalledWith(arr);
   return navigateSpy
 }
 
 // ----------------------------------------------------------------------------
 
-xdescribe('Nav Component Tests:', () => {
+describe('Nav Component Tests:', () => {
 
   let fixture: ComponentFixture<NavComponent>;
 
@@ -112,51 +121,72 @@ xdescribe('Nav Component Tests:', () => {
       NAV_EXAM = new Exam('00', 'Bingo', [EMPTY_QUESTION, EMPTY_QUESTION])
       NAV_EXAM_RESULT = new ExamResult('00', 'Bingo', new Date(), NAV_EXAM)
     })
-  }));
+  }))
 
   it('Component created fine', fakeAsync(() => {
     ensureOnInit(fixture)
   }))
 
-  it('Continue click working', fakeAsync(() => {
-    navigateTest(fixture, 1, [QUESTION_URL, NAV_EXAM_RESULT.id, 1], () => {
-      clickButton(fixture, '#continue')
-    })
-  }))
+  describe('button click working:', () => {
+    it('Continue click working', fakeAsync(() => {
+      navigateTest(fixture, 1, [QUESTION_URL, NAV_EXAM_RESULT.id, 1], () => {
+        clickButton(fixture, '#continue')
+      })
+    }))
 
-  it('Results click working - confirm false', fakeAsync(() => {
-    navigateTest(fixture, 0, null, () => {
-      CONFIRMATION = false
-      clickButton(fixture, '#results')
-    })
-  }))
-  it('Results click working - confirm true', fakeAsync(() => {
-    navigateTest(fixture, 1, [RESULTS_URL, NAV_EXAM_RESULT.id], () => {
-      CONFIRMATION = true
-      clickButton(fixture, '#results')
-    })
-  }))
+    it('Results click working - confirm false', fakeAsync(() => {
+      navigateTest(fixture, 0, null, () => {
+        CONFIRMATION = false
+        clickButton(fixture, '#results')
+      })
+    }))
+    it('Results click working - confirm true', fakeAsync(() => {
+      navigateTest(fixture, 1, [RESULTS_URL, NAV_EXAM_RESULT.id], () => {
+        CONFIRMATION = true
+        clickButton(fixture, '#results')
+      })
+    }))
 
-  it('Number button click working', fakeAsync(() => {
-    navigateTest(fixture, 1, [QUESTION_URL, NAV_EXAM_RESULT.id, 0], () => {
-      clickButton(fixture, '#b0')
-    })
-  }))
+    it('Number button click working', fakeAsync(() => {
+      navigateTest(fixture, 1, [QUESTION_URL, NAV_EXAM_RESULT.id, 0], () => {
+        clickButton(fixture, '#b0')
+      })
+    }))
 
-  it('Back to dash link click working - confirm false', fakeAsync(() => {
-    navigateTest(fixture, 0, null, () => {
-      CONFIRMATION = false
-      clickButton(fixture, '#cancel')
-    })
-  }))
-  it('Back to dash link click working - confirm true', fakeAsync(() => {
-    navigateTest(fixture, 1, [DASHBOARD_URL], () => {
-      clickButton(fixture, '#cancel')
-    })
-  }))
+    it('Back to dash link click working - confirm false', fakeAsync(() => {
+      navigateTest(fixture, 0, null, () => {
+        CONFIRMATION = false
+        clickButton(fixture, '#cancel')
+      })
+    }))
+    it('Back to dash link click working - confirm true', fakeAsync(() => {
+      navigateTest(fixture, 1, [DASHBOARD_URL], () => {
+        clickButton(fixture, '#cancel')
+      })
+    }))
+
+    it('pause button click working - unlocked', fakeAsync(() => {
+      navigateTest(fixture, 1, [DASHBOARD_URL], () => {
+        clickButton(fixture, '#pause')
+      })
+    }))
+    it('pause button click working - locked', fakeAsync(() => {
+      NAV_EXAM_RESULT.lock()
+      navigateTest(fixture, 0, [DASHBOARD_URL], () => {
+        clickButton(fixture, '#pause')
+      })
+    }))
+  })
+
+  xdescribe('Key press working:', () => {
+    it('right arrow key pressed working', fakeAsync(() => {
+      navigateTest(fixture, 0, [DASHBOARD_URL], () => {
+        keyDown(fixture, 'ArrowRight')
+      })
+    }))
+  })
 
   describe('Number button classes working:', () => {
-
     function b0Check(attempted: boolean, correct: boolean, guessing: boolean, locked: boolean) {
       ensureOnInit(fixture)
       let button = fixture.debugElement.query(By.css('#b0'));

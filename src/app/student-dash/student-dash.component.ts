@@ -23,12 +23,6 @@ export class StudentDashComponent {
     return moment(dt).fromNow();
   }
 
-  listResults(eid: string): ExamResult[] {
-    return this.service.results
-      .filter(r => r.exam.id === eid)
-      .sort((a, b) => b.when.getTime() - a.when.getTime())
-  }
-
   takeExam(exam: Exam) {
     if (!confirm('Ready to start the exam?!')) return
     this.service.startExam(exam.id).then(rid => {

@@ -19,19 +19,9 @@ export class NavComponent implements OnInit {
   isResultsPage = false
   qidn: number
 
-  private static timize(t: number) {
-    let pad2 = x => ('0' + x).slice(-2)
-    let h = Math.trunc(t / 3600)
-    let hr = t % 3600
-    let m = Math.trunc(hr / 60)
-    let mr = t % 60
-    let s = mr
-    if (h === 0) return m + ':' + pad2(s)
-    else return h + ':' + pad2(m) + ':' + pad2(s)
-  }
-
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
+    console.log(event)
     if (Lib.noExtra(event, KEY_CODE.RIGHT_ARROW)) this.next()
     else if (Lib.noExtra(event, KEY_CODE.LEFT_ARROW)) this.prev()
     else if (event.keyCode === KEY_CODE.ENTER) {
@@ -84,7 +74,7 @@ export class NavComponent implements OnInit {
   }
   qsec() {
     if (this.isResultsPage) return ''
-    else return NavComponent.timize(this.seconds())
+    else return Lib.timize(this.seconds())
   }
 
   private secondsTotal(): number {
@@ -92,7 +82,7 @@ export class NavComponent implements OnInit {
     else return 0
   }
   tsec() {
-    return NavComponent.timize(this.secondsTotal())
+    return Lib.timize(this.secondsTotal())
   }
 
   markGuess(guessed: boolean) {

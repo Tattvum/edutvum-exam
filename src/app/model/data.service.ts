@@ -42,9 +42,8 @@ interface Cache {
 
 @Injectable()
 export class DataService {
-  private readonly WORKING = ' #pending'
   private cache: Cache = {}
-  private currentExamResult: ExamResult
+  private pendingResult: ExamResult
 
   public exams: Exam[] = []
   public results: ExamResult[] = []
@@ -53,12 +52,6 @@ export class DataService {
   private globalTimer = Observable.interval(1000).subscribe(t => {
     if (this.globalTimerAction) this.globalTimerAction(t)
   })
-
-  private pendingResult: ExamResult
-
-  public testMe(n: number): number {
-    return n * 2
-  }
 
   constructor(private dataSource: DataSource, private securitySource: SecuritySource) {
     console.clear()
@@ -76,6 +69,12 @@ export class DataService {
 
   public timerOnlyMe(onlyMe: (number) => void) {
     this.globalTimerAction = onlyMe
+  }
+
+  public listResults(eid: string): ExamResult[] {
+    return this.results
+      .filter(r => r.exam.id === eid)
+      .sort((a, b) => b.when.getTime() - a.when.getTime())
   }
 
   public getExam(eid: string): ExamResult {
@@ -166,4 +165,10 @@ export class DataService {
   public logout(): Promise<void> {
     return this.securitySource.logout()
   }
+
+  // NOTE: Not used anywhere but in tests, just for sample testing
+  public testMe(n: number): number {
+    return n * 2
+  }
+
 }

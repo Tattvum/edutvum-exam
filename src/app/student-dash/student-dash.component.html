@@ -10,7 +10,7 @@
           <td class="col-3">{{ex.id}}</td>
           <td class="col-6 active title" (click)="takeExam(ex)">
             {{ex.title}}
-            <span *ngFor="let rs of listResults(ex.id); let j=index">
+            <span *ngFor="let rs of service.listResults(ex.id); let j=index">
                 <span data-toggle="tooltip"
                     class="badge pull-right"
                     (click)="showExamResult(rs)"

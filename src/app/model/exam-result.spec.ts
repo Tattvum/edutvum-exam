@@ -14,9 +14,9 @@ let createR = (questions: Question[], title = 'TEST E...', id = '00', answers: n
   let e = createE(questions, title, id)
   return new ExamResult(e.id, e.title, new Date(), e, answers)
 }
-let createR2 = (questions: Question[], answers: number[][]): ExamResult => {
+let createR2 = (questions: Question[], answers: number[][], durations: number[]=[]): ExamResult => {
   let e = createE(questions)
-  return new ExamResult(e.id, e.title, new Date(), e, answers)
+  return new ExamResult(e.id, e.title, new Date(), e, answers, null, null, durations)
 }
 
 let tfq = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
@@ -54,7 +54,7 @@ let checkScore = (s: Score, t: number, c: number, w: number, l: number, p: numbe
   expect(s.percent()).toBe(p)
 }
 
-describe('ExamResult:', () => {
+describe('ExamResult1:', () => {
   it('TFQ Creation checks works', () => {
     expect(() => createR2([tfq()], [])).not.toThrow()
     expect(() => createR2([tfq()], [[0, 1]])).toThrow()
@@ -85,7 +85,7 @@ describe('ExamResult:', () => {
   })
 })
 
-describe('ExamResult:', () => {
+describe('ExamResult2:', () => {
   it('Lock works', () => {
     let r = createR(questions1())
     expect(() => r.clearAnswers(0)).not.toThrow()
@@ -124,6 +124,28 @@ describe('ExamResult:', () => {
   it('some correct so mixed', () => {
     let answers3 = [[0], [], [2], [1], [], [2], [0, 2], [0, 2, 1]]
     checkScore(createR2(questions8(), answers3).score(), 8, 3, 3, 2, 38)
+  })
+})
+
+describe('ExamResult - duration tests:', () => {
+  let er = createR2(questions2(), [], [2, 5])
+  it('duration total works', () => {
+    expect(er.durationTotal()).toBe(7)
+  })
+  it('duration works', () => {
+    expect(er.duration(0)).toBe(2)
+    expect(er.duration(1)).toBe(5)
+  })
+  it('duration inc works', () => {
+    er.durationInc(0)
+    expect(er.duration(0)).toBe(3)
+    expect(er.duration(1)).toBe(5)
+    er.durationInc(1)
+    expect(er.duration(0)).toBe(3)
+    expect(er.duration(1)).toBe(6)
+    er.durationInc(1)
+    expect(er.duration(0)).toBe(3)
+    expect(er.duration(1)).toBe(7)
   })
 })
 
