@@ -1,10 +1,9 @@
 <div>
   <div>
-    <span id="ename">{{exam.title}}</span>
-    <span class="eid">({{exam.exam.id}}) </span>
+    <span class="eid">{{exam.exam.id}}</span>
+    <span id="ename"> {{exam.title}} </span>
     <span class="eid"> ({{exam.id}})</span>
-    <span *ngIf="exam.isLocked()" class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
-    <span *ngIf="!exam.isLocked()" class="when active"> {{ whatTime | async | date: 'yyyy-MMM-dd H:mm EEE' }} </span>
+    <span class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
   </div>
   <br>
   <div>
@@ -25,6 +24,10 @@
         class="btn btn-small btn-success btn-sm" >
       <span *ngIf="!exam.isLocked()">Done</span>
       <span *ngIf="exam.isLocked()">Results</span>
+    </span>
+    <span [class.hidden]="isBelowVer6()">
+      <span id="seconds"> &nbsp;&nbsp; {{ qsec() }} </span>
+      {{ tsec() }} &nbsp;&nbsp;
     </span>
   </div>
   <br>

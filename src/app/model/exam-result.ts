@@ -9,14 +9,16 @@ export enum ExamResultStatus {
 }
 
 export class ExamResult extends Exam {
+  private _secondsTotal = 0
   constructor(id: string, title: string, when: Date,
     readonly exam: Exam,
-    public answers: number[][] = [],
+    readonly answers: number[][] = [],
     protected status: ExamResultStatus = ExamResultStatus.PENDING,
     public guessings: boolean[] = [],
-    readonly moments: Date[] = [],
+    readonly durations: number[] = [],
   ) {
     super(id, title, exam.questions, when)
+    this._secondsTotal = durations.filter(x => !Lib.isNil(x)).reduce((t, s) => t + s, 0)
     if (!Lib.isNil(answers)) {
       Lib.failif(answers.length > this.questions.length, 'Too many answers', answers.length, this.questions.length)
       let ctx = this.id + ' ' + this.exam.id
@@ -67,6 +69,19 @@ export class ExamResult extends Exam {
     this.status = ExamResultStatus.DONE
   }
 
+  public durationTotal(): number {
+    return this._secondsTotal
+  }
+  public duration(qid: number): number {
+    let s = this.durations[qid]
+    if (Lib.isNil(s)) s = 0
+    return s
+  }
+  public durationInc(qid: number) {
+    this._secondsTotal++
+    this.durations[qid] = this.duration(qid) + 1
+  }
+
   public isAttempted(qid: number): boolean {
     let qans = this.answers[qid]
     return qans && qans.length > 0
@@ -100,8 +115,6 @@ export class ExamResult extends Exam {
         Lib.failif(true, 'This should never execute!')
         break;
     }
-    this.moments[qid] = new Date()
-    // console.log('setAnswer', this.exam.id, qid, ':', n, this.answers[qid], this.moments[qid])
   }
   public isAnswer(qid: number, n: number): boolean {
     let ans = this.answers[qid]
@@ -114,7 +127,6 @@ export class ExamResult extends Exam {
     let removed = index > -1
     if (removed) {
       this.answers[qid].splice(index, 1)
-      console.log('removeAnswer', this.exam.id, qid, ':', n, this.answers[qid], this.moments[qid])
     }
     return removed
   }

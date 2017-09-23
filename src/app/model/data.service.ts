@@ -1,3 +1,6 @@
+import 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
+
 import { Injectable } from '@angular/core';
 
 import { Lib } from './lib';
@@ -46,6 +49,11 @@ export class DataService {
   public exams: Exam[] = []
   public results: ExamResult[] = []
 
+  private globalTimerAction: (number) => void
+  private globalTimer = Observable.interval(1000).subscribe(t => {
+    if (this.globalTimerAction) this.globalTimerAction(t)
+  })
+
   private pendingResult: ExamResult
 
   public testMe(n: number): number {
@@ -64,6 +72,10 @@ export class DataService {
         Lib.assert(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
       })
     })
+  }
+
+  public timerOnlyMe(onlyMe: (number) => void) {
+    this.globalTimerAction = onlyMe
   }
 
   public getExam(eid: string): ExamResult {
@@ -93,7 +105,7 @@ export class DataService {
   public startExam(eid: string): Promise<string> {
     let call = u => this.dataSource.createExam(u, eid)
     return this.withUserPromise(call, result => {
-      console.log(result.id, 'exam started!')
+      // console.log(result.id, 'exam started!')
       this.cache[result.id] = result
       this.results.splice(0, 0, result)
       this.pendingResult = result
@@ -102,28 +114,35 @@ export class DataService {
   }
 
   public finishExam(): Promise<ExamResult> {
+    this.globalTimerAction = null
     this.pendingResult.lock()
     let call = u => this.dataSource.updateExam(u, this.pendingResult)
     return this.withUserPromise(call, ok => {
-      console.log(this.pendingResult.id,  'exam finished!')
+      // console.log(this.pendingResult.id, 'exam finished!')
       return this.pendingResult
     })
+  }
+
+  public pauseExam(): Promise<ExamResult> {
+    this.globalTimerAction = null
+    return this.saveExam()
   }
 
   public saveExam(): Promise<ExamResult> {
     // DO NOT LOCK!
     let call = u => this.dataSource.updateExam(u, this.pendingResult)
     return this.withUserPromise(call, ok => {
-      console.log(this.pendingResult.id,  'exam saved!')
+      // console.log(this.pendingResult.id, 'exam saved!')
       return this.pendingResult
     })
   }
 
   public cancelExam(): Promise<boolean> {
+    this.globalTimerAction = null
     let rid = this.pendingResult.id
     let call = u => this.dataSource.deleteExam(u, rid)
     return this.withUserPromise(call, ok => {
-      console.log(rid, 'exam canceled!')
+      // console.log(rid, 'exam canceled!')
       this.pendingResult = null
       delete this.cache[rid]
       let i = this.results.findIndex(er => er.id === rid)

@@ -18,7 +18,15 @@ export class NavComponent implements OnInit {
   exam: ExamResult = EMPTY_EXAM_RESULT
   isResultsPage = false
   qidn: number
-  whatTime = Observable.interval(1000).map(x => new Date()).share();
+
+  private static timize(t: number) {
+    let pad2 = x => ('0' + x).slice(-2)
+    let s = t % 60
+    let m = Math.trunc(t / 60)
+    let h = Math.trunc(t / 3600)
+    if (h === 0) return m + ':' + pad2(s)
+    else return h + ':' + pad2(m) + ':' + pad2(s)
+  }
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
@@ -32,13 +40,17 @@ export class NavComponent implements OnInit {
     }
   }
 
+  public timerAction(t: number) {
+    if (this.exam && !this.exam.isLocked()) this.exam.durationInc(this.qidn)
+  }
+
   constructor(private route: ActivatedRoute,
     private router: Router,
     private context: GeneralContext,
-    private service: DataService) { }
+    private service: DataService) {
+  }
 
   ngOnInit() {
-    //    console.log('ngOnInit')
     this.route.params.subscribe((params: Params) => {
       this.exam = EMPTY_EXAM_RESULT
       this.isResultsPage = false
@@ -52,7 +64,33 @@ export class NavComponent implements OnInit {
       if (this.isResultsPage) return
       this.qidn = +qid
       this.isResultsPage = false
+      this.service.timerOnlyMe(t => this.timerAction(t))
     })
+  }
+
+  isBelowVer6(): boolean {
+    if (this.exam) return this.exam.durationTotal() < 1
+    else return true
+  }
+
+  private seconds(): number {
+    if (Lib.isNil(this.exam)) return 0
+    let s = this.exam.duration(this.qidn)
+    if (Lib.isNil(s)) return 0
+    if (s === NaN) return 0
+    return s
+  }
+  qsec() {
+    if (this.isResultsPage) return ''
+    else return NavComponent.timize(this.seconds())
+  }
+
+  private secondsTotal(): number {
+    if (this.exam) return this.exam.durationTotal()
+    else return 0
+  }
+  tsec() {
+    return NavComponent.timize(this.secondsTotal())
   }
 
   markGuess(guessed: boolean) {
@@ -93,8 +131,10 @@ export class NavComponent implements OnInit {
 
   pauseExam() {
     if (!this.exam.isLocked()) {
-      this.context.alert('The exam will be paused now. \nYou can resume from the dashboard.')
-      this.router.navigate(['/student-dash'])
+      this.service.pauseExam().then(ok => {
+        this.context.alert('The exam will be paused now. \nYou can resume from the dashboard.')
+        this.router.navigate(['/student-dash'])
+      })
     }
   }
 

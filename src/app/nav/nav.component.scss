@@ -2,9 +2,19 @@ a {
   cursor: pointer;
 }
 
+#seconds {
+  color: salmon;
+  font-size: larger;
+  font-weight: bold;
+}
+
 #ename {
   color: maroon;
   font-size: larger;
+}
+
+.hidden {
+  display: none;
 }
 
 .eid {

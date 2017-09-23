@@ -93,7 +93,7 @@ function navigateTest(fixture: ComponentFixture<NavComponent>,
 
 // ----------------------------------------------------------------------------
 
-describe('Nav Component Tests:', () => {
+xdescribe('Nav Component Tests:', () => {
 
   let fixture: ComponentFixture<NavComponent>;
 

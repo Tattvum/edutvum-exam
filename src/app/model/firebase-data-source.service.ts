@@ -76,13 +76,14 @@ function createR(obj, es: { [key: string]: Exam }): ExamResult {
   if (aobj) exam.questions.forEach((q, i) => answers[i] = aobj[q.id])
   let gobj = obj.guessings
   let guessings: boolean[] = []
-  if (gobj) {
-    exam.questions.forEach((q, i) => guessings[i] = gobj[q.id])
-  }
+  if (gobj) exam.questions.forEach((q, i) => guessings[i] = gobj[q.id])
+  let dobj = obj.durations
+  let durations: number[] = []
+  if (dobj) exam.questions.forEach((q, i) => durations[i] = dobj[q.id])
   let status = ExamResultStatus.DONE
   if (obj.status) status = ExamResultStatus['' + obj.status]
   if (status !== ExamResultStatus.DONE) console.log('status', id, obj.status)
-  return new ExamResult(id, title, when, exam, answers, status, guessings)
+  return new ExamResult(id, title, when, exam, answers, status, guessings, durations)
 }
 
 @Injectable()
@@ -152,8 +153,10 @@ export class FirebaseDataSource implements DataSource {
     result.answers.forEach((ans: number[], i) => roanss[qs[i].id] = ans)
     let roguss = ro['guessings'] = {}
     result.guessings.forEach((isGuess: boolean, i) => roguss[qs[i].id] = isGuess)
-    ro['when'] = Date.now()
-    ro['revwhen'] = -Date.now()
+    let rodurs = ro['durations'] = {}
+    result.durations.forEach((secs: number, i) => rodurs[qs[i].id] = secs)
+    ro['when'] = result.when
+    ro['revwhen'] = -result.when
     ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'
     return ro
   }
