@@ -32,6 +32,7 @@ export class QidValidations {
         else {
           checkqid('ans', x[3].answers, exam, x)
           checkqid('gus', x[3].guessings, exam, x)
+          checkqid('dur', x[3].durations, exam, x)
         }
       },
     }, data.ver5.results)
