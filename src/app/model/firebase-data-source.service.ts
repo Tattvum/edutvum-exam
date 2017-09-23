@@ -155,8 +155,8 @@ export class FirebaseDataSource implements DataSource {
     result.guessings.forEach((isGuess: boolean, i) => roguss[qs[i].id] = isGuess)
     let rodurs = ro['durations'] = {}
     result.durations.forEach((secs: number, i) => rodurs[qs[i].id] = secs)
-    ro['when'] = result.when
-    ro['revwhen'] = -result.when
+    ro['when'] = result.when.getTime()
+    ro['revwhen'] = -result.when.getTime()
     ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'
     return ro
   }

@@ -17,7 +17,7 @@
         [class.locked]="exam.isLocked()"
         class="btn btn-small btn-danger btn-sm" >
       <span *ngIf="!exam.isLocked()">Cancel</span>
-      <span *ngIf="exam.isLocked()">Back</span>
+      <span *ngIf="exam.isLocked()">Home</span>
     </span>
     <span id="done" (click)="results()"
         [class.locked]="exam.isLocked()"

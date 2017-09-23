@@ -65,6 +65,13 @@ export const resultSchema = {
       },
       'additionalProperties': false,
     },
+    'durations': {
+      'type': 'object',
+      'patternProperties': {
+        '^[a-z0-9]+$': { 'type': 'number' }
+      },
+      'additionalProperties': false,
+    },
   },
   'additionalProperties': false,
   'required': ['exam', 'when', 'revwhen']
