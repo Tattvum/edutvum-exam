@@ -31,7 +31,6 @@ export class DetailsComponent implements OnInit {
       .subscribe((params: Params) => {
         let eid = params['eid']
         this.qid = params['qid']
-        console.log(eid, this.qid)
         if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
         let question: Question = null
         try {

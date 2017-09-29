@@ -7,7 +7,7 @@ import { Lib } from './lib';
 import { Question } from './question';
 import { Exam } from './exam';
 import { ExamResult, ExamResultStatus } from './exam-result';
-import { User } from './user';
+import { User, UserRole, EMPTY_USER } from './user';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -17,7 +17,8 @@ export function isin<T>(arr: Array<T>, val: T): boolean {
 export class Holders {
   constructor(
     public exams: Exam[] = [],
-    public results: ExamResult[] = []
+    public results: ExamResult[] = [],
+    public users: User[] = [],
   ) { }
 }
 
@@ -36,33 +37,51 @@ export abstract class SecuritySource {
   abstract logout(): Promise<void>
 }
 
+interface UserCache {
+  [id: string]: User
+}
+
 interface Cache {
   [id: string]: Exam
 }
 
 @Injectable()
 export class DataService {
+  private userCache: UserCache = {}
   private cache: Cache = {}
   private pendingResult: ExamResult
 
   public exams: Exam[] = []
   public results: ExamResult[] = []
+  public users: User[] = []
+  public isAdmin = false
 
   private globalTimerAction: (number) => void
   private globalTimer = Observable.interval(1000).subscribe(t => {
     if (this.globalTimerAction) this.globalTimerAction(t)
   })
 
+  init(user: User, dolast = () => { }) {
+    Lib.assert(Lib.isNil(user), 'user cannot be null')
+    this.dataSource.getHolders(user).then(hs => {
+      this.userCache = {}
+      this.cache = {}
+      this.users = hs.users
+      this.users.forEach(u => this.userCache[u.uid] = u)
+      this.exams = hs.exams
+      this.exams.forEach(e => this.cache[e.id] = e)
+      this.results = hs.results
+      this.results.forEach(r => this.cache[r.id] = r)
+      Lib.assert(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
+    }).then(dolast)
+  }
+
   constructor(private dataSource: DataSource, private securitySource: SecuritySource) {
     console.clear()
     this.userWait().then(user => {
-      Lib.assert(Lib.isNil(user), 'user cannot be null')
-      dataSource.getHolders(user).then(hs => {
-        this.exams = hs.exams
-        this.exams.forEach(e => this.cache[e.id] = e)
-        this.results = hs.results
-        this.results.forEach(r => this.cache[r.id] = r)
-        Lib.assert(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
+      // this.init(user)
+      this.init(user, () => {
+        this.isAdmin = this.userCache[user.uid].role === UserRole.ADMIN
       })
     })
   }
@@ -75,6 +94,10 @@ export class DataService {
     return this.results
       .filter(r => r.exam.id === eid)
       .sort((a, b) => b.when.getTime() - a.when.getTime())
+  }
+
+  public switchUser(uid: string) {
+    this.init(this.userCache[uid])
   }
 
   public getExam(eid: string): ExamResult {
@@ -153,7 +176,7 @@ export class DataService {
   public user(): User {
     return this.securitySource.user()
   }
-  public userWait(): Promise<User> {
+  private userWait(): Promise<User> {
     return this.securitySource.userWait()
   }
   public isLoggedIn(): boolean {

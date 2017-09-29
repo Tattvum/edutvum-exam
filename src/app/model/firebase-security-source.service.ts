@@ -9,7 +9,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 import { SecuritySource } from './data.service';
-import { User } from './user';
+import { User, UserRole } from './user';
 import { Lib } from './lib';
 
 class UserFbImpl implements User {
@@ -22,6 +22,10 @@ class UserFbImpl implements User {
   }
   get email() {
     return this.fbUser.email
+  }
+  // NOTE: Placeholder role
+  get role(): UserRole {
+    return UserRole.USER
   }
   public toString = (): string => {
     return this.name

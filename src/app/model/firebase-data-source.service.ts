@@ -15,11 +15,12 @@ import { AnswerType, TFQChoices, ARQChoices } from './answer-type';
 import { Question } from './question';
 import { Exam } from './exam';
 import { ExamResult, ExamResultStatus } from './exam-result';
-import { User } from './user';
+import { User, UserRole } from './user';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams'
 const RESULTS_URL = URL_VER + 'results/'
+const USERS_URL = URL_VER + 'users/'
 
 function fbObjToArr(obj): any[] {
   if (Lib.isNil(obj)) return []
@@ -90,6 +91,15 @@ function createR(obj, es: { [key: string]: Exam }): ExamResult {
   return new ExamResult(id, title, when, exam, answers, status, guessings, durations)
 }
 
+function createU(obj): User {
+  let uid = obj.localId
+  let name = obj.displayName
+  let email = obj.email
+  let role = UserRole.USER
+  if (obj.role && obj.role === UserRole[UserRole.ADMIN]) role = UserRole.ADMIN
+  return { uid: uid, name: name, email: email, role: role }
+}
+
 @Injectable()
 export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
@@ -101,6 +111,7 @@ export class FirebaseDataSource implements DataSource {
 
   getHolders(user: User): Promise<Holders> {
     Lib.assert(Lib.isNil(user), 'User should be authenticated')
+    this.holders = new Holders()
     return this.fetchAll(user).then(() => {
       return Promise.resolve(this.holders)
     })
@@ -125,7 +136,15 @@ export class FirebaseDataSource implements DataSource {
     this.alles = {}
     return this.fetchE().flatMap(() => {
       return this.fetchR(user)
+    }).flatMap(() => {
+      return this.fetchU()
     }).toPromise()
+  }
+
+  private fetchU(): Observable<void> {
+    return this.afDb.object(USERS_URL).first().map(
+      us => us.forEach(u => this.holders.users.push(createU(u)))
+    )
   }
 
   private fetchE(): Observable<void> {

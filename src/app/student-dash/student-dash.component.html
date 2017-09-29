@@ -1,6 +1,14 @@
 <app-user></app-user>
 <div class="container-fluid">
-  <h1>Exam Dashboard</h1>
+  <div>
+    <span class="h1">Exam Dashboard</span>
+    <span *ngIf="service.isAdmin">
+      for the user
+      <select [(ngModel)]="currentUser" (change)="userChanged()">
+        <option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</option>
+      </select>
+    </span>
+  </div>
 
   <br>
   <div class="container-fluid">
@@ -17,9 +25,9 @@
                     [class.locked]="rs.isLocked()"
                     title="{{showWhen(rs.when)}}">
                   <span *ngIf="rs.isLocked()">{{rs.score().percent()}}%</span>
-                  <span *ngIf="!rs.isLocked()" class="glyphicon glyphicon-play"></span>
-                </span>
-          </span>
+            <span *ngIf="!rs.isLocked()" class="glyphicon glyphicon-play"></span>
+            </span>
+            </span>
           </td>
           <td class="col-3">{{showWhen(ex.when)}}</td>
         </tr>

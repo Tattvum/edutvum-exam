@@ -80,6 +80,20 @@ export const resultSchema = {
 }
 validator.addSchema(resultSchema, '/ResultSchema')
 
+const userSchema = {
+  'id': '/UserSchema',
+  'type': 'object',
+  'properties': {
+    'localId': { 'type': 'string' },
+    'displayName': { 'type': 'string' },
+    'email': { 'type': 'string' },
+    'role': { 'type': { 'enum': ['USER', 'ADMIN'] } },
+  },
+//  'additionalProperties': false,
+  'required': ['localId', 'displayName', 'email']
+}
+validator.addSchema(userSchema, '/UserSchema')
+
 const ver5Schema = {
   'id': '/ver5Schema',
   'type': 'object',
@@ -107,8 +121,9 @@ const ver5Schema = {
           },
           'additionalProperties': false,
         },
+        'users': { 'type': 'array', 'items': { '$ref': '/UserSchema' } }
       },
-      'required': ['exams', 'results']
+      'required': ['exams', 'results', 'users']
     }
   },
   'additionalProperties': false,

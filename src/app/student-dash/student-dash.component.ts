@@ -12,15 +12,25 @@ import { DataService } from '../model/data.service';
   templateUrl: './student-dash.component.html',
   styleUrls: ['./student-dash.component.scss'],
 })
-export class StudentDashComponent {
+export class StudentDashComponent implements OnInit {
 
   public pageExam
   public pageResult
+  public currentUser
 
   constructor(public service: DataService, private router: Router) { }
 
+  ngOnInit(): void {
+    this.currentUser = this.service.user().uid
+  }
+
   showWhen(dt: Date): string {
     return moment(dt).fromNow();
+  }
+
+  userChanged() {
+    console.log(this.currentUser)
+    if (this.currentUser) this.service.switchUser(this.currentUser)
   }
 
   takeExam(exam: Exam) {

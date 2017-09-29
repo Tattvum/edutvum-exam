@@ -1,27 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { SecuritySource } from './data.service';
-import { User } from './user';
-
-class UserImpl implements User {
-  constructor(private _uid, private _name, private _email) { }
-  get uid() {
-    return this._uid
-  }
-  get name() {
-    return this._name
-  }
-  get email() {
-    return this._email
-  }
-  public toString = (): string => {
-    return this.name
-  }
-}
+import { User, EMPTY_USER } from './user';
 
 @Injectable()
 export class MockSecuritySource implements SecuritySource {
-  private _user = new UserImpl('00', 'Mock User', 'mock@example.com')
+  private _user = EMPTY_USER
 
   constructor() {
     // console.log(this._user)

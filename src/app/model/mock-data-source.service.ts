@@ -7,7 +7,7 @@ import { Lib } from './lib';
 import { AnswerType } from './answer-type';
 import { Question } from './question';
 import { Exam } from './exam';
-import { User } from './user';
+import { User, UserRole } from './user';
 import { ExamResult } from './exam-result';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
@@ -40,6 +40,12 @@ const NOUN = [
   'Donkey'
 ]
 
+export const USERS: User[] = [
+  {uid: 'u1', name: 'Bingo User', email: 'bingo@gmail.com', role: UserRole.USER},
+  {uid: 'u2', name: 'User Two', email: 'cisco@gmail.com', role: UserRole.ADMIN},
+  {uid: 'u3', name: '3rd User', email: 'django@gmail.com', role: UserRole.USER},
+]
+
 let alles: { [key: string]: Exam } = {}
 
 let makeExamRnd = (qs: number): Exam => {
@@ -63,6 +69,7 @@ export class MockDataSource implements DataSource {
 
   constructor() {
     this.holders.exams = makeExamsRnd(10)
+    this.holders.users = USERS
   }
 
   public getHolders(user: User): Promise<Holders> {
