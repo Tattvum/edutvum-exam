@@ -33,6 +33,7 @@ import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
 
 import { environment } from '../environments/environment';
+import { DetailsComponent } from './details/details.component';
 export const firebaseConfig = environment.firebaseConfig;
 
 let DATA_SOURCE = environment.firebase ? FirebaseDataSource : MockDataSource
@@ -60,6 +61,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     ResultComponent,
     LoginComponent,
     UserComponent,
+    DetailsComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

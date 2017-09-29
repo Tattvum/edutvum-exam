@@ -8,6 +8,8 @@ export class Question {
     public readonly type: AnswerType,
     public readonly choices: string[],
     public readonly solutions: number[],
+    public readonly notes = '',
+    public readonly explanation = ''
   ) {
     Lib.failif(Lib.isNil(id), 'id cannot be undefined')
     Lib.failif(Lib.isNil(title), 'title cannot be undefined')

@@ -49,21 +49,25 @@ function createA(type: AnswerType, given): string[] {
 function createQ(obj, key: string): Question {
   let id = key
   let title = obj.display
+  let notes = obj.notes
+  let explanation = obj.explanation
   let type = AnswerType['' + obj.type]
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
-  return new Question(id, title, type, choices, solutions)
+  return new Question(id, title, type, choices, solutions, notes, explanation)
 }
 
 function createE(obj): Exam {
   let id = obj.$key
   let title = obj.name
+  let notes = obj.notes
+  let explanation = obj.explanation
   let when = new Date(obj.when)
   let questions = []
   let qobj = obj.questions
   let qkeys = Object.keys(qobj).sort()
   qkeys.forEach(key => questions.push(createQ(qobj[key], key)))
-  return new Exam(id, title, questions, when)
+  return new Exam(id, title, questions, when, notes, explanation)
 }
 
 function createR(obj, es: { [key: string]: Exam }): ExamResult {

@@ -7,9 +7,11 @@ import { Lib } from './lib';
 export class Exam extends AbstractThing {
   constructor(
     id: string,
-    title: string,
+    public readonly title: string,
     public readonly questions: Question[],
-    when: Date = new Date()
+    public readonly when: Date = new Date(),
+    public readonly notes = '',
+    public readonly explanation = ''
   ) {
     super(id, title, when)
     Lib.failif(Lib.isNil(questions), 'Exam questions cannot be undefined')

@@ -6,6 +6,9 @@
     <app-display></app-display>
     <hr>
     <app-choice-input></app-choice-input>
+    <div *ngIf="isLocked">
+      <app-details></app-details>
+    </div>
   </div>
   <div *ngIf="isResultsPage">
     <app-result></app-result>

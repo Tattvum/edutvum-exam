@@ -12,6 +12,7 @@ const questionSchema = {
     'choices': { 'type': 'array', 'items': { 'type': 'string' } },
     'solutions': { 'type': 'array', 'items': { 'type': 'number' } },
     'notes': { 'type': 'string' },
+    'explanation': { 'type': 'string' },
   },
   'dependencies': {
     'choices': { 'properties': { 'type': { 'enum': ['MCQ', 'MAQ'] } } }
@@ -28,6 +29,7 @@ const examSchema = {
     'name': { 'type': 'string' },
     'by': { 'type': 'string' },
     'notes': { 'type': 'string' },
+    'explanation': { 'type': 'string' },
     'when': { 'type': 'string', 'pattern': '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' },
     'revwhen': { 'type': 'string', 'pattern': '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' },
     'questions': {
