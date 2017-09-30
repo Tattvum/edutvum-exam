@@ -4,13 +4,13 @@ import {
 } from '@angular/core/testing';
 
 import { Holders, DataService, DataSource, SecuritySource, isin } from './data.service';
-import { User } from './user';
+import { User, UserRole, EMPTY_USER } from './user';
 
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { EMPTY_EXAM, Exam } from 'app/model/exam';
 import { EMPTY_QUESTION } from 'app/model/question';
 
-const HOLDERS = new Holders([EMPTY_EXAM], [EMPTY_EXAM_RESULT])
+const HOLDERS = new Holders([EMPTY_EXAM], [EMPTY_EXAM_RESULT], [EMPTY_USER])
 
 let dataSourceMock = {
   getHolders: (user: User) => Promise.resolve(HOLDERS),
@@ -19,14 +19,8 @@ let dataSourceMock = {
   deleteExam: (user: User, rid: string) => Promise.resolve(true)
 }
 
-const USER = {
-  uid: 'dummy-id',
-  name: 'dummy-name',
-  email: 'dummy-email',
-}
-
 let securitySourceMock = {
-  userWait: () => Promise.resolve(USER)
+  userWait: () => Promise.resolve(EMPTY_USER)
 }
 
 function makeSpy(cls: any, method: string) {
