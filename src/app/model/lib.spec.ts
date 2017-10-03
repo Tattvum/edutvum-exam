@@ -1,4 +1,4 @@
-import { Lib, KEY_CODE } from './lib';
+import { Lib, KEY } from './lib';
 
 describe('Lib tests:', () => {
   it('times works', () => {

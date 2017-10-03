@@ -4,7 +4,7 @@ import { DataService } from '../model/data.service';
 import { AnswerType } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
-import { Lib, KEY_CODE } from '../model/lib';
+import { Lib, KEY } from '../model/lib';
 
 declare var MathJax: {
   Hub: {
@@ -28,8 +28,8 @@ export class ChoiceInputComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (Lib.noExtra(event, KEY_CODE.UP_ARROW)) this.elementRef.nativeElement.focus()
-    else if (Lib.noExtra(event, KEY_CODE.DOWN_ARROW)) this.elementRef.nativeElement.focus()
+    if (Lib.isPlainKey(event, KEY.ARROW_UP)) this.elementRef.nativeElement.focus()
+    else if (Lib.isPlainKey(event, KEY.ARROW_DOWN)) this.elementRef.nativeElement.focus()
   }
 
   constructor(private route: ActivatedRoute,

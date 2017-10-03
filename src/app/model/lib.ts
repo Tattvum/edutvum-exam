@@ -1,10 +1,11 @@
-export enum KEY_CODE {
-  ENTER = 13,
-  ESCAPE = 27,
-  LEFT_ARROW = 37,
-  UP_ARROW = 38,
-  RIGHT_ARROW = 39,
-  DOWN_ARROW = 40,
+// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+export enum KEY {
+  ENTER = 'Enter',
+  ESCAPE = 'Escape',
+  ARROW_LEFT = 'ArrowLeft',
+  ARROW_RIGHT = 'ArrowRight',
+  ARROW_UP = 'ArrowUp',
+  ARROW_DOWN = 'ArrowDown',
 }
 
 export class Lib {
@@ -68,8 +69,10 @@ export class Lib {
     return obj == undefined
   }
 
-  static noExtra(ev: KeyboardEvent, kc: KEY_CODE): boolean {
-    return ev.keyCode === kc && ev.metaKey === false
-      && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === false
+  // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+  static isPlainKey(ev: KeyboardEvent, k: KEY): boolean {
+    return ev.key === k && ev.metaKey === false
+    && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === false
   }
+
 }

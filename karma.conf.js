@@ -18,7 +18,15 @@ module.exports = function (config) {
       require('@angular/cli/plugins/karma')
     ],
     client: {
+      captureConsole: true,
       clearContext: false // leave Jasmine Spec Runner output visible in browser
+    },
+    //https://github.com/karma-runner/karma/issues/2582
+    //https://stackoverflow.com/questions/42378254/console-log-not-working-on-any-karma-project
+    browserConsoleLogOptions: {
+      level: 'log',
+      format: '%b %T: %m',
+      terminal: true
     },
     files: [
       { pattern: './src/test.ts', watched: false }
@@ -41,7 +49,7 @@ module.exports = function (config) {
       : ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_LOG,
     autoWatch: true,
     browsers: ['ChromeHeadless'],
     customLaunchers: {

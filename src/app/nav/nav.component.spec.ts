@@ -15,6 +15,7 @@ import { GeneralContext, GeneralContextImpl } from '../model/general-context';
 import { NavComponent } from './nav.component';
 import { EMPTY_EXAM, Exam } from 'app/model/exam';
 import { EMPTY_QUESTION } from 'app/model/question';
+import { Lib, KEY } from 'app/model/lib';
 
 // ----------------------------------------------------------------------------
 // Mocks
@@ -44,7 +45,9 @@ let dataServiceMock = {
 }
 
 let routerMock = {
-  navigate: (arr: any[]) => null
+  navigate: (arr: any[]) => {
+    console.warn(arr)
+  }
 }
 
 const ROUTER_PARAMS_MOCK = {
@@ -55,6 +58,11 @@ const ROUTER_PARAMS_MOCK = {
 let routeParamMock = {
   params: Observable.of(ROUTER_PARAMS_MOCK)
 }
+
+const QUESTION0_CALL = [QUESTION_URL, NAV_EXAM_RESULT.id, 0]
+const QUESTION1_CALL = [QUESTION_URL, NAV_EXAM_RESULT.id, 1]
+const RESULTS_CALL = [RESULTS_URL, NAV_EXAM_RESULT.id]
+const DASHBOARD_CALL = [DASHBOARD_URL]
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -69,9 +77,14 @@ function clickButton(fixture: ComponentFixture<NavComponent>, id: string) {
   tick()
 }
 
-function keyDown(fixture: ComponentFixture<NavComponent>, key: string) {
-  const event = new KeyboardEvent('keydown', { 'key': key, });
-  fixture.nativeElement.dispatchEvent(event)
+function windowKeyDown(fixture: ComponentFixture<NavComponent>, key: string) {
+  // fixture.nativeElement.dispatchEvent(event)
+  // fixture.debugElement.triggerEventHandler('keydown.space', {});
+  // http://pratibha02pandey.blogspot.in/2017/08/unit-testing-windowkeydown-event.html
+  const event = new KeyboardEvent('keydown', { key: key });
+  // console.warn('fn windowKeyDown', event.key)
+  window.dispatchEvent(event);
+  //  fixture.detectChanges();
   tick()
 }
 
@@ -128,60 +141,51 @@ describe('Nav Component Tests:', () => {
   }))
 
   describe('button click working:', () => {
-    it('Continue click working', fakeAsync(() => {
-      navigateTest(fixture, 1, [QUESTION_URL, NAV_EXAM_RESULT.id, 1], () => {
-        clickButton(fixture, '#continue')
+    function navClickBase(selector: string, call: any[], count = 1, ok = false) {
+      navigateTest(fixture, count, call, () => {
+        CONFIRMATION = ok
+        clickButton(fixture, selector)
       })
-    }))
+    }
+    function navClick(selector: string, call: any[], count = 1, ok = false) {
+      return fakeAsync(() => navClickBase(selector, call, count, ok))
+    }
 
-    it('Results click working - confirm false', fakeAsync(() => {
-      navigateTest(fixture, 0, null, () => {
-        CONFIRMATION = false
-        clickButton(fixture, '#results')
-      })
-    }))
-    it('Results click working - confirm true', fakeAsync(() => {
-      navigateTest(fixture, 1, [RESULTS_URL, NAV_EXAM_RESULT.id], () => {
-        CONFIRMATION = true
-        clickButton(fixture, '#results')
-      })
-    }))
+    it('Continue click working', navClick('#continue', QUESTION1_CALL))
+    it('Results click working - cancel', navClick('#results', RESULTS_CALL, 0))
+    it('Results click working - ok', navClick('#results', RESULTS_CALL, 1, true))
 
-    it('Number button click working', fakeAsync(() => {
-      navigateTest(fixture, 1, [QUESTION_URL, NAV_EXAM_RESULT.id, 0], () => {
-        clickButton(fixture, '#b0')
-      })
-    }))
+    it('Number button click working', navClick('#b0', QUESTION0_CALL))
 
-    it('Back to dash link click working - confirm false', fakeAsync(() => {
-      navigateTest(fixture, 0, null, () => {
-        CONFIRMATION = false
-        clickButton(fixture, '#cancel')
-      })
-    }))
-    it('Back to dash link click working - confirm true', fakeAsync(() => {
-      navigateTest(fixture, 1, [DASHBOARD_URL], () => {
-        clickButton(fixture, '#cancel')
-      })
-    }))
+    it('Dashboard click working - cancel', navClick('#cancel', DASHBOARD_CALL, 0))
+    it('Dashboard click working - ok', navClick('#cancel', DASHBOARD_CALL, 1, true))
 
-    it('pause button click working - unlocked', fakeAsync(() => {
-      navigateTest(fixture, 1, [DASHBOARD_URL], () => {
-        clickButton(fixture, '#pause')
-      })
-    }))
+    it('pause button click working - unlocked', navClick('#pause', DASHBOARD_CALL))
     it('pause button click working - locked', fakeAsync(() => {
       NAV_EXAM_RESULT.lock()
-      navigateTest(fixture, 0, [DASHBOARD_URL], () => {
-        clickButton(fixture, '#pause')
-      })
+      navClickBase('#pause', DASHBOARD_CALL, 0)
     }))
   })
 
-  xdescribe('Key press working:', () => {
-    it('right arrow key pressed working', fakeAsync(() => {
-      navigateTest(fixture, 0, [DASHBOARD_URL], () => {
-        keyDown(fixture, 'ArrowRight')
+  describe('Key press working:', () => {
+    function navKey(key: KEY, call: any[], count = 1, ok = false) {
+      return fakeAsync(() => {
+        navigateTest(fixture, count, call, () => {
+          CONFIRMATION = ok
+          windowKeyDown(fixture, key)
+        })
+      })
+    }
+    it('right arrow key working', navKey(KEY.ARROW_RIGHT, QUESTION1_CALL))
+    it('left arrow key working', navKey(KEY.ARROW_LEFT, RESULTS_CALL, 1, true))
+    it('escape key working - cancel', navKey(KEY.ESCAPE, DASHBOARD_CALL, 0))
+    it('escape key working - ok', navKey(KEY.ESCAPE, DASHBOARD_CALL, 1, true))
+
+    xit('enter key working', fakeAsync(() => {
+      console.warn('enter key working...')
+      navigateTest(fixture, 0, QUESTION1_CALL, () => {
+        NAV_EXAM_RESULT.setAnswer(0, 0)
+        windowKeyDown(fixture, KEY.ENTER)
       })
     }))
   })

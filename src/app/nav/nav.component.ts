@@ -6,7 +6,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
-import { Lib, KEY_CODE } from '../model/lib';
+import { Lib, KEY } from '../model/lib';
 
 @Component({
   selector: 'app-nav',
@@ -21,13 +21,13 @@ export class NavComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event)
-    if (Lib.noExtra(event, KEY_CODE.RIGHT_ARROW)) this.next()
-    else if (Lib.noExtra(event, KEY_CODE.LEFT_ARROW)) this.prev()
-    else if (event.keyCode === KEY_CODE.ENTER) {
+    // console.log('window:keydown', event, event.key)
+    if (Lib.isPlainKey(event, KEY.ARROW_RIGHT)) this.next()
+    else if (Lib.isPlainKey(event, KEY.ARROW_LEFT)) this.prev()
+    else if (event.key === KEY.ENTER) {
       if (event.ctrlKey === true) this.results()
       else this.markGuess(event.altKey === true)
-    } if (event.keyCode === KEY_CODE.ESCAPE) {
+    } if (event.key === KEY.ESCAPE) {
       this.gotoDash()
     }
   }
