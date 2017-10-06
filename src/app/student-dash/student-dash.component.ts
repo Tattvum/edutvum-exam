@@ -7,16 +7,39 @@ import { Exam } from '../model/exam';
 import { ExamResult } from '../model/exam-result';
 import { DataService } from '../model/data.service';
 
+import { trigger, transition, style, state, animate } from '@angular/animations';
+
 @Component({
   selector: 'app-student-dash',
   templateUrl: './student-dash.component.html',
   styleUrls: ['./student-dash.component.scss'],
+  animations: [
+    trigger('testAnim', [
+      state('true', style({
+        backgroundColor: '#f0ad4e',
+        color: 'black',
+        transform: 'scale(1)',
+      })),
+      state('false', style({
+        backgroundColor: '#c82333',
+        color: 'white',
+        transform: 'scale(1.1)',
+      })),
+      transition('* => *', animate('1000ms ease-in')),
+    ])
+  ]
 })
 export class StudentDashComponent implements OnInit {
 
   public pageExam
   public pageResult
   public currentUser
+
+  public ok = false
+
+  toggleOK() {
+    this.ok = !this.ok
+  }
 
   constructor(public service: DataService, private router: Router) { }
 
