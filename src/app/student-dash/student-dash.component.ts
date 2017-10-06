@@ -15,17 +15,14 @@ import { trigger, transition, style, state, animate } from '@angular/animations'
   styleUrls: ['./student-dash.component.scss'],
   animations: [
     trigger('testAnim', [
-      state('true', style({
-        backgroundColor: '#f0ad4e',
-        color: 'black',
+      state('false', style({
         transform: 'scale(1)',
       })),
-      state('false', style({
-        backgroundColor: '#c82333',
-        color: 'white',
-        transform: 'scale(1.1)',
+      state('true', style({
+        color: 'blue',
+        transform: 'scale(1.01)',
       })),
-      transition('* => *', animate('1000ms ease-in')),
+      transition('* => *', animate('200ms ease')),
     ])
   ]
 })

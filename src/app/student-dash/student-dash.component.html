@@ -9,10 +9,7 @@
       </select>
     </span>
   </div>
-  <div
-    style="width: 100px;"
-    (click)="toggleOK()"
-    [@testAnim]="ok">Animate</div>
+
   <br>
   <div class="container-fluid">
     <table class="table table-hover">
@@ -38,5 +35,15 @@
     </table>
     <pagination-controls id='exams' (pageChange)="pageExam = $event"></pagination-controls>
   </div>
+
+  <br>
+  <a
+  style="padding: 4px; float: right; text-align: right;"
+  (mouseenter)="toggleOK()"
+  (mouseleave)="toggleOK()"
+  [@testAnim]="ok"
+  href="https://github.com/Tattvum/edutvum-exam"
+  target="_blank"
+  >https://github.com/Tattvum/edutvum-exam</a>
 
 </div>
