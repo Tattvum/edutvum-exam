@@ -1,11 +1,48 @@
+You scored...!
+<br>
 <div *ngIf="results">
-  You scored...!
-  <div id="percent">{{results.percent()}}%</div>
-  <div id="marks">{{results.correct}}/{{results.total}}</div>
-  <br>
-  <div id="correct"><span>{{results.correct}}</span> Correct</div>
-  <div id="wrong"><span>{{results.wrong}}</span> Wrong</div>
-  <div id="missed"><span>{{results.leftout}}</span> Not Attempted</div>
-  <hr>
-  <div id="total"><span>{{results.total}}</span> Total</div>
+  <table style="border-collapse: separate; border-spacing: 24px;">
+    <tr>
+      <td style="vertical-align: bottom;">
+        <span id="percent">{{results.percent()}}%</span>
+      </td>
+      <td style="vertical-align: bottom;">
+        <table id="report" class="table table-bordered" style="width: 30%;">
+          <tr>
+            <td></td>
+            <th class="sure">Sure</th>
+            <th class="guess">Guess</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th class="correct">Correct</th>
+            <td class="correct sure">{{ report.correct.sure }}</td>
+            <td class="correct guess">{{ report.correct.guess }}</td>
+            <td class="correct total grand">{{ report.total.correct }}</td>
+          </tr>
+          <tr>
+            <th class="wrong">Wrong</th>
+            <td class="wrong sure">{{ report.wrong.sure }}</td>
+            <td class="wrong guess">{{ report.wrong.guess }}</td>
+            <td class="wrong total">{{ report.total.wrong }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="total sure">{{ report.total.sure }}</td>
+            <td class="total guess">{{ report.total.guess }}</td>
+            <td class="grand total"></td>
+          </tr>
+        </table>
+      </td>
+      <td style="text-align: left;">
+        <div class="correct">
+          <span>{{ report.total.correct }}</span> Correct</div>
+        <div class="">
+          <span>{{ report.total.total }}</span> Total</div>
+        <br>
+        <div class="missed">
+          <span>{{ report.total.skipped }}</span> Not Attempted</div>
+      </td>
+    </tr>
+  </table>
 </div>

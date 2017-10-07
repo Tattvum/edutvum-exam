@@ -5,13 +5,13 @@
   color: gray;
   font-size: 36px;
 }
-#correct {
+.correct {
   color: limegreen;
 }
-#wrong {
+.wrong {
   color: red;
 }
-#missed {
+.missed {
   color: dodgerblue;
 }
 #total {
@@ -19,6 +19,37 @@
 }
 div > span {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 16px;
   color: black;
+}
+
+th, td {
+  text-align: center;
+}
+
+@mixin bgfg($bg, $fg, $op) {
+  background-color: $bg;
+  color: $fg;
+  opacity: $op;
+}
+
+.guess {
+  opacity: 0.5;
+}
+.correct {
+  color: green;
+}
+.wrong {
+  color: red;
+}
+.skipped {
+  color: dodgerblue;
+}
+.total {
+  font-style: italic;
+}
+.grand {
+  font-size: larger;
+  font-style: normal;
+  font-weight: bold;
 }

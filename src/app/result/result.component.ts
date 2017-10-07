@@ -14,6 +14,25 @@ export class ResultComponent implements OnInit {
 
   exam: ExamResult = EMPTY_EXAM_RESULT
   results: Score
+  report = {
+    correct: {
+      sure: 0,
+      guess: 0,
+    },
+    wrong: {
+      sure: 0,
+      guess: 0,
+    },
+    total: {
+      correct: 0,
+      wrong: 0,
+      sure: 0,
+      guess: 0,
+      skipped: 0,
+      attempted: 0,
+      total: 0,
+    }
+  }
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -27,7 +46,38 @@ export class ResultComponent implements OnInit {
       if (Lib.isNil(exam)) return
       this.exam = exam
       this.results = this.exam.score()
+      this.compute()
     })
   }
 
+  compute() {
+    this.exam.answers.forEach((ans, qid) => {
+      if (ans !== undefined) {
+        if (this.exam.isAttempted(qid)) {
+          this.report.total.attempted++
+          if (this.exam.isCorrect(qid)) {
+            this.report.total.correct++
+            if (this.exam.guessings[qid]) {
+              this.report.correct.sure++
+              this.report.total.sure++
+            } else {
+              this.report.correct.guess++
+              this.report.total.guess++
+            }
+          } else {
+            this.report.total.wrong++
+            if (this.exam.guessings[qid]) {
+              this.report.wrong.sure++
+              this.report.total.sure++
+            } else {
+              this.report.wrong.guess++
+              this.report.total.guess++
+            }
+          }
+        } else this.report.total.skipped++
+      }
+    })
+    let total = this.report.total.total = this.exam.questions.length
+    this.report.total.skipped = total - this.report.total.attempted
+  }
 }
