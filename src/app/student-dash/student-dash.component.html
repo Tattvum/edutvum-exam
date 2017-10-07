@@ -10,6 +10,10 @@
     </span>
   </div>
 
+  <div *ngIf="service.loading" id="loading" style="color: red;">
+    Loading...
+  </div>
+
   <br>
   <div class="container-fluid">
     <table class="table table-hover">
@@ -38,12 +42,12 @@
 
   <br>
   <a
-  style="padding: 4px; float: right; text-align: right;"
-  (mouseenter)="toggleOK()"
-  (mouseleave)="toggleOK()"
-  [@testAnim]="ok"
-  href="https://github.com/Tattvum/edutvum-exam"
-  target="_blank"
-  >https://github.com/Tattvum/edutvum-exam</a>
+    style="padding: 4px; float: right; text-align: right;"
+    (mouseenter)="toggleOK()"
+    (mouseleave)="toggleOK()"
+    [@testAnim]="ok"
+    href="https://github.com/Tattvum/edutvum-exam"
+    target="_blank"
+    >https://github.com/Tattvum/edutvum-exam</a>
 
 </div>

@@ -55,6 +55,8 @@ export class DataService {
   public results: ExamResult[] = []
   public users: User[] = []
   public isAdmin = false
+  public loading = false
+  public activeUser: string
 
   private globalTimerAction: (number) => void
   private globalTimer = Observable.interval(1000).subscribe(t => {
@@ -63,6 +65,8 @@ export class DataService {
 
   init(user: User, dolast = () => { }) {
     Lib.assert(Lib.isNil(user), 'user cannot be null')
+    this.loading = true
+    this.activeUser = user.uid
     this.dataSource.getHolders(user).then(hs => {
       this.userCache = {}
       this.cache = {}
@@ -73,7 +77,7 @@ export class DataService {
       this.results = hs.results
       this.results.forEach(r => this.cache[r.id] = r)
       Lib.assert(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
-    }).then(dolast)
+    }).then(dolast).then(() => this.loading = false)
   }
 
   constructor(private dataSource: DataSource, private securitySource: SecuritySource) {

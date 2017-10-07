@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Exam } from '../model/exam';
 import { ExamResult } from '../model/exam-result';
 import { DataService } from '../model/data.service';
+import { Lib } from '../model/lib';
 
 import { trigger, transition, style, state, animate } from '@angular/animations';
 
@@ -23,7 +24,7 @@ import { trigger, transition, style, state, animate } from '@angular/animations'
         transform: 'scale(1.01)',
       })),
       transition('* => *', animate('200ms ease')),
-    ])
+    ]),
   ]
 })
 export class StudentDashComponent implements OnInit {
@@ -41,7 +42,7 @@ export class StudentDashComponent implements OnInit {
   constructor(public service: DataService, private router: Router) { }
 
   ngOnInit(): void {
-    this.currentUser = this.service.user().uid
+    this.currentUser = this.service.activeUser
   }
 
   showWhen(dt: Date): string {
