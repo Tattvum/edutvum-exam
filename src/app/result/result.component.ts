@@ -58,20 +58,20 @@ export class ResultComponent implements OnInit {
           if (this.exam.isCorrect(qid)) {
             this.report.total.correct++
             if (this.exam.guessings[qid]) {
-              this.report.correct.sure++
-              this.report.total.sure++
-            } else {
               this.report.correct.guess++
               this.report.total.guess++
+            } else {
+              this.report.correct.sure++
+              this.report.total.sure++
             }
           } else {
             this.report.total.wrong++
             if (this.exam.guessings[qid]) {
-              this.report.wrong.sure++
-              this.report.total.sure++
-            } else {
               this.report.wrong.guess++
               this.report.total.guess++
+            } else {
+              this.report.wrong.sure++
+              this.report.total.sure++
             }
           }
         } else this.report.total.skipped++
