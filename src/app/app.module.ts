@@ -5,11 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
-import {
-  MatButtonModule, MatCheckboxModule,
-  MatSelectModule, MATERIAL_COMPATIBILITY_MODE
-} from '@angular/material';
-
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
