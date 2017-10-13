@@ -1,0 +1,232 @@
+{
+  "type": "object",
+  "properties": {
+    "ver5": {
+      "type": "object",
+      "properties": {
+        "exams": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+$": {
+              "$ref": "#/definitions/ExamSchema"
+            }
+          },
+          "additionalProperties": false
+        },
+        "results": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z0-9]+$": {
+              "type": "object",
+              "patternProperties": {
+                "^[\\-\\w]+$": {
+                  "$ref": "#/definitions/ResultSchema"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserSchema"
+          }
+        }
+      },
+      "required": [
+        "exams",
+        "results",
+        "users"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ver5"
+  ],
+  "definitions": {
+    "QuestionSchema": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "TFQ",
+            "ARQ",
+            "MCQ",
+            "MAQ",
+            "NCQ"
+          ]
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "solutions": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "notes": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        }
+      },
+      "dependencies": {
+        "choices": {
+          "properties": {
+            "type": {
+              "enum": [
+                "MCQ",
+                "MAQ"
+              ]
+            }
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "display",
+        "type",
+        "solutions"
+      ]
+    },
+    "ExamSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "when": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "revwhen": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "questions": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+$": {
+              "$ref": "#/definitions/QuestionSchema"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "by",
+        "when",
+        "revwhen",
+        "questions"
+      ]
+    },
+    "ResultSchema": {
+      "type": "object",
+      "properties": {
+        "exam": {
+          "type": "string"
+        },
+        "when": {
+          "type": "number"
+        },
+        "revwhen": {
+          "type": "number"
+        },
+        "status": {
+          "type": {
+            "enum": [
+              "DONE",
+              "PENDING"
+            ]
+          }
+        },
+        "answers": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+$": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "guessings": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+$": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "durations": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+$": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "exam",
+        "when",
+        "revwhen"
+      ]
+    },
+    "UserSchema": {
+      "type": "object",
+      "properties": {
+        "localId": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": {
+            "enum": [
+              "USER",
+              "ADMIN"
+            ]
+          }
+        }
+      },
+      "required": [
+        "localId",
+        "displayName",
+        "email"
+      ]
+    }
+  }
+}

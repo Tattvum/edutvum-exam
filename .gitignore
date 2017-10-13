@@ -16,6 +16,7 @@ src/environments/environment.stage.ts
 **/node_modules
 /cmd-line/*.js
 /cmd-line/*.json
+!/cmd-line/edutvum-exam-schema.json
 
 #firebase cloud-functions
 functions/index.js
