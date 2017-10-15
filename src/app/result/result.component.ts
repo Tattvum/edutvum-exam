@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
+import { Data } from '../chart/chart.component';
 import { Score } from '../model/score';
 import { Lib } from '../model/lib';
 
@@ -33,6 +34,7 @@ export class ResultComponent implements OnInit {
       total: 0,
     }
   }
+  public array = []
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -47,10 +49,11 @@ export class ResultComponent implements OnInit {
       this.exam = exam
       this.results = this.exam.score()
       this.compute()
+      this.prepare()
     })
   }
 
-  compute() {
+  private compute() {
     this.exam.answers.forEach((ans, qid) => {
       if (ans !== undefined) {
         if (this.exam.isAttempted(qid)) {
@@ -80,4 +83,26 @@ export class ResultComponent implements OnInit {
     let total = this.report.total.total = this.exam.questions.length
     this.report.total.skipped = total - this.report.total.attempted
   }
+
+  private defval(a, b) {
+    return Lib.isNil(a) ? b : a
+  }
+
+  private prepare() {
+    this.array = []
+    this.exam.questions.forEach((q, qid) => {
+      let d = this.exam.durations[qid]
+      this.array.push({
+        value: this.defval(this.exam.durations[qid], 0),
+        attempted: this.defval(this.exam.isAttempted(qid), false),
+        correct: this.defval(this.exam.isCorrect(qid), false),
+        guess: this.defval(this.exam.guessings[qid], false),
+        action: () => {
+          console.log('action', qid)
+          this.router.navigate(['/question', this.exam.id, qid])
+        }
+      })
+    })
+  }
+
 }

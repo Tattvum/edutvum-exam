@@ -36,6 +36,7 @@ import { UserComponent } from './user/user.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
+import { ChartComponent } from './chart/chart.component';
 export const firebaseConfig = environment.firebaseConfig;
 
 let DATA_SOURCE = environment.firebase ? FirebaseDataSource : MockDataSource
@@ -65,6 +66,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     LoginComponent,
     UserComponent,
     DetailsComponent,
+    ChartComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

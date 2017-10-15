@@ -46,7 +46,7 @@ let dataServiceMock = {
 
 let routerMock = {
   navigate: (arr: any[]) => {
-    console.warn(arr)
+    // console.warn(arr)
   }
 }
 
