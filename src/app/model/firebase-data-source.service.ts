@@ -52,8 +52,9 @@ let qcache: { [key: string]: Question } = {}
 function createQ(obj, key: string, eid: string): Question {
   if (obj.kind) {
     let linkid = obj.eid + '.' + obj.qid
-    console.log('question link', obj, linkid)
-    return qcache[linkid]
+    let linkq = qcache[linkid]
+//    console.log('question link', linkid, linkq)
+    return linkq
   }
   let id = key
   let title = obj.display
@@ -63,7 +64,8 @@ function createQ(obj, key: string, eid: string): Question {
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
   let q = new Question(id, title, type, choices, solutions, notes, explanation)
-  qcache[eid + '.' + id] = q
+  let linkidnew = eid + '.' + id
+  qcache[linkidnew] = q
   return q
 }
 
