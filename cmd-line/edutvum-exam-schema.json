@@ -47,7 +47,7 @@
     "ver5"
   ],
   "definitions": {
-    "QuestionSchema": {
+    "QuestionFullSchema": {
       "type": "object",
       "properties": {
         "display": {
@@ -101,6 +101,29 @@
         "solutions"
       ]
     },
+    "QuestionLinkSchema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "LINK"
+          ]
+        },
+        "eid": {
+          "type": "string"
+        },
+        "qid": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "eid",
+        "qid"
+      ]
+    },
     "ExamSchema": {
       "type": "object",
       "properties": {
@@ -128,7 +151,15 @@
           "type": "object",
           "patternProperties": {
             "^[a-z0-9]+$": {
-              "$ref": "#/definitions/QuestionSchema"
+              "type": "object",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/QuestionFullSchema"
+                },
+                {
+                  "$ref": "#/definitions/QuestionLinkSchema"
+                }
+              ]
             }
           },
           "additionalProperties": false

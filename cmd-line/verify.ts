@@ -1,6 +1,7 @@
 import { SchemaValidations } from './schema.validations'
 import { QidValidations } from './qid.validations'
 import { QuestionValidations } from './question.validations'
+import { QuestionLinkValidations } from './question-link.validations'
 import { SolutionValidations } from './solution.validations'
 import { DataLib } from './library'
 import * as fs from 'jsonfile';
@@ -19,4 +20,5 @@ function validate(category, cls) {
 validate('Schema', SchemaValidations)
 validate('Qid', QidValidations)
 validate('Question', QuestionValidations)
+// validate('QuestionLink', QuestionLinkValidations)
 // validate('Solution', SolutionValidations)

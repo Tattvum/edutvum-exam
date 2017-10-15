@@ -47,7 +47,14 @@ function createA(type: AnswerType, given): string[] {
   return choices
 }
 
-function createQ(obj, key: string): Question {
+let qcache: { [key: string]: Question } = {}
+
+function createQ(obj, key: string, eid: string): Question {
+  if (obj.kind) {
+    let linkid = obj.eid + '.' + obj.qid
+    console.log('question link', obj, linkid)
+    return qcache[linkid]
+  }
   let id = key
   let title = obj.display
   let notes = obj.notes
@@ -55,7 +62,9 @@ function createQ(obj, key: string): Question {
   let type = AnswerType['' + obj.type]
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
-  return new Question(id, title, type, choices, solutions, notes, explanation)
+  let q = new Question(id, title, type, choices, solutions, notes, explanation)
+  qcache[eid + '.' + id] = q
+  return q
 }
 
 function createE(obj): Exam {
@@ -67,7 +76,7 @@ function createE(obj): Exam {
   let questions = []
   let qobj = obj.questions
   let qkeys = Object.keys(qobj).sort()
-  qkeys.forEach(key => questions.push(createQ(qobj[key], key)))
+  qkeys.forEach(key => questions.push(createQ(qobj[key], key, id)))
   return new Exam(id, title, questions, when, notes, explanation)
 }
 
@@ -104,7 +113,8 @@ function createU(obj): User {
 export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
 
-  private readonly revwhen = { query: { orderByChild: 'revwhen' } }
+  private readonly revwhenOrder = { query: { orderByChild: 'revwhen' } }
+  private readonly whenOrder = { query: { orderByChild: 'when' } }
   private alles: { [key: string]: Exam } = {}
 
   constructor(private afDb: AngularFireDatabase) { }
@@ -125,7 +135,7 @@ export class FirebaseDataSource implements DataSource {
     doit: (thing: any) => void,
     sayit: () => void): Observable<void> {
     // console.log(title, '-------', url);
-    return this.afDb.list(url, this.revwhen).first().map(things => {
+    return this.afDb.list(url, this.revwhenOrder).first().map(things => {
       // console.log('computing ' + title + '... ', things.length)
       things.forEach(thing => doit(thing))
       // console.log('all ' + title + ': ', sayit())
@@ -148,18 +158,18 @@ export class FirebaseDataSource implements DataSource {
   }
 
   private fetchE(): Observable<void> {
-    return this.fetch('exams', EXAMS_URL,
-      e => {
+    return this.afDb.list(EXAMS_URL, this.whenOrder).first().map(exs => {
+      exs.forEach(e => {
         let exam = createE(e)
         this.alles[e.$key] = exam
         this.holders.exams.push(exam)
-      },
-      () => this.holders.exams.length
-    )
+      })
+      this.holders.exams.reverse()
+    })
   }
 
   private fetchR(user: User): Observable<void> {
-    return this.afDb.list(this.resultsUrl(user), this.revwhen).first().map(
+    return this.afDb.list(this.resultsUrl(user), this.revwhenOrder).first().map(
       userRs => {
         fbObjToArr(userRs).forEach(
           r => this.holders.results.push(createR(r, this.alles))
