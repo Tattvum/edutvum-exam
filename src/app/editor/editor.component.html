@@ -1,4 +1,4 @@
-<span (click)="showEdit()" #display [innerHTML]="content">-</span>
+<span (click)="showEdit($event)" #display [innerHTML]="content">-</span>
 
 <app-popup [(visible)]="showPopup" (visibleChange)="closeEdit()">
   <h1>{{ title }}</h1>

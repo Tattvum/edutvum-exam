@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService } from '../model/data.service';
+import { DataService, ExamEditType } from '../model/data.service';
 import { AnswerType } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
@@ -99,5 +99,10 @@ export class ChoiceInputComponent implements OnInit {
     else this.exam.removeAnswer(+this.qid, cid)
     this.service.saveExam()
   }
+
+  oneditOption(newtext, i) {
+    this.question.choices[i] = newtext
+    this.service.editExamDetail(ExamEditType.QuestionChoice, this.qid, newtext)
+ }
 
 }

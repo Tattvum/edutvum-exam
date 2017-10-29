@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input } from '@angular/core';
 import { DataService } from 'app/model/data.service';
 import { Lib } from '../model/lib';
 
@@ -28,7 +28,8 @@ export class EditorComponent implements OnInit {
     MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.qref.nativeElement]);
   }
 
-  showEdit() {
+  showEdit(event) {
+    // if (!event.ctrlKey) return
     if (!(this.service.isAdmin)) return
     this.showPopup = true
     this.service.disableHotkeys = true

@@ -26,6 +26,7 @@ export enum ExamEditType {
   QuestionDisplay,
   QuestionExplanation,
   ExamExplanation,
+  QuestionChoice,
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -34,7 +35,8 @@ export abstract class DataSource {
   abstract createExam(user: User, eid: string): Promise<ExamResult>
   abstract updateExam(user: User, result: ExamResult): Promise<boolean>
   abstract deleteExam(user: User, rid: string): Promise<boolean>
-  abstract editExamDetail(user: User, type: ExamEditType, diff: string, eid: string, qid: string): Promise<boolean>
+  abstract editExamDetail(user: User, type: ExamEditType, diff: string, eid: string,
+    qid?: string, cid?: number): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -174,11 +176,11 @@ export class DataService {
     })
   }
 
-  public editExamDetail(type: ExamEditType, qidn: string, diff: string): Promise<boolean> {
+  public editExamDetail(type: ExamEditType, qidn: string, diff: string, cid?: number): Promise<boolean> {
     let q = this.pendingResult.questions[qidn]
     let eid = q.eid
     if (type === ExamEditType.ExamExplanation) eid = this.pendingResult.exam.id
-    let call = u => this.dataSource.editExamDetail(u, type, diff, eid, q.id)
+    let call = u => this.dataSource.editExamDetail(u, type, diff, eid, q.id, cid)
     return this.withUserPromise(call, ok => {
       console.log(ExamEditType[type], 'edit saved!', ok)
       return ok

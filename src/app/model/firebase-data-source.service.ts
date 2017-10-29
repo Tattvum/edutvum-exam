@@ -241,12 +241,13 @@ export class FirebaseDataSource implements DataSource {
     })
   }
 
-  private editUrl(type: ExamEditType, eid: string, qid: string): string {
+  private editUrl(type: ExamEditType, eid: string, qid: string, cid: number): string {
     let editurl = EXAMS_URL
     switch (type) {
       case ExamEditType.QuestionDisplay: return editurl + eid + '/questions/' + qid + '/display/'
       case ExamEditType.QuestionExplanation: return editurl + eid + '/questions/' + qid + '/explanation/'
       case ExamEditType.ExamExplanation: return editurl + eid + '/explanation/'
+      case ExamEditType.QuestionChoice: return editurl + eid + '/questions/' + qid + '/choices/' + cid
       default:
         console.log('editUrl', 'Unknown type', type)
         return null
@@ -254,9 +255,9 @@ export class FirebaseDataSource implements DataSource {
   }
 
   public editExamDetail(user: User, type: ExamEditType, diff: string,
-    eid: string, qid: string): Promise<boolean> {
+    eid: string, qid?: string, cid?: number): Promise<boolean> {
     console.log(' - editExamDetail', ExamEditType[type], eid, qid, diff)
-    let editurl = this.editUrl(type, eid, qid)
+    let editurl = this.editUrl(type, eid, qid, cid)
     Lib.failif(Lib.isNil(editurl), 'Invalid ExamEditType', type)
     return new Promise<boolean>(resolve => {
       this.afDb.object(editurl).set(diff).then((call) => {

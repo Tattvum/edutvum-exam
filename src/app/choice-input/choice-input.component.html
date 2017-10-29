@@ -14,7 +14,12 @@
             (click)="choiceClicked($event, i)" [disabled]="exam.isLocked()"
             [checked]="exam.isAnswer(qid, i)"
             />
-        <label class="opt" [for]="'rd'+i" [innerHTML]="ch"></label>
+        <label class="opt" [for]="'rd'+i" >
+          <app-editor title="Edit Choice Text"
+            [content]="ch"
+            (onedit)="oneditOption($event, i)" >
+          </app-editor>
+        </label>
       </label>
     </div>
     <div class="ncq" *ngIf="question.type == 4">
