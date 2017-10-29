@@ -176,7 +176,7 @@ export class DataService {
     })
   }
 
-  public editExamDetail(type: ExamEditType, qidn: string, diff: string, cid?: number): Promise<boolean> {
+  public editExamDetail(type: ExamEditType, diff: string, qidn: string, cid?: number): Promise<boolean> {
     let q = this.pendingResult.questions[qidn]
     let eid = q.eid
     if (type === ExamEditType.ExamExplanation) eid = this.pendingResult.exam.id

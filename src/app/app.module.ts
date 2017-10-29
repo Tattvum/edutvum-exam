@@ -39,6 +39,7 @@ import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
 import { ChartComponent } from './chart/chart.component';
 import { EditorComponent } from './editor/editor.component';
+import { MathJaxDirective } from './mathjax.directive';
 
 export const firebaseConfig = environment.firebaseConfig;
 
@@ -72,6 +73,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     ChartComponent,
     PopupComponent,
     EditorComponent,
+    MathJaxDirective,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

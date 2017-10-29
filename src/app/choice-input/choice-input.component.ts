@@ -100,9 +100,9 @@ export class ChoiceInputComponent implements OnInit {
     this.service.saveExam()
   }
 
-  oneditOption(newtext, i) {
+  oneditOption(newtext, i: number) {
     this.question.choices[i] = newtext
-    this.service.editExamDetail(ExamEditType.QuestionChoice, this.qid, newtext)
+    this.service.editExamDetail(ExamEditType.QuestionChoice, newtext, this.qid, i)
  }
 
 }

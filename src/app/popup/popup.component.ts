@@ -1,4 +1,7 @@
-import { Component, OnInit, Input, Output, OnChanges, EventEmitter } from '@angular/core';
+import {
+  Component, OnInit, Input, Output, OnChanges,
+  EventEmitter, SimpleChanges
+} from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 // https://coryrylan.com/blog/build-a-angular-modal-dialog-with-angular-animate
@@ -19,14 +22,12 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
     ])
   ]
 })
-export class PopupComponent implements OnInit {
+export class PopupComponent {
   @Input() closable = true;
   @Input() visible: boolean;
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor() { }
-
-  ngOnInit() { }
 
   close() {
     this.visible = false;

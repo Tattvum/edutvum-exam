@@ -258,6 +258,7 @@ export class FirebaseDataSource implements DataSource {
     eid: string, qid?: string, cid?: number): Promise<boolean> {
     console.log(' - editExamDetail', ExamEditType[type], eid, qid, diff)
     let editurl = this.editUrl(type, eid, qid, cid)
+    // console.log(' - ', editurl)
     Lib.failif(Lib.isNil(editurl), 'Invalid ExamEditType', type)
     return new Promise<boolean>(resolve => {
       this.afDb.object(editurl).set(diff).then((call) => {

@@ -28,7 +28,7 @@ export class DisplayComponent implements OnInit {
 
   onedit(newtext) {
     this.question.title = newtext
-    this.service.editExamDetail(ExamEditType.QuestionDisplay, this.qid, newtext)
+    this.service.editExamDetail(ExamEditType.QuestionDisplay, newtext, this.qid)
   }
 
 }

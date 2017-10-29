@@ -1,20 +1,16 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, Input } from '@angular/core';
+import {
+  Component, OnInit, ElementRef, ViewChild, EventEmitter,
+  Output, Input, SimpleChanges, OnChanges, Directive
+} from '@angular/core';
 import { DataService } from 'app/model/data.service';
 import { Lib } from '../model/lib';
-
-declare var MathJax: {
-  Hub: {
-    Queue: (p: Object[]) => void
-  }
-}
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })
-export class EditorComponent implements OnInit {
-  @ViewChild('display') qref: ElementRef;
+export class EditorComponent {
 
   @Input() title = 'Edit Display'
   @Input() content = '[blank]'
@@ -23,10 +19,6 @@ export class EditorComponent implements OnInit {
   showPopup = false
 
   constructor(private service: DataService) { }
-
-  ngOnInit() {
-    MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.qref.nativeElement]);
-  }
 
   showEdit(event) {
     // if (!event.ctrlKey) return
@@ -43,9 +35,6 @@ export class EditorComponent implements OnInit {
   edit() {
     if (!(this.service.isAdmin)) return
     this.closeEdit()
-    // console.log(this.question.id, this.qshow)
-    this.qref.nativeElement.innerHTML = this.content
-    MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.qref.nativeElement]);
     this.onedit.emit(this.content);
   }
 }

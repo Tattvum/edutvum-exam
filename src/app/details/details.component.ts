@@ -30,12 +30,12 @@ export class DetailsComponent implements OnInit {
 
   oneditQE(newtext) {
     this.question.explanation = newtext
-    this.service.editExamDetail(ExamEditType.QuestionExplanation, this.qid, newtext)
+    this.service.editExamDetail(ExamEditType.QuestionExplanation, newtext, this.qid)
   }
 
   oneditEE(newtext) {
     this.exam.exam.explanation = newtext
-    this.service.editExamDetail(ExamEditType.ExamExplanation, this.qid, newtext)
+    this.service.editExamDetail(ExamEditType.ExamExplanation, newtext, this.qid)
   }
 
 }
