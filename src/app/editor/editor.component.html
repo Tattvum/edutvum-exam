@@ -1,7 +1,11 @@
-<span (click)="showEdit($event)" [MathJax]="content">-</span>
+<span (click)="showEdit($event)" [MathJax]="content"></span>
+<span *ngIf="service.isAdmin"
+  (click)="showEdit($event)"
+  class="glyphicon-pencil">
+</span>
 
 <app-popup [(visible)]="showPopup" (visibleChange)="closeEdit()">
-  <h1>{{ title }}</h1>
+  <h1>{{ heading }}</h1>
   <textarea [(ngModel)]="content" rows="2"></textarea>
   <button (click)="edit()" class="btn">Save</button>
 </app-popup>

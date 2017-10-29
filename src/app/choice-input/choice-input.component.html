@@ -15,7 +15,7 @@
             [checked]="exam.isAnswer(qid, i)"
             />
         <label class="opt" [for]="'rd'+i" >
-          <app-editor title="Edit Choice Text"
+          <app-editor heading="Edit Choice Text"
             [content]="ch"
             (onedit)="oneditOption($event, i)" >
           </app-editor>

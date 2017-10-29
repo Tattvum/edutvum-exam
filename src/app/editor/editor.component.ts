@@ -12,13 +12,13 @@ import { Lib } from '../model/lib';
 })
 export class EditorComponent {
 
-  @Input() title = 'Edit Display'
+  @Input() heading = 'Edit Display'
   @Input() content = '[blank]'
   @Output() onedit: EventEmitter<string> = new EventEmitter<string>()
 
   showPopup = false
 
-  constructor(private service: DataService) { }
+  constructor(public service: DataService) { }
 
   showEdit(event) {
     // if (!event.ctrlKey) return
