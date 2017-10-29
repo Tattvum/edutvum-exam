@@ -1,7 +1,5 @@
 <span (click)="showEdit($event)" [MathJax]="content"></span>
-<span *ngIf="service.isAdmin"
-  (click)="showEdit($event)"
-  class="glyphicon-pencil">
+<span *ngIf="service.isAdmin" (click)="showEdit($event)" class="link"> [ edit ]
 </span>
 
 <app-popup [(visible)]="showPopup" (visibleChange)="closeEdit()">
