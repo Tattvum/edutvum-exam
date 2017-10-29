@@ -34,7 +34,7 @@ export abstract class DataSource {
   abstract createExam(user: User, eid: string): Promise<ExamResult>
   abstract updateExam(user: User, result: ExamResult): Promise<boolean>
   abstract deleteExam(user: User, rid: string): Promise<boolean>
-  abstract editExamDetail(user: User, type: ExamEditType, eid: string, diff: string, qid: string): Promise<boolean>
+  abstract editExamDetail(user: User, type: ExamEditType, diff: string, eid: string, qid: string): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -177,9 +177,8 @@ export class DataService {
   public editExamDetail(type: ExamEditType, qidn: string, diff: string): Promise<boolean> {
     let q = this.pendingResult.questions[qidn]
     let eid = q.eid
-    qidn = q.id
-    // console.log(eid, qidn, diff)
-    let call = u => this.dataSource.editExamDetail(u, type, eid, diff, qidn)
+    if (type === ExamEditType.ExamExplanation) eid = this.pendingResult.exam.id
+    let call = u => this.dataSource.editExamDetail(u, type, diff, eid, q.id)
     return this.withUserPromise(call, ok => {
       console.log(ExamEditType[type], 'edit saved!', ok)
       return ok

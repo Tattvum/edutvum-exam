@@ -253,8 +253,8 @@ export class FirebaseDataSource implements DataSource {
     }
   }
 
-  public editExamDetail(user: User, type: ExamEditType, eid: string, diff: string,
-    qid: string): Promise<boolean> {
+  public editExamDetail(user: User, type: ExamEditType, diff: string,
+    eid: string, qid: string): Promise<boolean> {
     console.log(' - editExamDetail', ExamEditType[type], eid, qid, diff)
     let editurl = this.editUrl(type, eid, qid)
     Lib.failif(Lib.isNil(editurl), 'Invalid ExamEditType', type)
