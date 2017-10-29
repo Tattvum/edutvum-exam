@@ -1,0 +1,7 @@
+<span (click)="showEdit()" #display [innerHTML]="content">-</span>
+
+<app-popup [(visible)]="showPopup" (visibleChange)="closeEdit()">
+  <h1>{{ title }}</h1>
+  <textarea [(ngModel)]="content" rows="2" ></textarea>
+  <button (click)="edit()" class="btn">Save</button>
+</app-popup>

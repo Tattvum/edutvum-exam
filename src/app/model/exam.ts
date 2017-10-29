@@ -11,7 +11,7 @@ export class Exam extends AbstractThing {
     public readonly questions: Question[],
     public readonly when: Date = new Date(),
     public readonly notes = '',
-    public readonly explanation = ''
+    public explanation = ''
   ) {
     super(id, title, when)
     Lib.failif(Lib.isNil(questions), 'Exam questions cannot be undefined')

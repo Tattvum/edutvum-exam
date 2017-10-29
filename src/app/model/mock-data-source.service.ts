@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { DataSource, Holders } from './data.service'
+import { DataSource, Holders, ExamEditType } from './data.service'
 
 import { Lib } from './lib';
 
@@ -41,9 +41,9 @@ const NOUN = [
 ]
 
 export const USERS: User[] = [
-  {uid: 'u1', name: 'Bingo User', email: 'bingo@gmail.com', role: UserRole.USER},
-  {uid: 'u2', name: 'User Two', email: 'cisco@gmail.com', role: UserRole.ADMIN},
-  {uid: 'u3', name: '3rd User', email: 'django@gmail.com', role: UserRole.USER},
+  { uid: 'u1', name: 'Bingo User', email: 'bingo@gmail.com', role: UserRole.USER },
+  { uid: 'u2', name: 'User Two', email: 'cisco@gmail.com', role: UserRole.ADMIN },
+  { uid: 'u3', name: '3rd User', email: 'django@gmail.com', role: UserRole.USER },
 ]
 
 let alles: { [key: string]: Exam } = {}
@@ -93,4 +93,8 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(true) // TBD
   }
 
+  public editExamDetail(user: User, type: ExamEditType, eid: string, diff: string,
+    qid: string): Promise<boolean> {
+    return Promise.resolve(true) // TBD
+  }
 }

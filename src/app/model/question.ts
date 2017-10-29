@@ -4,12 +4,13 @@ import { Lib } from './lib';
 export class Question {
   constructor(
     public readonly id: string,
-    public readonly title: string,
+    public title: string,
     public readonly type: AnswerType,
     public readonly choices: string[],
     public readonly solutions: number[],
     public readonly notes = '',
-    public readonly explanation = ''
+    public explanation = '',
+    public readonly eid = '',
   ) {
     Lib.failif(Lib.isNil(id), 'id cannot be undefined')
     Lib.failif(Lib.isNil(title), 'title cannot be undefined')
@@ -49,6 +50,10 @@ export class Question {
         Lib.failif(solutions.length !== 1, 'NCQ should have only one solution')
         break
     }
+  }
+
+  public fullid(): string {
+    return this.eid + '.' + this.id
   }
 
   public isSolution(n: number): boolean {

@@ -7,7 +7,7 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { DataSource, Holders } from './data.service'
+import { DataSource, Holders, ExamEditType } from './data.service'
 
 import { Lib } from './lib';
 
@@ -18,7 +18,7 @@ import { ExamResult, ExamResultStatus } from './exam-result';
 import { User, UserRole } from './user';
 
 const URL_VER = 'ver5/'
-const EXAMS_URL = URL_VER + 'exams'
+const EXAMS_URL = URL_VER + 'exams/'
 const RESULTS_URL = URL_VER + 'results/'
 const USERS_URL = URL_VER + 'users/'
 
@@ -53,7 +53,7 @@ function createQ(obj, key: string, eid: string): Question {
   if (obj.kind) {
     let linkid = obj.eid + '.' + obj.qid
     let linkq = qcache[linkid]
-//    console.log('question link', linkid, linkq)
+    //    console.log('question link', linkid, linkq)
     return linkq
   }
   let id = key
@@ -63,9 +63,8 @@ function createQ(obj, key: string, eid: string): Question {
   let type = AnswerType['' + obj.type]
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
-  let q = new Question(id, title, type, choices, solutions, notes, explanation)
-  let linkidnew = eid + '.' + id
-  qcache[linkidnew] = q
+  let q = new Question(id, title, type, choices, solutions, notes, explanation, eid)
+  qcache[q.fullid()] = q
   return q
 }
 
@@ -238,6 +237,33 @@ export class FirebaseDataSource implements DataSource {
       }).catch(err => {
         console.log(err)
         resolve(null)
+      })
+    })
+  }
+
+  private editUrl(type: ExamEditType, eid: string, qid: string): string {
+    let editurl = EXAMS_URL
+    switch (type) {
+      case ExamEditType.QuestionDisplay: return editurl + eid + '/questions/' + qid + '/display/'
+      case ExamEditType.QuestionExplanation: return editurl + eid + '/questions/' + qid + '/explanation/'
+      case ExamEditType.ExamExplanation: return editurl + eid + '/explanation/'
+      default:
+        console.log('editUrl', 'Unknown type', type)
+        return null
+    }
+  }
+
+  public editExamDetail(user: User, type: ExamEditType, eid: string, diff: string,
+    qid: string): Promise<boolean> {
+    console.log(' - editExamDetail', ExamEditType[type], eid, qid, diff)
+    let editurl = this.editUrl(type, eid, qid)
+    Lib.failif(Lib.isNil(editurl), 'Invalid ExamEditType', type)
+    return new Promise<boolean>(resolve => {
+      this.afDb.object(editurl).set(diff).then((call) => {
+        resolve(true)
+      }).catch(err => {
+        console.log(err)
+        resolve(false)
       })
     })
   }

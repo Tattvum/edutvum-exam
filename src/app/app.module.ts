@@ -33,10 +33,13 @@ import { ChoiceInputComponent } from './choice-input/choice-input.component';
 import { ResultComponent } from './result/result.component';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
+import { PopupComponent } from './popup/popup.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
 import { ChartComponent } from './chart/chart.component';
+import { EditorComponent } from './editor/editor.component';
+
 export const firebaseConfig = environment.firebaseConfig;
 
 let DATA_SOURCE = environment.firebase ? FirebaseDataSource : MockDataSource
@@ -67,6 +70,8 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     UserComponent,
     DetailsComponent,
     ChartComponent,
+    PopupComponent,
+    EditorComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

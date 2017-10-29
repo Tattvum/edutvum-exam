@@ -21,6 +21,7 @@ export class NavComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
+    if (this.service.disableHotkeys) return
     // console.log('window:keydown', event, event.key)
     if (Lib.isPlainKey(event, KEY.ARROW_RIGHT)) this.next()
     else if (Lib.isPlainKey(event, KEY.ARROW_LEFT)) this.prev()

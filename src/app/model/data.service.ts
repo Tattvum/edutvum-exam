@@ -22,11 +22,19 @@ export class Holders {
   ) { }
 }
 
+export enum ExamEditType {
+  QuestionDisplay,
+  QuestionExplanation,
+  ExamExplanation,
+  UNKNOWN_LAST // Just tag the end?
+}
+
 export abstract class DataSource {
   abstract getHolders(user: User): Promise<Holders>
   abstract createExam(user: User, eid: string): Promise<ExamResult>
   abstract updateExam(user: User, result: ExamResult): Promise<boolean>
   abstract deleteExam(user: User, rid: string): Promise<boolean>
+  abstract editExamDetail(user: User, type: ExamEditType, eid: string, diff: string, qid: string): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -57,6 +65,7 @@ export class DataService {
   public isAdmin = false
   public loading = false
   public activeUser: string
+  public disableHotkeys = false
 
   private globalTimerAction: (number) => void
   private globalTimer = Observable.interval(1000).subscribe(t => {
@@ -82,10 +91,12 @@ export class DataService {
 
   constructor(private dataSource: DataSource, private securitySource: SecuritySource) {
     console.clear()
+    this.isAdmin = false
     this.userWait().then(user => {
       // this.init(user)
       this.init(user, () => {
-        this.isAdmin = this.userCache[user.uid].role === UserRole.ADMIN
+        let u = this.userCache[user.uid]
+        if (u) this.isAdmin = u.role === UserRole.ADMIN
       })
     })
   }
@@ -160,6 +171,18 @@ export class DataService {
     return this.withUserPromise(call, ok => {
       // console.log(this.pendingResult.id, 'exam saved!')
       return this.pendingResult
+    })
+  }
+
+  public editExamDetail(type: ExamEditType, qidn: string, diff: string): Promise<boolean> {
+    let q = this.pendingResult.questions[qidn]
+    let eid = q.eid
+    qidn = q.id
+    // console.log(eid, qidn, diff)
+    let call = u => this.dataSource.editExamDetail(u, type, eid, diff, qidn)
+    return this.withUserPromise(call, ok => {
+      console.log(ExamEditType[type], 'edit saved!', ok)
+      return ok
     })
   }
 

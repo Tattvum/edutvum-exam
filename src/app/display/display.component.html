@@ -1,2 +1,5 @@
-<div class="light">( {{qid}} - {{qidshow}} )</div>
-<div #question>-</div>
+<div class="light">( {{ qid }} - {{ question.fullid() }} )</div>
+<app-editor title="Edit Question Display"
+  [content]="question.title"
+  (onedit)="onedit($event)" >
+</app-editor>

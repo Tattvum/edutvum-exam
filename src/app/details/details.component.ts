@@ -1,15 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { DataService } from '../model/data.service';
+import { DataService, ExamEditType } from '../model/data.service';
 import { Question } from '../model/question';
 import { Lib } from '../model/lib';
 import { EMPTY_EXAM_RESULT, ExamResult } from 'app/model/exam-result';
-
-declare var MathJax: {
-  Hub: {
-    Queue: (p: Object[]) => void
-  }
-}
 
 @Component({
   selector: 'app-details',
@@ -17,12 +11,10 @@ declare var MathJax: {
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit {
-  @ViewChild('explanationq') qrefq: ElementRef;
-  @ViewChild('explanatione') qrefe: ElementRef;
 
   qid
-  qidshow = ''
-  exam: ExamResult = EMPTY_EXAM_RESULT
+  exam: ExamResult
+  question: Question
 
   constructor(private route: ActivatedRoute, private service: DataService) { }
 
@@ -31,24 +23,19 @@ export class DetailsComponent implements OnInit {
       .subscribe((params: Params) => {
         let eid = params['eid']
         this.qid = params['qid']
-        if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
-        let question: Question = null
-        try {
-          question = this.service.getQuestion(eid, this.qid)
-        } catch (e) {
-          console.log(e)
-        }
-        if (Lib.isNil(question)) return
         this.exam = this.service.getExam(eid)
-        this.qidshow = question.id
-        this.setExplanation(question.explanation, this.qrefq.nativeElement)
-        this.setExplanation(this.exam.exam.explanation, this.qrefe.nativeElement)
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+        this.question = this.service.getQuestion(eid, this.qid)
       })
   }
 
-  setExplanation(content: string, element: any) {
-    element.innerHTML = (content) ? ' <hr> ' + content : ''
+  oneditQE(newtext) {
+    this.question.explanation = newtext
+    this.service.editExamDetail(ExamEditType.QuestionExplanation, this.qid, newtext)
+  }
+
+  oneditEE(newtext) {
+    this.exam.exam.explanation = newtext
+    this.service.editExamDetail(ExamEditType.ExamExplanation, this.qid, newtext)
   }
 
 }

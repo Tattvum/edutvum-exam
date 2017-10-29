@@ -1,13 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { DataService } from '../model/data.service';
-import { Lib } from '../model/lib';
 
-declare var MathJax: {
-  Hub: {
-    Queue: (p: Object[]) => void
-  }
-}
+import { DataService, ExamEditType } from '../model/data.service';
+import { Question } from '../model/question';
+import { Lib } from '../model/lib';
 
 @Component({
   selector: 'app-display',
@@ -15,10 +11,9 @@ declare var MathJax: {
   styleUrls: ['./display.component.scss']
 })
 export class DisplayComponent implements OnInit {
-  @ViewChild('question') qref: ElementRef;
 
   qid
-  qidshow = ''
+  question: Question
 
   constructor(private route: ActivatedRoute, private service: DataService) { }
 
@@ -27,18 +22,13 @@ export class DisplayComponent implements OnInit {
       .subscribe((params: Params) => {
         let eid = params['eid']
         this.qid = params['qid']
-        if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
-        let question = null
-        try {
-          question = this.service.getQuestion(eid, this.qid)
-        } catch (e) {
-          console.log(e)
-        }
-        if (Lib.isNil(question)) return
-        this.qidshow = question.id
-        this.qref.nativeElement.innerHTML = question.title
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.qref.nativeElement]);
+        this.question = this.service.getQuestion(eid, this.qid)
       })
+  }
+
+  onedit(newtext) {
+    this.question.title = newtext
+    this.service.editExamDetail(ExamEditType.QuestionDisplay, this.qid, newtext)
   }
 
 }
