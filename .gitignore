@@ -14,7 +14,6 @@ src/environments/environment.stage.ts
 
 # dependencies
 **/node_modules
-package-lock.json
 /cmd-line/*.js
 /cmd-line/*.json
 !/cmd-line/edutvum-exam-schema.json
