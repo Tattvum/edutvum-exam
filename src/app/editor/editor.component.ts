@@ -17,24 +17,31 @@ export class EditorComponent {
   @Output() onedit: EventEmitter<string> = new EventEmitter<string>()
 
   showPopup = false
+  backupContent = ''
 
   constructor(public service: DataService) { }
 
   showEdit(event) {
     // if (!event.ctrlKey) return
     if (!(this.service.isAdmin)) return
+    this.backupContent = this.content
     this.showPopup = true
     this.service.disableHotkeys = true
   }
 
-  closeEdit() {
+  private endEdit() {
     this.showPopup = false
     this.service.disableHotkeys = false
   }
 
+  closeEdit() {
+    this.content = this.backupContent
+    this.endEdit()
+  }
+
   edit() {
     if (!(this.service.isAdmin)) return
-    this.closeEdit()
+    this.endEdit()
     this.onedit.emit(this.content);
   }
 }
