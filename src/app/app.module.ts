@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AngularFireModule } from 'angularfire2';
@@ -51,7 +50,6 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    HttpModule,
     AppRoutingModule,
     Ng2PaginationModule,
     AngularFireModule.initializeApp(firebaseConfig),
