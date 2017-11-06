@@ -12,6 +12,9 @@
 src/environments/environment.prod.ts
 src/environments/environment.stage.ts
 
+#firebase-cli
+firebase-debug.log
+
 # dependencies
 **/node_modules
 /cmd-line/*.js
