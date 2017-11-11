@@ -19,7 +19,10 @@ export class MathJaxDirective implements OnChanges {
 
   ngOnChanges() {
     this.element.nativeElement.innerHTML = this.MathJax;
-    MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.element.nativeElement]);
+    // http://docs.mathjax.org/en/latest/api/hub.html
+    // "If no element is provided, the whole document is processed"
+    // NOTE: This speeded up quite a bit!
+    MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
   }
 }
 
