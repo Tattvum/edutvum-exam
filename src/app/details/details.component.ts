@@ -28,14 +28,14 @@ export class DetailsComponent implements OnInit {
       })
   }
 
-  oneditQE(newtext) {
+  onEditQE(newtext) {
     this.question.explanation = newtext
-    this.service.editExamDetail(ExamEditType.QuestionExplanation, newtext, this.qid)
+    this.service.editQuestionExplanation(newtext, this.qid)
   }
 
-  oneditEE(newtext) {
+  onEditEE(newtext) {
     this.exam.exam.explanation = newtext
-    this.service.editExamDetail(ExamEditType.ExamExplanation, newtext, this.qid)
+    this.service.editExamExplanation(newtext, this.question.eid)
   }
 
 }

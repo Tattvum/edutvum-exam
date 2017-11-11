@@ -1,7 +1,12 @@
 <div>
   <div>
     <span class="eid">{{exam.exam.id}}</span>
-    <span id="ename"> {{exam.title}} </span>
+    <span id="ename">
+      <app-editor heading="Edit Exam Title"
+        [content]="exam.exam.title"
+        (onedit)="onEditTitle($event)" >
+      </app-editor>
+    </span>
     <span class="eid"> ({{exam.id}})</span>
     <span class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
   </div>

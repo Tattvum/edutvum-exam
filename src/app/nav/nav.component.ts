@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService } from '../model/data.service';
+import { DataService, ExamEditType } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { Lib, KEY } from '../model/lib';
@@ -139,5 +139,10 @@ export class NavComponent implements OnInit {
         this.router.navigate(['/student-dash'])
       })
     }
+  }
+
+  onEditTitle(newtext) {
+    this.exam.exam.title = newtext
+    this.service.editExamTitle(newtext, this.exam.exam.id)
   }
 }

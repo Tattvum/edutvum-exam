@@ -27,6 +27,7 @@ export enum ExamEditType {
   QuestionExplanation,
   ExamExplanation,
   QuestionChoice,
+  ExamName,
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -176,15 +177,37 @@ export class DataService {
     })
   }
 
-  public editExamDetail(type: ExamEditType, diff: string, qidn: string, cid?: number): Promise<boolean> {
+  private editQuestionDetail(diff: string, qidn: number, type: ExamEditType, cid?: number): Promise<boolean> {
     let q = this.pendingResult.questions[qidn]
     let eid = q.eid
-    if (type === ExamEditType.ExamExplanation) eid = this.pendingResult.exam.id
     let call = u => this.dataSource.editExamDetail(u, type, diff, eid, q.id, cid)
     return this.withUserPromise(call, ok => {
       console.log(ExamEditType[type], 'edit saved!', ok)
       return ok
     })
+  }
+  public editQuestionDisplay(diff: string, qidn: number): Promise<boolean> {
+    return this.editQuestionDetail(diff, qidn, ExamEditType.QuestionDisplay)
+  }
+  public editQuestionExplanation(diff: string, qidn: number): Promise<boolean> {
+    return this.editQuestionDetail(diff, qidn, ExamEditType.QuestionExplanation)
+  }
+  public editQuestionChoice(diff: string, qidn: number, cid: number): Promise<boolean> {
+    return this.editQuestionDetail(diff, qidn, ExamEditType.QuestionChoice, cid)
+  }
+
+  private editExamDetail(diff: string, eid: string, type: ExamEditType): Promise<boolean> {
+    let call = u => this.dataSource.editExamDetail(u, type, diff, eid)
+    return this.withUserPromise(call, ok => {
+      console.log(ExamEditType[type], 'edit saved!', ok)
+      return ok
+    })
+  }
+  public editExamTitle(diff: string, eid: string): Promise<boolean> {
+    return this.editExamDetail(diff, eid, ExamEditType.ExamName)
+  }
+  public editExamExplanation(diff: string, eid: string): Promise<boolean> {
+    return this.editExamDetail(diff, eid, ExamEditType.ExamExplanation)
   }
 
   public cancelExam(): Promise<boolean> {

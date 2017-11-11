@@ -3,7 +3,7 @@
 <div class="explanationQ">
   <app-editor heading="Edit Question Explantion"
     [content]="question.explanation"
-    (onedit)="oneditQE($event)" >
+    (onedit)="onEditQE($event)" >
   </app-editor>
 </div>
 
@@ -12,6 +12,6 @@
 <div class="explanationE">
   <app-editor heading="Edit Exam Explantion"
     [content]="exam.exam.explanation"
-    (onedit)="oneditEE($event)" >
+    (onedit)="onEditEE($event)" >
   </app-editor>
 </div>

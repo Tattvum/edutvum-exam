@@ -7,7 +7,7 @@ import { Lib } from './lib';
 export class Exam extends AbstractThing {
   constructor(
     id: string,
-    public readonly title: string,
+    public title: string,
     public readonly questions: Question[],
     public readonly when: Date = new Date(),
     public readonly notes = '',
