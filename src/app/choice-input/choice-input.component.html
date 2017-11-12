@@ -41,4 +41,10 @@
     [content]="solutions"
     (onedit)="editSolution($event)" >
   </app-editor>
+  <br>
+  <span style="color: red;">Type:</span>
+  <app-editor heading="Edit Question Type"
+    [content]="type"
+    (onedit)="editType($event)" >
+  </app-editor>
 </div>

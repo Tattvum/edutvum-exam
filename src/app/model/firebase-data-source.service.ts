@@ -250,6 +250,7 @@ export class FirebaseDataSource implements DataSource {
       case ExamEditType.QuestionChoice: return editurl + eid + '/questions/' + qid + '/choices/' + cid
       case ExamEditType.ExamName: return editurl + eid + '/name/'
       case ExamEditType.QuestionSolution: return editurl + eid + '/questions/' + qid + '/solutions/'
+      case ExamEditType.QuestionType: return editurl + eid + '/questions/' + qid + '/type/'
       default:
         console.log('editUrl', 'Unknown type', type)
         return null

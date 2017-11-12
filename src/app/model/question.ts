@@ -1,4 +1,4 @@
-import { AnswerType } from './answer-type';
+import { AnswerType, TFQChoices, ARQChoices } from './answer-type';
 import { Lib } from './lib';
 
 export class Question {
@@ -6,11 +6,21 @@ export class Question {
     public readonly id: string,
     public title: string,
     public type: AnswerType,
-    public readonly choices: string[],
+    public choices: string[],
     public solutions: number[],
     public readonly notes = '',
     public explanation = '',
     public readonly eid = '',
+  ) {
+    this.validate(id, title, type, choices, solutions)
+  }
+
+  validate(
+    id: string,
+    title: string,
+    type: AnswerType,
+    choices: string[],
+    solutions: number[],
   ) {
     Lib.failif(Lib.isNil(id), 'id cannot be undefined')
     Lib.failif(Lib.isNil(title), 'title cannot be undefined')
@@ -53,34 +63,20 @@ export class Question {
   }
 
   public setSolutions(solutions) {
-    Lib.failif(solutions.length < 1, 'There should be atleast one solution', this.id)
-
-    if (this.type !== AnswerType.NCQ) {
-      Lib.failif(this.choices.length < 1, 'There should be atleast one choice', this.id, this.type)
-      solutions.forEach((sol, i) => {
-        Lib.failif(sol > this.choices.length - 1 || sol < 0, 'solution (' + i + ') out of bounds')
-      })
-    }
-
-    switch (this.type) {
-      case AnswerType.TFQ:
-        Lib.failif(solutions.length !== 1, 'TFQ should have only one solution')
-        break
-      case AnswerType.MCQ:
-        Lib.failif(solutions.length !== 1, 'MCQ should have only one solution')
-        break
-      case AnswerType.ARQ:
-        Lib.failif(solutions.length !== 1, 'MCQ should have only one solution')
-        break
-      case AnswerType.MAQ:
-        Lib.failif(solutions.length > this.choices.length, 'MAQ cannot have more solutions than choices')
-        break
-      case AnswerType.NCQ:
-        Lib.failif(solutions.length !== 1, 'NCQ should have only one solution')
-        break
-    }
-
+    this.validate(this.id, this.title, this.type, this.choices, solutions)
     this.solutions = solutions
+  }
+
+  setType(typestr: string) {
+    let type = AnswerType['' + typestr]
+    if (type === AnswerType.TFQ || type === AnswerType.ARQ) {
+      if (type === AnswerType.TFQ) this.choices = TFQChoices
+      else if (type === AnswerType.ARQ) this.choices = ARQChoices
+      this.solutions = [0]
+    } else {
+      this.validate(this.id, this.title, type, this.choices, this.solutions)
+    }
+    this.type = type
   }
 
   public fullid(): string {

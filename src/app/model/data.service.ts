@@ -29,6 +29,7 @@ export enum ExamEditType {
   QuestionChoice,
   ExamName,
   QuestionSolution,
+  QuestionType,
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -198,6 +199,9 @@ export class DataService {
   }
   public editQuestionSolution(diff: any, qidn: number): Promise<boolean> {
     return this.editQuestionDetail(diff, qidn, ExamEditType.QuestionSolution)
+  }
+  public editQuestionType(diff: any, qidn: number): Promise<boolean> {
+    return this.editQuestionDetail(diff, qidn, ExamEditType.QuestionType)
   }
 
   private editExamDetail(diff: any, eid: string, type: ExamEditType): Promise<boolean> {

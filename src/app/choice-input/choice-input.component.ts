@@ -134,7 +134,14 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   editType(newtext) {
-    console.log(newtext)
+    try {
+      this.question.setType(newtext)
+      this.service.editQuestionType(newtext, +this.qid)
+    } catch (error) {
+      console.log(newtext)
+      this.context.alert(error)
+      this.setType()
+    }
   }
 
 }
