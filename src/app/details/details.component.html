@@ -1,17 +1,40 @@
-<hr>
-
-<div class="explanationQ">
-  <app-editor heading="Edit Question Explantion"
-    [content]="question.explanation"
-    (onedit)="onEditQE($event)" >
-  </app-editor>
+<div>
+  <hr>
+  <div class="explanationQ">
+    <app-editor heading="Edit Question Explantion"
+      [content]="question.explanation"
+      (onedit)="editExplanationQ($event)" >
+    </app-editor>
+  </div>
 </div>
 
-<hr>
-
-<div class="explanationE">
-  <app-editor heading="Edit Exam Explantion"
-    [content]="exam.exam.explanation"
-    (onedit)="onEditEE($event)" >
-  </app-editor>
+<div>
+  <hr>
+  <div class="explanationE">
+    <app-editor heading="Edit Exam Explantion"
+      [content]="exam.exam.explanation"
+      (onedit)="editExplanationE($event)" >
+    </app-editor>
+  </div>
 </div>
+
+<div *ngIf="service.isAdmin">
+  <hr>
+  <div class="notesQ">
+    <app-editor heading="Edit Question Notes"
+      [content]="question.notes"
+      (onedit)="editNotesQ($event)" >
+    </app-editor>
+  </div>
+</div>
+
+<div *ngIf="service.isAdmin">
+  <hr>
+  <div class="notesE">
+    <app-editor heading="Edit Exam Notes"
+      [content]="exam.exam.notes"
+      (onedit)="editNotesE($event)" >
+  </app-editor>
+  </div>
+</div>
+

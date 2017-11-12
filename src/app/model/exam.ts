@@ -10,7 +10,7 @@ export class Exam extends AbstractThing {
     public title: string,
     public readonly questions: Question[],
     public readonly when: Date = new Date(),
-    public readonly notes = '',
+    public notes = '',
     public explanation = ''
   ) {
     super(id, title, when)

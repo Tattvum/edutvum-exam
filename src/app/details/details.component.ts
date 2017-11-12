@@ -16,7 +16,7 @@ export class DetailsComponent implements OnInit {
   exam: ExamResult
   question: Question
 
-  constructor(private route: ActivatedRoute, private service: DataService) { }
+  constructor(private route: ActivatedRoute, public service: DataService) { }
 
   ngOnInit() {
     this.route.params
@@ -28,14 +28,24 @@ export class DetailsComponent implements OnInit {
       })
   }
 
-  onEditQE(newtext) {
+  editExplanationQ(newtext) {
     this.question.explanation = newtext
     this.service.editQuestionExplanation(newtext, this.qid)
   }
 
-  onEditEE(newtext) {
+  editExplanationE(newtext) {
     this.exam.exam.explanation = newtext
     this.service.editExamExplanation(newtext, this.question.eid)
+  }
+
+  editNotesQ(newtext) {
+    this.question.notes = newtext
+    this.service.editQuestionNotes(newtext, this.qid)
+  }
+
+  editNotesE(newtext) {
+    this.exam.exam.notes = newtext
+    this.service.editExamNotes(newtext, this.question.eid)
   }
 
 }

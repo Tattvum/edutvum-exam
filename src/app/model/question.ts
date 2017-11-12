@@ -8,7 +8,7 @@ export class Question {
     public type: AnswerType,
     public choices: string[],
     public solutions: number[],
-    public readonly notes = '',
+    public notes = '',
     public explanation = '',
     public readonly eid = '',
   ) {
