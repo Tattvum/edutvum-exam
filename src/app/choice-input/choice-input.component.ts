@@ -5,6 +5,7 @@ import { AnswerType } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { Lib, KEY } from '../model/lib';
+import { GeneralContext } from 'app/model/general-context';
 
 declare var MathJax: {
   Hub: {
@@ -23,6 +24,8 @@ export class ChoiceInputComponent implements OnInit {
   question: Question = EMPTY_QUESTION
   exam: ExamResult = EMPTY_EXAM_RESULT
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+  solutions = ''
+  type = 'MCQ'
 
   @ViewChild('first') private elementRef: ElementRef;
 
@@ -35,7 +38,8 @@ export class ChoiceInputComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private service: DataService) { }
+    private context: GeneralContext,
+    public service: DataService) { }
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
@@ -44,12 +48,24 @@ export class ChoiceInputComponent implements OnInit {
       if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
       this.exam = this.service.getExam(eid)
       this.question = this.service.getQuestion(eid, this.qid)
+      this.setSolutions()
+      this.setType()
       MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
     })
   }
 
   clearAll() {
     if (!this.exam.isLocked()) this.exam.clearAnswers(+this.qid)
+  }
+
+  setSolutions() {
+    this.solutions = JSON.stringify(this.question.solutions)
+    console.log(this.solutions)
+  }
+
+  setType() {
+    this.type = AnswerType[this.question.type]
+    console.log(this.type)
   }
 
   get ctype(): string {
@@ -100,9 +116,25 @@ export class ChoiceInputComponent implements OnInit {
     this.service.saveExam()
   }
 
-  onEditOption(newtext, i: number) {
+  editOption(newtext, i: number) {
     this.question.choices[i] = newtext
     this.service.editQuestionChoice(newtext, +this.qid, i)
- }
+  }
+
+  editSolution(newtext) {
+    try {
+      let arr = JSON.parse(newtext)
+      this.question.setSolutions(arr)
+      this.service.editQuestionSolution(arr, +this.qid)
+    } catch (error) {
+      console.log(newtext)
+      this.context.alert(error)
+      this.setSolutions()
+    }
+  }
+
+  editType(newtext) {
+    console.log(newtext)
+  }
 
 }

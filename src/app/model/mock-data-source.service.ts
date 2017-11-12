@@ -93,7 +93,7 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(true) // TBD
   }
 
-  public editExamDetail(user: User, type: ExamEditType, diff: string, eid: string,
+  public editExamDetail(user: User, type: ExamEditType, diff: any, eid: string,
     qid?: string, cid?: number): Promise<boolean> {
     return Promise.resolve(true) // TBD
   }

@@ -249,13 +249,14 @@ export class FirebaseDataSource implements DataSource {
       case ExamEditType.ExamExplanation: return editurl + eid + '/explanation/'
       case ExamEditType.QuestionChoice: return editurl + eid + '/questions/' + qid + '/choices/' + cid
       case ExamEditType.ExamName: return editurl + eid + '/name/'
+      case ExamEditType.QuestionSolution: return editurl + eid + '/questions/' + qid + '/solutions/'
       default:
         console.log('editUrl', 'Unknown type', type)
         return null
     }
   }
 
-  public editExamDetail(user: User, type: ExamEditType, diff: string,
+  public editExamDetail(user: User, type: ExamEditType, diff: any,
     eid: string, qid?: string, cid?: number): Promise<boolean> {
     console.log(' - editExamDetail', ExamEditType[type], eid, qid, diff)
     let editurl = this.editUrl(type, eid, qid, cid)

@@ -5,9 +5,9 @@ export class Question {
   constructor(
     public readonly id: string,
     public title: string,
-    public readonly type: AnswerType,
+    public type: AnswerType,
     public readonly choices: string[],
-    public readonly solutions: number[],
+    public solutions: number[],
     public readonly notes = '',
     public explanation = '',
     public readonly eid = '',
@@ -50,6 +50,37 @@ export class Question {
         Lib.failif(solutions.length !== 1, 'NCQ should have only one solution')
         break
     }
+  }
+
+  public setSolutions(solutions) {
+    Lib.failif(solutions.length < 1, 'There should be atleast one solution', this.id)
+
+    if (this.type !== AnswerType.NCQ) {
+      Lib.failif(this.choices.length < 1, 'There should be atleast one choice', this.id, this.type)
+      solutions.forEach((sol, i) => {
+        Lib.failif(sol > this.choices.length - 1 || sol < 0, 'solution (' + i + ') out of bounds')
+      })
+    }
+
+    switch (this.type) {
+      case AnswerType.TFQ:
+        Lib.failif(solutions.length !== 1, 'TFQ should have only one solution')
+        break
+      case AnswerType.MCQ:
+        Lib.failif(solutions.length !== 1, 'MCQ should have only one solution')
+        break
+      case AnswerType.ARQ:
+        Lib.failif(solutions.length !== 1, 'MCQ should have only one solution')
+        break
+      case AnswerType.MAQ:
+        Lib.failif(solutions.length > this.choices.length, 'MAQ cannot have more solutions than choices')
+        break
+      case AnswerType.NCQ:
+        Lib.failif(solutions.length !== 1, 'NCQ should have only one solution')
+        break
+    }
+
+    this.solutions = solutions
   }
 
   public fullid(): string {
