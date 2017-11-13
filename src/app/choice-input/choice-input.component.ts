@@ -60,12 +60,12 @@ export class ChoiceInputComponent implements OnInit {
 
   setSolutions() {
     this.solutions = JSON.stringify(this.question.solutions)
-    console.log(this.solutions)
+    // console.log(this.solutions)
   }
 
   setType() {
     this.type = AnswerType[this.question.type]
-    console.log(this.type)
+    // console.log(this.type)
   }
 
   get ctype(): string {
@@ -141,6 +141,29 @@ export class ChoiceInputComponent implements OnInit {
       console.log(newtext)
       this.context.alert(error)
       this.setType()
+    }
+  }
+
+  removeChoice(i: number) {
+    if (!this.service.isAdmin) return
+    if (this.context.confirm('Remove choice #' + i + ': Sure?!')) {
+      try {
+        this.question.removeChoice(i)
+        this.service.editQuestionChoicesAll(this.question.choices, +this.qid)
+      } catch (error) {
+        this.context.alert(error)
+      }
+    }
+  }
+
+  addChoice() {
+    if (!this.service.isAdmin) return
+    try {
+      let choicestr = 'New Choice'
+      this.question.addChoice(choicestr)
+      this.service.editQuestionChoicesAll(this.question.choices, +this.qid)
+    } catch (error) {
+      this.context.alert(error)
     }
   }
 

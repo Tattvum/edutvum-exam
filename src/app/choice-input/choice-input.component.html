@@ -9,7 +9,7 @@
   <div class="btn-group-vertical" role="choices">
     <div *ngFor="let ch of question.choices; let i=index">
       <label [ngClass]="colors(i)">
-        <label class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
+        <label (click)="removeChoice(i)" class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
         <input [type]="ctype" name="choices" [id]="'rd'+i" #first
             (click)="choiceClicked($event, i)" [disabled]="exam.isLocked()"
             [checked]="exam.isAnswer(qid, i)"
@@ -35,6 +35,8 @@
 </form>
 
 <div *ngIf="service.isAdmin">
+  <br>
+  <button (click)="addChoice()">Add Choice</button>
   <br>
   <span style="color: red;">Solutions:</span>
   <app-editor heading="Edit Question Solution"

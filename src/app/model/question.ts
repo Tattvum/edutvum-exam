@@ -79,6 +79,20 @@ export class Question {
     this.type = type
   }
 
+  removeChoice(i: number) {
+    let tempChoices = [...this.choices]
+    tempChoices.splice(i, 1)
+    this.validate(this.id, this.title, this.type, tempChoices, this.solutions)
+    this.choices.splice(i, 1)
+  }
+
+  addChoice(choicestr: string) {
+    let tempChoices = [...this.choices]
+    tempChoices.push(choicestr)
+    this.validate(this.id, this.title, this.type, tempChoices, this.solutions)
+    this.choices.push(choicestr)
+  }
+
   public fullid(): string {
     return this.eid + '.' + this.id
   }
