@@ -51,7 +51,7 @@ let qcache: { [key: string]: Question } = {}
 
 function createQ(obj, key: string, eid: string): Question {
   if (obj.kind) {
-    let linkid = obj.eid + '.' + obj.qid
+    let linkid = obj.eid.trim() + '.' + obj.qid.trim()
     let linkq = qcache[linkid]
     //    console.log('question link', linkid, linkq)
     return linkq

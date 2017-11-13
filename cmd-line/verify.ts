@@ -20,5 +20,5 @@ function validate(category, cls) {
 validate('Schema', SchemaValidations)
 validate('Qid', QidValidations)
 validate('Question', QuestionValidations)
-// validate('QuestionLink', QuestionLinkValidations)
+validate('QuestionLink', QuestionLinkValidations)
 // validate('Solution', SolutionValidations)
