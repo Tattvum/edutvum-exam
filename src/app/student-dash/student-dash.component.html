@@ -7,6 +7,7 @@
       <select [(ngModel)]="currentUser" (change)="userChanged()">
         <option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</option>
       </select>
+      <button class="gap" (click)="createExam()">Create Exam!</button>
     </span>
   </div>
 

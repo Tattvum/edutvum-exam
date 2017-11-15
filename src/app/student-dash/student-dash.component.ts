@@ -9,6 +9,7 @@ import { DataService } from '../model/data.service';
 import { Lib } from '../model/lib';
 
 import { trigger, transition, style, state, animate } from '@angular/animations';
+import { GeneralContext } from 'app/model/general-context';
 
 @Component({
   selector: 'app-student-dash',
@@ -39,7 +40,9 @@ export class StudentDashComponent implements OnInit {
     this.ok = !this.ok
   }
 
-  constructor(public service: DataService, private router: Router) { }
+  constructor(public service: DataService,
+    private context: GeneralContext,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.currentUser = this.service.activeUser
@@ -67,6 +70,13 @@ export class StudentDashComponent implements OnInit {
     else {
       if (!confirm('Ready to continue the exam?!')) return
       this.router.navigate(['/question', result.id, 0])
+    }
+  }
+
+  createExam() {
+    let eid = this.context.prompt('Please enter the Exam ID')
+    if (eid && eid.length > 0) {
+      this.service.defineExam(eid)
     }
   }
 }

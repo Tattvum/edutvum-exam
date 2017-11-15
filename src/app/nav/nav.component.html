@@ -9,6 +9,7 @@
     </span>
     <span class="eid"> ({{exam.id}})</span>
     <span class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
+    <button class="gap" *ngIf="service.isAdmin" (click)="addQuestion()">Add Question!</button>
   </div>
   <br>
   <div>

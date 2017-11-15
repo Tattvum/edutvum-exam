@@ -1,7 +1,7 @@
 import { AnswerType } from './answer-type';
 import { Question } from './question';
-import { Exam } from './exam';
-import { ExamResult, ExamResultStatus } from './exam-result';
+import { Exam, ExamStatus } from './exam';
+import { ExamResult } from './exam-result';
 import { Score } from './score';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
@@ -40,7 +40,7 @@ let sols2: number[] = [0, 2]
 let sols3: number[] = [1, 2, 3]
 
 let create1QR = (type: AnswerType, choices: string[], sols: number[], ans: number[] = [],
-  status = ExamResultStatus.PENDING): ExamResult => {
+  status = ExamStatus.PENDING): ExamResult => {
   let q = [new Question('00', 'TEST Q...', type, choices, sols)]
   let e = new Exam('00', 'TEST E', q)
   return new ExamResult(e.id, e.title, new Date(), e, [ans], status)
@@ -164,7 +164,7 @@ describe('ExamResult - Question - declaration tests:', () => {
   })
 
   it('Lock works on create', () => {
-    let r = create1QR(AnswerType.MAQ, choices6, sols1, [], ExamResultStatus.DONE)
+    let r = create1QR(AnswerType.MAQ, choices6, sols1, [], ExamStatus.DONE)
     expect(r.isLocked()).toBeTruthy()
     expect(() => r.clearAnswers(0)).toThrow()
     expect(() => r.setAnswer(0, 1729)).toThrow()

@@ -97,4 +97,13 @@ export class MockDataSource implements DataSource {
     qid?: string, cid?: number): Promise<boolean> {
     return Promise.resolve(true) // TBD
   }
+
+  public defineExam(user: User, exam: Exam): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
+  public addQuestion(user: User, eid: string, question: Question): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
 }

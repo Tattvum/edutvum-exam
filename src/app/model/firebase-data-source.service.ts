@@ -13,8 +13,8 @@ import { Lib } from './lib';
 
 import { AnswerType, TFQChoices, ARQChoices } from './answer-type';
 import { Question } from './question';
-import { Exam } from './exam';
-import { ExamResult, ExamResultStatus } from './exam-result';
+import { Exam, ExamStatus } from './exam';
+import { ExamResult } from './exam-result';
 import { User, UserRole } from './user';
 
 const URL_VER = 'ver5/'
@@ -95,9 +95,9 @@ function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let dobj = obj.durations
   let durations: number[] = []
   if (dobj) exam.questions.forEach((q, i) => durations[i] = dobj[q.id])
-  let status = ExamResultStatus.DONE
-  if (obj.status) status = ExamResultStatus['' + obj.status]
-  if (status !== ExamResultStatus.DONE) console.log('status', id, obj.status)
+  let status = ExamStatus.DONE
+  if (obj.status) status = ExamStatus['' + obj.status]
+  if (status !== ExamStatus.DONE) console.log('status', id, obj.status)
   return new ExamResult(id, title, when, exam, answers, status, guessings, durations)
 }
 
@@ -231,7 +231,7 @@ export class FirebaseDataSource implements DataSource {
     return new Promise<ExamResult>(resolve => {
       this.afDb.list(this.resultsUrl(user)).push(ro).then((call) => {
         let key = call.key
-        let result = new ExamResult(key, er.title, er.when, er.exam, er.answers, ExamResultStatus.PENDING, er.guessings)
+        let result = new ExamResult(key, er.title, er.when, er.exam, er.answers, ExamStatus.PENDING, er.guessings)
         this.alles[key] = result
         resolve(result)
       }).catch(err => {
@@ -268,6 +268,65 @@ export class FirebaseDataSource implements DataSource {
     Lib.failif(Lib.isNil(editurl), 'Invalid ExamEditType', type)
     return new Promise<boolean>(resolve => {
       this.afDb.object(editurl).set(diff).then((call) => {
+        resolve(true)
+      }).catch(err => {
+        console.log(err)
+        resolve(false)
+      })
+    })
+  }
+
+  private convertQuestion(question: Question): any {
+    let qo = {}
+    qo['display'] = question.title
+    qo['notes'] = question.notes
+    qo['explanation'] = question.explanation
+    qo['choices'] = question.choices
+    qo['solutions'] = question.solutions
+    qo['type'] = AnswerType[question.type]
+    return qo
+  }
+
+  private convertPureExam(exam: Exam, user: User): any {
+    let eo = {}
+    eo['by'] = user.uid
+    eo['name'] = exam.title
+    eo['notes'] = exam.notes
+    eo['explanation'] = exam.explanation
+    let when = eo['when'] = exam.when.toISOString()
+    eo['revwhen'] = Lib.d2rev(when)
+    // console.log(when, eo['revwhen'])
+    let qs = {}
+    exam.questions.forEach(q => qs[q.id] = this.convertQuestion(q))
+    eo['questions'] = qs
+    eo['status'] = ExamStatus[exam.status]
+    let eocover = {}
+    eocover[exam.id] = eo
+    return eocover
+  }
+
+  public defineExam(user: User, exam: Exam): Promise<boolean> {
+    Lib.assert(Lib.isNil(exam), 'exam cannot be undefined')
+    let eocover = this.convertPureExam(exam, user)
+    return new Promise<boolean>(resolve => {
+      this.afDb.object(EXAMS_URL).update(eocover).then((call) => {
+        this.alles[exam.id] = exam
+        this.holders.exams.push(exam)
+        resolve(true)
+      }).catch(err => {
+        console.log(err)
+        resolve(false)
+      })
+    })
+  }
+
+  public addQuestion(user: User, eid: string, question: Question): Promise<boolean> {
+    Lib.assert(Lib.isNil(question), 'question cannot be undefined')
+    let qocover = {}
+    qocover[question.id] = this.convertQuestion(question)
+    let editurl = EXAMS_URL + eid + '/questions/'
+    return new Promise<boolean>(resolve => {
+      this.afDb.object(editurl).update(qocover).then((call) => {
         resolve(true)
       }).catch(err => {
         console.log(err)

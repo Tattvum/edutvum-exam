@@ -40,7 +40,7 @@ export class NavComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private context: GeneralContext,
-    private service: DataService) {
+    public service: DataService) {
   }
 
   ngOnInit() {
@@ -144,5 +144,11 @@ export class NavComponent implements OnInit {
   onEditTitle(newtext) {
     this.exam.exam.title = newtext
     this.service.editExamTitle(newtext, this.exam.exam.id)
+  }
+
+  addQuestion() {
+    this.service.addQuestion().then(ok => {
+      this.router.navigate(['/question', this.exam.id, this.exam.questions.length - 1])
+    })
   }
 }

@@ -4,6 +4,10 @@ import { Score } from './score';
 import { AbstractThing } from './abstract-thing';
 import { Lib } from './lib';
 
+export enum ExamStatus {
+  PENDING, DONE
+}
+
 export class Exam extends AbstractThing {
   constructor(
     id: string,
@@ -11,7 +15,8 @@ export class Exam extends AbstractThing {
     public readonly questions: Question[],
     public readonly when: Date = new Date(),
     public notes = '',
-    public explanation = ''
+    public explanation = '',
+    public status = ExamStatus.DONE
   ) {
     super(id, title, when)
     Lib.failif(Lib.isNil(questions), 'Exam questions cannot be undefined')

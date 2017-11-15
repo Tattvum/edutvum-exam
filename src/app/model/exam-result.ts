@@ -1,23 +1,19 @@
 import { AnswerType } from './answer-type';
-import { Exam, EMPTY_EXAM } from './exam';
+import { Exam, ExamStatus, EMPTY_EXAM } from './exam';
 import { Question, EMPTY_QUESTION } from './question';
 import { Score, EMPTY_SCORE } from 'app/model/score';
 import { Lib } from '../model/lib';
-
-export enum ExamResultStatus {
-  PENDING, DONE
-}
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
   constructor(id: string, title: string, when: Date,
     readonly exam: Exam,
     readonly answers: number[][] = [],
-    protected status: ExamResultStatus = ExamResultStatus.PENDING,
+    status: ExamStatus = ExamStatus.PENDING,
     public guessings: boolean[] = [],
     readonly durations: number[] = [],
   ) {
-    super(id, title, exam.questions, when)
+    super(id, title, exam.questions, when, '', '', status)
     this._secondsTotal = durations.filter(x => !Lib.isNil(x)).reduce((t, s) => t + s, 0)
     if (!Lib.isNil(answers)) {
       Lib.failif(answers.length > this.questions.length, 'Too many answers', answers.length, this.questions.length)
@@ -61,12 +57,12 @@ export class ExamResult extends Exam {
   }
 
   public isLocked(): boolean {
-    return this.status === ExamResultStatus.DONE;
+    return this.status === ExamStatus.DONE;
   }
   public lock() {
     // Repeated lock is ignored
     if (this.isLocked()) return
-    this.status = ExamResultStatus.DONE
+    this.status = ExamStatus.DONE
   }
 
   public durationTotal(): number {

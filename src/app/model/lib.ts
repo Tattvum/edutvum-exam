@@ -72,7 +72,22 @@ export class Lib {
   // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
   static isPlainKey(ev: KeyboardEvent, k: KEY): boolean {
     return ev.key === k && ev.metaKey === false
-    && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === false
+      && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === false
+  }
+
+  public static n2s(n: number) {
+    return ('0' + n).slice(-2);
+  }
+
+  public static n9(d: string) {
+    if (d === '-' || d === 'T' || d === ':' || d === '.' || d === 'Z') return d
+    else return 9 - (+d)
+  }
+
+  public static d2rev(d: string) {
+    let dd = []
+    d.split('').forEach(c => dd.push(this.n9(c)));
+    return dd.join('')
   }
 
 }

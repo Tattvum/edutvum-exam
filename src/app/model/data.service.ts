@@ -5,9 +5,10 @@ import { Injectable } from '@angular/core';
 
 import { Lib } from './lib';
 import { Question } from './question';
-import { Exam } from './exam';
-import { ExamResult, ExamResultStatus } from './exam-result';
+import { Exam, ExamStatus } from './exam';
+import { ExamResult } from './exam-result';
 import { User, UserRole, EMPTY_USER } from './user';
+import { AnswerType } from 'app/model/answer-type';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -43,6 +44,8 @@ export abstract class DataSource {
   abstract deleteExam(user: User, rid: string): Promise<boolean>
   abstract editExamDetail(user: User, type: ExamEditType, diff: any, eid: string,
     qid?: string, cid?: number): Promise<boolean>
+  abstract defineExam(user: User, exam: Exam): Promise<boolean>
+  abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -182,6 +185,20 @@ export class DataService {
     })
   }
 
+  public cancelExam(): Promise<boolean> {
+    this.globalTimerAction = null
+    let rid = this.pendingResult.id
+    let call = u => this.dataSource.deleteExam(u, rid)
+    return this.withUserPromise(call, ok => {
+      // console.log(rid, 'exam canceled!')
+      this.pendingResult = null
+      delete this.cache[rid]
+      let i = this.results.findIndex(er => er.id === rid)
+      this.results.splice(i, 1)
+      return true
+    })
+  }
+
   private editQuestionDetail(diff: any, qidn: number, type: ExamEditType, cid?: number): Promise<boolean> {
     let q = this.pendingResult.questions[qidn]
     let eid = q.eid
@@ -230,17 +247,32 @@ export class DataService {
     return this.editExamDetail(diff, eid, ExamEditType.ExamNotes)
   }
 
-  public cancelExam(): Promise<boolean> {
-    this.globalTimerAction = null
-    let rid = this.pendingResult.id
-    let call = u => this.dataSource.deleteExam(u, rid)
+  defineExam(eid: string): Promise<boolean> {
+    let qid = eid + 'q01'
+    let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ,
+      ['Choice 1', 'Choice 2'], [0], 'Question Notes:', 'Question Explanation', eid)
+    let newExam = new Exam(eid, 'New Exam [TBD]', [newQuestion], new Date(),
+      'Exam Notes:', 'Exam Explanation', ExamStatus.PENDING)
+    let call = u => this.dataSource.defineExam(u, newExam)
     return this.withUserPromise(call, ok => {
-      // console.log(rid, 'exam canceled!')
-      this.pendingResult = null
-      delete this.cache[rid]
-      let i = this.results.findIndex(er => er.id === rid)
-      this.results.splice(i, 1)
-      return true
+      console.log('pure exam saved!')
+      this.exams.splice(0, 0, newExam)
+      this.cache[newExam.id] = newExam
+      return ok
+    })
+  }
+
+  addQuestion(): Promise<boolean> {
+    let result = this.pendingResult
+    let eid = result.exam.id
+    let qid = eid + 'q' + Lib.n2s(result.questions.length + 1)
+    let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ,
+      ['Choice 1', 'Choice 2'], [0], 'Question Notes:', 'Question Explanation', eid)
+    let call = u => this.dataSource.addQuestion(u, eid, newQuestion)
+    return this.withUserPromise(call, ok => {
+      this.pendingResult.questions.push(newQuestion)
+      console.log('new question saved!')
+      return ok
     })
   }
 
