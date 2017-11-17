@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService, ExamEditType } from '../model/data.service';
+import { ExamStatus } from '../model/exam';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { Lib, KEY } from '../model/lib';
@@ -59,6 +60,10 @@ export class NavComponent implements OnInit {
       this.isResultsPage = false
       this.service.timerOnlyMe(t => this.timerAction(t))
     })
+  }
+
+  get isPending(): boolean {
+    return this.exam.exam.status === ExamStatus.PENDING && this.service.isAdmin
   }
 
   isBelowVer6(): boolean {

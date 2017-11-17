@@ -78,7 +78,9 @@ function createE(obj): Exam {
   let qobj = obj.questions
   let qkeys = Object.keys(qobj).sort()
   qkeys.forEach(key => questions.push(createQ(qobj[key], key, id)))
-  return new Exam(id, title, questions, when, notes, explanation)
+  let status = ExamStatus.DONE
+  if (obj.status) status = ExamStatus['' + obj.status]
+  return new Exam(id, title, questions, when, notes, explanation, status)
 }
 
 function createR(obj, es: { [key: string]: Exam }): ExamResult {
