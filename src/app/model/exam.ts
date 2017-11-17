@@ -40,6 +40,10 @@ export class Exam extends AbstractThing {
   public isSolution(qid: number, n: number): boolean {
     return this.questions[qid].isSolution(n)
   }
+
+  public isPending(): boolean {
+    return this.status === ExamStatus.PENDING
+  }
 }
 
 export const EMPTY_EXAM = new Exam('00', 'Bingo', [EMPTY_QUESTION])

@@ -19,9 +19,9 @@
   <div class="container-fluid">
     <table class="table table-hover">
       <tbody *ngFor="let ex of service.exams | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }">
-        <tr class="row">
+        <tr class="row" [class.pending]="ex.isPending()">
           <td class="col-3">{{ex.id}}</td>
-          <td class="col-6 active title" (click)="takeExam(ex)">
+          <td class="col-6 title" (click)="takeExam(ex)">
             {{ex.title}}
             <span *ngFor="let rs of service.listResults(ex.id); let j=index">
                 <span data-toggle="tooltip"

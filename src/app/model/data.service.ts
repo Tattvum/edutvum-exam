@@ -104,10 +104,13 @@ export class DataService {
     console.clear()
     this.isAdmin = false
     this.userWait().then(user => {
-      // this.init(user)
       this.init(user, () => {
         let u = this.userCache[user.uid]
-        if (u) this.isAdmin = u.role === UserRole.ADMIN
+        console.log(u)
+        if (u) {
+          this.isAdmin = u.role === UserRole.ADMIN
+          this.exams = this.exams.filter(e => !e.isPending() || this.isAdmin)
+        }
       })
     })
   }

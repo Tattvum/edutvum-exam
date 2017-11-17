@@ -116,8 +116,6 @@ function createU(obj): User {
 export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
 
-  private readonly revwhenOrder = { query: { orderByChild: 'revwhen' } }
-  private readonly whenOrder = { query: { orderByChild: 'when' } }
   private alles: { [key: string]: Exam } = {}
 
   constructor(private afDb: AngularFireDatabase) { }
@@ -134,23 +132,12 @@ export class FirebaseDataSource implements DataSource {
     return RESULTS_URL + user.uid + '/'
   }
 
-  private fetch(title: string, url: string,
-    doit: (thing: any) => void,
-    sayit: () => void): Observable<void> {
-    // console.log(title, '-------', url);
-    return this.afDb.list(url, this.revwhenOrder).first().map(things => {
-      // console.log('computing ' + title + '... ', things.length)
-      things.forEach(thing => doit(thing))
-      // console.log('all ' + title + ': ', sayit())
-    })
-  }
-
   private fetchAll(user: User): Promise<void> {
     this.alles = {}
-    return this.fetchE().flatMap(() => {
-      return this.fetchR(user)
+    return this.fetchU().flatMap(() => {
+      return this.fetchE()
     }).flatMap(() => {
-      return this.fetchU()
+      return this.fetchR(user)
     }).toPromise()
   }
 
@@ -161,7 +148,8 @@ export class FirebaseDataSource implements DataSource {
   }
 
   private fetchE(): Observable<void> {
-    return this.afDb.list(EXAMS_URL, this.whenOrder).first().map(exs => {
+    let whenOrder = { query: { orderByChild: 'when' } }
+    return this.afDb.list(EXAMS_URL, whenOrder).first().map(exs => {
       exs.forEach(e => {
         let exam = createE(e)
         this.alles[e.$key] = exam
@@ -172,7 +160,8 @@ export class FirebaseDataSource implements DataSource {
   }
 
   private fetchR(user: User): Observable<void> {
-    return this.afDb.list(this.resultsUrl(user), this.revwhenOrder).first().map(
+    let revwhenOrder = { query: { orderByChild: 'revwhen' } }
+    return this.afDb.list(this.resultsUrl(user), revwhenOrder).first().map(
       userRs => {
         fbObjToArr(userRs).forEach(
           r => this.holders.results.push(createR(r, this.alles))
