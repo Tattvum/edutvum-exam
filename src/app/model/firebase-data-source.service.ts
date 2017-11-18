@@ -326,4 +326,16 @@ export class FirebaseDataSource implements DataSource {
     })
   }
 
+  public publishExam(user: User, eid: string): Promise<boolean> {
+    let editurl = EXAMS_URL + eid + '/status/'
+    return new Promise<boolean>(resolve => {
+      this.afDb.object(editurl).set('DONE').then((call) => {
+        resolve(true)
+      }).catch(err => {
+        console.log(err)
+        resolve(false)
+      })
+    })
+  }
+
 }

@@ -35,6 +35,7 @@
             </span>
           </td>
           <td class="col-3">{{showWhen(ex.when)}}</td>
+          <td *ngIf="ex.isPending()"><button (click)="publishExam(ex.id)">Publish</button></td>
         </tr>
       </tbody>
     </table>

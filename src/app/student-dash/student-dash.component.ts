@@ -79,4 +79,12 @@ export class StudentDashComponent implements OnInit {
       this.service.defineExam(eid)
     }
   }
+
+  publishExam(eid: string) {
+    if (this.context.confirm('Published exam cannot add questions.\n OK to proceed?')) {
+      this.service.publishExam(eid).then(ok => {
+        console.log('Exam Published!', eid)
+      })
+    }
+  }
 }

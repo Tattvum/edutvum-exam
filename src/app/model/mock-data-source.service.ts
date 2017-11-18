@@ -106,4 +106,8 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(true)
   }
 
+  public publishExam(user: User, eid: string): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
 }

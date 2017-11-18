@@ -46,6 +46,7 @@ export abstract class DataSource {
     qid?: string, cid?: number): Promise<boolean>
   abstract defineExam(user: User, exam: Exam): Promise<boolean>
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
+  abstract publishExam(user: User, eid: string): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -276,6 +277,14 @@ export class DataService {
       this.pendingResult.questions.push(newQuestion)
       console.log('new question saved!')
       return ok
+    })
+  }
+
+  public publishExam(eid: string): Promise<boolean> {
+    let call = u => this.dataSource.publishExam(u, eid)
+    return this.withUserPromise(call, ok => {
+      this.cache[eid].status = ExamStatus.DONE
+      return true
     })
   }
 
