@@ -58,10 +58,14 @@ export class StudentDashComponent implements OnInit {
   }
 
   takeExam(exam: Exam) {
-    if (!confirm('Ready to start the exam?!')) return
-    this.service.startExam(exam.id).then(rid => {
-      this.router.navigate(['/question', rid, 0])
-    })
+    if (exam.isPending()) {
+      this.router.navigate(['/results', this.service.pendingId(exam.id)])
+    } else {
+      if (!confirm('Ready to start the exam?!')) return
+      this.service.startExam(exam.id).then(rid => {
+        this.router.navigate(['/question', rid, 0])
+      })
+    }
   }
 
   showExamResult(result: ExamResult) {

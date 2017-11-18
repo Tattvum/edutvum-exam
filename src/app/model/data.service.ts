@@ -95,6 +95,7 @@ export class DataService {
       this.users.forEach(u => this.userCache[u.uid] = u)
       this.exams = hs.exams
       this.exams.forEach(e => this.cache[e.id] = e)
+      this.exams.filter(e => e.isPending()).forEach(e => this.shadowPendingExam(e.id))
       this.results = hs.results
       this.results.forEach(r => this.cache[r.id] = r)
       Lib.assert(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
@@ -251,6 +252,19 @@ export class DataService {
     return this.editExamDetail(diff, eid, ExamEditType.ExamNotes)
   }
 
+  public pendingId(eid: string) {
+    return eid + '.pending'
+  }
+
+  private shadowPendingExam(eid: string) {
+    let exam = this.cache[eid]
+    let rid = this.pendingId(eid)
+    let er = new ExamResult(rid, exam.title, new Date(), exam)
+    er.lock()
+    this.cache[rid] = er
+    this.results.splice(0, 0, er)
+  }
+
   defineExam(eid: string): Promise<boolean> {
     let qid = eid + 'q01'
     let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ,
@@ -262,6 +276,7 @@ export class DataService {
       console.log('pure exam saved!')
       this.exams.splice(0, 0, newExam)
       this.cache[newExam.id] = newExam
+      this.shadowPendingExam(newExam.id)
       return ok
     })
   }
