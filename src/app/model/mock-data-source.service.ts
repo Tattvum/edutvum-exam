@@ -78,9 +78,9 @@ export class MockDataSource implements DataSource {
 
   public createExam(user: User, eid: string): Promise<ExamResult> {
     console.log('starting exam!', eid)
-    Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
+    Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
     let exam = alles[eid]
-    Lib.assert(Lib.isNil(exam), 'exam cannot be undefined', eid)
+    Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined', eid)
     let result = new ExamResult(eid, exam.title, new Date(), exam)
     return Promise.resolve(result)
   }
@@ -103,6 +103,10 @@ export class MockDataSource implements DataSource {
   }
 
   public addQuestion(user: User, eid: string, question: Question): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
+  public addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean> {
     return Promise.resolve(true)
   }
 

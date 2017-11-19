@@ -54,7 +54,7 @@ export class Lib {
   }
 
   // TBD: NOTE: bad name, same as failif.
-  static assert(condition: boolean, message: string, ...things) {
+  static failifold(condition: boolean, message: string, ...things) {
     if (condition) {
       console.log('Assertion failed: ', message, ...things)
       throw new Error('Assertion failed: ' + message)
@@ -62,6 +62,10 @@ export class Lib {
   }
   static failif(condition: boolean, message: string, ...things) {
     if (condition) throw new Error('Assertion failed: ' + message + ': ' + things.join(', '))
+  }
+
+  static assert(condition: boolean, message: string, ...things) {
+    if (!condition) throw new Error('Assertion failed: ' + message + ': ' + things.join(', '))
   }
 
   static isNil(obj): boolean {

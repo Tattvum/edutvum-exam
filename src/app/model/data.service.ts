@@ -9,6 +9,7 @@ import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
 import { User, UserRole, EMPTY_USER } from './user';
 import { AnswerType } from 'app/model/answer-type';
+import { GeneralContext } from 'app/model/general-context';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -46,6 +47,7 @@ export abstract class DataSource {
     qid?: string, cid?: number): Promise<boolean>
   abstract defineExam(user: User, exam: Exam): Promise<boolean>
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
+  abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
   abstract publishExam(user: User, eid: string): Promise<boolean>
 }
 
@@ -85,7 +87,7 @@ export class DataService {
   })
 
   init(user: User, dolast = () => { }) {
-    Lib.assert(Lib.isNil(user), 'user cannot be null')
+    Lib.failifold(Lib.isNil(user), 'user cannot be null')
     this.loading = true
     this.activeUser = user.uid
     this.dataSource.getHolders(user).then(hs => {
@@ -98,11 +100,13 @@ export class DataService {
       this.exams.filter(e => e.isPending()).forEach(e => this.shadowPendingExam(e.id))
       this.results = hs.results
       this.results.forEach(r => this.cache[r.id] = r)
-      Lib.assert(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
+      Lib.failifold(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
     }).then(dolast).then(() => this.loading = false)
   }
 
-  constructor(private dataSource: DataSource, private securitySource: SecuritySource) {
+  constructor(private dataSource: DataSource,
+    private context: GeneralContext,
+    private securitySource: SecuritySource) {
     console.clear()
     this.isAdmin = false
     this.userWait().then(user => {
@@ -132,12 +136,12 @@ export class DataService {
   }
 
   public getExam(eid: string): ExamResult {
-    Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
+    Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
     if (this.pendingResult && this.pendingResult.id === eid) return this.pendingResult
 
     let result = <ExamResult>this.cache[eid]
-    Lib.assert(Lib.isNil(result), 'exam result cannot be undefined', eid)
-    Lib.assert(!(result instanceof ExamResult), 'Either pendingResult of ExamResult', result)
+    Lib.failifold(Lib.isNil(result), 'exam result cannot be undefined', eid)
+    Lib.failifold(!(result instanceof ExamResult), 'Either pendingResult of ExamResult', result)
     this.pendingResult = result
     return result
   }
@@ -149,7 +153,7 @@ export class DataService {
   private withUserPromise<A, B>(call: (u: User) => Promise<A>, act: (a: A) => B): Promise<B> {
     return new Promise<B>(resolve => {
       this.userWait().then(user => {
-        Lib.assert(Lib.isNil(user), 'user cannot be null')
+        Lib.failifold(Lib.isNil(user), 'user cannot be null')
         call(user).then((a: A) => resolve(act(a)))
       })
     })
@@ -291,6 +295,35 @@ export class DataService {
     return this.withUserPromise(call, ok => {
       this.pendingResult.questions.push(newQuestion)
       console.log('new question saved!')
+      return ok
+    })
+  }
+
+  private assertAlert(condition: boolean, message: string, ...things) {
+    if (!condition) {
+      let errorMsg = message + '\n' + things.join(', ')
+      this.context.alert(errorMsg)
+      throw new Error(errorMsg)
+    }
+  }
+
+  addLinkQuestion(fullid: string): Promise<boolean> {
+    let result = this.pendingResult
+    let eid = result.exam.id
+    let qid = eid + 'q' + Lib.n2s(result.questions.length + 1)
+    let ids = fullid.split('.')
+    this.assertAlert(ids.length === 2, 'eid.qid should have one and only one dot', fullid)
+    console.log(ids)
+    let leid = ids[0]
+    let lqid = ids[1]
+    let linkExam = this.cache[leid]
+    this.assertAlert(linkExam != null, 'Invalid eid:', leid, fullid)
+    let linkQuestion = linkExam.questions.find(q => q.fullid() === fullid)
+    this.assertAlert(linkQuestion != null, 'Invalid qid:', lqid, fullid)
+    let call = u => this.dataSource.addLinkQuestion(u, eid, qid, leid, lqid)
+    return this.withUserPromise(call, ok => {
+      this.pendingResult.exam.questions.push(linkQuestion)
+      console.log('new LINK question saved!')
       return ok
     })
   }

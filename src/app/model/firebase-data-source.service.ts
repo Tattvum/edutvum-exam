@@ -121,7 +121,7 @@ export class FirebaseDataSource implements DataSource {
   constructor(private afDb: AngularFireDatabase) { }
 
   getHolders(user: User): Promise<Holders> {
-    Lib.assert(Lib.isNil(user), 'User should be authenticated')
+    Lib.failifold(Lib.isNil(user), 'User should be authenticated')
     this.holders = new Holders()
     return this.fetchAll(user).then(() => {
       return Promise.resolve(this.holders)
@@ -214,9 +214,9 @@ export class FirebaseDataSource implements DataSource {
   }
 
   public createExam(user: User, eid: string): Promise<ExamResult> {
-    Lib.assert(Lib.isNil(eid), 'eid cannot be undefined')
+    Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
     let exam = this.alles[eid]
-    Lib.assert(Lib.isNil(exam), 'exam cannot be undefined', eid)
+    Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined', eid)
     let er = new ExamResult(eid, exam.title, new Date(), exam)
     let ro = this.convertExam(er)
     return new Promise<ExamResult>(resolve => {
@@ -297,7 +297,7 @@ export class FirebaseDataSource implements DataSource {
   }
 
   public defineExam(user: User, exam: Exam): Promise<boolean> {
-    Lib.assert(Lib.isNil(exam), 'exam cannot be undefined')
+    Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined')
     let eocover = this.convertPureExam(exam, user)
     return new Promise<boolean>(resolve => {
       this.afDb.object(EXAMS_URL).update(eocover).then((call) => {
@@ -312,12 +312,27 @@ export class FirebaseDataSource implements DataSource {
   }
 
   public addQuestion(user: User, eid: string, question: Question): Promise<boolean> {
-    Lib.assert(Lib.isNil(question), 'question cannot be undefined')
+    Lib.failifold(Lib.isNil(question), 'question cannot be undefined')
     let qocover = {}
     qocover[question.id] = this.convertQuestion(question)
     let editurl = EXAMS_URL + eid + '/questions/'
     return new Promise<boolean>(resolve => {
       this.afDb.object(editurl).update(qocover).then((call) => {
+        resolve(true)
+      }).catch(err => {
+        console.log(err)
+        resolve(false)
+      })
+    })
+  }
+
+  public addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean> {
+    Lib.assert(eid != null, 'eid cannot be null or undefined')
+    let editurl = EXAMS_URL + eid + '/questions/'
+    let linkq = {}
+    linkq[qid] = {'kind': 'LINK', 'eid': leid, 'qid': lqid}
+    return new Promise<boolean>(resolve => {
+      this.afDb.object(editurl).update(linkq).then((call) => {
         resolve(true)
       }).catch(err => {
         console.log(err)

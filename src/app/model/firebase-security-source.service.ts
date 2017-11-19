@@ -58,7 +58,7 @@ export class FirebaseSecuritySource implements SecuritySource {
     else {
       return new Promise(resolve => {
         this.afAuth.auth.onAuthStateChanged(user => {
-          Lib.assert(user == null, 'User cannot be null')
+          Lib.failifold(user == null, 'User cannot be null')
           resolve(new UserFbImpl(user))
         })
       })

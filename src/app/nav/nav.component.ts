@@ -156,4 +156,13 @@ export class NavComponent implements OnInit {
       this.router.navigate(['/question', this.exam.id, this.exam.questions.length - 1])
     })
   }
+
+  addLinkQuestion() {
+    let fullid = this.context.prompt('Please enter the LINK ExamID.QuestionID')
+    if (fullid && fullid.length > 0) {
+      this.service.addLinkQuestion(fullid).then(ok => {
+        this.router.navigate(['/question', this.exam.id, this.exam.questions.length - 1])
+      })
+    }
+  }
 }

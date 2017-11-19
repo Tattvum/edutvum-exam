@@ -28,9 +28,9 @@ describe('Lib tests:', () => {
     expect(Lib.timize(5000)).toBe('1:23:20')
   })
   it('assert works', () => {
-    expect(() => Lib.assert(false, 'BINGO')).not.toThrow()
+    expect(() => Lib.failifold(false, 'BINGO')).not.toThrow()
     console.log = jasmine.createSpy('log').and.stub();
-    expect(() => Lib.assert(true, 'BINGO')).toThrow()
+    expect(() => Lib.failifold(true, 'BINGO')).toThrow()
     expect(console.log).toHaveBeenCalledTimes(1);
   })
   it('failif works', () => {
