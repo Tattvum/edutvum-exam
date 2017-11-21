@@ -16,6 +16,8 @@ export class EditorComponent {
   @Input() content = '[blank]'
   @Output() onedit: EventEmitter<string> = new EventEmitter<string>()
 
+  @ViewChild('textbox') private textbox: ElementRef;
+
   showPopup = false
   backupContent = ''
 
@@ -27,6 +29,12 @@ export class EditorComponent {
     this.backupContent = this.content
     this.showPopup = true
     this.service.disableHotkeys = true
+    // https://stackoverflow.com/questions/38307060/how-to-set-focus-on-element-with-binding
+    // https://stackoverflow.com/a/45306425/6205090
+    setTimeout(() => {
+      this.textbox.nativeElement.focus()
+      this.textbox.nativeElement.select()
+    }, 10);
   }
 
   private endEdit() {
