@@ -60,12 +60,10 @@ export class ChoiceInputComponent implements OnInit {
 
   setSolutions() {
     this.solutions = JSON.stringify(this.question.solutions)
-    // console.log(this.solutions)
   }
 
   setType() {
     this.type = AnswerType[this.question.type]
-    // console.log(this.type)
   }
 
   get ctype(): string {
