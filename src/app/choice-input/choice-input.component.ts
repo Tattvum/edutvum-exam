@@ -129,8 +129,8 @@ export class ChoiceInputComponent implements OnInit {
     } catch (error) {
       console.log(newtext)
       this.context.alert(error)
-      this.setSolutions()
     }
+    this.setSolutions()
   }
 
   editType(newtext) {
@@ -140,8 +140,8 @@ export class ChoiceInputComponent implements OnInit {
     } catch (error) {
       console.log(newtext)
       this.context.alert(error)
-      this.setType()
     }
+    this.setType()
   }
 
   removeChoice(i: number) {
