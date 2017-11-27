@@ -7,7 +7,7 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { DataSource, Holders, ExamEditType } from './data.service'
+import { DataSource, Holders, ExamEditType, FileLink } from './data.service'
 
 import { Lib } from './lib';
 
@@ -27,6 +27,16 @@ function fbObjToArr(obj): any[] {
   let arr = []
   Object.keys(obj).forEach(function (key, index) {
     arr[+key] = obj[key]
+  })
+  return arr
+}
+
+function fbObjToArrT<T>(obj): T[] {
+  if (Lib.isNil(obj)) return []
+  let arr = []
+  Object.keys(obj).forEach(function (key, index) {
+    arr[index] = obj[key]
+    // console.log(index, key, obj[key].file, arr[index].file)
   })
   return arr
 }
@@ -63,7 +73,8 @@ function createQ(obj, key: string, eid: string): Question {
   let type = AnswerType['' + obj.type]
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
-  let q = new Question(id, title, type, choices, solutions, notes, explanation, eid)
+  let files = fbObjToArrT<FileLink>(obj.files)
+  let q = new Question(id, title, type, choices, solutions, notes, explanation, eid, files)
   qcache[q.fullid()] = q
   return q
 }
@@ -330,7 +341,7 @@ export class FirebaseDataSource implements DataSource {
     Lib.assert(eid != null, 'eid cannot be null or undefined')
     let editurl = EXAMS_URL + eid + '/questions/'
     let linkq = {}
-    linkq[qid] = {'kind': 'LINK', 'eid': leid, 'qid': lqid}
+    linkq[qid] = { 'kind': 'LINK', 'eid': leid, 'qid': lqid }
     return new Promise<boolean>(resolve => {
       this.afDb.object(editurl).update(linkq).then((call) => {
         resolve(true)
@@ -345,6 +356,19 @@ export class FirebaseDataSource implements DataSource {
     let editurl = EXAMS_URL + eid + '/status/'
     return new Promise<boolean>(resolve => {
       this.afDb.object(editurl).set('DONE').then((call) => {
+        resolve(true)
+      }).catch(err => {
+        console.log(err)
+        resolve(false)
+      })
+    })
+  }
+
+  public saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<boolean> {
+    let editurl = EXAMS_URL + eid + '/questions/' + qid + '/files/'
+    return new Promise<boolean>(resolve => {
+      this.afDb.list(editurl).push(fileLink).then((call) => {
+        console.log('saved fileLink', editurl)
         resolve(true)
       }).catch(err => {
         console.log(err)

@@ -38,6 +38,14 @@ export enum ExamEditType {
   UNKNOWN_LAST // Just tag the end?
 }
 
+export class FileLink {
+  constructor(
+    public path: String,
+    public url: string,
+    public file: string
+  ) {}
+}
+
 export abstract class DataSource {
   abstract getHolders(user: User): Promise<Holders>
   abstract createExam(user: User, eid: string): Promise<ExamResult>
@@ -49,6 +57,7 @@ export abstract class DataSource {
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
   abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
   abstract publishExam(user: User, eid: string): Promise<boolean>
+  abstract saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -334,6 +343,22 @@ export class DataService {
       this.cache[eid].status = ExamStatus.DONE
       return true
     })
+  }
+
+  public saveFile(qidn: number, fileLink: FileLink): Promise<boolean> {
+    let result = this.pendingResult
+    let eid = result.exam.id
+    let qid = result.exam.questions[qidn].id
+    let call = u => this.dataSource.saveFile(u, eid, qid, fileLink)
+    return this.withUserPromise(call, ok => {
+      result.exam.questions[qidn].files.push(fileLink)
+      console.log('file link saved!')
+      return true
+    })
+  }
+
+  public getQuestionId(qidn: number): string {
+    return this.pendingResult.exam.questions[qidn].id
   }
 
   public user(): User {

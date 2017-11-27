@@ -3,11 +3,15 @@ import { Observable } from 'rxjs/Rx';
 
 import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService, ExamEditType } from '../model/data.service';
+import { DataService, ExamEditType, FileLink } from '../model/data.service';
 import { ExamStatus } from '../model/exam';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { Lib, KEY } from '../model/lib';
+
+import { Upload } from '../model/upload';
+import { FirebaseUpload } from '../model/firebase-upload.service';
+import { EMPTY_QUESTION } from 'app/model/question';
 
 @Component({
   selector: 'app-nav',
@@ -16,9 +20,13 @@ import { Lib, KEY } from '../model/lib';
 })
 export class NavComponent implements OnInit {
 
-  exam: ExamResult = EMPTY_EXAM_RESULT
+  exam = EMPTY_EXAM_RESULT
+  question = EMPTY_QUESTION
   isResultsPage = false
   qidn: number
+
+  selectedFiles: FileList;
+  currentUpload: Upload;
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
@@ -41,6 +49,7 @@ export class NavComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private context: GeneralContext,
+    private uploader: FirebaseUpload,
     public service: DataService) {
   }
 
@@ -57,6 +66,7 @@ export class NavComponent implements OnInit {
       this.isResultsPage = (Lib.isNil(qid))
       if (this.isResultsPage) return
       this.qidn = +qid
+      this.question = this.exam.questions[this.qidn]
       this.isResultsPage = false
       this.service.timerOnlyMe(t => this.timerAction(t))
     })
@@ -165,4 +175,20 @@ export class NavComponent implements OnInit {
       })
     }
   }
+
+  uploadFiles(event) {
+    this.selectedFiles = event.target.files;
+    console.log(this.selectedFiles)
+    let file = this.selectedFiles.item(0)
+    this.currentUpload = new Upload(file);
+    this.uploader.pushUpload(this.exam.exam.id, this.qidn, this.currentUpload)
+  }
+
+  copyUrlToClipboard(f: FileLink, event) {
+    let selectbox = event.target.parentNode.querySelector('.selectbox')
+    selectbox.select()
+    document.execCommand('Copy')
+    console.log('copied', f.url)
+  }
+
 }

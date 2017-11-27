@@ -18,6 +18,7 @@ import { GeneralContext, GeneralContextImpl } from './model/general-context';
 
 import { MockDataSource } from './model/mock-data-source.service';
 import { MockSecuritySource } from './model/mock-security-source.service';
+import { FirebaseUpload } from './model/firebase-upload.service';
 
 import { FirebaseSecuritySource } from './model/firebase-security-source.service';
 import { FirebaseDataSource } from './model/firebase-data-source.service';
@@ -77,6 +78,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     { provide: GeneralContext, useClass: GeneralContextImpl },
     { provide: DataSource, useClass: DATA_SOURCE },
     { provide: SecuritySource, useClass: SECURITY_SOURCE },
+    FirebaseUpload,
     DataService,
     AuthGuard
   ],

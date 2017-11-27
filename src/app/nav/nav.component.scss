@@ -18,6 +18,31 @@ a {
 
 .gap {
   margin-left: 10px;
+  display: inline;
+}
+
+.selectbox {
+  margin-left: 10px;
+  color: lightgray;
+  border: 0px;
+  display: inline;
+}
+
+.inline {
+  display: inline;
+}
+
+progress {
+  height: 5px;
+  width: 200px;
+  margin-left: 10px;
+}
+
+progress[value = "100"] {
+  display: none;
+}
+progress[value = "0"] {
+  display: none;
 }
 
 .eid {

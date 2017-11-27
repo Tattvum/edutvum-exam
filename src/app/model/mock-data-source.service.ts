@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { DataSource, Holders, ExamEditType } from './data.service'
+import { DataSource, Holders, ExamEditType, FileLink } from './data.service'
 
 import { Lib } from './lib';
 
@@ -114,4 +114,7 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(true)
   }
 
+  public saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<boolean> {
+    return Promise.resolve(true)
+  }
 }

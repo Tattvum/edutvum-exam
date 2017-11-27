@@ -1,5 +1,6 @@
 import { AnswerType, TFQChoices, ARQChoices } from './answer-type';
 import { Lib } from './lib';
+import { FileLink } from 'app/model/data.service';
 
 export class Question {
   constructor(
@@ -11,6 +12,7 @@ export class Question {
     public notes = '',
     public explanation = '',
     public readonly eid = '',
+    public files: FileLink[] = [],
   ) {
     this.validate(id, title, type, choices, solutions)
   }
