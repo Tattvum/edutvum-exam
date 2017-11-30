@@ -347,8 +347,9 @@ export class DataService {
 
   public saveFile(qidn: number, fileLink: FileLink): Promise<boolean> {
     let result = this.pendingResult
-    let eid = result.exam.id
-    let qid = result.exam.questions[qidn].id
+    let q = this.pendingResult.questions[qidn]
+    let qid = q.id
+    let eid = q.eid
     let call = u => this.dataSource.saveFile(u, eid, qid, fileLink)
     return this.withUserPromise(call, ok => {
       result.exam.questions[qidn].files.push(fileLink)
