@@ -79,6 +79,12 @@ export class Lib {
       && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === false
   }
 
+  public static range(len: number): number[] {
+    let arr = []
+    for (let i = 0; i < len; i++) arr.push(i)
+    return arr
+  }
+
   public static n2s(n: number) {
     return ('0' + n).slice(-2);
   }

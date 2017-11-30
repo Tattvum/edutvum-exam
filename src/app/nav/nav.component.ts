@@ -179,9 +179,10 @@ export class NavComponent implements OnInit {
   uploadFiles(event) {
     this.selectedFiles = event.target.files;
     console.log(this.selectedFiles)
-    let file = this.selectedFiles.item(0)
-    this.currentUpload = new Upload(file);
-    this.uploader.pushUpload(this.exam.exam.id, this.qidn, this.currentUpload)
+    Lib.range(this.selectedFiles.length).forEach(i => {
+      this.currentUpload = new Upload(this.selectedFiles.item(i));
+      this.uploader.pushUpload(this.exam.exam.id, this.qidn, this.currentUpload)
+    })
   }
 
   copyUrlToClipboard(f: FileLink, event) {
