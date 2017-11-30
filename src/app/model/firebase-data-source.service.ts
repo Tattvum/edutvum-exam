@@ -31,11 +31,13 @@ function fbObjToArr(obj): any[] {
   return arr
 }
 
-function fbObjToArrT<T>(obj): T[] {
+function fbObjToFLArr(obj): FileLink[] {
   if (Lib.isNil(obj)) return []
   let arr = []
   Object.keys(obj).forEach(function (key, index) {
-    arr[index] = obj[key]
+    let fl = obj[key]
+    fl.id = key
+    arr[index] = fl
     // console.log(index, key, obj[key].file, arr[index].file)
   })
   return arr
@@ -73,7 +75,7 @@ function createQ(obj, key: string, eid: string): Question {
   let type = AnswerType['' + obj.type]
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
-  let files = fbObjToArrT<FileLink>(obj.files)
+  let files = fbObjToFLArr(obj.files)
   let q = new Question(id, title, type, choices, solutions, notes, explanation, eid, files)
   qcache[q.fullid()] = q
   return q
@@ -199,7 +201,7 @@ export class FirebaseDataSource implements DataSource {
 
   public deleteExam(user: User, rid: string): Promise<boolean> {
     return new Promise<boolean>(resolve => {
-      this.afDb.object(this.resultsUrl(user) + rid + '/').remove().then((call) => {
+      this.afDb.object(this.resultsUrl(user) + rid + '/').remove().then(call => {
         resolve(true)
       }).catch(err => {
         console.log(err)
@@ -215,7 +217,7 @@ export class FirebaseDataSource implements DataSource {
     ro = JSON.parse(JSON.stringify(ro))
     // console.log(JSON.stringify(ro))
     return new Promise<boolean>(resolve => {
-      this.afDb.object(this.resultsUrl(user) + result.id + '/').set(ro).then((call) => {
+      this.afDb.object(this.resultsUrl(user) + result.id + '/').set(ro).then(call => {
         resolve(true)
       }).catch(err => {
         console.log(err)
@@ -231,7 +233,7 @@ export class FirebaseDataSource implements DataSource {
     let er = new ExamResult(eid, exam.title, new Date(), exam)
     let ro = this.convertExam(er)
     return new Promise<ExamResult>(resolve => {
-      this.afDb.list(this.resultsUrl(user)).push(ro).then((call) => {
+      this.afDb.list(this.resultsUrl(user)).push(ro).then(call => {
         let key = call.key
         let result = new ExamResult(key, er.title, er.when, er.exam, er.answers, ExamStatus.PENDING, er.guessings)
         this.alles[key] = result
@@ -269,7 +271,7 @@ export class FirebaseDataSource implements DataSource {
     // console.log(' - ', editurl)
     Lib.failif(Lib.isNil(editurl), 'Invalid ExamEditType', type)
     return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).set(diff).then((call) => {
+      this.afDb.object(editurl).set(diff).then(call => {
         resolve(true)
       }).catch(err => {
         console.log(err)
@@ -311,7 +313,7 @@ export class FirebaseDataSource implements DataSource {
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined')
     let eocover = this.convertPureExam(exam, user)
     return new Promise<boolean>(resolve => {
-      this.afDb.object(EXAMS_URL).update(eocover).then((call) => {
+      this.afDb.object(EXAMS_URL).update(eocover).then(call => {
         this.alles[exam.id] = exam
         this.holders.exams.push(exam)
         resolve(true)
@@ -328,7 +330,7 @@ export class FirebaseDataSource implements DataSource {
     qocover[question.id] = this.convertQuestion(question)
     let editurl = EXAMS_URL + eid + '/questions/'
     return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).update(qocover).then((call) => {
+      this.afDb.object(editurl).update(qocover).then(call => {
         resolve(true)
       }).catch(err => {
         console.log(err)
@@ -343,7 +345,7 @@ export class FirebaseDataSource implements DataSource {
     let linkq = {}
     linkq[qid] = { 'kind': 'LINK', 'eid': leid, 'qid': lqid }
     return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).update(linkq).then((call) => {
+      this.afDb.object(editurl).update(linkq).then(call => {
         resolve(true)
       }).catch(err => {
         console.log(err)
@@ -355,7 +357,7 @@ export class FirebaseDataSource implements DataSource {
   public publishExam(user: User, eid: string): Promise<boolean> {
     let editurl = EXAMS_URL + eid + '/status/'
     return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).set('DONE').then((call) => {
+      this.afDb.object(editurl).set('DONE').then(call => {
         resolve(true)
       }).catch(err => {
         console.log(err)
@@ -364,11 +366,24 @@ export class FirebaseDataSource implements DataSource {
     })
   }
 
-  public saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<boolean> {
-    let editurl = EXAMS_URL + eid + '/questions/' + qid + '/files/'
+  public saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string> {
+    let url = EXAMS_URL + eid + '/questions/' + qid + '/files/'
+    return new Promise<string>(resolve => {
+      this.afDb.list(url).push(fileLink).then(call => {
+        let key = call.key
+        console.log('saved fileLink', url, key)
+        resolve(key)
+      }).catch(err => {
+        console.log(err)
+        resolve(null)
+      })
+    })
+  }
+
+  public deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean> {
+    let url = EXAMS_URL + eid + '/questions/' + qid + '/files/' + fid + '/'
     return new Promise<boolean>(resolve => {
-      this.afDb.list(editurl).push(fileLink).then((call) => {
-        console.log('saved fileLink', editurl)
+      this.afDb.object(url).remove().then(call => {
         resolve(true)
       }).catch(err => {
         console.log(err)

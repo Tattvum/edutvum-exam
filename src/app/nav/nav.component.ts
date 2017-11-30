@@ -192,4 +192,9 @@ export class NavComponent implements OnInit {
     console.log('copied', f.url)
   }
 
+  removeFile(f: FileLink) {
+    console.log(f.id)
+    this.uploader.deleteFileStorage(this.exam.exam.id, this.qidn, f)
+  }
+
 }

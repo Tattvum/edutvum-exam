@@ -90,7 +90,8 @@
     <tbody *ngFor="let f of question.files; let i=index">
       <tr class="row">
       <td class="col-12" (click)="copyUrlToClipboard(f, $event)" >
-        <span> {{i+1}} </span>
+        <button (click)="removeFile(f)" class="inline">Remove</button>
+        <span style="margin-left: 20px;"> {{i+1}} </span>
         <span style="margin-left: 20px;"> {{f.file}} </span>
         <input readonly type="text" class="selectbox" [value]="f.url">
       </td>

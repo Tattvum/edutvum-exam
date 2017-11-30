@@ -46,12 +46,17 @@ export class FirebaseUpload {
           console.log('uploaded and saved!')
         })
       })
-    }
+  }
 
-  /*
-    private deleteFileStorage(name: string) {
-      let storageRef = firebase.storage().ref();
-      storageRef.child(`${this.basePath}/${name}`).delete()
-    }
-  */
+  public deleteFileStorage(eid: string, qidn: number, f: FileLink) {
+    let qid = this.service.getQuestionId(qidn);
+    let storageRef = firebase.storage().ref();
+    let path = `exams/${eid}/questions/${qid}/files/${f.file}`
+    storageRef.child(path).delete().then(call => {
+      console.log('file deleted in storage', f.file)
+      this.service.deleteFile(qidn, f.id).then(() => {
+        console.log('deleted!')
+      })
+  })
+  }
 }

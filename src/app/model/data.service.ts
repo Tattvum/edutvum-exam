@@ -40,10 +40,11 @@ export enum ExamEditType {
 
 export class FileLink {
   constructor(
-    public path: String,
+    public path: string,
     public url: string,
-    public file: string
-  ) {}
+    public file: string,
+    public id: string = null,
+  ) { }
 }
 
 export abstract class DataSource {
@@ -57,7 +58,8 @@ export abstract class DataSource {
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
   abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
   abstract publishExam(user: User, eid: string): Promise<boolean>
-  abstract saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<boolean>
+  abstract saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string>
+  abstract deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -345,16 +347,38 @@ export class DataService {
     })
   }
 
-  public saveFile(qidn: number, fileLink: FileLink): Promise<boolean> {
+  public saveFile(qidn: number, fileLink: FileLink): Promise<string> {
     let result = this.pendingResult
     let q = this.pendingResult.questions[qidn]
     let qid = q.id
     let eid = q.eid
     let call = u => this.dataSource.saveFile(u, eid, qid, fileLink)
-    return this.withUserPromise(call, ok => {
+    return this.withUserPromise(call, fid => {
+      fileLink.id = fid
       result.exam.questions[qidn].files.push(fileLink)
-      console.log('file link saved!')
-      return true
+      console.log('file link saved!', fileLink)
+      return fid
+    })
+  }
+
+  public deleteFile(qidn: number, fid: string): Promise<boolean> {
+    let result = this.pendingResult
+    let q = this.pendingResult.questions[qidn]
+    let qid = q.id
+    let eid = q.eid
+    let call = u => this.dataSource.deleteFile(u, eid, qid, fid)
+    return this.withUserPromise(call, ok => {
+      let files = result.exam.questions[qidn].files
+      console.log('file link deleting...', files.length)
+      let i = files.findIndex(f => f.id === fid)
+      console.log(i, files[i].id)
+      if (i >= 0) {
+        // https://stackoverflow.com/questions/40462369/remove-item-from-stored-array-in-angular-2
+        // "You can't use delete to remove an item from an array."
+        files.splice(i, 1)
+        console.log('file link deleted!', i, fid, files.length)
+      }
+      return ok
     })
   }
 
