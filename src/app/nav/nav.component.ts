@@ -193,8 +193,11 @@ export class NavComponent implements OnInit {
   }
 
   removeFile(f: FileLink) {
-    console.log(f.id)
-    this.uploader.deleteFileStorage(this.exam.exam.id, this.qidn, f)
+    if (this.context.confirm(`Delete the file: ${f.file}. Sure?!
+      \n Please ensure that your existing tags are not using it.`)) {
+      console.log(f.id)
+      this.uploader.deleteFileStorage(this.exam.exam.id, this.qidn, f)
+    }
   }
 
 }
