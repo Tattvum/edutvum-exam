@@ -53,7 +53,7 @@ export class StudentDashComponent implements OnInit {
   }
 
   userChanged() {
-    console.log(this.currentUser)
+    // console.log(this.currentUser)
     if (this.currentUser) this.service.switchUser(this.currentUser)
   }
 

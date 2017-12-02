@@ -7,8 +7,9 @@ import { Holders, DataService, DataSource, SecuritySource, isin } from './data.s
 import { User, UserRole, EMPTY_USER } from './user';
 
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
-import { EMPTY_EXAM, Exam } from 'app/model/exam';
-import { EMPTY_QUESTION } from 'app/model/question';
+import { EMPTY_EXAM, Exam } from '../model/exam';
+import { EMPTY_QUESTION } from '../model/question';
+import { GeneralContext } from '../model/general-context';
 
 const HOLDERS = new Holders([EMPTY_EXAM], [EMPTY_EXAM_RESULT], [EMPTY_USER])
 
@@ -23,6 +24,9 @@ let securitySourceMock = {
   userWait: () => Promise.resolve(EMPTY_USER)
 }
 
+let generalContextMock = {
+}
+
 function makeSpy(cls: any, method: string) {
   return spyOn(getTestBed().get(cls), method).and.callThrough()
 }
@@ -34,6 +38,7 @@ describe('DataService tests:', () => {
       providers: [
         { provide: DataSource, useValue: dataSourceMock },
         { provide: SecuritySource, useValue: securitySourceMock },
+        { provide: GeneralContext, useValue: generalContextMock },
         { provide: DataService, useClass: DataService },
       ]
     })

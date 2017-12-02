@@ -3,10 +3,6 @@ import { Injectable } from '@angular/core';
 import 'rxjs/Rx';
 import { Subject, Observable } from 'rxjs/Rx';
 
-import * as firebase from 'firebase/app';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database';
-
 import { DataSource, Holders, ExamEditType, FileLink } from './data.service'
 
 import { Lib } from './lib';
@@ -16,6 +12,7 @@ import { Question } from './question';
 import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
 import { User, UserRole } from './user';
+import { FirebaseAPI } from 'app/model/firebase-api.service';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams/'
@@ -131,7 +128,7 @@ export class FirebaseDataSource implements DataSource {
 
   private alles: { [key: string]: Exam } = {}
 
-  constructor(private afDb: AngularFireDatabase) { }
+  constructor(private afbapi: FirebaseAPI) { }
 
   getHolders(user: User): Promise<Holders> {
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')
@@ -155,14 +152,13 @@ export class FirebaseDataSource implements DataSource {
   }
 
   private fetchU(): Observable<void> {
-    return this.afDb.object(USERS_URL).first().map(
+    return this.afbapi.objectFirstMap(USERS_URL,
       us => us.forEach(u => this.holders.users.push(createU(u)))
     )
   }
 
   private fetchE(): Observable<void> {
-    let whenOrder = { query: { orderByChild: 'when' } }
-    return this.afDb.list(EXAMS_URL, whenOrder).first().map(exs => {
+    return this.afbapi.listFirstMap(EXAMS_URL, exs => {
       exs.forEach(e => {
         let exam = createE(e)
         this.alles[e.$key] = exam
@@ -173,8 +169,7 @@ export class FirebaseDataSource implements DataSource {
   }
 
   private fetchR(user: User): Observable<void> {
-    let revwhenOrder = { query: { orderByChild: 'revwhen' } }
-    return this.afDb.list(this.resultsUrl(user), revwhenOrder).first().map(
+    return this.afbapi.listFirstMapR(this.resultsUrl(user),
       userRs => {
         fbObjToArr(userRs).forEach(
           r => this.holders.results.push(createR(r, this.alles))
@@ -200,14 +195,8 @@ export class FirebaseDataSource implements DataSource {
   }
 
   public deleteExam(user: User, rid: string): Promise<boolean> {
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(this.resultsUrl(user) + rid + '/').remove().then(call => {
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
-    })
+    let url = this.resultsUrl(user) + rid + '/'
+    return this.afbapi.objectRemoveBool(url)
   }
 
   public updateExam(user: User, result: ExamResult): Promise<boolean> {
@@ -216,14 +205,8 @@ export class FirebaseDataSource implements DataSource {
     // https://github.com/firebase/quickstart-js/issues/64
     ro = JSON.parse(JSON.stringify(ro))
     // console.log(JSON.stringify(ro))
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(this.resultsUrl(user) + result.id + '/').set(ro).then(call => {
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
-    })
+    let url = this.resultsUrl(user) + result.id + '/'
+    return this.afbapi.objectSetBool(url, ro)
   }
 
   public createExam(user: User, eid: string): Promise<ExamResult> {
@@ -232,16 +215,12 @@ export class FirebaseDataSource implements DataSource {
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined', eid)
     let er = new ExamResult(eid, exam.title, new Date(), exam)
     let ro = this.convertExam(er)
-    return new Promise<ExamResult>(resolve => {
-      this.afDb.list(this.resultsUrl(user)).push(ro).then(call => {
-        let key = call.key
-        let result = new ExamResult(key, er.title, er.when, er.exam, er.answers, ExamStatus.PENDING, er.guessings)
-        this.alles[key] = result
-        resolve(result)
-      }).catch(err => {
-        console.log(err)
-        resolve(null)
-      })
+    let url = this.resultsUrl(user)
+    return this.afbapi.listPush<ExamResult>(url, ro, call => {
+      let key = call.key
+      let result = new ExamResult(key, er.title, er.when, er.exam, er.answers, ExamStatus.PENDING, er.guessings)
+      this.alles[key] = result
+      return result
     })
   }
 
@@ -267,17 +246,10 @@ export class FirebaseDataSource implements DataSource {
   public editExamDetail(user: User, type: ExamEditType, diff: any,
     eid: string, qid?: string, cid?: number): Promise<boolean> {
     console.log(' - editExamDetail', ExamEditType[type], eid, qid, diff)
-    let editurl = this.editUrl(type, eid, qid, cid)
+    let url = this.editUrl(type, eid, qid, cid)
     // console.log(' - ', editurl)
-    Lib.failif(Lib.isNil(editurl), 'Invalid ExamEditType', type)
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).set(diff).then(call => {
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
-    })
+    Lib.failif(Lib.isNil(url), 'Invalid ExamEditType', type)
+    return this.afbapi.objectSetBool(url, diff)
   }
 
   private convertQuestion(question: Question): any {
@@ -312,15 +284,11 @@ export class FirebaseDataSource implements DataSource {
   public defineExam(user: User, exam: Exam): Promise<boolean> {
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined')
     let eocover = this.convertPureExam(exam, user)
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(EXAMS_URL).update(eocover).then(call => {
-        this.alles[exam.id] = exam
-        this.holders.exams.push(exam)
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
+    let url = EXAMS_URL
+    return this.afbapi.objectUpdate<boolean>(url, eocover, call => {
+      this.alles[exam.id] = exam
+      this.holders.exams.push(exam)
+      return true
     })
   }
 
@@ -328,68 +296,35 @@ export class FirebaseDataSource implements DataSource {
     Lib.failifold(Lib.isNil(question), 'question cannot be undefined')
     let qocover = {}
     qocover[question.id] = this.convertQuestion(question)
-    let editurl = EXAMS_URL + eid + '/questions/'
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).update(qocover).then(call => {
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
-    })
+    let url = EXAMS_URL + eid + '/questions/'
+    return this.afbapi.objectUpdateBool(url, qocover)
   }
 
   public addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean> {
     Lib.assert(eid != null, 'eid cannot be null or undefined')
-    let editurl = EXAMS_URL + eid + '/questions/'
+    let url = EXAMS_URL + eid + '/questions/'
     let linkq = {}
     linkq[qid] = { 'kind': 'LINK', 'eid': leid, 'qid': lqid }
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).update(linkq).then(call => {
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
-    })
+    return this.afbapi.objectUpdateBool(url, linkq)
   }
 
   public publishExam(user: User, eid: string): Promise<boolean> {
-    let editurl = EXAMS_URL + eid + '/status/'
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(editurl).set('DONE').then(call => {
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
-    })
+    let url = EXAMS_URL + eid + '/status/'
+    return this.afbapi.objectSetBool(url, 'DONE')
   }
 
   public saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string> {
     let url = EXAMS_URL + eid + '/questions/' + qid + '/files/'
-    return new Promise<string>(resolve => {
-      this.afDb.list(url).push(fileLink).then(call => {
-        let key = call.key
-        console.log('saved fileLink', url, key)
-        resolve(key)
-      }).catch(err => {
-        console.log(err)
-        resolve(null)
-      })
+    return this.afbapi.listPush<string>(url, fileLink, call => {
+      let key = call.key + ''
+      console.log('saved fileLink', url, key)
+      return key
     })
   }
 
   public deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean> {
     let url = EXAMS_URL + eid + '/questions/' + qid + '/files/' + fid + '/'
-    return new Promise<boolean>(resolve => {
-      this.afDb.object(url).remove().then(call => {
-        resolve(true)
-      }).catch(err => {
-        console.log(err)
-        resolve(false)
-      })
-    })
+    return this.afbapi.objectRemoveBool(url)
   }
 
 }

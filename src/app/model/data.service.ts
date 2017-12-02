@@ -123,7 +123,7 @@ export class DataService {
     this.userWait().then(user => {
       this.init(user, () => {
         let u = this.userCache[user.uid]
-        console.log(u)
+        // console.log('user', u)
         if (u) {
           this.isAdmin = u.role === UserRole.ADMIN
           this.exams = this.exams.filter(e => !e.isPending() || this.isAdmin)
