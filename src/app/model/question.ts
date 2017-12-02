@@ -71,14 +71,19 @@ export class Question {
 
   setType(typestr: string) {
     let type = AnswerType['' + typestr]
-    if (type === AnswerType.TFQ || type === AnswerType.ARQ) {
-      if (type === AnswerType.TFQ) this.choices = TFQChoices
-      else if (type === AnswerType.ARQ) this.choices = ARQChoices
-      this.solutions = [0]
+    let choices = this.choices
+    let solutions = this.solutions
+    if (type === AnswerType.TFQ || type === AnswerType.ARQ || type === AnswerType.NCQ) {
+      if (type === AnswerType.TFQ) choices = TFQChoices
+      else if (type === AnswerType.ARQ) choices = ARQChoices
+      else if (type === AnswerType.NCQ) choices = []
+      solutions = [0]
     } else {
-      this.validate(this.id, this.title, type, this.choices, this.solutions)
+      this.validate(this.id, this.title, type, choices, solutions)
     }
     this.type = type
+    this.choices = choices
+    this.solutions = solutions
   }
 
   removeChoice(i: number) {
