@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import 'rxjs/Rx';
-import { Subject, Observable } from 'rxjs/Rx';
 
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -14,16 +13,16 @@ export class FirebaseAPI {
 
   constructor(private afDb: AngularFireDatabase) { }
 
-  objectFirstMap(url: string, fn: (x) => void): Observable<void> {
-    return this.afDb.object(url).first().map(x => fn(x))
+  async objectFirstMap(url: string): Promise<any> {
+    return await this.afDb.object(url).first().toPromise()
   }
 
-  listFirstMap(url: string, fn: (x) => void): Observable<void> {
-    return this.afDb.list(url, this.whenOrder).first().map(x => fn(x))
+  async listFirstMap(url: string): Promise<any> {
+    return await this.afDb.list(url, this.whenOrder).first().toPromise()
   }
 
-  listFirstMapR(url: string, fn: (x) => void): Observable<void> {
-    return this.afDb.list(url, this.revwhenOrder).first().map(x => fn(x))
+  async listFirstMapR(url: string): Promise<any> {
+    return await this.afDb.list(url, this.revwhenOrder).first().toPromise()
   }
 
   private promise<T>(fbPromise: firebase.Promise<any>, fn: (x) => T): Promise<T> {

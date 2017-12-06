@@ -10,7 +10,8 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { Holders, DataService, DataSource, SecuritySource, isin } from './data.service';
+import { Holders } from './data.service';
+import * as fbs from './firebase-data-source.service';
 import { FirebaseDataSource } from './firebase-data-source.service';
 import { User, UserRole, EMPTY_USER } from './user';
 
@@ -20,6 +21,7 @@ import { EMPTY_QUESTION } from '../model/question';
 import { GeneralContext } from '../model/general-context';
 import { FirebaseAPI } from '../model/firebase-api.service';
 import { Lib } from '../model/lib';
+import { AnswerType } from 'app/model/answer-type';
 
 const mockdata = {
   ver5: {
@@ -28,11 +30,21 @@ const mockdata = {
         by: 'A 1', name: 'E 1', revwhen: '7982-94-95', when: '2017-05-04',
         questions: {
           e1q01: {
-            display: 'Q 1', notes: 'N 1', solutions: [1], type: 'TFQ',
-          },
-          e1q02: {
             display: 'Q 1', notes: 'N 1', solutions: [1], type: 'MCQ',
             choices: ['C 1', 'C 2', 'C 3'],
+          },
+          e1q02: {
+            display: 'Q 2', notes: 'N 2', solutions: [0, 2], type: 'MAQ',
+            choices: ['C 1', 'C 2', 'C 3'],
+          },
+          e1q03: {
+            display: 'Q 3', notes: 'N 3', solutions: [0], type: 'TFQ',
+          },
+          e1q04: {
+            display: 'Q 4', notes: 'N 4', solutions: [0], type: 'ARQ',
+          },
+          e1q05: {
+            display: 'Q 4', notes: 'N 4', solutions: [273], type: 'NCQ',
           },
         },
       },
@@ -40,10 +52,10 @@ const mockdata = {
         by: 'A 2', name: 'E 2', revwhen: '7982-94-95', when: '2017-05-04',
         questions: {
           e2q01: {
-            display: 'Q 1', notes: 'N 1', solutions: [1], type: 'TFQ',
+            eid: 'e1', qid: 'e1q01', kind: 'LINK'
           },
           e2q02: {
-            display: 'Q 1', notes: 'N 1', solutions: [1], type: 'TFQ',
+            display: 'Q 1', notes: 'N 1', solutions: [0, 2], type: 'MAQ',
             choices: ['C 1', 'C 2', 'C 3'],
           },
         },
@@ -54,10 +66,10 @@ const mockdata = {
         r1: {
           exam: 'e1', revwhen: -1507038437147, status: 'DONE', when: 1507038437147,
           answers: {
-            e1q1: [2],
+            e1q01: [0], e1q03: [1],
           },
-          durations: { 'nsejs1q01': 263, 'nsejs1q38': 91, },
-          guessings: { 'nsejs1q01': false, 'nsejs1q02': false, },
+          durations: { 'e1q01': 263, 'e1q03': 91, },
+          guessings: { 'e1q01': true, 'e1q03': false, },
         },
       }
     },
@@ -96,18 +108,9 @@ function url2obj(url: string) {
 }
 
 let firebaseAPIMock = {
-  objectFirstMap: (url, fn) => {
-    // console.warn('objectFirstMap', url)
-    return Observable.of(url2obj(url)).map(x => fn(x))
-  },
-  listFirstMap: (url, fn) => {
-    // console.warn('listFirstMap', url)
-    return Observable.of(objToFbArr(url2obj(url))).map(x => fn(x))
-  },
-  listFirstMapR: (url, fn) => {
-    // console.warn('listFirstMapR', url)
-    return Observable.of(objToFbArr(url2obj(url))).map(x => fn(x))
-  }
+  objectFirstMap: url => Promise.resolve(url2obj(url)),
+  listFirstMap: url => Promise.resolve(objToFbArr(url2obj(url))),
+  listFirstMapR: url => Promise.resolve(objToFbArr(url2obj(url))),
 }
 
 function makeSpy(cls: any, method: string) {
@@ -121,7 +124,7 @@ function resolvePromise(p) {
   return obj
 }
 
-describe('FirebaseDataSource tests:', () => {
+describe('FirebaseDataSource', () => {
 
   let service: FirebaseDataSource
 
@@ -135,12 +138,101 @@ describe('FirebaseDataSource tests:', () => {
     service = injector.get(FirebaseDataSource)
   })
 
-  it('object checks', fakeAsync(() => {
+  it('overall object checks', fakeAsync(() => {
     let holders: Holders = resolvePromise(service.getHolders(EMPTY_USER))
     expect(holders).not.toBeNull()
     expect(holders.users.length).toBe(2)
     expect(holders.exams.length).toBe(2)
     expect(holders.results.length).toBe(1)
   }))
+
+  describe('ExamResult conversion', () => {
+    let e = null;
+    e = mockdata.ver5.exams['e1']
+    e['$key'] = 'e1'
+    let e1 = fbs.createE(e)
+    e = mockdata.ver5.exams['e2']
+    e['$key'] = 'e2'
+    let e2 = fbs.createE(e)
+    let exams = { 'e1': e1, 'e2': e2 }
+    function rCheckForward(rkey) {
+      let r = mockdata.ver5.results.u1[rkey]
+      r['$key'] = rkey
+      let r_ = fbs.createR(r, exams)
+      expect(r_).not.toBeNull()
+    }
+    function rCheckReverse(rkey) {
+      let r = mockdata.ver5.results.u1[rkey]
+      r['$key'] = rkey
+      let r_ = fbs.createR(r, exams)
+      let r_r = fbs.convertExamResult(r_)
+      expect(r_).not.toBeNull()
+    }
+    it('forward checks', () => {
+      rCheckForward('r1')
+    })
+    it('reverse checks', () => {
+      rCheckReverse('r1')
+    })
+  })
+
+  describe('Exam conversion', () => {
+    function eCheckForward(ekey) {
+      let e = mockdata.ver5.exams[ekey]
+      let e_ = fbs.createE(e)
+      expect(e_).not.toBeNull()
+      expect(e_.title).toBe(e.name)
+    }
+    function eCheckReverse(ekey) {
+      let e = mockdata.ver5.exams[ekey]
+      let e_ = fbs.createE(e)
+      let e_e = fbs.convertPureExam(e_, EMPTY_USER)
+      expect(e_e).not.toBeNull()
+      expect(e_e.name).toBe(e.name)
+    }
+    it('forward checks', () => {
+      eCheckForward('e1')
+      // NOTE: This depends on e1 being the first.
+      // LINK questions depend on the original
+      eCheckForward('e2')
+    })
+    it('reverse checks', () => {
+      eCheckReverse('e1')
+    })
+  })
+
+  describe('Question conversion', () => {
+    function qCheckForward(ekey, qkey, lekey = ekey, lqkey = qkey) {
+      let q = mockdata.ver5.exams[ekey].questions[qkey]
+      let lq = mockdata.ver5.exams[lekey].questions[lqkey]
+      let q_ = fbs.createQ(q, qkey, ekey)
+      expect(q_).not.toBeNull()
+      expect(q_.eid).toBe(lekey)
+      expect(q_.id).toBe(lqkey)
+      expect(q_.title).toBe(lq.display)
+      expect(q_.type).toBe(AnswerType[lq.type + ''])
+    }
+    function qCheckReverse(ekey, qkey) {
+      let q = mockdata.ver5.exams[ekey].questions[qkey]
+      let q_ = fbs.createQ(q, qkey, ekey)
+      let q_q = fbs.convertQuestion(q_)
+      expect(q_q).not.toBeNull()
+      expect(q_q.display).toBe(q.display)
+    }
+    it('forward checks', () => {
+      qCheckForward('e1', 'e1q01')
+      qCheckForward('e1', 'e1q02')
+      qCheckForward('e1', 'e1q03')
+      qCheckForward('e1', 'e1q04')
+      qCheckForward('e2', 'e2q01', 'e1', 'e1q01')
+      qCheckForward('e2', 'e2q02')
+    })
+    it('reverse checks', () => {
+      qCheckReverse('e1', 'e1q01')
+      qCheckReverse('e1', 'e1q02')
+      // reverse check for link question not possible
+      qCheckReverse('e2', 'e2q02')
+    })
+  })
 
 })

@@ -19,7 +19,8 @@ const EXAMS_URL = URL_VER + 'exams/'
 const RESULTS_URL = URL_VER + 'results/'
 const USERS_URL = URL_VER + 'users/'
 
-function fbObjToArr(obj): any[] {
+// NOTE: PUBLIC for TEST sake ONLY
+export function fbObjToArr(obj): any[] {
   if (Lib.isNil(obj)) return []
   let arr = []
   Object.keys(obj).forEach(function (key, index) {
@@ -28,7 +29,8 @@ function fbObjToArr(obj): any[] {
   return arr
 }
 
-function fbObjToFLArr(obj): FileLink[] {
+// NOTE: PUBLIC for TEST sake ONLY
+export function fbObjToFLArr(obj): FileLink[] {
   if (Lib.isNil(obj)) return []
   let arr = []
   Object.keys(obj).forEach(function (key, index) {
@@ -40,7 +42,8 @@ function fbObjToFLArr(obj): FileLink[] {
   return arr
 }
 
-function createA(type: AnswerType, given): string[] {
+// NOTE: PUBLIC for TEST sake ONLY
+export function createA(type: AnswerType, given): string[] {
   let choices = given !== undefined ? fbObjToArr(given).slice(0) : null
   switch (type) {
     case AnswerType.TFQ:
@@ -58,7 +61,8 @@ function createA(type: AnswerType, given): string[] {
 
 let qcache: { [key: string]: Question } = {}
 
-function createQ(obj, key: string, eid: string): Question {
+// NOTE: PUBLIC for TEST sake ONLY
+export function createQ(obj, key: string, eid: string): Question {
   if (obj.kind) {
     let linkid = obj.eid.trim() + '.' + obj.qid.trim()
     let linkq = qcache[linkid]
@@ -78,7 +82,8 @@ function createQ(obj, key: string, eid: string): Question {
   return q
 }
 
-function createE(obj): Exam {
+// NOTE: PUBLIC for TEST sake ONLY
+export function createE(obj): Exam {
   let id = obj.$key
   let title = obj.name
   let notes = obj.notes
@@ -93,7 +98,8 @@ function createE(obj): Exam {
   return new Exam(id, title, questions, when, notes, explanation, status)
 }
 
-function createR(obj, es: { [key: string]: Exam }): ExamResult {
+// NOTE: PUBLIC for TEST sake ONLY
+export function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let id = obj.$key
   let exam = es[obj.exam]
   let title = exam.title
@@ -113,13 +119,60 @@ function createR(obj, es: { [key: string]: Exam }): ExamResult {
   return new ExamResult(id, title, when, exam, answers, status, guessings, durations)
 }
 
-function createU(obj): User {
+// NOTE: PUBLIC for TEST sake ONLY
+export function createU(obj): User {
   let uid = obj.localId
   let name = obj.displayName
   let email = obj.email
   let role = UserRole.USER
   if (obj.role && obj.role === UserRole[UserRole.ADMIN]) role = UserRole.ADMIN
   return { uid: uid, name: name, email: email, role: role }
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
+export function convertQuestion(question: Question): any {
+  let qo = {}
+  qo['display'] = question.title
+  qo['notes'] = question.notes
+  qo['explanation'] = question.explanation
+  qo['choices'] = question.choices
+  qo['solutions'] = question.solutions
+  qo['type'] = AnswerType[question.type]
+  return qo
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
+export function convertPureExam(exam: Exam, user: User): any {
+  let eo = {}
+  eo['by'] = user.uid
+  eo['name'] = exam.title
+  eo['notes'] = exam.notes
+  eo['explanation'] = exam.explanation
+  let when = eo['when'] = exam.when.toISOString()
+  eo['revwhen'] = Lib.d2rev(when)
+  // console.log(when, eo['revwhen'])
+  let qs = {}
+  exam.questions.forEach(q => qs[q.id] = convertQuestion(q))
+  eo['questions'] = qs
+  eo['status'] = ExamStatus[exam.status]
+  return eo
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
+export function convertExamResult(result: ExamResult): any {
+  let ro = {}
+  ro['exam'] = result.exam.id
+  let roanss = ro['answers'] = {}
+  let qs = result.exam.questions
+  result.answers.forEach((ans: number[], i) => roanss[qs[i].id] = ans)
+  let roguss = ro['guessings'] = {}
+  result.guessings.forEach((isGuess: boolean, i) => roguss[qs[i].id] = isGuess)
+  let rodurs = ro['durations'] = {}
+  result.durations.forEach((secs: number, i) => rodurs[qs[i].id] = secs)
+  ro['when'] = result.when.getTime()
+  ro['revwhen'] = -result.when.getTime()
+  ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'
+  return ro
 }
 
 @Injectable()
@@ -130,68 +183,40 @@ export class FirebaseDataSource implements DataSource {
 
   constructor(private afbapi: FirebaseAPI) { }
 
-  getHolders(user: User): Promise<Holders> {
+  async getHolders(user: User): Promise<Holders> {
+    console.log('inside getHolders2')
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')
     this.holders = new Holders()
-    return this.fetchAll(user).then(() => {
-      return Promise.resolve(this.holders)
-    })
+    await this.fetchU()
+    await this.fetchE()
+    await this.fetchR(user)
+    return this.holders
   }
 
   private resultsUrl(user: User): string {
     return RESULTS_URL + user.uid + '/'
   }
 
-  private fetchAll(user: User): Promise<void> {
-    this.alles = {}
-    return this.fetchU().flatMap(() => {
-      return this.fetchE()
-    }).flatMap(() => {
-      return this.fetchR(user)
-    }).toPromise()
+  private async fetchU(): Promise<void> {
+    let uobjs = await this.afbapi.objectFirstMap(USERS_URL)
+    uobjs.forEach(u => this.holders.users.push(createU(u)))
   }
 
-  private fetchU(): Observable<void> {
-    return this.afbapi.objectFirstMap(USERS_URL,
-      us => us.forEach(u => this.holders.users.push(createU(u)))
-    )
-  }
-
-  private fetchE(): Observable<void> {
-    return this.afbapi.listFirstMap(EXAMS_URL, exs => {
-      exs.forEach(e => {
-        let exam = createE(e)
-        this.alles[e.$key] = exam
-        this.holders.exams.push(exam)
-      })
-      this.holders.exams.reverse()
+  private async fetchE(): Promise<void> {
+    let eobjs = await this.afbapi.listFirstMap(EXAMS_URL)
+    eobjs.forEach(e => {
+      let exam = createE(e)
+      this.alles[e.$key] = exam
+      this.holders.exams.push(exam)
     })
+    this.holders.exams.reverse()
   }
 
-  private fetchR(user: User): Observable<void> {
-    return this.afbapi.listFirstMapR(this.resultsUrl(user),
-      userRs => {
-        fbObjToArr(userRs).forEach(
-          r => this.holders.results.push(createR(r, this.alles))
-        )
-      }
+  private async fetchR(user: User): Promise<void> {
+    let robjs = await this.afbapi.listFirstMapR(this.resultsUrl(user))
+    fbObjToArr(robjs).forEach(
+      r => this.holders.results.push(createR(r, this.alles))
     )
-  }
-
-  private convertExam(result: ExamResult): any {
-    let ro = {}
-    ro['exam'] = result.exam.id
-    let roanss = ro['answers'] = {}
-    let qs = result.exam.questions
-    result.answers.forEach((ans: number[], i) => roanss[qs[i].id] = ans)
-    let roguss = ro['guessings'] = {}
-    result.guessings.forEach((isGuess: boolean, i) => roguss[qs[i].id] = isGuess)
-    let rodurs = ro['durations'] = {}
-    result.durations.forEach((secs: number, i) => rodurs[qs[i].id] = secs)
-    ro['when'] = result.when.getTime()
-    ro['revwhen'] = -result.when.getTime()
-    ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'
-    return ro
   }
 
   public deleteExam(user: User, rid: string): Promise<boolean> {
@@ -200,7 +225,7 @@ export class FirebaseDataSource implements DataSource {
   }
 
   public updateExam(user: User, result: ExamResult): Promise<boolean> {
-    let ro = this.convertExam(result)
+    let ro = convertExamResult(result)
     // TBD NOTE: This null trsformation is required!
     // https://github.com/firebase/quickstart-js/issues/64
     ro = JSON.parse(JSON.stringify(ro))
@@ -214,7 +239,7 @@ export class FirebaseDataSource implements DataSource {
     let exam = this.alles[eid]
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined', eid)
     let er = new ExamResult(eid, exam.title, new Date(), exam)
-    let ro = this.convertExam(er)
+    let ro = convertExamResult(er)
     let url = this.resultsUrl(user)
     return this.afbapi.listPush<ExamResult>(url, ro, call => {
       let key = call.key
@@ -252,38 +277,10 @@ export class FirebaseDataSource implements DataSource {
     return this.afbapi.objectSetBool(url, diff)
   }
 
-  private convertQuestion(question: Question): any {
-    let qo = {}
-    qo['display'] = question.title
-    qo['notes'] = question.notes
-    qo['explanation'] = question.explanation
-    qo['choices'] = question.choices
-    qo['solutions'] = question.solutions
-    qo['type'] = AnswerType[question.type]
-    return qo
-  }
-
-  private convertPureExam(exam: Exam, user: User): any {
-    let eo = {}
-    eo['by'] = user.uid
-    eo['name'] = exam.title
-    eo['notes'] = exam.notes
-    eo['explanation'] = exam.explanation
-    let when = eo['when'] = exam.when.toISOString()
-    eo['revwhen'] = Lib.d2rev(when)
-    // console.log(when, eo['revwhen'])
-    let qs = {}
-    exam.questions.forEach(q => qs[q.id] = this.convertQuestion(q))
-    eo['questions'] = qs
-    eo['status'] = ExamStatus[exam.status]
-    let eocover = {}
-    eocover[exam.id] = eo
-    return eocover
-  }
-
   public defineExam(user: User, exam: Exam): Promise<boolean> {
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined')
-    let eocover = this.convertPureExam(exam, user)
+    let eocover = {}
+    eocover[exam.id] = convertPureExam(exam, user)
     let url = EXAMS_URL
     return this.afbapi.objectUpdate<boolean>(url, eocover, call => {
       this.alles[exam.id] = exam
@@ -295,7 +292,7 @@ export class FirebaseDataSource implements DataSource {
   public addQuestion(user: User, eid: string, question: Question): Promise<boolean> {
     Lib.failifold(Lib.isNil(question), 'question cannot be undefined')
     let qocover = {}
-    qocover[question.id] = this.convertQuestion(question)
+    qocover[question.id] = convertQuestion(question)
     let url = EXAMS_URL + eid + '/questions/'
     return this.afbapi.objectUpdateBool(url, qocover)
   }
