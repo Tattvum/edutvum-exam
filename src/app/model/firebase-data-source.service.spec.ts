@@ -44,8 +44,32 @@ const mockdata = {
             display: 'Q 4', notes: 'N 4', solutions: [0], type: 'ARQ',
           },
           e1q05: {
-            display: 'Q 4', notes: 'N 4', solutions: [273], type: 'NCQ',
+            display: 'Q 5', notes: 'N 4', solutions: [273], type: 'NCQ',
           },
+          e1q06: {
+            display: 'Q 6',
+            kind: 'GROUP',
+            questions: {
+              e1q06s1: {
+                display: 's1', notes: 'N', solutions: [0], type: 'TFQ',
+              },
+              e1q06s2: {
+                display: 's1', notes: 'N', solutions: [0], type: 'TFQ',
+              },
+              e1q06s3: {
+                display: 'Q 6',
+                kind: 'GROUP',
+                questions: {
+                  e1q06s3s1: {
+                    display: 's1', notes: 'N', solutions: [0], type: 'TFQ',
+                  },
+                  e1q06s3s2: {
+                    display: 's2', notes: 'N', solutions: [0], type: 'TFQ',
+                  }
+                }
+              }
+            }
+          }
         },
       },
       e2: {
@@ -124,7 +148,7 @@ function resolvePromise(p) {
   return obj
 }
 
-describe('FirebaseDataSource', () => {
+describe('FirebaseDataSource -', () => {
 
   let service: FirebaseDataSource
 
@@ -138,7 +162,7 @@ describe('FirebaseDataSource', () => {
     service = injector.get(FirebaseDataSource)
   })
 
-  it('overall object checks', fakeAsync(() => {
+  it('overall object checks -', fakeAsync(() => {
     let holders: Holders = resolvePromise(service.getHolders(EMPTY_USER))
     expect(holders).not.toBeNull()
     expect(holders.users.length).toBe(2)
@@ -146,7 +170,7 @@ describe('FirebaseDataSource', () => {
     expect(holders.results.length).toBe(1)
   }))
 
-  describe('ExamResult conversion', () => {
+  describe('ExamResult conversion -', () => {
     let e = null;
     e = mockdata.ver5.exams['e1']
     e['$key'] = 'e1'
@@ -168,15 +192,15 @@ describe('FirebaseDataSource', () => {
       let r_r = fbs.convertExamResult(r_)
       expect(r_).not.toBeNull()
     }
-    it('forward checks', () => {
+    it('forward checks -', () => {
       rCheckForward('r1')
     })
-    it('reverse checks', () => {
+    it('reverse checks -', () => {
       rCheckReverse('r1')
     })
   })
 
-  describe('Exam conversion', () => {
+  describe('Exam conversion -', () => {
     function eCheckForward(ekey) {
       let e = mockdata.ver5.exams[ekey]
       let e_ = fbs.createE(e)
@@ -190,36 +214,30 @@ describe('FirebaseDataSource', () => {
       expect(e_e).not.toBeNull()
       expect(e_e.name).toBe(e.name)
     }
-    it('forward checks', () => {
+    it('forward checks -', () => {
       eCheckForward('e1')
       // NOTE: This depends on e1 being the first.
       // LINK questions depend on the original
       eCheckForward('e2')
     })
-    it('reverse checks', () => {
+    it('reverse checks -', () => {
       eCheckReverse('e1')
     })
   })
 
-  describe('Question conversion', () => {
+  describe('Question conversion -', () => {
     function qCheckForward(ekey, qkey, lekey = ekey, lqkey = qkey) {
       let q = mockdata.ver5.exams[ekey].questions[qkey]
       let lq = mockdata.ver5.exams[lekey].questions[lqkey]
-      let q_ = fbs.createQ(q, qkey, ekey)
+      let q_ = fbs.createQ(q, qkey, ekey)[0]
       expect(q_).not.toBeNull()
       expect(q_.eid).toBe(lekey)
       expect(q_.id).toBe(lqkey)
       expect(q_.title).toBe(lq.display)
       expect(q_.type).toBe(AnswerType[lq.type + ''])
+      expect(q_.groups.length).toBe(0)
     }
-    function qCheckReverse(ekey, qkey) {
-      let q = mockdata.ver5.exams[ekey].questions[qkey]
-      let q_ = fbs.createQ(q, qkey, ekey)
-      let q_q = fbs.convertQuestion(q_)
-      expect(q_q).not.toBeNull()
-      expect(q_q.display).toBe(q.display)
-    }
-    it('forward checks', () => {
+    it('forward checks -', () => {
       qCheckForward('e1', 'e1q01')
       qCheckForward('e1', 'e1q02')
       qCheckForward('e1', 'e1q03')
@@ -227,11 +245,33 @@ describe('FirebaseDataSource', () => {
       qCheckForward('e2', 'e2q01', 'e1', 'e1q01')
       qCheckForward('e2', 'e2q02')
     })
-    it('reverse checks', () => {
+
+    function qCheckReverse(ekey, qkey) {
+      let q = mockdata.ver5.exams[ekey].questions[qkey]
+      let q_ = fbs.createQ(q, qkey, ekey)
+      let q_q = fbs.convertQuestion(q_[0])
+      expect(q_q).not.toBeNull()
+      expect(q_q.display).toBe(q.display)
+    }
+    it('reverse checks -', () => {
       qCheckReverse('e1', 'e1q01')
       qCheckReverse('e1', 'e1q02')
       // reverse check for link question not possible
       qCheckReverse('e2', 'e2q02')
+    })
+
+    function qGroupCheckForward(ekey, qkey) {
+      let q = mockdata.ver5.exams[ekey].questions[qkey]
+      let qq = fbs.createQ(q, qkey, ekey)
+      expect(qq).not.toBeNull()
+      expect(qq.length).toBe(4)
+      expect(qq[0].groups.length).toBe(1)
+      expect(qq[1].groups.length).toBe(1)
+      expect(qq[2].groups.length).toBe(2)
+      expect(qq[3].groups.length).toBe(2)
+    }
+    it('GROUP Forward checks -', () => {
+      qGroupCheckForward('e1', 'e1q06')
     })
   })
 

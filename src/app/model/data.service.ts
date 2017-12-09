@@ -35,6 +35,7 @@ export enum ExamEditType {
   QuestionNotes,
   ExamNotes,
   QuestionChoicesAll,
+  QuestionGroupDisplay,
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -52,8 +53,8 @@ export abstract class DataSource {
   abstract createExam(user: User, eid: string): Promise<ExamResult>
   abstract updateExam(user: User, result: ExamResult): Promise<boolean>
   abstract deleteExam(user: User, rid: string): Promise<boolean>
-  abstract editExamDetail(user: User, type: ExamEditType, diff: any, eid: string,
-    qid?: string, cid?: number): Promise<boolean>
+  abstract editExamDetail(user: User, type: ExamEditType, diff: any,
+    fullid: string, cid?: number): Promise<boolean>
   abstract defineExam(user: User, exam: Exam): Promise<boolean>
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
   abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
@@ -221,8 +222,7 @@ export class DataService {
 
   private editQuestionDetail(diff: any, qidn: number, type: ExamEditType, cid?: number): Promise<boolean> {
     let q = this.pendingResult.questions[qidn]
-    let eid = q.eid
-    let call = u => this.dataSource.editExamDetail(u, type, diff, eid, q.id, cid)
+    let call = u => this.dataSource.editExamDetail(u, type, diff, q.fullid(), cid)
     return this.withUserPromise(call, ok => {
       console.log(ExamEditType[type], 'edit saved!', ok)
       return ok
@@ -248,6 +248,15 @@ export class DataService {
   }
   public editQuestionChoicesAll(diff: any, qidn: number): Promise<boolean> {
     return this.editQuestionDetail(diff, qidn, ExamEditType.QuestionChoicesAll)
+  }
+
+  public editQuestionGroupDisplay(diff: any, fullid: string): Promise<boolean> {
+    let type = ExamEditType.QuestionGroupDisplay
+    let call = u => this.dataSource.editExamDetail(u, type, diff, fullid)
+    return this.withUserPromise(call, ok => {
+      console.log(ExamEditType[type], 'edit saved!', ok)
+      return ok
+    })
   }
 
   private editExamDetail(diff: any, eid: string, type: ExamEditType): Promise<boolean> {
@@ -284,7 +293,7 @@ export class DataService {
     let qid = eid + 'q01'
     let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ,
       ['Choice 1', 'Choice 2'], [0], 'Question Notes:', 'Question Explanation', eid)
-    let newExam = new Exam(eid, 'New Exam [TBD]', [newQuestion], new Date(),
+    let newExam = new Exam(eid, 'New Exam ' + eid, [newQuestion], new Date(),
       'Exam Notes:', 'Exam Explanation', ExamStatus.PENDING)
     let call = u => this.dataSource.defineExam(u, newExam)
     return this.withUserPromise(call, ok => {

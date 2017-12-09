@@ -31,4 +31,11 @@ export class DisplayComponent implements OnInit {
     this.service.editQuestionDisplay(newtext, this.qid)
   }
 
+  onQgEdit(i: number, newtext) {
+    let group = this.question.groups[i]
+    group.title = newtext
+    console.log('TBD onQgEdit', i, group.fullid(), newtext)
+    this.service.editQuestionGroupDisplay(newtext, group.fullid())
+  }
+
 }

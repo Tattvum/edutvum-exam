@@ -63,6 +63,7 @@ let makeExamsRnd = (es: number): Exam[] => {
   return examHolders
 }
 
+// TBD
 @Injectable()
 export class MockDataSource implements DataSource {
   private holders = new Holders()
@@ -90,12 +91,12 @@ export class MockDataSource implements DataSource {
   }
 
   public deleteExam(user: User, rid: string): Promise<boolean> {
-    return Promise.resolve(true) // TBD
+    return Promise.resolve(true)
   }
 
-  public editExamDetail(user: User, type: ExamEditType, diff: any, eid: string,
-    qid?: string, cid?: number): Promise<boolean> {
-    return Promise.resolve(true) // TBD
+  public editExamDetail(user: User, type: ExamEditType, diff: any, fullid: string,
+    cid?: number): Promise<boolean> {
+    return Promise.resolve(true)
   }
 
   public defineExam(user: User, exam: Exam): Promise<boolean> {

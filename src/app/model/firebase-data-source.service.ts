@@ -13,6 +13,7 @@ import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
 import { User, UserRole } from './user';
 import { FirebaseAPI } from 'app/model/firebase-api.service';
+import { QuestionGroup } from 'app/model/question-group';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams/'
@@ -62,12 +63,26 @@ export function createA(type: AnswerType, given): string[] {
 let qcache: { [key: string]: Question } = {}
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createQ(obj, key: string, eid: string): Question {
-  if (obj.kind) {
+export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] = []): Question[] {
+  let qarr = []
+  if (obj.kind === 'LINK') {
     let linkid = obj.eid.trim() + '.' + obj.qid.trim()
     let linkq = qcache[linkid]
     //    console.log('question link', linkid, linkq)
-    return linkq
+    return [linkq]
+  } else if (obj.kind === 'GROUP') {
+    let path = groups.map(g => g.id).join('.')
+    let group = new QuestionGroup(key, path, obj.display, eid)
+    groups.push(group)
+    let qobj = obj.questions
+    let qkeys = Object.keys(qobj).sort()
+    for (let i = 0; i < qkeys.length; i++) {
+      let k = qkeys[i]
+      let qs = createQ(qobj[k], k, eid, groups.slice(0))
+      qarr.push(...qs)
+    }
+    groups.pop()
+    return qarr
   }
   let id = key
   let title = obj.display
@@ -77,9 +92,10 @@ export function createQ(obj, key: string, eid: string): Question {
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
   let files = fbObjToFLArr(obj.files)
-  let q = new Question(id, title, type, choices, solutions, notes, explanation, eid, files)
+  let q = new Question(id, title, type, choices,
+    solutions, notes, explanation, eid, files, groups.slice(0))
   qcache[q.fullid()] = q
-  return q
+  return [q]
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -92,7 +108,7 @@ export function createE(obj): Exam {
   let questions = []
   let qobj = obj.questions
   let qkeys = Object.keys(qobj).sort()
-  qkeys.forEach(key => questions.push(createQ(qobj[key], key, id)))
+  qkeys.forEach(key => questions.push(...createQ(qobj[key], key, id)))
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   return new Exam(id, title, questions, when, notes, explanation, status)
@@ -249,19 +265,20 @@ export class FirebaseDataSource implements DataSource {
     })
   }
 
-  private editUrl(type: ExamEditType, eid: string, qid: string, cid: number): string {
-    let editurl = EXAMS_URL
+  private editUrl(type: ExamEditType, fullid: string, cid: number): string {
+    let editurl = EXAMS_URL + fullid.replace(/\./g, '/questions/')
     switch (type) {
-      case ExamEditType.QuestionDisplay: return editurl + eid + '/questions/' + qid + '/display/'
-      case ExamEditType.QuestionExplanation: return editurl + eid + '/questions/' + qid + '/explanation/'
-      case ExamEditType.ExamExplanation: return editurl + eid + '/explanation/'
-      case ExamEditType.QuestionChoice: return editurl + eid + '/questions/' + qid + '/choices/' + cid
-      case ExamEditType.ExamName: return editurl + eid + '/name/'
-      case ExamEditType.QuestionSolution: return editurl + eid + '/questions/' + qid + '/solutions/'
-      case ExamEditType.QuestionType: return editurl + eid + '/questions/' + qid + '/type/'
-      case ExamEditType.QuestionNotes: return editurl + eid + '/questions/' + qid + '/notes/'
-      case ExamEditType.ExamNotes: return editurl + eid + '/notes/'
-      case ExamEditType.QuestionChoicesAll: return editurl + eid + '/questions/' + qid + '/choices/'
+      case ExamEditType.QuestionDisplay: return editurl + '/display/'
+      case ExamEditType.QuestionExplanation: return editurl + '/explanation/'
+      case ExamEditType.ExamExplanation: return editurl + '/explanation/'
+      case ExamEditType.QuestionChoice: return editurl + '/choices/' + cid
+      case ExamEditType.ExamName: return editurl + '/name/'
+      case ExamEditType.QuestionSolution: return editurl + '/solutions/'
+      case ExamEditType.QuestionType: return editurl + '/type/'
+      case ExamEditType.QuestionNotes: return editurl + '/notes/'
+      case ExamEditType.ExamNotes: return editurl + '/notes/'
+      case ExamEditType.QuestionChoicesAll: return editurl + '/choices/'
+      case ExamEditType.QuestionGroupDisplay: return editurl + '/display/'
       default:
         console.log('editUrl', 'Unknown type', type)
         return null
@@ -269,9 +286,9 @@ export class FirebaseDataSource implements DataSource {
   }
 
   public editExamDetail(user: User, type: ExamEditType, diff: any,
-    eid: string, qid?: string, cid?: number): Promise<boolean> {
-    console.log(' - editExamDetail', ExamEditType[type], eid, qid, diff)
-    let url = this.editUrl(type, eid, qid, cid)
+    fullid: string, cid?: number): Promise<boolean> {
+    console.log(' - editExamDetail', ExamEditType[type], fullid, diff)
+    let url = this.editUrl(type, fullid, cid)
     // console.log(' - ', editurl)
     Lib.failif(Lib.isNil(url), 'Invalid ExamEditType', type)
     return this.afbapi.objectSetBool(url, diff)

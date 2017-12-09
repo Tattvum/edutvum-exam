@@ -1,6 +1,7 @@
 import { AnswerType, TFQChoices, ARQChoices } from './answer-type';
 import { Lib } from './lib';
-import { FileLink } from 'app/model/data.service';
+import { FileLink } from './data.service';
+import { QuestionGroup } from './question-group';
 
 export class Question {
   constructor(
@@ -13,6 +14,7 @@ export class Question {
     public explanation = '',
     public readonly eid = '',
     public files: FileLink[] = [],
+    public groups: QuestionGroup[] = []
   ) {
     this.validate(id, title, type, choices, solutions)
   }
@@ -101,7 +103,10 @@ export class Question {
   }
 
   public fullid(): string {
-    return this.eid + '.' + this.id
+    let out = this.eid + '.'
+    let path = this.groups.map(g => g.id).join('.')
+    if (path && path !== '') out += path + '.'
+    return out + this.id
   }
 
   public isSolution(n: number): boolean {

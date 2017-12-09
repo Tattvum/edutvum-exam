@@ -1,5 +1,6 @@
 import { AnswerType } from './answer-type';
 import { Question } from './question';
+import { QuestionGroup } from 'app/model/question-group';
 
 describe('Question - declaration tests:', () => {
   let choices0: string[] = []
@@ -117,6 +118,18 @@ describe('Question - declaration tests:', () => {
     expect(maq().isSolution(4)).toBeFalsy()
     expect(ncq().isSolution(-3.141)).toBeTruthy()
     expect(ncq().isSolution(4)).toBeFalsy()
+  })
+
+  it('fullid checks -', () => {
+    let g1 = new QuestionGroup('GID1', 'PATH', '', 'EID')
+    let g2 = new QuestionGroup('GID2', 'PATH', '', 'EID')
+    let q = new Question('ID', '', AnswerType.TFQ, ['', ''], [0], '', '', 'EID', null, [g1, g2])
+    expect(q.fullid()).toBe('EID.GID1.GID2.ID')
+  })
+
+  it('fullid null path checks -', () => {
+    let q = new Question('ID', '', AnswerType.TFQ, ['', ''], [0], '', '', 'EID', null)
+    expect(q.fullid()).toBe('EID.ID')
   })
 
 })

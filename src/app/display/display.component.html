@@ -1,4 +1,18 @@
-<div class="light">( {{ qid }} - {{ question.fullid() }} )</div>
+<div class="light">
+  (
+    <span>{{ qid }} - </span><span  style="color: red;">{{question.eid}}</span>
+    <span *ngFor="let qg of question.groups; let i=index">. {{ qg.id }}</span>
+    <span style="color: red;">. {{question.id}}</span>
+    )
+</div>
+
+<div *ngFor="let qg of question.groups; let i=index">
+  <app-editor heading="Edit Question Group Display"
+    [content]="qg.title"
+    (onedit)="onQgEdit(i, $event)" >
+  </app-editor>
+</div>
+
 <app-editor heading="Edit Question Display"
   [content]="question.title"
   (onedit)="onEdit($event)" >
