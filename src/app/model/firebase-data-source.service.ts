@@ -356,4 +356,9 @@ export class FirebaseDataSource implements DataSource {
     return this.afbapi.objectUpdateBool(url, go)
   }
 
+  public deleteQuestion(user: User, fullid: string): Promise<boolean> {
+    let url = EXAMS_URL + fullid.replace(/\./g, '/questions/') + '/'
+    return this.afbapi.objectRemoveBool(url)
+  }
+
 }

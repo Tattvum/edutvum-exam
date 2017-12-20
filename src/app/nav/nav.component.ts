@@ -206,4 +206,12 @@ export class NavComponent implements OnInit {
     })
   }
 
+  deleteQuestion() {
+    if (this.context.confirm('Question deletion is irretrievable! Continue?!')) {
+      this.service.deleteQuestion(this.qidn).then(ok => {
+        this.router.navigate(['/results', this.exam.id])
+      })
+    }
+  }
+
 }

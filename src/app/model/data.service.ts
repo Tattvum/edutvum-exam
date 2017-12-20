@@ -63,6 +63,7 @@ export abstract class DataSource {
   abstract saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string>
   abstract deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean>
   abstract addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean>
+  abstract deleteQuestion(user: User, fullid: string): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -429,6 +430,16 @@ export class DataService {
         console.log('startGroup-4', 'addGroup addQuestion done', qidn, n)
         return true
       })
+    })
+  }
+
+  deleteQuestion(qidn: number): Promise<boolean> {
+    let q = this.pendingResult.exam.questions[qidn]
+    let call = u => this.dataSource.deleteQuestion(u, q.fullid())
+    return this.withUserPromise(call, ok => {
+      this.pendingResult.exam.questions.splice(qidn, 1)
+      console.log('question deleted!', q.fullid())
+      return ok
     })
   }
 

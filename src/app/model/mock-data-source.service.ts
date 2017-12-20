@@ -127,4 +127,8 @@ export class MockDataSource implements DataSource {
   public addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean> {
     return Promise.resolve(true)
   }
+
+  public deleteQuestion(user: User, fullid: string): Promise<boolean> {
+    return Promise.resolve(true)
+  }
 }
