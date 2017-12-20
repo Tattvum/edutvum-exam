@@ -9,6 +9,7 @@ import { Question } from './question';
 import { Exam } from './exam';
 import { User, UserRole } from './user';
 import { ExamResult } from './exam-result';
+import { QuestionGroup } from 'app/model/question-group';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question('00', title, type, choices, sols)
@@ -120,6 +121,10 @@ export class MockDataSource implements DataSource {
   }
 
   public deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
+  public addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean> {
     return Promise.resolve(true)
   }
 }

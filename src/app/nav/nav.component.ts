@@ -162,8 +162,8 @@ export class NavComponent implements OnInit {
   }
 
   addQuestion() {
-    this.service.addQuestion().then(ok => {
-      this.router.navigate(['/question', this.exam.id, this.exam.questions.length - 1])
+    this.service.addQuestion(this.qidn).then(n => {
+      this.router.navigate(['/question', this.exam.id, n])
     })
   }
 
@@ -198,6 +198,12 @@ export class NavComponent implements OnInit {
       console.log(f.id)
       this.uploader.deleteFileStorage(this.exam.exam.id, this.qidn, f)
     }
+  }
+
+  startGroup() {
+    this.service.startGroup(this.qidn).then(ok => {
+      this.router.navigate(['/question', this.exam.id, this.exam.questions.length - 1])
+    })
   }
 
 }

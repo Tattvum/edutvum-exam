@@ -75,11 +75,13 @@ export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] =
     let group = new QuestionGroup(key, path, obj.display, eid)
     groups.push(group)
     let qobj = obj.questions
-    let qkeys = Object.keys(qobj).sort()
-    for (let i = 0; i < qkeys.length; i++) {
-      let k = qkeys[i]
-      let qs = createQ(qobj[k], k, eid, groups.slice(0))
-      qarr.push(...qs)
+    if (qobj) {
+      let qkeys = Object.keys(qobj).sort()
+      for (let i = 0; i < qkeys.length; i++) {
+        let k = qkeys[i]
+        let qs = createQ(qobj[k], k, eid, groups.slice(0))
+        qarr.push(...qs)
+      }
     }
     groups.pop()
     return qarr
@@ -95,6 +97,7 @@ export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] =
   let q = new Question(id, title, type, choices,
     solutions, notes, explanation, eid, files, groups.slice(0))
   qcache[q.fullid()] = q
+  // if (groups.length > 0) console.log('createQ GROUP', eid, q.fullid())
   return [q]
 }
 
@@ -200,7 +203,6 @@ export class FirebaseDataSource implements DataSource {
   constructor(private afbapi: FirebaseAPI) { }
 
   async getHolders(user: User): Promise<Holders> {
-    console.log('inside getHolders2')
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')
     this.holders = new Holders()
     await this.fetchU()
@@ -308,10 +310,11 @@ export class FirebaseDataSource implements DataSource {
 
   public addQuestion(user: User, eid: string, question: Question): Promise<boolean> {
     Lib.failifold(Lib.isNil(question), 'question cannot be undefined')
-    let qocover = {}
-    qocover[question.id] = convertQuestion(question)
-    let url = EXAMS_URL + eid + '/questions/'
-    return this.afbapi.objectUpdateBool(url, qocover)
+    let qo = convertQuestion(question)
+    let path = question.fullid().replace(/\./g, '/questions/')
+    let url = EXAMS_URL + path + '/'
+    console.log('addQuestion', question.fullid(), url)
+    return this.afbapi.objectUpdateBool(url, qo)
   }
 
   public addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean> {
@@ -339,6 +342,18 @@ export class FirebaseDataSource implements DataSource {
   public deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean> {
     let url = EXAMS_URL + eid + '/questions/' + qid + '/files/' + fid + '/'
     return this.afbapi.objectRemoveBool(url)
+  }
+
+  public addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean> {
+    Lib.failifold(Lib.isNil(qgroup), 'question group cannot be undefined')
+    let path = qgroup.fullid().replace(/\./g, '/questions/')
+    console.log(qgroup.fullid(), path)
+    let url = EXAMS_URL + path + '/'
+    let go = {}
+    go['kind'] = 'GROUP'
+    go['display'] = qgroup.title
+    console.log('firebase addGroup', eid, url)
+    return this.afbapi.objectUpdateBool(url, go)
   }
 
 }

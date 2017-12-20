@@ -54,17 +54,17 @@ const mockdata = {
                 display: 's1', notes: 'N', solutions: [0], type: 'TFQ',
               },
               e1q06s2: {
-                display: 's1', notes: 'N', solutions: [0], type: 'TFQ',
+                display: 's2', notes: 'N', solutions: [0], type: 'TFQ',
               },
               e1q06s3: {
                 display: 'Q 6',
                 kind: 'GROUP',
                 questions: {
                   e1q06s3s1: {
-                    display: 's1', notes: 'N', solutions: [0], type: 'TFQ',
+                    display: 's3', notes: 'N', solutions: [0], type: 'TFQ',
                   },
                   e1q06s3s2: {
-                    display: 's2', notes: 'N', solutions: [0], type: 'TFQ',
+                    display: 's4', notes: 'N', solutions: [0], type: 'TFQ',
                   }
                 }
               }
@@ -162,7 +162,7 @@ describe('FirebaseDataSource -', () => {
     service = injector.get(FirebaseDataSource)
   })
 
-  it('overall object checks -', fakeAsync(() => {
+  it('Overall object checks -', fakeAsync(() => {
     let holders: Holders = resolvePromise(service.getHolders(EMPTY_USER))
     expect(holders).not.toBeNull()
     expect(holders.users.length).toBe(2)
@@ -192,10 +192,10 @@ describe('FirebaseDataSource -', () => {
       let r_r = fbs.convertExamResult(r_)
       expect(r_).not.toBeNull()
     }
-    it('forward checks -', () => {
+    it('Forward checks -', () => {
       rCheckForward('r1')
     })
-    it('reverse checks -', () => {
+    it('Reverse checks -', () => {
       rCheckReverse('r1')
     })
   })
@@ -214,7 +214,7 @@ describe('FirebaseDataSource -', () => {
       expect(e_e).not.toBeNull()
       expect(e_e.name).toBe(e.name)
     }
-    it('forward checks -', () => {
+    it('Forward checks -', () => {
       eCheckForward('e1')
       // NOTE: This depends on e1 being the first.
       // LINK questions depend on the original
@@ -237,7 +237,7 @@ describe('FirebaseDataSource -', () => {
       expect(q_.type).toBe(AnswerType[lq.type + ''])
       expect(q_.groups.length).toBe(0)
     }
-    it('forward checks -', () => {
+    it('Forward checks -', () => {
       qCheckForward('e1', 'e1q01')
       qCheckForward('e1', 'e1q02')
       qCheckForward('e1', 'e1q03')
@@ -253,7 +253,7 @@ describe('FirebaseDataSource -', () => {
       expect(q_q).not.toBeNull()
       expect(q_q.display).toBe(q.display)
     }
-    it('reverse checks -', () => {
+    it('Reverse checks -', () => {
       qCheckReverse('e1', 'e1q01')
       qCheckReverse('e1', 'e1q02')
       // reverse check for link question not possible
@@ -262,13 +262,13 @@ describe('FirebaseDataSource -', () => {
 
     function qGroupCheckForward(ekey, qkey) {
       let q = mockdata.ver5.exams[ekey].questions[qkey]
-      let qq = fbs.createQ(q, qkey, ekey)
-      expect(qq).not.toBeNull()
-      expect(qq.length).toBe(4)
-      expect(qq[0].groups.length).toBe(1)
-      expect(qq[1].groups.length).toBe(1)
-      expect(qq[2].groups.length).toBe(2)
-      expect(qq[3].groups.length).toBe(2)
+      let q_ = fbs.createQ(q, qkey, ekey)
+      expect(q_).not.toBeNull()
+      expect(q_.length).toBe(4)
+      expect(q_[0].groups.length).toBe(1)
+      expect(q_[1].groups.length).toBe(1)
+      expect(q_[2].groups.length).toBe(2)
+      expect(q_[3].groups.length).toBe(2)
     }
     it('GROUP Forward checks -', () => {
       qGroupCheckForward('e1', 'e1q06')

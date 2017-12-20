@@ -14,7 +14,7 @@ export class Question {
     public explanation = '',
     public readonly eid = '',
     public files: FileLink[] = [],
-    public groups: QuestionGroup[] = []
+    public groups: QuestionGroup[] = [],
   ) {
     this.validate(id, title, type, choices, solutions)
   }
@@ -102,10 +102,14 @@ export class Question {
     this.choices.push(choicestr)
   }
 
+  public path(): string {
+    return this.groups.map(g => g.id).join('.')
+  }
+
   public fullid(): string {
     let out = this.eid + '.'
-    let path = this.groups.map(g => g.id).join('.')
-    if (path && path !== '') out += path + '.'
+    let p = this.path()
+    if (p && p !== '') out += p + '.'
     return out + this.id
   }
 

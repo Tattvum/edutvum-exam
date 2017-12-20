@@ -10,6 +10,7 @@ import { ExamResult } from './exam-result';
 import { User, UserRole, EMPTY_USER } from './user';
 import { AnswerType } from 'app/model/answer-type';
 import { GeneralContext } from 'app/model/general-context';
+import { QuestionGroup } from 'app/model/question-group';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -61,6 +62,7 @@ export abstract class DataSource {
   abstract publishExam(user: User, eid: string): Promise<boolean>
   abstract saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string>
   abstract deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean>
+  abstract addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -305,17 +307,26 @@ export class DataService {
     })
   }
 
-  addQuestion(): Promise<boolean> {
-    let result = this.pendingResult
-    let eid = result.exam.id
-    let qid = eid + 'q' + Lib.n2s(result.questions.length + 1)
-    let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ,
-      ['Choice 1', 'Choice 2'], [0], 'Question Notes:', 'Question Explanation', eid)
+  addQuestion(qidn: number, groups: QuestionGroup[] = []): Promise<number> {
+    let exam = this.pendingResult.exam
+    let eid = exam.id
+    console.log('addQuestion-1', qidn, QuestionGroup.path(groups), groups.length)
+    if (qidn >= 0) groups = exam.questions[qidn].groups.slice(0)
+    let qid = eid + 'q' + Lib.n2s(exam.questions.length + 1)
+    let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ, ['Choice 1', 'Choice 2'],
+      [0], 'Question Notes:', 'Question Explanation', eid, [], groups)
     let call = u => this.dataSource.addQuestion(u, eid, newQuestion)
     return this.withUserPromise(call, ok => {
-      this.pendingResult.questions.push(newQuestion)
-      console.log('new question saved!')
-      return ok
+      let newn = 0
+      if (qidn < 0) {
+        newn = exam.questions.length
+        exam.questions.push(newQuestion)
+      } else {
+        newn = qidn + 1
+        exam.questions.splice(newn, 0, newQuestion)
+      }
+      console.log('addQuestion-2', 'new question saved!', newn, newQuestion.fullid())
+      return newn
     })
   }
 
@@ -393,6 +404,32 @@ export class DataService {
 
   public getQuestionId(qidn: number): string {
     return this.pendingResult.exam.questions[qidn].id
+  }
+
+  startGroup(qidn: number): Promise<boolean> {
+    let exam = this.pendingResult.exam
+    let eid = exam.id
+    let groups: QuestionGroup[] = []
+    let qgpath = ''
+    if (qidn >= 0) {
+      let q = exam.questions[qidn]
+      console.log('startGroup-1', qidn, q.fullid())
+      groups = q.groups.slice(0)
+      qgpath = QuestionGroup.path(groups)
+    }
+    let qgid = 'g' + Lib.rndn(899, 100)
+    let qg = new QuestionGroup(qgid, qgpath, 'New Group ' + qgid, eid)
+    groups.push(qg)
+    console.log('startGroup-2', qidn, QuestionGroup.path(groups))
+    let call = u => this.dataSource.addGroup(u, eid, qg)
+    return this.withUserPromise(call, ok => {
+      console.log('startGroup-3', 'new GROUP started!', qidn, qg.fullid())
+    }).then(() => {
+      return this.addQuestion(qidn, groups).then(n => {
+        console.log('startGroup-4', 'addGroup addQuestion done', qidn, n)
+        return true
+      })
+    })
   }
 
   public user(): User {

@@ -1,6 +1,11 @@
 import { Lib } from './lib';
 
 export class QuestionGroup {
+
+  public static path(groups: QuestionGroup[]): string {
+    return groups.map(g => g.id).join('.')
+  }
+
   constructor(
     public readonly id: string,
     public readonly path: string,
