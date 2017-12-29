@@ -52,4 +52,19 @@ describe('Lib tests:', () => {
     expect(Lib.isNil(null)).toBeTruthy()
     expect(Lib.isNil(undefined)).toBeTruthy()
   })
+
+})
+
+describe('array indexOf test', () => {
+  let arr = [
+    { id: 'nsejs1', title: 'NSEJS exam 2011' },
+    { id: 'ncert1', title: 'NCERT exam 2011' },
+    { id: 'nsejs2', title: 'class 10 NSEJS exam 2012' },
+  ]
+  let check = query => arr.filter(o => o.title.toUpperCase().indexOf(query.toUpperCase()) !== -1)
+  it('all', () => {
+    expect(check('nsej').length).toBe(2)
+    expect(check('nce').length).toBe(1)
+    expect(check('prmo').length).toBe(0)
+  })
 })

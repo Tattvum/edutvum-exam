@@ -8,6 +8,11 @@
         <option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</option>
       </select>
       <button class="gap" (click)="createExam()">Create Exam!</button>
+      <span class="gap" >
+        <span>Filter by Title: </span>
+        <input #filter type="text" [(ngModel)]="service.titleFilter">
+        <button *ngIf="service.titleFilter" (click)="service.titleFilter=''">Reset</button>
+      </span>
     </span>
   </div>
 
@@ -18,7 +23,7 @@
   <br>
   <div class="container-fluid">
     <table class="table table-hover">
-      <tbody *ngFor="let ex of service.exams | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }">
+      <tbody *ngFor="let ex of service.filteredExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }">
         <tr class="row" [class.pending]="ex.isPending()">
           <td class="col-3">{{ex.id}}</td>
           <td class="col-6 title" (click)="takeExam(ex)">

@@ -95,11 +95,16 @@ export class DataService {
   public loading = false
   public activeUser: string
   public disableHotkeys = false
+  public titleFilter = ''
 
   private globalTimerAction: (number) => void
   private globalTimer = Observable.interval(1000).subscribe(t => {
     if (this.globalTimerAction) this.globalTimerAction(t)
   })
+
+  public filteredExams(): Exam[] {
+    return this.exams.filter(e => e.title.toUpperCase().indexOf(this.titleFilter.toUpperCase()) !== -1)
+  }
 
   init(user: User, dolast = () => { }) {
     Lib.failifold(Lib.isNil(user), 'user cannot be null')
