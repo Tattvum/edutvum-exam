@@ -2,3 +2,4 @@
 label {
   font-weight: normal;
 }
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";

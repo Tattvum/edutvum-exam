@@ -3,11 +3,11 @@
   <div>
     <span class="h1">Exam Dashboard</span>
     <span *ngIf="service.isAdmin">
-      for the user
+      <span class="gap">User: </span>
       <select [(ngModel)]="currentUser" (change)="userChanged()">
         <option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</option>
       </select>
-      <button class="gap" (click)="createExam()">Create Exam!</button>
+      <button mat-button class="gap" (click)="createExam()">Create Exam!</button>
     </span>
     <span class="gap" >
       <span>Filter by Title: </span>
