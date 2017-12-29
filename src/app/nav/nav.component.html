@@ -37,11 +37,11 @@
   </div>
   <br>
   <div *ngIf="isPending">
-    <button (click)="addQuestion()">Add Question!</button>
-    <button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
-    <button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>
+    <button mat-raised-button (click)="addQuestion()">Add Question!</button>
+    <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
+    <button mat-raised-button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>
     <span class="gap"> {{question.fullid()}} </span>
-    <button *ngIf="!isResultsPage" class="gap" (click)="deleteQuestion()">Delete Question!</button>
+    <button mat-raised-button *ngIf="!isResultsPage" class="gap" (click)="deleteQuestion()">Delete Question!</button>
   </div>
   <br>
   <div class="btn-toolbar" role="toolbar">

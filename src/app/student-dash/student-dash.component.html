@@ -2,17 +2,19 @@
 <div class="container-fluid">
   <div>
     <span class="h1">Exam Dashboard</span>
-    <span *ngIf="service.isAdmin">
-      <span class="gap">User: </span>
-      <select [(ngModel)]="currentUser" (change)="userChanged()">
-        <option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</option>
-      </select>
-      <button mat-button class="gap" (click)="createExam()">Create Exam!</button>
-    </span>
     <span class="gap" >
-      <span>Filter by Title: </span>
-      <input #filter type="text" [(ngModel)]="service.titleFilter">
-      <button *ngIf="service.titleFilter" (click)="service.titleFilter=''">Reset</button>
+      <mat-form-field>
+        <input matInput placeholder="Filter by Title" #filter [(ngModel)]="service.titleFilter">
+      </mat-form-field>
+      <button mat-raised-button *ngIf="service.titleFilter" (click)="service.titleFilter=''">Reset</button>
+    </span>
+    <span class="gap" *ngIf="service.isAdmin">
+      <mat-form-field>
+        <mat-select [(ngModel)]="currentUser" (change)="userChanged()" placeholder="User">
+          <mat-option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" class="gap" (click)="createExam()">Create Exam!</button>
     </span>
   </div>
 
@@ -40,7 +42,7 @@
             </span>
           </td>
           <td class="col-3">{{showWhen(ex.when)}}</td>
-          <td *ngIf="ex.isPending()"><button (click)="publishExam(ex.id)">Publish</button></td>
+          <td *ngIf="ex.isPending()"><button mat-raised-button (click)="publishExam(ex.id)">Publish</button></td>
         </tr>
       </tbody>
     </table>

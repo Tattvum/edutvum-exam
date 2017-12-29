@@ -4,6 +4,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatInputModule,
+  MatSelectModule,
+} from '@angular/material';
+
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -56,7 +63,10 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     Ng2PaginationModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   declarations: [
     AppComponent,
@@ -82,7 +92,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     FirebaseAPI,
     FirebaseUpload,
     DataService,
-    AuthGuard
+    AuthGuard,
   ],
   bootstrap: [AppComponent]
 })
