@@ -2,50 +2,56 @@
 <div class="container-fluid">
   <div>
     <span class="h1">Exam Dashboard</span>
-    <span class="gap" >
+    <span class="gap rwd-line" >
       <mat-form-field>
         <input matInput placeholder="Filter by Title" #filter [(ngModel)]="service.titleFilter">
       </mat-form-field>
       <button mat-raised-button *ngIf="service.titleFilter" (click)="service.titleFilter=''">Reset</button>
     </span>
-    <span class="gap" *ngIf="service.isAdmin">
+    <span class="gap rwd-line" *ngIf="service.isAdmin">
       <mat-form-field>
         <mat-select [(ngModel)]="currentUser" (change)="userChanged()" placeholder="User">
           <mat-option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button mat-raised-button color="primary" class="gap" (click)="createExam()">Create Exam!</button>
+      <button mat-raised-button color="primary" class="gap rwd-line" (click)="createExam()">Create Exam!</button>
     </span>
   </div>
 
-  <div *ngIf="service.loading" id="loading" style="color: red;">
-    Loading...
+  <div *ngIf="service.loading" id="loading">
+    <mat-spinner [diameter]="40"></mat-spinner>
   </div>
 
   <br>
-  <div class="container-fluid">
-    <table class="table table-hover">
-      <tbody *ngFor="let ex of service.filteredExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }">
-        <tr class="row" [class.pending]="ex.isPending()">
-          <td class="col-3">{{ex.id}}</td>
-          <td class="col-6 title" (click)="takeExam(ex)">
-            {{ex.title}}
-            <span *ngFor="let rs of service.listResults(ex.id); let j=index">
-                <span data-toggle="tooltip"
-                    class="badge pull-right"
-                    (click)="showExamResult(rs)"
-                    [class.locked]="rs.isLocked()"
-                    title="{{showWhen(rs.when)}}">
-                  <span *ngIf="rs.isLocked()">{{rs.score().percent()}}%</span>
-            <span *ngIf="!rs.isLocked()" class="glyphicon glyphicon-play"></span>
-            </span>
-            </span>
-          </td>
-          <td class="col-3">{{showWhen(ex.when)}}</td>
-          <td *ngIf="ex.isPending()"><button mat-raised-button (click)="publishExam(ex.id)">Publish</button></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="center">
+    <mat-card *ngFor="let ex of service.filteredExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
+        [class.pending]="ex.isPending()"
+        style="margin-bottom: 4px;"
+        >
+      <div>
+        <span class="eid gap rwd-line">{{ex.id}}</span>
+        <span class="etitle gap actionable rwd-line" (click)="takeExam(ex)">{{ex.title}}</span>
+        <span class="ewhen gap rwd-line"> {{showWhen(ex.when)}} </span>
+        <button *ngIf="ex.isPending()" class="right" mat-raised-button (click)="publishExam(ex.id)">Publish</button>
+        <mat-chip-list class="right">
+          <mat-chip *ngFor="let rs of service.listResults(ex.id); let j=index"
+              color="{{rs.isLocked()? 'primary': 'warn'}}"
+              selected="true"
+              (click)="showExamResult(rs)"
+              [class.locked]="rs.isLocked()"
+              title="{{showWhen(rs.when)}}"
+              >
+            <span *ngIf="rs.isLocked()" class="actionable">{{rs.score().percent()}}%</span>
+            <span *ngIf="!rs.isLocked()" class="actionable">...%</span>
+            <span *ngIf="false" class="glyphicon glyphicon-play">0%</span>
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </mat-card>
+  </div>
+
+  <br>
+  <div>
     <pagination-controls id='exams' (pageChange)="pageExam = $event"></pagination-controls>
   </div>
 

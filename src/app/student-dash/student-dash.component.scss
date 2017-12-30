@@ -2,10 +2,6 @@ a {
   cursor: pointer;
 }
 
-.gap {
-  margin-left: 40px;
-}
-
 .pending {
   background-color: lightyellow;
 }
@@ -39,4 +35,56 @@ a {
 .badge:hover {
   background-color: #0069d9;
   border-color: #0062cc;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+.actionable {
+  cursor: pointer;
+}
+
+.center {
+  margin: auto;
+  width: 90%;
+}
+
+.eid {
+  width: 30%;
+  font-size: smaller;
+  text-align: left;
+  color: gray;
+}
+.etitle {
+  font-size: larger;
+  color: maroon;
+  font-family: 'Roboto',"Helvetica Neue",sans-serif;
+}
+.etitle:hover {
+  color: blue;
+}
+.ewhen {
+  width: unset;
+  font-size: smaller;
+  color: gray;
+}
+
+.rwd-line {
+  display: block;
+}
+
+.gap {
+  margin-left: 16px;
+}
+
+.right {
+  float: none;
+}
+
+@media screen and (min-width: 768px){
+  .rwd-line {
+    display: inline;
+  }
+  .right {
+    float: right;
+  }
 }
