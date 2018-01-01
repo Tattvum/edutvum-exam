@@ -1,12 +1,12 @@
-#top-bar {
-  text-align: right;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  height: 20px;
-}
-
-#top-bar > span {
-  background-color: yellow;
+.mynav {
+  background-color: whitesmoke;
+  border-bottom: 1px solid lightgrey;
+  padding: 8px 20px;
   width: 100%;
-  height: 100%;
+}
+a:hover {
+  text-decoration: none;
+}
+h4 {
+  color: gray;
 }

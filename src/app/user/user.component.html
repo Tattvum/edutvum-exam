@@ -1,10 +1,6 @@
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <span class="navbar-brand" >Edutvum Exam</span>
-    </div>
-    <ul class="nav navbar-nav navbar-right">
-      <li title="Logout" (click)="logout()"><a href="#">{{service.user() + ''}}</a></li>
-    </ul>
+<div fxLayout="row" fxLayout.lt-sm="column" class="mynav">
+  <div fxFlex> <h4>Edutvum Exam</h4> </div>
+  <div fxLayout="row-reverse"  fxFlexAlign="center" fxLayout.lt-sm="row" fxFlexAlign.lt-sm="start">
+    <div title="Logout" (click)="logout()"><a href="#">{{service.user() + ''}}</a></div>
   </div>
-</nav>
+</div>

@@ -1,40 +1,9 @@
-a {
-  cursor: pointer;
-}
-
 .pending {
   background-color: lightyellow;
 }
 
 .ng2-pagination .pagination-next {
   font-size: 18px;
-}
-
-.vcenter {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.title {
-  cursor: pointer;
-  color: green;
-}
-.title:hover {
-  color: maroon;
-}
-
-.badge {
-  margin-left: 4px;
-  background-color: #f0ad4e;
-  border-color: #eea236;
-  &:not(.locked) {
-    background-color: #c82333;
-    border-color: #bd2130;
-  }
-}
-.badge:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
 }
 
 @import url('https://fonts.googleapis.com/css?family=Roboto');
@@ -48,12 +17,6 @@ a {
   width: 90%;
 }
 
-.eid {
-  width: 30%;
-  font-size: smaller;
-  text-align: left;
-  color: gray;
-}
 .etitle {
   font-size: larger;
   color: maroon;
@@ -62,29 +25,8 @@ a {
 .etitle:hover {
   color: blue;
 }
-.ewhen {
+.light {
   width: unset;
   font-size: smaller;
   color: gray;
-}
-
-.rwd-line {
-  display: block;
-}
-
-.gap {
-  margin-left: 16px;
-}
-
-.right {
-  float: none;
-}
-
-@media screen and (min-width: 768px){
-  .rwd-line {
-    display: inline;
-  }
-  .right {
-    float: right;
-  }
 }
