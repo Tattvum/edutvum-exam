@@ -32,6 +32,7 @@
     "@angular/platform-browser-dynamic": "^5.1.2",
     "@angular/platform-server": "^5.1.2",
     "@angular/router": "^5.1.2",
+    "@angular/service-worker": "^5.1.2",
     "angularfire2": "^4.0.0-rc0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.3",
