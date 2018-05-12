@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import 'rxjs/Rx';
-import { Subject, Observable } from 'rxjs/Rx';
+import 'rxjs'
+import { Subject, Observable } from 'rxjs';
 
 import { DataSource, Holders, ExamEditType, FileLink } from './data.service'
 

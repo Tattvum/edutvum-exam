@@ -3,8 +3,8 @@ import {
   discardPeriodicTasks, tick, getTestBed, flush
 } from '@angular/core/testing';
 
-import 'rxjs/Rx';
-import { Subject, Observable } from 'rxjs/Rx';
+import 'rxjs'
+import { Subject, Observable } from 'rxjs';
 
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';

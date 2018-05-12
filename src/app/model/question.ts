@@ -27,7 +27,7 @@ export class Question {
     solutions: number[],
   ) {
     Lib.failif(Lib.isNil(id), 'id cannot be undefined')
-    Lib.failif(Lib.isNil(title), 'title cannot be undefined')
+    Lib.failif(Lib.isNil(title), 'title cannot be undefined', id)
     Lib.failif(Lib.isNil(type), 'Type cannot be undefined')
     Lib.failif(solutions.length < 1, 'There should be atleast one solution', id)
 

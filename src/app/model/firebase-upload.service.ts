@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import 'rxjs/Rx';
-import { Subject, Observable } from 'rxjs/Rx';
+import 'rxjs'
+import { Subject, Observable } from 'rxjs';
 
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase } from 'angularfire2/database';

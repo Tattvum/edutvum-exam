@@ -13,7 +13,7 @@
     </div>
     <div *ngIf="service.isAdmin" fxFlexAlign="baseline">
       <mat-form-field>
-        <mat-select [(ngModel)]="currentUser" (change)="userChanged()" placeholder="User">
+        <mat-select [(ngModel)]="currentUser" (selectionChange)="userChanged()" placeholder="User">
           <mat-option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</mat-option>
         </mat-select>
       </mat-form-field>

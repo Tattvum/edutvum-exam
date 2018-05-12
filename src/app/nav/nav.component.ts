@@ -1,5 +1,5 @@
-import 'rxjs/Rx';
-import { Observable } from 'rxjs/Rx';
+import 'rxjs'
+import { Observable } from 'rxjs';
 
 import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';

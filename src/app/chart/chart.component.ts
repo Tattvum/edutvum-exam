@@ -1,5 +1,5 @@
-import 'rxjs/Rx'
-import { Observable } from 'rxjs/Rx'
+import 'rxjs'
+import { Observable, fromEvent } from 'rxjs'
 
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core'
 import { Lib } from '../model/lib';
@@ -54,16 +54,16 @@ export class ChartComponent implements AfterViewInit {
 
     this.draw()
 
-    Observable.fromEvent<MouseEvent>(canvasEl, 'mousemove')
+    fromEvent<MouseEvent>(canvasEl, 'mousemove')
       .subscribe((event: MouseEvent) => {
         this.p = { x: event.offsetX, y: event.offsetY }
         this.drawMouseMove()
       })
-    Observable.fromEvent<MouseEvent>(canvasEl, 'mouseleave')
+    fromEvent<MouseEvent>(canvasEl, 'mouseleave')
       .subscribe((event: MouseEvent) => {
         this.draw()
       })
-    Observable.fromEvent<MouseEvent>(canvasEl, 'click')
+    fromEvent<MouseEvent>(canvasEl, 'click')
       .subscribe((event: MouseEvent) => {
         let n = this.x2n(event.offsetX)
         if (n >= 0 && n < this.array.length) {

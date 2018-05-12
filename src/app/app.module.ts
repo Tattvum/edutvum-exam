@@ -111,6 +111,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatListModule,
     MatCardModule,
     MatChipsModule,
+    MatTabsModule,
   ],
   declarations: [
     AppComponent,
