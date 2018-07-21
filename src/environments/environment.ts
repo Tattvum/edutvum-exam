@@ -6,5 +6,11 @@
 export const environment = {
   production: false,
   firebase: false,
-  firebaseConfig: {}
+  firebaseConfig: {
+    apiKey: 'xxx',
+    authDomain: 'xxx.firebaseapp.com',
+    databaseURL: 'https://xxx.firebaseio.com',
+    projectId: 'xxx',
+    storageBucket: 'xxx.appspot.com',
+  }
 };
