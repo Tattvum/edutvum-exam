@@ -76,6 +76,8 @@ import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
 import { PopupComponent } from './popup/popup.component';
 
+import { SmallspComponent } from './common/smallsp.component';
+
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
 import { ChartComponent } from './chart/chart.component';
@@ -129,6 +131,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     PopupComponent,
     EditorComponent,
     MathJaxDirective,
+    SmallspComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

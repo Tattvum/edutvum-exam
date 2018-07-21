@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import 'rxjs'
 import 'rxjs/add/operator/toPromise';
+import { first } from 'rxjs/operators';
 
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -17,11 +18,11 @@ export class FirebaseAPI {
   constructor(private afDb: AngularFireDatabase) { }
 
   async objectFirstMap(url: string): Promise<any> {
-    return await this.afDb.object(url).valueChanges().first().toPromise()
+    return await this.afDb.object(url).valueChanges().pipe(first()).toPromise()
   }
 
   async listFirstMapAF5(url: string, child: string): Promise<any> {
-    return await this.afDb.list(url, this.order(child)).snapshotChanges().first()
+    return await this.afDb.list(url, this.order(child)).snapshotChanges().pipe(first())
         .map(actions => {
           return actions.map(action => ({ $key: action.key, ...action.payload.val() }));
         }).toPromise()

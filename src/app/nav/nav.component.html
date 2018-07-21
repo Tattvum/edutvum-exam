@@ -17,13 +17,13 @@
         data-toggle="tooltip" title="Pause Exam"
         class="btn btn-small btn-danger btn-sm" >
       <span class="glyphicon glyphicon-pause"></span>
-    </span>
+    </span>  <smallsp></smallsp>
     <span id="cancel" (click)="gotoDash()"
         [class.locked]="exam.isLocked()"
         class="btn btn-small btn-danger btn-sm" >
       <span *ngIf="!exam.isLocked()">Cancel</span>
       <span *ngIf="exam.isLocked()">Home</span>
-    </span>
+    </span>  <smallsp></smallsp>
     <span id="done" (click)="results()"
         [class.locked]="exam.isLocked()"
         class="btn btn-small btn-success btn-sm" >
@@ -68,14 +68,14 @@
       [class.attempted]="exam.isAttempted(qidn)"
       class="btn btn-small btn-primary btn-sm" >
     Continue <span class="glyphicon glyphicon-arrow-right glyph-span"></span>
-  </span>
+  </span>  <smallsp></smallsp>
   <span (click)="markGuess(false)" id="btn-sure"
       [class.disabled]="exam.isLocked()"
       [class.attempted]="exam.isAttempted(qidn)"
       [class.selected]="!exam.guessings[qidn]"
       class="btn btn-small btn-sm btn-doubt" >
     I'm sure
-  </span>
+  </span>  <smallsp></smallsp>
   <span (click)="markGuess(true)" id="btn-guess"
       [class.disabled]="exam.isLocked()"
       [class.attempted]="exam.isAttempted(qidn)"
