@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'smallsp',
+  selector: 'sp',
   template: '<span style="font-size: .8em;">&nbsp;</span>',
 })
-export class SmallspComponent {}
+export class SpaceComponent {}
