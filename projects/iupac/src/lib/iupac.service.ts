@@ -7,8 +7,4 @@ export class IupacService {
 
   constructor() { }
 
-  public getMessage(): string {
-    return "Bingo from Library!"
-  }
-
 }

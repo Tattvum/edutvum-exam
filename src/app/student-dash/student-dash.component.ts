@@ -11,8 +11,6 @@ import { Lib } from '../model/lib';
 import { trigger, transition, style, state, animate } from '@angular/animations';
 import { GeneralContext } from 'app/model/general-context';
 
-import { IupacService } from 'iupac';
-
 @Component({
   selector: 'app-student-dash',
   templateUrl: './student-dash.component.html',
@@ -44,11 +42,7 @@ export class StudentDashComponent implements OnInit {
 
   constructor(public service: DataService,
     private context: GeneralContext,
-    private router: Router) {
-      let iupac = new IupacService()
-      console.log(iupac.getMessage())
-
-    }
+    private router: Router) {}
 
   ngOnInit(): void {
     this.currentUser = this.service.activeUser
