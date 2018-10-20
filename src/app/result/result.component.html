@@ -1,5 +1,5 @@
 <mat-tab-group>
-  <mat-tab label="Simple">
+  <mat-tab label="Simple Marking Scheme">
     <br>
     <div *ngIf="results">
       <table style="border-collapse: separate; border-spacing: 24px;">
@@ -46,12 +46,64 @@
           </td>
         </tr>
       </table>
-      Question-wise time distribution:
-      <br>
-      <app-chart [width]="800" [height]="200" [array]="array"></app-chart>
     </div>
   </mat-tab>
-  <mat-tab label="Main">
-    Content 2
+
+  <mat-tab label="NSE/IIT Marking Scheme">
+    <br>
+    <div *ngIf="results">
+      <table style="border-collapse: separate; border-spacing: 24px;">
+        <tr>
+          <td>
+            <mat-radio-group [(ngModel)]="unit" (change)="changeUnit()">
+                <mat-radio-button value="0"> Questions </mat-radio-button><br>
+                <mat-radio-button value="1" defaultChecked> Marks </mat-radio-button><br>
+                <mat-radio-button value="2"> Percentage </mat-radio-button><br>
+            </mat-radio-group>
+          </td>
+          <td style="vertical-align: bottom;">
+            <table id="report" class="table table-bordered" style="width: 30%;">
+              <tr>
+                <td></td>
+                <th class="sure">Sure</th>
+                <th class="guess">Guess</th>
+                <td></td>
+              </tr>
+              <tr>
+                <th class="correct">Correct</th>
+                <td class="correct sure">{{ correctSure | number:'1.0-0' }}</td>
+                <td class="correct guess">{{ correctGuess | number:'1.0-0' }}</td>
+                <td class="correct total grand">{{ correctTotal | number:'1.0-0' }}</td>
+              </tr>
+              <tr>
+                <th class="wrong">Wrong</th>
+                <td class="wrong sure">{{ wrongSure | number:'1.0-0' }}</td>
+                <td class="wrong guess">{{ wrongGuess | number:'1.0-0' }}</td>
+                <td class="wrong total">{{ wrongTotal | number:'1.0-0' }}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td class="total sure">{{ sureTotal | number:'1.0-0' }}</td>
+                <td class="total guess">{{ guessTotal | number:'1.0-0' }}</td>
+                <td class="">{{ total | number:'1.0-0' }}</td>
+              </tr>
+              <tr>
+                <td colspan="4" style="text-align: right;"><i>( {{ unitName }} )</i></td>
+              </tr>
+            </table>
+          </td>
+          <td style="text-align: left;">
+            <div class="missed">
+              <span>{{ maxTotal }}</span><sp></sp> Total {{ unitName }}</div>
+            <div class="missed">
+              <span>{{ skipped | number:'1.0-0' }}</span><sp></sp> Skipped {{ unitName }}</div>
+              <br>
+          </td>
+        </tr>
+      </table>
+    </div>
   </mat-tab>
 </mat-tab-group>
+Question-wise <b>Time</b> distribution:
+<br>
+<app-chart [width]="800" [height]="200" [array]="array"></app-chart>

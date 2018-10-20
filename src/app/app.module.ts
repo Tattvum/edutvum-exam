@@ -108,6 +108,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
+    MatRadioModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatTableModule,

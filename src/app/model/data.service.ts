@@ -1,6 +1,7 @@
+
+import {interval as observableInterval,  Observable } from 'rxjs';
 import 'rxjs';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/interval'
+
 
 import { Injectable } from '@angular/core';
 
@@ -99,7 +100,7 @@ export class DataService {
   public titleFilter = ''
 
   private globalTimerAction: (number) => void
-  private globalTimer = Observable.interval(1000).subscribe(t => {
+  private globalTimer = observableInterval(1000).subscribe(t => {
     if (this.globalTimerAction) this.globalTimerAction(t)
   })
 

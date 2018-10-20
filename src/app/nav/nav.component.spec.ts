@@ -1,3 +1,5 @@
+
+import {of as observableOf,  Observable } from 'rxjs';
 import {
   ComponentFixture, TestBed, getTestBed,
   async, fakeAsync, tick, flushMicrotasks,
@@ -7,7 +9,6 @@ import {
 import { By } from '@angular/platform-browser';
 import { DebugElement, Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { DataService } from '../model/data.service';
@@ -56,7 +57,7 @@ const ROUTER_PARAMS_MOCK = {
 }
 
 let routeParamMock = {
-  params: Observable.of(ROUTER_PARAMS_MOCK)
+  params: observableOf(ROUTER_PARAMS_MOCK)
 }
 
 const QUESTION0_CALL = [QUESTION_URL, NAV_EXAM_RESULT.id, 0]
