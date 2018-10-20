@@ -78,6 +78,7 @@
           "options": {
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
+            "tsConfig": "src/tsconfig.json",
             "scripts": [],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
