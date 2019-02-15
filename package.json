@@ -16,7 +16,8 @@
     "lint": "ng lint",
     "deploy": "ng build --prod -c prod && firebase deploy --only hosting",
     "export": "firebase database:get / edutvum-exam > cmd-line/edutvum-exam-export-$(date +%Y%m%d_%H).json",
-    "verify": "tsc cmd-line/verify.ts && node cmd-line/verify.js cmd-line/edutvum-exam-import.json"
+    "verify": "tsc cmd-line/verify.ts && node cmd-line/verify.js cmd-line/edutvum-exam-import.json",
+    "backup": "gsutil -m cp -r gs://edutvum-exam.appspot.com/ ."
   },
   "private": true,
   "dependencies": {
@@ -50,6 +51,7 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^0.10.2",
     "@angular/cli": "^7.0.2",
     "@angular/compiler-cli": "7.0.0",
     "@types/jasmine": "^2.8.9",

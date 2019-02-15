@@ -19,7 +19,8 @@
       </mat-form-field>
     </div>
     <div *ngIf="service.isAdmin" fxFlexAlign="baseline">
-      <button mat-raised-button color="primary" (click)="createExam()">Create Exam!</button>
+      <button mat-raised-button color="primary" 
+          id="create-exam-button" (click)="createExam()">Create Exam!</button>
     </div>
   </div>
 

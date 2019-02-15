@@ -191,7 +191,7 @@ export class ResultComponent implements OnInit {
     let sols = ex.questions[qid].solutions
     let anss = ex.answers[qid]
     if (!ex.isAttempted(qid)) return 0
-    //ASSERT 4 chouces exactly!!
+    //ASSERT 4 choices exactly!!
     if (q.type !== AnswerType.MAQ) return ex.isCorrect(qid) ? +3 : -1
     //ASSERT answers are non-duplicated
     let m = 0

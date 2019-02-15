@@ -1,15 +1,21 @@
 import { browser, element, by } from 'protractor';
 
 export class EdutvumExamPage {
+
   navigateTo() {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  getCreateExamButton() {
+    return element(by.id('create-exam-button'));
+  }
+
+  getCreateExamButtonText() {
+    return element(by.id('create-exam-button')).getText();
   }
 
   getTitle() {
     return browser.getTitle();
   }
+
 }
