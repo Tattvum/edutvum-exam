@@ -50,7 +50,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 import { AppRoutingModule } from './app-routing.module';
 //https://medium.com/@tomsu/how-to-build-a-library-for-angular-apps-4f9b38b0ed11
-import { IupacModule } from 'iupac';
+//import { IupacModule } from 'iupac';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
 
@@ -117,7 +117,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatCardModule,
     MatChipsModule,
     MatTabsModule,
-    IupacModule,
+//    IupacModule,
   ],
   declarations: [
     AppComponent,
