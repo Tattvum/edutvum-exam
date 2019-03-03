@@ -87,8 +87,10 @@
 <br>
 <div *ngIf="isPending && !isResultsPage">
   <input name="file" class="inline" (change)="uploadFiles($event)" type="file" multiple>
+<!--
   <progress class="inline" [value]="currentUpload?.progress" max="100"></progress>
-
+  <mat-progress-bar [mode]="determinate" [value]="currentUpload?.progress"></mat-progress-bar>
+ -->
   <table style="margin-top: 8px; width: 50%;" class="table table-hover">
     <tbody *ngFor="let f of question.files; let i=index">
       <tr class="row">

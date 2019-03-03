@@ -38,12 +38,17 @@ export class FirebaseUpload {
       },
       (error) => console.log(error),
       () => { // upload success
-        upload.url = uploadTask.snapshot.downloadURL
-        upload.name = upload.file.name
-        let fileLink = new FileLink(path, upload.url, upload.name)
-        console.log(fileLink)
-        this.service.saveFile(qidn, fileLink).then(() => {
-          console.log('uploaded and saved!')
+        //https://stackoverflow.com/a/50661040
+        //firebase-storage-getdownloadurl-method-cant-be-resolved
+        //https://firebase.google.com/docs/storage/web/upload-files
+        //#monitor_upload_progress
+        uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+          upload.name = upload.file.name
+          let fileLink = new FileLink(path, downloadURL, upload.name)
+          console.log(fileLink)
+          this.service.saveFile(qidn, fileLink).then(() => {
+            console.log('uploaded and saved!')
+          })  
         })
       })
   }
@@ -57,6 +62,6 @@ export class FirebaseUpload {
       this.service.deleteFile(qidn, f.id).then(() => {
         console.log('deleted!')
       })
-  })
+    })
   }
 }
