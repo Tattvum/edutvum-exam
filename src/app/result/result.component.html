@@ -1,11 +1,11 @@
 <mat-tab-group>
-  <mat-tab label="Simple Marking Scheme.">
+  <mat-tab label="JEE Marking Scheme">
     <br>
-    <div *ngIf="results">
+    <div *ngIf="scorer">
       <table style="border-collapse: separate; border-spacing: 24px;">
         <tr>
           <td style="vertical-align: bottom;">
-            <span id="percent">{{results.percent()}}%</span>
+            <span id="percent">{{ scorer.percent | number:'1.0-0' }}%</span>
           </td>
           <td style="vertical-align: bottom;">
             <table id="report" class="table table-bordered" style="width: 30%;">
@@ -17,75 +17,21 @@
               </tr>
               <tr>
                 <th class="correct">Correct</th>
-                <td class="correct sure">{{ report.correct.sure }}</td>
-                <td class="correct guess">{{ report.correct.guess }}</td>
-                <td class="correct total grand">{{ report.total.correct }}</td>
+                <td class="correct sure">{{ scorer.cs | number:'1.0-0' }}</td>
+                <td class="correct guess">{{ scorer.cg | number:'1.0-0' }}</td>
+                <td class="correct total grand">{{ scorer.c | number:'1.0-0' }}</td>
               </tr>
               <tr>
                 <th class="wrong">Wrong</th>
-                <td class="wrong sure">{{ report.wrong.sure }}</td>
-                <td class="wrong guess">{{ report.wrong.guess }}</td>
-                <td class="wrong total">{{ report.total.wrong }}</td>
+                <td class="wrong sure">{{ scorer.ws | number:'1.0-0' }}</td>
+                <td class="wrong guess">{{ scorer.wg | number:'1.0-0' }}</td>
+                <td class="wrong total">{{ scorer.w | number:'1.0-0' }}</td>
               </tr>
               <tr>
                 <td></td>
-                <td class="total sure">{{ report.total.sure }}</td>
-                <td class="total guess">{{ report.total.guess }}</td>
-                <td class="">{{ report.total.attempted }}</td>
-              </tr>
-            </table>
-          </td>
-          <td style="text-align: left;">
-            <div class="correct">
-              <span>{{ report.total.correct }}</span> Correct</div>
-            <div class="">
-              <span>{{ report.total.total }}</span> Total</div>
-            <br>
-            <div class="missed">
-              <span>{{ report.total.skipped }}</span> Not Attempted</div>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </mat-tab>
-
-  <mat-tab label="NSE/IIT Marking Scheme">
-    <br>
-    <div *ngIf="results">
-      <table style="border-collapse: separate; border-spacing: 24px;">
-        <tr>
-          <td>
-            <mat-radio-group [(ngModel)]="unit" (change)="changeUnit()">
-                <mat-radio-button value="0"> Questions </mat-radio-button><br>
-                <mat-radio-button value="1" defaultChecked> Marks </mat-radio-button><br>
-                <mat-radio-button value="2"> Percentage </mat-radio-button><br>
-            </mat-radio-group>
-          </td>
-          <td style="vertical-align: bottom;">
-            <table id="report" class="table table-bordered" style="width: 30%;">
-              <tr>
-                <td></td>
-                <th class="sure">Sure</th>
-                <th class="guess">Guess</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="correct">Correct</th>
-                <td class="correct sure">{{ correctSure | number:'1.0-0' }}</td>
-                <td class="correct guess">{{ correctGuess | number:'1.0-0' }}</td>
-                <td class="correct total grand">{{ correctTotal | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <th class="wrong">Wrong</th>
-                <td class="wrong sure">{{ wrongSure | number:'1.0-0' }}</td>
-                <td class="wrong guess">{{ wrongGuess | number:'1.0-0' }}</td>
-                <td class="wrong total">{{ wrongTotal | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td class="total sure">{{ sureTotal | number:'1.0-0' }}</td>
-                <td class="total guess">{{ guessTotal | number:'1.0-0' }}</td>
-                <td class="">{{ total | number:'1.0-0' }}</td>
+                <td class="total sure">{{ scorer.s | number:'1.0-0' }}</td>
+                <td class="total guess">{{ scorer.g | number:'1.0-0' }}</td>
+                <td class="">{{ scorer.total | number:'1.0-0' }}</td>
               </tr>
               <tr>
                 <td colspan="4" style="text-align: right;"><i>( {{ unitName }} )</i></td>
@@ -94,10 +40,15 @@
           </td>
           <td style="text-align: left;">
             <div class="missed">
-              <span>{{ maxTotal }}</span><sp></sp> Total {{ unitName }}</div>
+              <span>{{ scorer.totalPossible | number:'1.0-0' }}</span><sp></sp> Total {{ unitName }}</div>
             <div class="missed">
-              <span>{{ skipped | number:'1.0-0' }}</span><sp></sp> Skipped {{ unitName }}</div>
+              <span>{{ scorer.skipped | number:'1.0-0' }}</span><sp></sp> Skipped {{ unitName }}</div>
               <br>
+            <mat-radio-group [(ngModel)]="unit" (change)="changeUnit()">
+              <mat-radio-button value="0"> Questions </mat-radio-button><br>
+              <mat-radio-button value="1"> Marks </mat-radio-button><br>
+              <mat-radio-button value="2"> Percentage </mat-radio-button><br>
+            </mat-radio-group>
           </td>
         </tr>
       </table>
