@@ -40,6 +40,7 @@ export class ResultComponent implements OnInit {
   }
 
   changeUnit() {
+    //let pcent = (q: number) => (q / this.r3.q) * 100
     //WARNING: This + is required!!
     switch(+this.unit) {
       case 0: {
