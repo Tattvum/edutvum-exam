@@ -35,7 +35,7 @@ export class Question {
       console.log(id, AnswerType[type])
     }
 
-    if (type !== AnswerType.NCQ) {
+    if (type !== AnswerType.NCQ && type !== AnswerType.NAQ) {
       Lib.failif(choices.length < 1, 'There should be atleast one choice', id, type)
       solutions.forEach((sol, i) => {
         Lib.failif(sol > choices.length - 1 || sol < 0, 'solution (' + i + ') out of bounds')
@@ -63,6 +63,10 @@ export class Question {
         Lib.failif(choices.length !== 0, 'NCQ should have no choice')
         Lib.failif(solutions.length !== 1, 'NCQ should have only one solution')
         break
+      case AnswerType.NAQ:
+        Lib.failif(choices.length !== 0, 'NAQ should have no choice')
+        Lib.failif(solutions.length !== 1, 'NAQ should have only one solution')
+        break
     }
   }
 
@@ -75,10 +79,12 @@ export class Question {
     let type = AnswerType['' + typestr]
     let choices = this.choices
     let solutions = this.solutions
-    if (type === AnswerType.TFQ || type === AnswerType.ARQ || type === AnswerType.NCQ) {
+    if (type === AnswerType.TFQ || type === AnswerType.ARQ 
+      || type === AnswerType.NCQ || type === AnswerType.NAQ) {
       if (type === AnswerType.TFQ) choices = TFQChoices
       else if (type === AnswerType.ARQ) choices = ARQChoices
       else if (type === AnswerType.NCQ) choices = []
+      else if (type === AnswerType.NAQ) choices = []  
       solutions = [0]
     } else {
       this.validate(this.id, this.title, type, choices, solutions)
