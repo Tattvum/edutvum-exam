@@ -56,6 +56,9 @@ export function createA(type: AnswerType, given): string[] {
     case AnswerType.NCQ:
       choices = []
       break;
+    case AnswerType.NAQ:
+      choices = []
+      break;  
   }
   return choices
 }

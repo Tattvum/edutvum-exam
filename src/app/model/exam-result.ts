@@ -27,7 +27,7 @@ export class ExamResult extends Exam {
   private checkAnsInChoice(qans: any[], q: Question, ctx: string) {
     let chlen = q.choices.length
     ctx += '.' + q.id
-    if (q.type !== AnswerType.NCQ) {
+    if (q.type !== AnswerType.NCQ && q.type !== AnswerType.NAQ) {
       qans.forEach((ans, j) => {
         let error = ctx + ', a[' + j + ']=' + ans + ', len:' + chlen
         Lib.failif(ans > chlen - 1 || ans < 0, 'Ans out-of-choice', ctx)
@@ -53,6 +53,9 @@ export class ExamResult extends Exam {
       case AnswerType.MAQ:
         Lib.failif(alen > chlen, 'MAQ cannot have more answers than choices')
         break
+      case AnswerType.NAQ:
+        Lib.failif(alen > 1, 'NAQ cannot have more than one answer', ctx)
+      break 
     }
   }
 
@@ -107,6 +110,9 @@ export class ExamResult extends Exam {
       case AnswerType.NCQ:
         this.answers[qid] = [n]
         break;
+      case AnswerType.NAQ:
+        this.answers[qid] = [n]
+         break; 
       default:
         Lib.failif(true, 'This should never execute!')
         break;

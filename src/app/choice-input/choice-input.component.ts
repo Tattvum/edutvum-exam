@@ -108,6 +108,11 @@ export class ChoiceInputComponent implements OnInit {
     this.service.saveExam()
   }
 
+  setNaqDone(){
+    this.exam.setAnswer(+this.qid, 0)
+    this.service.saveExam()
+  }
+
   choiceClicked(event, cid: number) {
     if (event.target.checked) this.exam.setAnswer(+this.qid, cid)
     else this.exam.removeAnswer(+this.qid, cid)
