@@ -38,6 +38,15 @@
     <button (click)="setNaqDone()" [class.hidden]="exam.isLocked()">Done</button>
   </div>
 </form>
+<hr>
+
+<div *ngIf="!lockedSuggestionEmpty()">
+  <mat-form-field class="suggestion-box" *ngIf="!exam.isLocked()">
+    <textarea matInput placeholder="Suggestion:" [(ngModel)]="suggestion" ></textarea>
+  </mat-form-field>
+  <div *ngIf="exam.isLocked()" class="suggestion-box-locked">{{ suggestion }}</div>
+  <hr>
+</div>
 
 <div *ngIf="service.isAdmin">
   <br>

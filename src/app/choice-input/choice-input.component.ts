@@ -108,6 +108,19 @@ export class ChoiceInputComponent implements OnInit {
     this.service.saveExam()
   }
 
+  get suggestion(): string {
+    return this.exam.suggestions[+this.qid]
+  }
+
+  lockedSuggestionEmpty(): boolean {
+    //CAUTION: '== null' (not ===) is required as it covers both undefined and null!
+    return this.exam.isLocked() && (this.suggestion == null || this.suggestion === "")
+  }
+
+  set suggestion(s: string) {
+    this.exam.suggestions[+this.qid] = s
+  }
+
   setNaqDone(){
     this.exam.setAnswer(+this.qid, 0)
     this.service.saveExam()
