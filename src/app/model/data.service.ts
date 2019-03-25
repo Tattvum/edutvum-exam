@@ -84,12 +84,13 @@ interface Cache {
   [id: string]: Exam
 }
 
+
 @Injectable()
 export class DataService {
   private userCache: UserCache = {}
   private cache: Cache = {}
   private pendingResult: ExamResult
-
+  
   public exams: Exam[] = []
   public results: ExamResult[] = []
   public users: User[] = []
@@ -98,6 +99,7 @@ export class DataService {
   public activeUser: string
   public disableHotkeys = false
   public titleFilter = ''
+  public showAll = false
 
   private globalTimerAction: (number) => void
   private globalTimer = observableInterval(1000).subscribe(t => {
@@ -107,6 +109,22 @@ export class DataService {
   public filteredExams(): Exam[] {
     return this.exams.filter(e => e.title.toUpperCase().indexOf(this.titleFilter.toUpperCase()) !== -1)
   }
+
+  public filteredRecentExams(): Exam[] {
+    if (!this.showAll) {
+
+      let eids = [...new Set(this.results.map(r => r.exam.id))]
+      let topr = eid => this.results.filter(r => r.exam.id === eid)
+        .sort((a, b) => b.when.getTime() - a.when.getTime())[0]
+      return eids.map(eid => topr(eid))
+        .sort((a, b) => b.when.getTime() - a.when.getTime())
+        .map(r => r.exam)
+        .filter(e => e.title.toUpperCase().indexOf(this.titleFilter.toUpperCase()) !== -1)
+    } else {
+      return this.filteredExams()
+    }
+  }
+
 
   init(user: User, dolast = () => { }) {
     Lib.failifold(Lib.isNil(user), 'user cannot be null')
@@ -134,10 +152,9 @@ export class DataService {
     this.userWait().then(user => {
       this.init(user, () => {
         let u = this.userCache[user.uid]
-        // console.log('user', u)
         if (u) {
           this.isAdmin = u.role === UserRole.ADMIN
-          this.exams = this.exams.filter(e => !e.isPending() || this.isAdmin)
+          this.exams = this.exams.filter(e => e.isPending() || this.isAdmin)
         }
       })
     })
