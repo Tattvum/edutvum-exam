@@ -4,8 +4,8 @@
   <div class="center" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column">
     <div fxFlexAlign="baseline" class="h2">Exam Dashboard</div>
     <div fxFlexAlign="baseline">
-      <mat-checkbox class="mycheckbox" (change)="service.showAll?true:false" [(ngModel)]="service.showAll"
-        [checked]="showAll">Show All Exams</mat-checkbox>
+      <mat-checkbox class="mycheckbox" 
+          [(ngModel)]="service.showAll">Show All Exams</mat-checkbox>
     </div>
 
     <div fxFlexAlign="baseline">
