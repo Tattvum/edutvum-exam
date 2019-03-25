@@ -2,14 +2,18 @@
 <div class="container-fluid">
 
   <div class="center" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column">
-    <div fxFlexAlign="baseline" class="h1">Exam Dashboard</div>
+    <div fxFlexAlign="baseline" clmyfilteredExamsass="h1">Exam Dashboard</div>
+    <div fxFlexAlign="baseline">
+      <mat-checkbox class="mycheckbox" (change)="service.isCheck?true:false" [(ngModel)]="service.isCheck"
+        [checked]="isCheck">Show All Exams</mat-checkbox>
+    </div>
+
     <div fxFlexAlign="baseline">
       <mat-form-field>
         <input matInput placeholder="Filter by Title" #filter [(ngModel)]="service.titleFilter">
       </mat-form-field>
-      <button fxFlexOffset="10px" fxFlexAlign="start" mat-raised-button
-          [disabled]="!service.titleFilter"
-          (click)="service.titleFilter=''">Reset</button>
+      <button fxFlexOffset="10px" fxFlexAlign="start" mat-raised-button [disabled]="!service.titleFilter"
+        (click)="service.titleFilter=''">Reset</button>
     </div>
     <div *ngIf="service.isAdmin" fxFlexAlign="baseline">
       <mat-form-field>
@@ -19,8 +23,7 @@
       </mat-form-field>
     </div>
     <div *ngIf="service.isAdmin" fxFlexAlign="baseline">
-      <button mat-raised-button color="primary" 
-          id="create-exam-button" (click)="createExam()">Create Exam!</button>
+      <button mat-raised-button color="primary" id="create-exam-button" (click)="createExam()">Create Exam!</button>
     </div>
   </div>
 
@@ -29,13 +32,21 @@
   </div>
 
   <br>
-  <div class="center">
-    <mat-card *ngFor="let ex of service.filteredExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
-        [class.pending]="ex.isPending()"
-        style="margin-bottom: 4px;"
-        >
+
+  <!--  <div class="center" [style.visibility]="service.isCheck ? 'visible' : 'hidden'" id="isCheck">
+    to display in my checkbo div tag
+     <div *ngFor="let exd of service.completedExams()">
+       <div *ngIf="service.mycount===0">
+        {{exd.name}}{{exd.value}}
+      </div>
+     </div>
+  </div> -->
+
+  <!--    <mat-card *ngFor="let ex of service.mycompletedExams(exd.title) ">
+
       <div fxLayout="column">
-        <div class="light">{{ex.id}}</div>
+        <div class="light" > {{exd.title}}
+        </div> 
         <div fxLayout="row" fxLayoutWrap>
           <div fxLayout="row">
               <div class="etitle actionable" fxFlexAlign="baseline" (click)="takeExam(ex)">{{ex.title}}</div>
@@ -58,6 +69,41 @@
               </mat-chip>
             </mat-chip-list>
           </div>
+          </div> 
+      </div> 
+    
+    </mat-card>
+  </div>-->
+
+
+  <br><br>
+
+
+  <div class="center">
+
+    <mat-card
+      *ngFor="let ex of service.filteredRecentExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
+      [class.pending]="ex.isPending()" style="margin-bottom: 4px;">
+      <div fxLayout="column">
+        <div class="light">{{ex.id}}</div>
+        <div fxLayout="row" fxLayoutWrap>
+          <div fxLayout="row">
+            <div class="etitle actionable" fxFlexAlign="baseline" (click)="takeExam(ex)">{{ex.title}}</div>
+            <div class="light" fxFlexAlign="baseline" fxFlexOffset="10px">{{showWhen(ex.when)}}</div>
+          </div>
+          <div fxLayout="row-reverse" fxLayout.lt-sm="row" fxFlex.lt-sm="100%">
+            <div>
+              <button *ngIf="ex.isPending()" mat-raised-button (click)="publishExam(ex.id)">Publish</button>
+            </div>
+            <mat-chip-list>
+              <mat-chip *ngFor="let rs of service.listResults(ex.id); let j=index"
+                color="{{rs.isLocked()? 'primary': 'warn'}}" selected="true" (click)="showExamResult(rs)"
+                [class.locked]="rs.isLocked()" title="{{showWhen(rs.when)}}">
+                <span *ngIf="rs.isLocked()" class="actionable">{{rs.score().percent()}}%</span>
+                <span *ngIf="!rs.isLocked()" class="actionable">...%</span>
+              </mat-chip>
+            </mat-chip-list>
+          </div>
         </div>
       </div>
     </mat-card>
@@ -69,13 +115,8 @@
   </div>
 
   <br>
-  <a
-    style="padding: 4px; float: right; text-align: right;"
-    (mouseenter)="toggleOK()"
-    (mouseleave)="toggleOK()"
-    [@testAnim]="ok"
-    href="https://github.com/Tattvum/edutvum-exam"
-    target="_blank"
-    >https://github.com/Tattvum/edutvum-exam</a>
+  <a style="padding: 4px; float: right; text-align: right;" (mouseenter)="toggleOK()" (mouseleave)="toggleOK()"
+    [@testAnim]="ok" href="https://github.com/Tattvum/edutvum-exam"
+    target="_blank">https://github.com/Tattvum/edutvum-exam</a>
 
 </div>
