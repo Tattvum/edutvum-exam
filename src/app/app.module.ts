@@ -117,6 +117,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatCardModule,
     MatChipsModule,
     MatTabsModule,
+    MatCheckboxModule
 //    IupacModule,
   ],
   declarations: [
