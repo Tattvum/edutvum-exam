@@ -2,7 +2,7 @@
 <div class="container-fluid">
 
   <div class="center" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column">
-    <div fxFlexAlign="baseline" clmyfilteredExamsass="h1">Exam Dashboard</div>
+    <div fxFlexAlign="baseline" class="h2">Exam Dashboard</div>
     <div fxFlexAlign="baseline">
       <mat-checkbox class="mycheckbox" (change)="service.showAll?true:false" [(ngModel)]="service.showAll"
         [checked]="showAll">Show All Exams</mat-checkbox>
@@ -39,8 +39,9 @@
         <div class="light">{{ex.id}}</div>
         <div fxLayout="row" fxLayoutWrap>
           <div fxLayout="row">
-            <div class="etitle actionable" fxFlexAlign="baseline" (click)="takeExam(ex)">{{ex.title}}</div>
-            <div class="light" fxFlexAlign="baseline" fxFlexOffset="10px">{{showWhen(ex.when)}}</div>
+            <div class="etitle actionable" fxFlexAlign="baseline" 
+              title="{{showWhen(ex.when)}}"(click)="takeExam(ex)">{{ex.title}}</div>
+            <!-- <div class="light" fxFlexAlign="baseline" fxFlexOffset="10px">{{showWhen(ex.when)}}</div> -->
           </div>
           <div fxLayout="row-reverse" fxLayout.lt-sm="row" fxFlex.lt-sm="100%">
             <div>
