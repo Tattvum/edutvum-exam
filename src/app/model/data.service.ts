@@ -1,5 +1,5 @@
 
-import { interval as observableInterval, Observable } from 'rxjs';
+import {interval as observableInterval,  Observable } from 'rxjs';
 import 'rxjs';
 
 
@@ -90,8 +90,7 @@ export class DataService {
   private userCache: UserCache = {}
   private cache: Cache = {}
   private pendingResult: ExamResult
-  private doneResult: ExamResult
-
+  
   public exams: Exam[] = []
   public results: ExamResult[] = []
   public users: User[] = []
@@ -100,7 +99,7 @@ export class DataService {
   public activeUser: string
   public disableHotkeys = false
   public titleFilter = ''
-  public isCheck = false
+  public showAll = false
 
   private globalTimerAction: (number) => void
   private globalTimer = observableInterval(1000).subscribe(t => {
@@ -112,7 +111,7 @@ export class DataService {
   }
 
   public filteredRecentExams(): Exam[] {
-    if (!this.isCheck) {
+    if (!this.showAll) {
 
       let eids = [...new Set(this.results.map(r => r.exam.id))]
       let topr = eid => this.results.filter(r => r.exam.id === eid)
@@ -167,7 +166,7 @@ export class DataService {
 
   public listResults(eid: string): ExamResult[] {
     return this.results
-      .filter(r => (r.exam.id === eid))
+      .filter(r => r.exam.id === eid)
       .sort((a, b) => b.when.getTime() - a.when.getTime())
   }
 
@@ -308,23 +307,9 @@ export class DataService {
     return eid + '.pending'
   }
 
-  public doneId(eid: string) {
-    return eid + '.done'
-  }
   private shadowPendingExam(eid: string) {
     let exam = this.cache[eid]
-    // let rid = this.pendingId(eid)
-    let rid = this.doneId(eid)
-    let er = new ExamResult(rid, exam.title, new Date(), exam)
-    er.lock()
-    this.cache[rid] = er
-    this.results.splice(0, 0, er)
-  }
-
-  private myshadowPendingExam(eid: string) {
-    let exam = this.cache[eid]
-    // let rid = this.pendingId(eid)
-    let rid = this.doneId(eid)
+    let rid = this.pendingId(eid)
     let er = new ExamResult(rid, exam.title, new Date(), exam)
     er.lock()
     this.cache[rid] = er
