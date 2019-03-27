@@ -109,14 +109,13 @@ export class DataService {
   public filteredExams(): Exam[] {
     let revChron = (a, b) => b.when.getTime() - a.when.getTime()
     let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
-    let titleFilter = (e: Exam) => cistrcomp(e.title, this.titleFilter)
+    let tFilter = (e: Exam) => cistrcomp(e.title, this.titleFilter)
     if (this.showAll) {
-      let showPending = (e: Exam) => this.isAdmin ? true : e.status === ExamStatus.DONE
-      return this.exams.filter(titleFilter).filter(showPending)
+      return this.exams.filter(tFilter)
     } else {
       let eids = [...new Set(this.results.map(r => r.exam.id))]
       let topr = eid => this.results.filter(r => r.exam.id === eid).sort(revChron)[0]
-      return eids.map(topr).sort(revChron).map(r => r.exam).filter(titleFilter)
+      return eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
     }
   }
 
@@ -149,7 +148,8 @@ export class DataService {
         if (u) {
           this.isAdmin = u.role === UserRole.ADMIN
           this.showAll = this.isAdmin
-          this.exams = this.exams.filter(e => e.isPending() || this.isAdmin)
+          let showPending = (e: Exam) => this.isAdmin ? true : e.status === ExamStatus.DONE
+          this.exams = this.exams.filter(showPending)
         }
       })
     })
