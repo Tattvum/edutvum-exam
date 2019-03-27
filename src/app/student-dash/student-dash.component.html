@@ -22,7 +22,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="service.isAdmin" fxFlexAlign="baseline">
+    <div *ngIf="service.isAdmin && service.showAll" fxFlexAlign="baseline">
       <button mat-raised-button color="primary" id="create-exam-button" (click)="createExam()">Create Exam!</button>
     </div>
   </div>
@@ -32,8 +32,10 @@
   </div>
 
   <div class="center">
+    <h3 class="bright" *ngIf="service.showAll">All Exams</h3>
+    <h3 class="bright" *ngIf="!service.showAll">My Recent Exams</h3>
     <mat-card
-      *ngFor="let ex of service.filteredRecentExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
+      *ngFor="let ex of service.filteredExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
       [class.pending]="ex.isPending()" style="margin-bottom: 4px;">
       <div fxLayout="column">
         <div class="light">{{ex.id}}</div>

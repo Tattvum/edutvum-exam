@@ -1,5 +1,5 @@
 
-import {interval as observableInterval,  Observable } from 'rxjs';
+import { interval as observableInterval, Observable } from 'rxjs';
 import 'rxjs';
 
 
@@ -90,7 +90,7 @@ export class DataService {
   private userCache: UserCache = {}
   private cache: Cache = {}
   private pendingResult: ExamResult
-  
+
   public exams: Exam[] = []
   public results: ExamResult[] = []
   public users: User[] = []
@@ -107,24 +107,18 @@ export class DataService {
   })
 
   public filteredExams(): Exam[] {
-    return this.exams.filter(e => e.title.toUpperCase().indexOf(this.titleFilter.toUpperCase()) !== -1)
-  }
-
-  public filteredRecentExams(): Exam[] {
-    if (!this.showAll) {
-
-      let eids = [...new Set(this.results.map(r => r.exam.id))]
-      let topr = eid => this.results.filter(r => r.exam.id === eid)
-        .sort((a, b) => b.when.getTime() - a.when.getTime())[0]
-      return eids.map(eid => topr(eid))
-        .sort((a, b) => b.when.getTime() - a.when.getTime())
-        .map(r => r.exam)
-        .filter(e => e.title.toUpperCase().indexOf(this.titleFilter.toUpperCase()) !== -1)
+    let revChron = (a, b) => b.when.getTime() - a.when.getTime()
+    let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
+    let titleFilter = (e: Exam) => cistrcomp(e.title, this.titleFilter)
+    if (this.showAll) {
+      let showPending = (e: Exam) => this.isAdmin ? true : e.status === ExamStatus.DONE
+      return this.exams.filter(titleFilter).filter(showPending)
     } else {
-      return this.filteredExams()
+      let eids = [...new Set(this.results.map(r => r.exam.id))]
+      let topr = eid => this.results.filter(r => r.exam.id === eid).sort(revChron)[0]
+      return eids.map(topr).sort(revChron).map(r => r.exam).filter(titleFilter)
     }
   }
-
 
   init(user: User, dolast = () => { }) {
     Lib.failifold(Lib.isNil(user), 'user cannot be null')
@@ -154,6 +148,7 @@ export class DataService {
         let u = this.userCache[user.uid]
         if (u) {
           this.isAdmin = u.role === UserRole.ADMIN
+          this.showAll = this.isAdmin
           this.exams = this.exams.filter(e => e.isPending() || this.isAdmin)
         }
       })
