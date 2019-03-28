@@ -148,8 +148,7 @@ export class DataService {
         if (u) {
           this.isAdmin = u.role === UserRole.ADMIN
           this.showAll = this.isAdmin
-          let showPending = (e: Exam) => this.isAdmin ? true : e.status === ExamStatus.DONE
-          this.exams = this.exams.filter(showPending)
+          this.exams = this.exams.filter(e => !e.isPending() || this.isAdmin)
         }
       })
     })
