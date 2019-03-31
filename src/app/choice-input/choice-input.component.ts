@@ -25,6 +25,7 @@ export class ChoiceInputComponent implements OnInit {
   exam: ExamResult = EMPTY_EXAM_RESULT
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   solutions = ''
+  mytype =['TFQ','MCQ','MAQ','NCQ','NAQ']
   type = 'MCQ'
 
   @ViewChild('first') private elementRef: ElementRef;
