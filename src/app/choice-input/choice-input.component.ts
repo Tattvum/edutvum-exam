@@ -25,7 +25,8 @@ export class ChoiceInputComponent implements OnInit {
   exam: ExamResult = EMPTY_EXAM_RESULT
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   solutions = ''
-  mytype =['TFQ','MCQ','MAQ','NCQ','NAQ']
+ // mytype =['TFQ','MCQ','MAQ','NCQ','NAQ']
+ mytype:any
   type = 'MCQ'
 
   @ViewChild('first') private elementRef: ElementRef;
@@ -43,6 +44,7 @@ export class ChoiceInputComponent implements OnInit {
     public service: DataService) { }
 
   ngOnInit() {
+    this.mytype=(Object.keys(AnswerType).filter(key => !isNaN(Number(AnswerType[key])))).filter(function(x) { return x !== "UNKNOWN_LAST"; })
     this.route.params.subscribe((params: Params) => {
       let eid = params['eid']
       this.qid = params['qid']
