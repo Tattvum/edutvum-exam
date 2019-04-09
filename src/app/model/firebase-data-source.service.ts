@@ -135,13 +135,13 @@ export function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let dobj = obj.durations
   let durations: number[] = []
   if (dobj) exam.questions.forEach((q, i) => durations[i] = dobj[q.id])
-  let sobj = obj.suggestions
-  let suggestions: string[] = []
-  if (sobj) exam.questions.forEach((q, i) => suggestions[i] = sobj[q.id])
+  let sobj = obj.comments
+  let comments: string[] = []
+  if (sobj) exam.questions.forEach((q, i) => comments[i] = sobj[q.id])
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   if (status !== ExamStatus.DONE) console.log('status', id, obj.status)
-  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, suggestions)
+  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, comments)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -194,8 +194,8 @@ export function convertExamResult(result: ExamResult): any {
   result.guessings.forEach((isGuess: boolean, i) => roguss[qs[i].id] = isGuess)
   let rodurs = ro['durations'] = {}
   result.durations.forEach((secs: number, i) => rodurs[qs[i].id] = secs)
-  let rosugs = ro['suggestions'] = {}
-  result.suggestions.forEach((sugs: string, i) => rosugs[qs[i].id] = sugs)
+  let rosugs = ro['comments'] = {}
+  result.comments.forEach((sugs: string, i) => rosugs[qs[i].id] = sugs)
   ro['when'] = result.when.getTime()
   ro['revwhen'] = -result.when.getTime()
   ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'

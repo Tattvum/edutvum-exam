@@ -12,7 +12,7 @@ export class ExamResult extends Exam {
     status: ExamStatus = ExamStatus.PENDING,
     public guessings: boolean[] = [],
     readonly durations: number[] = [],
-    readonly suggestions: string[] = [],
+    readonly comments: string[] = [],
   ) {
     super(id, title, exam.questions, when, '', '', status)
     this._secondsTotal = durations.filter(x => !Lib.isNil(x)).reduce((t, s) => t + s, 0)

@@ -40,11 +40,11 @@
 </form>
 <hr>
 
-<div *ngIf="!lockedSuggestionEmpty()">
-  <mat-form-field class="suggestion-box" *ngIf="!exam.isLocked()">
-    <textarea matInput placeholder="Suggestion:" [(ngModel)]="suggestion" ></textarea>
+<div *ngIf="!lockedCommentEmpty()">
+  <mat-form-field class="comment-box" *ngIf="!exam.isLocked()">
+    <textarea matInput placeholder="Comment:" [(ngModel)]="comment" ></textarea>
   </mat-form-field>
-  <div *ngIf="exam.isLocked()" class="suggestion-box-locked">{{ suggestion }}</div>
+  <div *ngIf="exam.isLocked()" class="comment-box-locked">{{ comment }}</div>
   <hr>
 </div>
 
