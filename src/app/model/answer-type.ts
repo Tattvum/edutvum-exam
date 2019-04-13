@@ -8,6 +8,18 @@ export enum AnswerType {
   UNKNOWN_LAST // Just tag the end?
 }
 
+export const ANSWER_TYPES = [
+  AnswerType.TFQ,
+  AnswerType.MCQ,
+  AnswerType.MAQ,
+  AnswerType.ARQ,
+  AnswerType.NCQ,
+  AnswerType.NAQ,
+]
+
+export const ANSWER_TYPE_NAMES = ANSWER_TYPES.map(a => AnswerType[a])
+
+
 export const TFQChoices: string[] = ['True', 'False']
 export const ARQChoices: string[] = [
   'Both <b>A</b> and <b>R</b> are CORRECT and <b>R</b> is the CORRECT explanation of the <b>A</b>.',
