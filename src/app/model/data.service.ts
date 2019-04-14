@@ -13,6 +13,7 @@ import { User, UserRole, EMPTY_USER } from './user';
 import { AnswerType } from 'app/model/answer-type';
 import { GeneralContext } from 'app/model/general-context';
 import { QuestionGroup } from 'app/model/question-group';
+import { Comment } from 'app/model/comment';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -58,6 +59,7 @@ export abstract class DataSource {
   abstract deleteExam(user: User, rid: string): Promise<boolean>
   abstract editExamDetail(user: User, type: ExamEditType, diff: any,
     fullid: string, cid?: number): Promise<boolean>
+  abstract addComment(user: User, eid: string, qid: string, comment: Comment): Promise<boolean>
   abstract defineExam(user: User, exam: Exam): Promise<boolean>
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
   abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
@@ -295,6 +297,20 @@ export class DataService {
   }
   public editExamNotes(diff: any, eid: string): Promise<boolean> {
     return this.editExamDetail(diff, eid, ExamEditType.ExamNotes)
+  }
+
+  public addComment(title: string, qidn: number): Promise<Comment> {
+    let r = this.pendingResult
+    let q = r.exam.questions[qidn]
+    let comment = null
+    let makeComment = (u: User) => {
+      comment = new Comment(title, new Date(), u)
+      return comment
+    }
+    let call = u => this.dataSource.addComment(u, r.id, q.id, makeComment(u))
+    return this.withUserPromise(call, ok => {
+      return comment
+    })
   }
 
   public pendingId(eid: string) {

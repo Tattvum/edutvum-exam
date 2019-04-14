@@ -6,6 +6,8 @@ import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { Lib, KEY } from '../model/lib';
 import { GeneralContext } from 'app/model/general-context';
+import { Comment, CommentList } from 'app/model/comment';
+import * as moment from 'moment';
 
 declare var MathJax: {
   Hub: {
@@ -26,6 +28,7 @@ export class ChoiceInputComponent implements OnInit {
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   solutions = ''
   type = 'MCQ'
+  newcomment = ''
 
   @ViewChild('first') private elementRef: ElementRef;
 
@@ -50,12 +53,18 @@ export class ChoiceInputComponent implements OnInit {
       this.question = this.service.getQuestion(eid, this.qid)
       this.setSolutions()
       this.setType()
+      this.setComment()
       MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
     })
   }
 
   clearAll() {
     if (!this.exam.isLocked()) this.exam.clearAnswers(+this.qid)
+  }
+
+  setComment() {
+    let cl = this.exam.commentLists[+this.qid]
+    this.newcomment = '#' + (cl == null ? 0 : cl.length)
   }
 
   setSolutions() {
@@ -108,20 +117,30 @@ export class ChoiceInputComponent implements OnInit {
     this.service.saveExam()
   }
 
-  get comment(): string {
-    return this.exam.comments[+this.qid]
+  showWhen(dt: Date): string {
+    return moment(dt).fromNow();
   }
 
-  lockedCommentEmpty(): boolean {
-    //CAUTION: '== null' (not ===) is required as it covers both undefined and null!
-    return this.exam.isLocked() && (this.comment == null || this.comment === "")
+  get comments(): CommentList {
+    let revChron = (a, b) => b.when.getTime() - a.when.getTime()
+    let list = this.exam.commentLists[+this.qid]
+    //if(list) list = list.sort(revChron)
+    return list
   }
 
-  set comment(s: string) {
-    this.exam.comments[+this.qid] = s
+  addComment(newtext) {
+    try {
+      this.service.addComment(newtext, +this.qid).then(c => {
+        this.exam.addComment(+this.qid, c)
+        this.setComment()
+      })
+    } catch (error) {
+      console.log(newtext)
+      this.context.alert(error)
+    }
   }
 
-  setNaqDone(){
+  setNaqDone() {
     this.exam.setAnswer(+this.qid, 0)
     this.service.saveExam()
   }

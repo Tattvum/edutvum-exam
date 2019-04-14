@@ -14,6 +14,7 @@ import { ExamResult } from './exam-result';
 import { User, UserRole } from './user';
 import { FirebaseAPI } from 'app/model/firebase-api.service';
 import { QuestionGroup } from 'app/model/question-group';
+import { CommentList, Comment } from './comment';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams/'
@@ -58,7 +59,7 @@ export function createA(type: AnswerType, given): string[] {
       break;
     case AnswerType.NAQ:
       choices = []
-      break;  
+      break;
   }
   return choices
 }
@@ -121,6 +122,18 @@ export function createE(obj): Exam {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
+export function asCList(obj): CommentList {
+  if (Lib.isNil(obj)) return []
+  let arr = []
+  Object.keys(obj).forEach(function (key, index) {
+    let cl = obj[key]
+    arr[index] = cl
+    // console.log(index, key, obj[key].file, arr[index].file)
+  })
+  return arr
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
 export function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let id = obj.$key
   let exam = es[obj.exam]
@@ -135,13 +148,13 @@ export function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let dobj = obj.durations
   let durations: number[] = []
   if (dobj) exam.questions.forEach((q, i) => durations[i] = dobj[q.id])
-  let sobj = obj.comments
-  let comments: string[] = []
-  if (sobj) exam.questions.forEach((q, i) => comments[i] = sobj[q.id])
+  let clobj = obj.commentlists
+  let commentlists: CommentList[] = []
+  if (clobj) exam.questions.forEach((q, i) => commentlists[i] = asCList(clobj[q.id]))
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   if (status !== ExamStatus.DONE) console.log('status', id, obj.status)
-  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, comments)
+  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, commentlists)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -184,6 +197,25 @@ export function convertPureExam(exam: Exam, user: User): any {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
+export function convertComment(comment: Comment): any {
+  let co = {}
+  co['title'] = comment.title
+  co['when'] = comment.when.toISOString()
+  co['user'] = comment.user.name
+  co['uid'] = comment.user.uid
+  //console.log(JSON.stringify(co))
+  return co
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
+export function convertCommentList(commentList: CommentList): any {
+  let clo = []
+  commentList.forEach(c => clo.push(convertComment(c)));
+  //console.log(JSON.stringify(clo))
+  return clo
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
 export function convertExamResult(result: ExamResult): any {
   let ro = {}
   ro['exam'] = result.exam.id
@@ -194,8 +226,8 @@ export function convertExamResult(result: ExamResult): any {
   result.guessings.forEach((isGuess: boolean, i) => roguss[qs[i].id] = isGuess)
   let rodurs = ro['durations'] = {}
   result.durations.forEach((secs: number, i) => rodurs[qs[i].id] = secs)
-  let rosugs = ro['comments'] = {}
-  result.comments.forEach((sugs: string, i) => rosugs[qs[i].id] = sugs)
+  let rocls = ro['commentlists'] = {}
+  result.commentLists.forEach((cls: CommentList, i) => rocls[qs[i].id] = convertCommentList(cls))
   ro['when'] = result.when.getTime()
   ro['revwhen'] = -result.when.getTime()
   ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'
@@ -302,6 +334,16 @@ export class FirebaseDataSource implements DataSource {
     // console.log(' - ', editurl)
     Lib.failif(Lib.isNil(url), 'Invalid ExamEditType', type)
     return this.afbapi.objectSetBool(url, diff)
+  }
+
+  public addComment(user: User, eid: string, qid: string, comment: Comment): Promise<boolean> {
+    let url = RESULTS_URL + user.uid + "/" + eid + "/commentlists/" + qid
+    let co = convertComment(comment)
+    console.log(' - ', url, co)
+    return this.afbapi.listPush<boolean>(url, co, call => {
+      //console.log('firebase datasource addComment saved!')
+      return true
+    })
   }
 
   public defineExam(user: User, exam: Exam): Promise<boolean> {

@@ -10,6 +10,7 @@ import { Exam } from './exam';
 import { User, UserRole } from './user';
 import { ExamResult } from './exam-result';
 import { QuestionGroup } from 'app/model/question-group';
+import { Comment } from 'app/model/comment';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question('00', title, type, choices, sols)
@@ -97,6 +98,10 @@ export class MockDataSource implements DataSource {
 
   public editExamDetail(user: User, type: ExamEditType, diff: any, fullid: string,
     cid?: number): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
+  public addComment(user: User, eid: string, qid: string, comment: Comment): Promise<boolean> {
     return Promise.resolve(true)
   }
 

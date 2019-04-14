@@ -3,6 +3,8 @@ import { Exam, ExamStatus, EMPTY_EXAM } from './exam';
 import { Question, EMPTY_QUESTION } from './question';
 import { Score, EMPTY_SCORE } from 'app/model/score';
 import { Lib } from '../model/lib';
+import { CommentList, Comment } from './comment';
+import { EMPTY_USER } from './user';
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
@@ -12,7 +14,7 @@ export class ExamResult extends Exam {
     status: ExamStatus = ExamStatus.PENDING,
     public guessings: boolean[] = [],
     readonly durations: number[] = [],
-    readonly comments: string[] = [],
+    readonly commentLists: CommentList[] = [],
   ) {
     super(id, title, exam.questions, when, '', '', status)
     this._secondsTotal = durations.filter(x => !Lib.isNil(x)).reduce((t, s) => t + s, 0)
@@ -56,7 +58,7 @@ export class ExamResult extends Exam {
         break
       case AnswerType.NAQ:
         Lib.failif(alen > 1, 'NAQ cannot have more than one answer', ctx)
-      break 
+        break
     }
   }
 
@@ -113,7 +115,7 @@ export class ExamResult extends Exam {
         break;
       case AnswerType.NAQ:
         this.answers[qid] = [n]
-         break; 
+        break;
       default:
         Lib.failif(true, 'This should never execute!')
         break;
@@ -143,6 +145,12 @@ export class ExamResult extends Exam {
     // all answers are given
     for (let ans of sols) if (!this.answers[qid].includes(ans)) return false
     return true
+  }
+
+  public addComment(qid: number, c: Comment) {
+    let cl = this.commentLists[qid]
+    if (!cl) cl = this.commentLists[qid] = []
+    cl.push(c)
   }
 
   public score(): Score {

@@ -1,7 +1,4 @@
-<span (click)="clearAll()"
-    [class.hidden]="exam.isLocked()"
-    id="clear-all"
-    class="btn" >
+<span (click)="clearAll()" [class.hidden]="exam.isLocked()" id="clear-all" class="btn">
   Clear answers
 </span>
 
@@ -11,26 +8,20 @@
       <label [ngClass]="colors(i)">
         <label (click)="removeChoice(i)" class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
         <sp></sp>
-        <input [type]="ctype" name="choices" [id]="'rd'+i" #first
-            (click)="choiceClicked($event, i)" [disabled]="exam.isLocked()"
-            [checked]="exam.isAnswer(qid, i)"
-            />
+        <input [type]="ctype" name="choices" [id]="'rd'+i" #first (click)="choiceClicked($event, i)"
+          [disabled]="exam.isLocked()" [checked]="exam.isAnswer(qid, i)" />
         <sp></sp>
-        <label class="opt" [for]="'rd'+i" >
-          <app-editor heading="Edit Choice Text"
-            [content]="ch"
-            (onedit)="editOption($event, i)" >
+        <label class="opt" [for]="'rd'+i">
+          <app-editor heading="Edit Choice Text" [content]="ch" (onedit)="editOption($event, i)">
           </app-editor>
         </label>
       </label>
     </div>
     <div class="ncq" *ngIf="question.type == 4">
       <div>Type your answer here:</div>
-      <input [(ngModel)]="ncqtext" type="number" name="choices"
-          [ngClass]="colors()" [disabled]="exam.isLocked()"
-        />
+      <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors()" [disabled]="exam.isLocked()" />
       <div *ngIf="exam.isLocked()" [class.correct]="true">
-      ({{exam.questions[qid].solutions[0]}})
+        ({{exam.questions[qid].solutions[0]}})
       </div>
     </div>
   </div>
@@ -40,11 +31,21 @@
 </form>
 <hr>
 
-<div *ngIf="!lockedCommentEmpty()">
-  <mat-form-field class="comment-box" *ngIf="!exam.isLocked()">
-    <textarea matInput placeholder="Comment:" [(ngModel)]="comment" ></textarea>
-  </mat-form-field>
-  <div *ngIf="exam.isLocked()" class="comment-box-locked">{{ comment }}</div>
+<div>
+  <div style="color: coral;">Comments:</div>
+  <app-editor heading="Add Comment" [content]="newcomment" (onedit)="addComment($event)">
+  </app-editor>
+  <div>
+    <div *ngFor="let c of comments; let i=index">
+      <span class="comment-box-title">{{ c.title }}</span>
+      <sp></sp>
+      <sp></sp>
+      <span class="comment-box-user">{{ c.user }}</span>
+      <sp></sp>
+      <sp></sp>
+      <span class="comment-box-when" title="{{ c.when }}">{{ showWhen(c.when) }}</span>
+    </div>
+  </div>
   <hr>
 </div>
 
@@ -53,14 +54,10 @@
   <button (click)="addChoice()">Add Choice</button>
   <br>
   <span style="color: red;">Solutions:</span>
-  <app-editor heading="Edit Question Solution"
-    [content]="solutions"
-    (onedit)="editSolution($event)" >
+  <app-editor heading="Edit Question Solution" [content]="solutions" (onedit)="editSolution($event)">
   </app-editor>
   <br>
   <span style="color: red;">Type:</span>
-  <app-editor heading="Edit Question Type"
-    [content]="type"
-    (onedit)="editType($event)" >
+  <app-editor heading="Edit Question Type" [content]="type" (onedit)="editType($event)">
   </app-editor>
 </div>
