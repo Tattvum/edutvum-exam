@@ -117,6 +117,10 @@ export class ChoiceInputComponent implements OnInit {
     this.service.saveExam()
   }
 
+  formatWhen(dt: Date): string {
+    return moment(dt).format('llll')
+  }
+
   showWhen(dt: Date): string {
     return moment(dt).fromNow();
   }
@@ -124,7 +128,7 @@ export class ChoiceInputComponent implements OnInit {
   get comments(): CommentList {
     let revChron = (a, b) => b.when.getTime() - a.when.getTime()
     let list = this.exam.commentLists[+this.qid]
-    //if(list) list = list.sort(revChron)
+    if (list) list = list.sort(revChron)
     return list
   }
 

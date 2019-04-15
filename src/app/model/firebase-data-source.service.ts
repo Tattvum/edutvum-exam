@@ -127,6 +127,8 @@ export function asCList(obj): CommentList {
   let arr = []
   Object.keys(obj).forEach(function (key, index) {
     let cl = obj[key]
+    //CAUTION: This typecasting is essential. Typescript is unaware, till last moment.
+    cl.when = new Date(cl.when)
     arr[index] = cl
     // console.log(index, key, obj[key].file, arr[index].file)
   })
@@ -339,7 +341,7 @@ export class FirebaseDataSource implements DataSource {
   public addComment(user: User, eid: string, qid: string, comment: Comment): Promise<boolean> {
     let url = RESULTS_URL + user.uid + "/" + eid + "/commentlists/" + qid
     let co = convertComment(comment)
-    console.log(' - ', url, co)
+    //console.log(' - ', url, co)
     return this.afbapi.listPush<boolean>(url, co, call => {
       //console.log('firebase datasource addComment saved!')
       return true
