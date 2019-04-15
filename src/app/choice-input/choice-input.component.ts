@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService, ExamEditType } from '../model/data.service';
-import { AnswerType } from '../model/answer-type';
+import { AnswerType,ANSWER_TYPE_NAMES } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { Lib, KEY } from '../model/lib';
@@ -20,6 +20,7 @@ declare var MathJax: {
   templateUrl: './choice-input.component.html',
   styleUrls: ['./choice-input.component.scss']
 })
+
 export class ChoiceInputComponent implements OnInit {
 
   qid: string
@@ -27,6 +28,7 @@ export class ChoiceInputComponent implements OnInit {
   exam: ExamResult = EMPTY_EXAM_RESULT
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   solutions = ''
+  mytype=ANSWER_TYPE_NAMES
   type = 'MCQ'
   newcomment = ''
 
@@ -45,7 +47,7 @@ export class ChoiceInputComponent implements OnInit {
     public service: DataService) { }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
+      this.route.params.subscribe((params: Params) => {
       let eid = params['eid']
       this.qid = params['qid']
       if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
