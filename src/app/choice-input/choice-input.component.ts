@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService, ExamEditType } from '../model/data.service';
-import { AnswerType,ANSWER_TYPE_NAMES } from '../model/answer-type';
+import { AnswerType, ANSWER_TYPE_NAMES } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { Lib, KEY } from '../model/lib';
 import { GeneralContext } from 'app/model/general-context';
 import { Comment, CommentList } from 'app/model/comment';
 import * as moment from 'moment';
+import { FormControl } from '@angular/forms';
 
 declare var MathJax: {
   Hub: {
@@ -28,9 +29,11 @@ export class ChoiceInputComponent implements OnInit {
   exam: ExamResult = EMPTY_EXAM_RESULT
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   solutions = ''
-  mytype=ANSWER_TYPE_NAMES
+  mytype = ANSWER_TYPE_NAMES
   type = 'MCQ'
   newcomment = ''
+  choices = []
+  arrsol = []
 
   @ViewChild('first') private elementRef: ElementRef;
 
@@ -47,12 +50,13 @@ export class ChoiceInputComponent implements OnInit {
     public service: DataService) { }
 
   ngOnInit() {
-      this.route.params.subscribe((params: Params) => {
+    this.route.params.subscribe((params: Params) => {
       let eid = params['eid']
       this.qid = params['qid']
       if (Lib.isNil(eid) || Lib.isNil(this.qid)) return
       this.exam = this.service.getExam(eid)
       this.question = this.service.getQuestion(eid, this.qid)
+      this.setChoices()
       this.setSolutions()
       this.setType()
       this.setComment()
@@ -69,8 +73,14 @@ export class ChoiceInputComponent implements OnInit {
     this.newcomment = '#' + (cl == null ? 0 : cl.length)
   }
 
+  setChoices() {
+    this.choices = []
+    this.question.choices.forEach((_, i) => this.choices.push(this.AAA[i]))
+  }
+
   setSolutions() {
     this.solutions = JSON.stringify(this.question.solutions)
+    this.arrsol = this.question.solutions.slice(0)
   }
 
   setType() {
@@ -169,6 +179,17 @@ export class ChoiceInputComponent implements OnInit {
       this.service.editQuestionSolution(arr, +this.qid)
     } catch (error) {
       console.log(newtext)
+      this.context.alert(error)
+    }
+    this.setSolutions()
+  }
+
+  editSolution2() {
+    try {
+      this.question.setSolutions(this.arrsol)
+      this.service.editQuestionSolution(this.arrsol, +this.qid)
+    } catch (error) {
+      console.log(this.arrsol)
       this.context.alert(error)
     }
     this.setSolutions()
