@@ -84,6 +84,7 @@ import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
 import { ChartComponent } from './chart/chart.component';
 import { EditorComponent } from './editor/editor.component';
+import { Editor1Component } from './editor1/editor1.component';
 import { MathJaxDirective } from './mathjax.directive';
 
 export const firebaseConfig = environment.firebaseConfig;
@@ -118,7 +119,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatChipsModule,
     MatTabsModule,
     MatCheckboxModule
-//    IupacModule,
+    //    IupacModule,
   ],
   declarations: [
     AppComponent,
@@ -135,6 +136,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     ChartComponent,
     PopupComponent,
     EditorComponent,
+    Editor1Component,
     MathJaxDirective,
     SpaceComponent,
   ],

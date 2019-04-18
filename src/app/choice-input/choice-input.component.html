@@ -29,28 +29,9 @@
     <button (click)="setNaqDone()" [class.hidden]="exam.isLocked()">Done</button>
   </div>
 </form>
-<hr>
-
-<div>
-  <div style="color: coral;">Comments:</div>
-  <app-editor heading="Add Comment" [content]="newcomment" (onedit)="addComment($event)">
-  </app-editor>
-  <div>
-    <div *ngFor="let c of comments; let i=index">
-      <span class="comment-box-title">{{ c.title }}</span>
-      <sp></sp>
-      <sp></sp>
-      <span class="comment-box-user">{{ c.user }}</span>
-      <sp></sp>
-      <sp></sp>
-      <span class="comment-box-when" title="{{ formatWhen(c.when) }}">{{ showWhen(c.when) }}</span>
-    </div>
-  </div>
-  <hr>
-</div>
 
 <div *ngIf="service.isAdmin">
-  <br>
+  <hr>
   <button (click)="addChoice()">Add Choice</button>
   <br>
   <span style="color: red;">Solutions:</span>
@@ -64,4 +45,22 @@
       <mat-option *ngFor="let item of mytype" value={{item}}>{{item}}</mat-option>
     </mat-select>
   </mat-form-field>
+</div>
+
+<hr>
+<div>
+  <div style="color: coral;">Comments:</div>
+  <app-editor1 heading="Add Comment" [content]="newcomment" (onedit)="addComment($event)">
+  </app-editor1>
+  <div>
+    <div *ngFor="let c of comments; let i=index">
+      <span class="comment-box-title">{{ c.title }}</span>
+      <sp></sp>
+      <sp></sp>
+      <span class="comment-box-user">{{ c.user }}</span>
+      <sp></sp>
+      <sp></sp>
+      <span class="comment-box-when" title="{{ formatWhen(c.when) }}">{{ showWhen(c.when) }}</span>
+    </div>
+  </div>
 </div>
