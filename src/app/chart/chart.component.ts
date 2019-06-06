@@ -26,7 +26,7 @@ const XOFFSET = 10
   styleUrls: ['./chart.component.scss']
 })
 export class ChartComponent implements AfterViewInit {
-  @ViewChild('canvas') public canvas: ElementRef
+  @ViewChild('canvas', { static: true }) public canvas: ElementRef
 
   @Input() public width = 800
   @Input() public height = 200

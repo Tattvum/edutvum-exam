@@ -40,10 +40,14 @@
           </td>
           <td style="text-align: left;">
             <div class="missed">
-              <span>{{ scorer.totalPossible | number:'1.0-0' }}</span><sp></sp> Total {{ unitName }}</div>
+              <span>{{ scorer.totalPossible | number:'1.0-0' }}</span>
+              <sp></sp> Total {{ unitName }}
+            </div>
             <div class="missed">
-              <span>{{ scorer.skipped | number:'1.0-0' }}</span><sp></sp> Skipped {{ unitName }}</div>
-              <br>
+              <span>{{ scorer.skipped | number:'1.0-0' }}</span>
+              <sp></sp> Skipped {{ unitName }}
+            </div>
+            <br>
             <mat-radio-group [(ngModel)]="unit" (change)="changeUnit()">
               <mat-radio-button value="0"> Questions </mat-radio-button><br>
               <mat-radio-button value="1"> Marks </mat-radio-button><br>

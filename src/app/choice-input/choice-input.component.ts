@@ -32,7 +32,7 @@ export class ChoiceInputComponent implements OnInit {
   type = 'MCQ'
   newcomment = ''
 
-  @ViewChild('first') private elementRef: ElementRef;
+  @ViewChild('first', { static: true }) private elementRef: ElementRef;
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {

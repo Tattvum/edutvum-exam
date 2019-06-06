@@ -16,7 +16,7 @@ export class EditorComponent {
   @Input() content = '[blank]'
   @Output() onedit: EventEmitter<string> = new EventEmitter<string>()
 
-  @ViewChild('textbox') private textbox: ElementRef;
+  @ViewChild('textbox', { static: true }) private textbox: ElementRef;
 
   showPopup = false
   backupContent = ''

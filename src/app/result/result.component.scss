@@ -31,6 +31,11 @@ th, td {
   text-align: center;
 }
 
+.table-bordered th, .table-bordered td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
 @mixin bgfg($bg, $fg, $op) {
   background-color: $bg;
   color: $fg;
