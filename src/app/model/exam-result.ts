@@ -4,7 +4,7 @@ import { Question, EMPTY_QUESTION } from './question';
 import { Score, EMPTY_SCORE } from 'app/model/score';
 import { Lib } from '../model/lib';
 import { CommentList, Comment } from './comment';
-import { EMPTY_USER } from './user';
+import { EMPTY_USER, User } from './user';
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
@@ -15,6 +15,7 @@ export class ExamResult extends Exam {
     public guessings: boolean[] = [],
     readonly durations: number[] = [],
     readonly commentLists: CommentList[] = [],
+    readonly user: User = EMPTY_USER,
   ) {
     super(id, title, exam.questions, when, '', '', status)
     this._secondsTotal = durations.filter(x => !Lib.isNil(x)).reduce((t, s) => t + s, 0)

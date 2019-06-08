@@ -136,7 +136,7 @@ export function asCList(obj): CommentList {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createR(obj, es: { [key: string]: Exam }): ExamResult {
+export function createR(obj, es: { [key: string]: Exam }, user: User): ExamResult {
   let id = obj.$key
   let exam = es[obj.exam]
   let title = exam.title
@@ -156,7 +156,7 @@ export function createR(obj, es: { [key: string]: Exam }): ExamResult {
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   if (status !== ExamStatus.DONE) console.log('status', id, obj.status)
-  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, commentlists)
+  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, commentlists, user)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -275,7 +275,7 @@ export class FirebaseDataSource implements DataSource {
   private async fetchR(user: User): Promise<void> {
     let robjs = await this.afbapi.listFirstMapR(this.resultsUrl(user))
     fbObjToArr(robjs).forEach(
-      r => this.holders.results.push(createR(r, this.alles))
+      r => this.holders.results.push(createR(r, this.alles, user))
     )
   }
 
@@ -338,8 +338,8 @@ export class FirebaseDataSource implements DataSource {
     return this.afbapi.objectSetBool(url, diff)
   }
 
-  public addComment(user: User, eid: string, qid: string, comment: Comment): Promise<boolean> {
-    let url = RESULTS_URL + user.uid + "/" + eid + "/commentlists/" + qid
+  public addComment(user: User, eid: string, euid: string, qid: string, comment: Comment): Promise<boolean> {
+    let url = RESULTS_URL + euid + "/" + eid + "/commentlists/" + qid
     let co = convertComment(comment)
     //console.log(' - ', url, co)
     return this.afbapi.listPush<boolean>(url, co, call => {

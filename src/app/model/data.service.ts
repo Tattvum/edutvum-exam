@@ -59,7 +59,7 @@ export abstract class DataSource {
   abstract deleteExam(user: User, rid: string): Promise<boolean>
   abstract editExamDetail(user: User, type: ExamEditType, diff: any,
     fullid: string, cid?: number): Promise<boolean>
-  abstract addComment(user: User, eid: string, qid: string, comment: Comment): Promise<boolean>
+  abstract addComment(user: User, eid: string, euid: string, qid: string, comment: Comment): Promise<boolean>
   abstract defineExam(user: User, exam: Exam): Promise<boolean>
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
   abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
@@ -307,7 +307,7 @@ export class DataService {
       comment = new Comment(title, new Date(), u)
       return comment
     }
-    let call = u => this.dataSource.addComment(u, r.id, q.id, makeComment(u))
+    let call = u => this.dataSource.addComment(u, r.id, r.user.uid, q.id, makeComment(u))
     return this.withUserPromise(call, ok => {
       return comment
     })
