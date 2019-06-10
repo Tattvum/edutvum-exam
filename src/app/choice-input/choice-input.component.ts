@@ -127,6 +127,20 @@ export class ChoiceInputComponent implements OnInit {
     return moment(dt).fromNow();
   }
 
+  get omission(): boolean {
+    return this.exam.isOmitted(+this.qid)
+  }
+
+  toggleOmission() {
+    if (!this.service.isAdmin && !this.exam.isLocked()) return
+    try {
+      this.exam.toggleOmission(+this.qid)
+      this.service.saveExamAdmin()
+    } catch (error) {
+      this.context.alert(error)
+    }
+  }
+
   get comments(): CommentList {
     let revChron = (a, b) => b.when.getTime() - a.when.getTime()
     let list = this.exam.commentLists[+this.qid]

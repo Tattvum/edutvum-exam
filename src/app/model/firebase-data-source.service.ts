@@ -153,10 +153,13 @@ export function createR(obj, es: { [key: string]: Exam }, user: User): ExamResul
   let clobj = obj.commentlists
   let commentlists: CommentList[] = []
   if (clobj) exam.questions.forEach((q, i) => commentlists[i] = asCList(clobj[q.id]))
+  let oobj = obj.omissions
+  let omissions: boolean[] = []
+  if (oobj) exam.questions.forEach((q, i) => omissions[i] = oobj[q.id])
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   if (status !== ExamStatus.DONE) console.log('status', id, obj.status)
-  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, commentlists, user)
+  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, commentlists, user, omissions)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -230,6 +233,8 @@ export function convertExamResult(result: ExamResult): any {
   result.durations.forEach((secs: number, i) => rodurs[qs[i].id] = secs)
   let rocls = ro['commentlists'] = {}
   result.commentLists.forEach((cls: CommentList, i) => rocls[qs[i].id] = convertCommentList(cls))
+  let roomis = ro['omissions'] = {}
+  result.omissions.forEach((isOmitted: boolean, i) => roomis[qs[i].id] = isOmitted)
   ro['when'] = result.when.getTime()
   ro['revwhen'] = -result.when.getTime()
   ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'

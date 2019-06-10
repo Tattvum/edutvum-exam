@@ -229,6 +229,16 @@ export class DataService {
     })
   }
 
+  public saveExamAdmin(): Promise<ExamResult> {
+    // DO NOT LOCK!
+    let r = this.pendingResult
+    let call = u => this.dataSource.updateExam(r.user, this.pendingResult)
+    return this.withUserPromise(call, ok => {
+      console.log(this.pendingResult.id, 'exam omission saved!')
+      return this.pendingResult
+    })
+  }
+
   public cancelExam(): Promise<boolean> {
     this.globalTimerAction = null
     let rid = this.pendingResult.id

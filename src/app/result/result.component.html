@@ -47,6 +47,10 @@
               <span>{{ scorer.skipped | number:'1.0-0' }}</span>
               <sp></sp> Skipped {{ unitName }}
             </div>
+            <div class="missed">
+              <span>{{ scorer.omitted | number:'1.0-0' }}</span>
+              <sp></sp> Omitted
+            </div>
             <br>
             <mat-radio-group [(ngModel)]="unit" (change)="changeUnit()">
               <mat-radio-button value="0"> Questions </mat-radio-button><br>

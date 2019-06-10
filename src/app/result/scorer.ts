@@ -7,6 +7,7 @@ interface Q {
   status(): number // +1 correct, 0 skipped, -1 wrong
   marks(): number
   max(): number
+  omitted(): boolean
 }
 
 function asQArr_Simple(ex: ExamResult): Q[] {
@@ -16,12 +17,13 @@ function asQArr_Simple(ex: ExamResult): Q[] {
       "status": () => ex.isAttempted(qid) ? ex.isCorrect(qid) ? +1 : -1 : 0,
       "marks": () => ex.isAttempted(qid) ? 1 : 0,
       "max": () => 1,
+      "omitted": () => ex.isOmitted(qid),
     }
   })
 }
 
 function asQArr_Percent(ex: ExamResult): Q[] {
-  let count = ex.questions.length
+  let count = ex.questions.filter((_, qid) => !ex.isOmitted(qid)).length
   let qpercent = 100 / count
   return ex.questions.map((_, qid) => {
     return {
@@ -29,6 +31,7 @@ function asQArr_Percent(ex: ExamResult): Q[] {
       "status": () => ex.isAttempted(qid) ? ex.isCorrect(qid) ? +1 : -1 : 0,
       "marks": () => ex.isAttempted(qid) ? qpercent : 0,
       "max": () => qpercent,
+      "omitted": () => ex.isOmitted(qid),
     }
   })
 }
@@ -55,6 +58,7 @@ function asQArr_JEE(ex: ExamResult): Q[] {
         else if (m < anss.length) return -2
       },
       "max": () => ex.questions[qid].type === AnswerType.MAQ ? +4 : +3,
+      "omitted": () => ex.isOmitted(qid),
     }
   })
 }
@@ -75,7 +79,7 @@ export class Scorer {
     this.q1 = asQArr_Simple(ex)
     this.q2 = asQArr_JEE(ex)
     this.q3 = asQArr_Percent(ex)
-    this.qs = this.q1
+    this.qs = this.q1 //default
   }
 
   get mode(): Modes { return this._mode }
@@ -88,13 +92,25 @@ export class Scorer {
     }
   }
 
-  get skipped(): number { 
-    return this.qs.filter((q: Q) => q.status() === 0).map(q => q.max()).reduce((sum, qm) => sum += qm, 0) 
+  get skipped(): number {
+    return this.qs
+      .filter(q => !q.omitted())
+      .filter((q: Q) => q.status() === 0)
+      .map(q => q.max())
+      .reduce((sum, qm) => sum += qm, 0)
+  }
+
+  get omitted(): number {
+    return this.qs.filter(q => q.omitted()).length
   }
 
   private sumMarks(condition: (q: Q) => boolean): number {
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Reduce_of_empty_array_with_no_initial_value
-    return this.qs.filter(condition).map(q => q.marks()).reduce((sum, qm) => sum += qm, 0)
+    return this.qs
+      .filter(q => !q.omitted())
+      .filter(condition)
+      .map(q => q.marks())
+      .reduce((sum, qm) => sum += qm, 0)
   }
 
   get cs(): number { return this.sumMarks((q: Q) => !q.guessed() && q.status() > 0) }
@@ -107,10 +123,25 @@ export class Scorer {
   get s(): number { return this.sumMarks((q: Q) => !q.guessed()) }
   get g(): number { return this.sumMarks((q: Q) => q.guessed()) }
 
-  get total(): number { return this.sumMarks((q: Q) => true) }
-  get totalPossible(): number { return this.qs.map(q => q.max()).reduce((sum, qm) => sum += qm, 0) }
+  get totalPossible(): number {
+    switch (this.mode) {
+      case Modes.Simple:
+      case Modes.JEE: return this.qs.filter(q => !q.omitted())
+        .map(q => q.max()).reduce((sum, qm) => sum += qm, 0)
+      case Modes.Percent: return 100
+    }
+    return
+  }
+
+  get total(): number {
+    switch (this.mode) {
+      case Modes.Simple: return this.c
+      case Modes.JEE: return this.sumMarks((q: Q) => true)
+      case Modes.Percent: return this.c
+    }
+  }
 
   get percent(): number {
-    return (this.mode === Modes.Simple ? this.c : this.total) / this.totalPossible * 100
+    return (this.total / this.totalPossible) * 100
   }
 }

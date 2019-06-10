@@ -44,6 +44,11 @@
       <mat-option *ngFor="let item of mytype" value={{item}}>{{item}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <br>
+  <button (click)="toggleOmission()">
+    <span *ngIf="!omission">Omit Question</span>
+    <span *ngIf="omission">Cancel Omission</span>
+  </button>
 </div>
 
 <hr>

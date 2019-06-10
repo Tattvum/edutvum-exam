@@ -120,6 +120,11 @@ progress[value = "0"] {
   color: $fg;
 }
 
+@mixin omit() {
+  border: 3px dotted darkblue;
+  text-decoration: line-through;
+}
+
 .nav-number.attempted {
   &:not(.locked) {
     @include bgfg(lightseagreen, white);
@@ -135,7 +140,14 @@ progress[value = "0"] {
     &.correct {
       @include bgfg(green, white);
     }
+    &.omitted {
+      @include omit();
+    }
   }
+}
+
+.nav-number.omitted {
+  @include omit();
 }
 
 //---- guessing button ----

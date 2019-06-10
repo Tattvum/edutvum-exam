@@ -51,6 +51,7 @@
         [class.correct]="exam.isCorrect(i)"
         [class.guessing]="exam.guessings[i]"
         [class.attempted]="exam.isAttempted(i)"
+        [class.omitted]="exam.isOmitted(i)"
         [class.selected]="i == qidn"
         (click)="select(i)"
         id="b{{i}}"

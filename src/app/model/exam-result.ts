@@ -16,6 +16,7 @@ export class ExamResult extends Exam {
     readonly durations: number[] = [],
     readonly commentLists: CommentList[] = [],
     readonly user: User = EMPTY_USER,
+    public omissions: boolean[] = [],
   ) {
     super(id, title, exam.questions, when, '', '', status)
     this._secondsTotal = durations.filter(x => !Lib.isNil(x)).reduce((t, s) => t + s, 0)
@@ -148,6 +149,16 @@ export class ExamResult extends Exam {
     return true
   }
 
+  public isOmitted(qid: number) {
+    let curr = false
+    if (this.omissions) curr = this.omissions[qid]
+    return curr
+  }
+
+  public toggleOmission(qid: number) {
+    this.omissions[qid] = !this.isOmitted(qid)
+  }
+
   public addComment(qid: number, c: Comment) {
     let cl = this.commentLists[qid]
     if (!cl) cl = this.commentLists[qid] = []
@@ -158,14 +169,14 @@ export class ExamResult extends Exam {
     let correct = 0
     let wrong = 0
     this.answers.forEach((ans, qid) => {
-      if (ans !== undefined) {
+      if (ans !== undefined && !this.isOmitted(qid)) {
         if (this.isAttempted(qid)) {
           if (this.isCorrect(qid)) correct++
           else wrong++
         }
       }
     })
-    let total = this.questions.length
+    let total = this.questions.filter((ans, qid) => !this.isOmitted(qid)).length
     return new Score(total, correct, wrong)
   }
 }
