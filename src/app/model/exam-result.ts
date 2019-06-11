@@ -165,21 +165,6 @@ export class ExamResult extends Exam {
     cl.push(c)
   }
 
-  // public scoreOld(): Score {
-  //   let correct = 0
-  //   let wrong = 0
-  //   this.answers.forEach((ans, qid) => {
-  //     if (ans !== undefined && !this.isOmitted(qid)) {
-  //       if (this.isAttempted(qid)) {
-  //         if (this.isCorrect(qid)) correct++
-  //         else wrong++
-  //       }
-  //     }
-  //   })
-  //   let total = this.questions.filter((ans, qid) => !this.isOmitted(qid)).length
-  //   return new Score(total, correct, wrong)
-  // }
-
   public get score(): Scorer {
     return new Scorer(this)
   }

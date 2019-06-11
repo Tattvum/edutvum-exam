@@ -150,8 +150,7 @@ export class ChoiceInputComponent implements OnInit {
 
   addComment(newtext) {
     try {
-      this.service.addComment(newtext, +this.qid).then(c => {
-        this.exam.addComment(+this.qid, c)
+      this.service.addComment(newtext, +this.qid).then(x => {
         this.setComment()
       })
     } catch (error) {

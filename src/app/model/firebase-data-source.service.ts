@@ -343,16 +343,6 @@ export class FirebaseDataSource implements DataSource {
     return this.afbapi.objectSetBool(url, diff)
   }
 
-  public addComment(user: User, eid: string, euid: string, qid: string, comment: Comment): Promise<boolean> {
-    let url = RESULTS_URL + euid + "/" + eid + "/commentlists/" + qid
-    let co = convertComment(comment)
-    //console.log(' - ', url, co)
-    return this.afbapi.listPush<boolean>(url, co, call => {
-      //console.log('firebase datasource addComment saved!')
-      return true
-    })
-  }
-
   public defineExam(user: User, exam: Exam): Promise<boolean> {
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined')
     let eocover = {}

@@ -59,7 +59,6 @@ export abstract class DataSource {
   abstract deleteExam(user: User, rid: string): Promise<boolean>
   abstract editExamDetail(user: User, type: ExamEditType, diff: any,
     fullid: string, cid?: number): Promise<boolean>
-  abstract addComment(user: User, eid: string, euid: string, qid: string, comment: Comment): Promise<boolean>
   abstract defineExam(user: User, exam: Exam): Promise<boolean>
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
   abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
@@ -215,27 +214,30 @@ export class DataService {
     })
   }
 
-  public pauseExam(): Promise<ExamResult> {
+  public pauseExam(): Promise<boolean> {
     this.globalTimerAction = null
     return this.saveExam()
   }
 
-  public saveExam(): Promise<ExamResult> {
+  public saveExam(): Promise<boolean> {
     // DO NOT LOCK!
     let call = u => this.dataSource.updateExam(u, this.pendingResult)
     return this.withUserPromise(call, ok => {
       // console.log(this.pendingResult.id, 'exam saved!')
-      return this.pendingResult
+      return ok
     })
   }
 
-  public saveExamAdmin(): Promise<ExamResult> {
+  public saveExamAdmin(fn: (u: User) => void = (u) => { }): Promise<boolean> {
     // DO NOT LOCK!
     let r = this.pendingResult
-    let call = u => this.dataSource.updateExam(r.user, this.pendingResult)
+    let call = u => {
+      fn(u)
+      return this.dataSource.updateExam(r.user, this.pendingResult)
+    }
     return this.withUserPromise(call, ok => {
       console.log(this.pendingResult.id, 'exam omission saved!')
-      return this.pendingResult
+      return ok
     })
   }
 
@@ -309,18 +311,12 @@ export class DataService {
     return this.editExamDetail(diff, eid, ExamEditType.ExamNotes)
   }
 
-  public addComment(title: string, qidn: number): Promise<Comment> {
-    let r = this.pendingResult
-    let q = r.exam.questions[qidn]
-    let comment = null
-    let makeComment = (u: User) => {
-      comment = new Comment(title, new Date(), u)
-      return comment
+  public addComment(title: string, qidn: number): Promise<boolean> {
+    let addCommentInternally = (u: User) => {
+      let comment = new Comment(title, new Date(), u)
+      this.pendingResult.addComment(qidn, comment)
     }
-    let call = u => this.dataSource.addComment(u, r.id, r.user.uid, q.id, makeComment(u))
-    return this.withUserPromise(call, ok => {
-      return comment
-    })
+    return this.saveExamAdmin(addCommentInternally)
   }
 
   public pendingId(eid: string) {

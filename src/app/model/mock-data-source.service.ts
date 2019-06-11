@@ -101,10 +101,6 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(true)
   }
 
-  public addComment(user: User, eid: string, euid: string, qid: string, comment: Comment): Promise<boolean> {
-    return Promise.resolve(true)
-  }
-
   public defineExam(user: User, exam: Exam): Promise<boolean> {
     return Promise.resolve(true)
   }
