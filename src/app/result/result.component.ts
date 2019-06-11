@@ -2,12 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
-import { Data } from '../chart/chart.component';
-import { Score } from '../model/score';
 import { Lib } from '../model/lib';
-import { AnswerType } from '../model/answer-type';
-import { Question } from '../model/question';
-import { Scorer, Modes } from './scorer';
+import { Scorer, Modes } from '../model/scorer';
 
 @Component({
   selector: 'app-result',
@@ -42,7 +38,7 @@ export class ResultComponent implements OnInit {
   changeUnit() {
     //let pcent = (q: number) => (q / this.r3.q) * 100
     //WARNING: This + is required!!
-    switch(+this.unit) {
+    switch (+this.unit) {
       case 0: {
         this.scorer.mode = Modes.Simple
         this.unitName = "Questions"

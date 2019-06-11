@@ -4,7 +4,7 @@
   <div class="center" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column">
     <div fxFlexAlign="baseline" class="h2">Exam Dashboard</div>
     <div fxFlexAlign="baseline">
-      <mat-checkbox class="mycheckbox" 
+      <mat-checkbox class="mycheckbox"
           [(ngModel)]="service.showAll">Show All Exams</mat-checkbox>
     </div>
 
@@ -41,7 +41,7 @@
         <div class="light">{{ex.id}}</div>
         <div fxLayout="row" fxLayoutWrap>
           <div fxLayout="row">
-            <div class="etitle actionable" fxFlexAlign="baseline" 
+            <div class="etitle actionable" fxFlexAlign="baseline"
               title="{{showWhen(ex.when)}}"(click)="takeExam(ex)">{{ex.title}}</div>
             <!-- <div class="light" fxFlexAlign="baseline" fxFlexOffset="10px">{{showWhen(ex.when)}}</div> -->
           </div>
@@ -53,7 +53,7 @@
               <mat-chip *ngFor="let rs of service.listResults(ex.id); let j=index"
                 color="{{rs.isLocked()? 'primary': 'warn'}}" selected="true" (click)="showExamResult(rs)"
                 [class.locked]="rs.isLocked()" title="{{showWhen(rs.when)}}">
-                <span *ngIf="rs.isLocked()" class="actionable">{{rs.score().percent()}}%</span>
+                <span *ngIf="rs.isLocked()" class="actionable">{{rs.score.percent | number:'1.0-0'}}%</span>
                 <span *ngIf="!rs.isLocked()" class="actionable">...%</span>
               </mat-chip>
             </mat-chip-list>

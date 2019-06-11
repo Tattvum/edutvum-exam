@@ -1,6 +1,4 @@
-import { AnswerType } from './answer-type';
 import { Question, EMPTY_QUESTION } from './question';
-import { Score } from './score';
 import { AbstractThing } from './abstract-thing';
 import { Lib } from './lib';
 

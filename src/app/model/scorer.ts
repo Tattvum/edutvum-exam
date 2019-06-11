@@ -1,6 +1,6 @@
-import { AnswerType } from '../model/answer-type';
-import { Question } from '../model/question';
-import { ExamResult } from 'app/model/exam-result';
+import { AnswerType } from './answer-type'
+import { Question } from './question'
+import { ExamResult } from './exam-result';
 
 interface Q {
   guessed(): boolean
