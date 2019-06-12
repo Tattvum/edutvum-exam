@@ -332,7 +332,14 @@ export class DataService {
     this.results.splice(0, 0, er)
   }
 
+  validateExamId(eid: string) {
+    if (!(/^[A-Za-z0-9]+$/i.test(eid))) throw new Error('Invaid: ' + eid + ' - Only alphanumeric')
+    let exam = this.cache[eid]
+    if (exam != null) throw new Error('Duplicate: ' + eid + ' - ' + exam.title)
+  }
+
   defineExam(eid: string): Promise<boolean> {
+    this.validateExamId(eid)
     let qid = eid + 'q01'
     let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ,
       ['Choice 1', 'Choice 2'], [0], 'Question Notes:', 'Question Explanation', eid)

@@ -42,7 +42,7 @@ export class StudentDashComponent implements OnInit {
 
   constructor(public service: DataService,
     private context: GeneralContext,
-    private router: Router) {}
+    private router: Router) { }
 
   ngOnInit(): void {
     this.currentUser = this.service.activeUser
@@ -80,7 +80,13 @@ export class StudentDashComponent implements OnInit {
   createExam() {
     let eid = this.context.prompt('Please enter the Exam ID')
     if (eid && eid.length > 0) {
-      this.service.defineExam(eid)
+      try {
+        this.service.defineExam(eid)
+        //this.service.validateExamId(eid)
+      } catch (e) {
+        this.context.alert(e.message)
+        this.createExam()// call myself again...
+      }
     }
   }
 
