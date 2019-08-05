@@ -40,6 +40,7 @@ export enum ExamEditType {
   ExamNotes,
   QuestionChoicesAll,
   QuestionGroupDisplay,
+  ExamMarkingScheme,
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -236,7 +237,7 @@ export class DataService {
       return this.dataSource.updateExam(r.user, this.pendingResult)
     }
     return this.withUserPromise(call, ok => {
-      console.log(this.pendingResult.id, 'exam omission saved!')
+      console.log(this.pendingResult.id, 'saved as admin!')
       return ok
     })
   }
@@ -309,6 +310,9 @@ export class DataService {
   }
   public editExamNotes(diff: any, eid: string): Promise<boolean> {
     return this.editExamDetail(diff, eid, ExamEditType.ExamNotes)
+  }
+  public editExamMarkingScheme(diff: any, eid: string): Promise<boolean> {
+    return this.editExamDetail(diff, eid, ExamEditType.ExamMarkingScheme)
   }
 
   public addComment(title: string, qidn: number): Promise<boolean> {

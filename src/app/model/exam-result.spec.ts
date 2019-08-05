@@ -2,8 +2,6 @@ import { AnswerType } from './answer-type';
 import { Question } from './question';
 import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
-import { Score } from './score';
-import { Scorer } from './scorer';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question('00', title, type, choices, sols)
@@ -45,14 +43,6 @@ let create1QR = (type: AnswerType, choices: string[], sols: number[], ans: numbe
   let q = [new Question('00', 'TEST Q...', type, choices, sols)]
   let e = new Exam('00', 'TEST E', q)
   return new ExamResult(e.id, e.title, new Date(), e, [ans], status)
-}
-
-let checkScore = (s: Scorer, t: number, c: number, w: number, l: number, p: number) => {
-  expect(s.total).toBe(t)
-  // expect(s.correct).toBe(c)
-  // expect(s.wrong).toBe(w)
-  // expect(s.leftout).toBe(l)
-  // expect(s.percent()).toBe(p)
 }
 
 describe('ExamResult - all:', () => {
@@ -108,178 +98,157 @@ describe('ExamResult - all:', () => {
       expect(r.isAttempted(0)).toBeTruthy()
     })
 
-    it('none attempted so zero', () => {
-      let answersNull = [[], [], [], [], [], [], [], []]
-      checkScore(createR2(questions8(), answersNull).score, 8, 0, 0, 8, 0)
+    describe('ExamResult - duration tests:', () => {
+      let er = createR2(questions2(), [[0], [1, 2]], [2, 5])
+      xit('duration total works', () => {
+        expect(er.durationTotal()).toBe(7)
+      })
+      xit('duration works', () => {
+        expect(er.duration(0)).toBe(2)
+        expect(er.duration(1)).toBe(5)
+      })
+      it('duration inc works', () => {
+        er.durationInc(0)
+        expect(er.duration(0)).toBe(3)
+        expect(er.duration(1)).toBe(5)
+        er.durationInc(1)
+        expect(er.duration(0)).toBe(3)
+        expect(er.duration(1)).toBe(6)
+        er.durationInc(1)
+        expect(er.duration(0)).toBe(3)
+        expect(er.duration(1)).toBe(7)
+      })
     })
 
-    it('none correct so zero', () => {
-      let answers0 = [[1], [1], [0], [1], [1], [2], [0, 2, 1], [0]]
-      checkScore(createR2(questions8(), answers0).score, 8, 0, 8, 0, 0)
+    describe('ExamResult - Question - declaration tests:', () => {
+
+      it('Answers are checked fine', () => {
+        expect(() => create1QR(AnswerType.TFQ, choices2, [0], [2])).toThrow()
+        expect(() => create1QR(AnswerType.TFQ, choices2, [0], [1])).not.toThrow()
+        expect(() => create1QR(AnswerType.TFQ, choices2, [0], [1, 1])).toThrow()
+        expect(() => create1QR(AnswerType.MCQ, choices3, [0], [1])).not.toThrow()
+        expect(() => create1QR(AnswerType.MCQ, choices3, [0], [1, 1])).toThrow()
+        expect(() => create1QR(AnswerType.ARQ, choices5, [0], [1])).not.toThrow()
+        expect(() => create1QR(AnswerType.ARQ, choices5, [0], [1, 1])).toThrow()
+        expect(() => create1QR(AnswerType.MAQ, choices2, [0, 1], [1, 1])).not.toThrow()
+        expect(() => create1QR(AnswerType.MAQ, choices2, [0, 1], [1, 1, 0])).toThrow()
+      })
+
+      it('Lock works on create', () => {
+        let r = create1QR(AnswerType.MAQ, choices6, sols1, [], ExamStatus.DONE)
+        expect(r.isLocked()).toBeTruthy()
+        expect(() => r.clearAnswers(0)).toThrow()
+        expect(() => r.setAnswer(0, 1729)).toThrow()
+        expect(() => r.removeAnswer(0, 1729)).toThrow()
+      })
     })
 
-    it('all correct so full', () => {
-      let answers8 = [[0], [0], [2], [2], [3], [3], [0, 2], [0, 2]]
-      checkScore(createR2(questions8(), answers8).score, 8, 8, 0, 0, 100)
+    describe('ExamResult - single sol tests:', () => {
+      let choices: string[] = ['choice 1', 'choice 2']
+      let sols: number[] = [0]
+      let r = create1QR(AnswerType.TFQ, choices, sols)
+
+      xit('No answers, so not attempted', () => {
+        expect(r.isAttempted(0)).toBeFalsy()
+      })
+      it('Some answers, so attempted', () => {
+        r.setAnswer(0, 1)
+        expect(r.isAttempted(0)).toBeTruthy()
+      })
+      it('Multiple answers for tfq, mcq and arq, not alllowed', () => {
+        r.clearAnswers(0)
+        r.setAnswer(0, 1)
+        expect(r.isAnswer(0, 1)).toBeTruthy()
+        r.setAnswer(0, 0)
+        expect(r.isAnswer(0, 0)).toBeTruthy()
+        expect(r.isAnswer(0, 1)).toBeFalsy()
+      })
+      it('Out-of-bounds answer not allowed', () => {
+        r.clearAnswers(0)
+        expect(() => r.setAnswer(0, 2)).toThrow()
+      })
+      it('Clear answers - working', () => {
+        r.clearAnswers(0)
+        expect(r.isAttempted(0)).toBeFalsy()
+      })
+      it('No answers, so not correct', () => {
+        expect(r.isCorrect(0)).toBeFalsy()
+      })
+      it('Right answer so correct', () => {
+        r.setAnswer(0, 0)
+        expect(r.isCorrect(0)).toBeTruthy()
+        r.clearAnswers(0)
+      })
+      it('Wrong answer so not correct', () => {
+        r.setAnswer(0, 1)
+        expect(r.isCorrect(0)).toBeFalsy()
+        r.clearAnswers(0)
+      })
     })
 
-    it('some correct so mixed', () => {
-      let answers3 = [[0], [], [2], [1], [], [2], [0, 2], [0, 2, 1]]
-      checkScore(createR2(questions8(), answers3).score, 8, 3, 3, 2, 38)
-    })
-  })
+    describe('ExamResult - many sol tests:', () => {
+      let choices: string[] = ['choice 1', 'choice 2', 'choice 3']
+      let sols: number[] = [0, 2]
+      let r = create1QR(AnswerType.MAQ, choices, sols)
 
-  fdescribe('ExamResult - duration tests:', () => {
-    let er = createR2(questions2(), [[0], [1, 2]], [2, 5])
-    xit('duration total works', () => {
-      expect(er.durationTotal()).toBe(7)
+      it('Out-of-bounds answer not allowed', () => {
+        r.clearAnswers(0)
+        expect(() => r.setAnswer(0, 3)).toThrow()
+      })
+      it('Duplicate answer not allowed', () => {
+        r.clearAnswers(0)
+        expect(() => r.setAnswer(0, 1)).not.toThrow()
+        expect(() => r.setAnswer(0, 1)).toThrow()
+      })
+      it('One wrong answer alone so not correct', () => {
+        r.clearAnswers(0)
+        r.setAnswer(0, 1)
+        expect(r.isCorrect(0)).toBeFalsy()
+      })
+      it('One right answer alone so not correct', () => {
+        r.clearAnswers(0)
+        r.setAnswer(0, 0)
+        expect(r.isCorrect(0)).toBeFalsy()
+      })
+      xit('All and only right answers, so correct', () => {
+        r.setAnswer(0, 2)
+        expect(r.isCorrect(0)).toBeTruthy()
+      })
+      it('All right but one wrong answer too, so not correct', () => {
+        r.setAnswer(0, 1)
+        expect(r.isCorrect(0)).toBeFalsy()
+      })
+      it('Remove Answer exception - working', () => {
+        expect(r.removeAnswer(0, 21)).toBeFalsy()
+      })
+      xit('All and only right answers, so correct - remove working', () => {
+        r.removeAnswer(0, 1)
+        expect(r.isCorrect(0)).toBeTruthy()
+        r.clearAnswers(0)
+      })
     })
-    xit('duration works', () => {
-      expect(er.duration(0)).toBe(2)
-      expect(er.duration(1)).toBe(5)
-    })
-    it('duration inc works', () => {
-      er.durationInc(0)
-      expect(er.duration(0)).toBe(3)
-      expect(er.duration(1)).toBe(5)
-      er.durationInc(1)
-      expect(er.duration(0)).toBe(3)
-      expect(er.duration(1)).toBe(6)
-      er.durationInc(1)
-      expect(er.duration(0)).toBe(3)
-      expect(er.duration(1)).toBe(7)
-    })
-  })
 
-  describe('ExamResult - Question - declaration tests:', () => {
+    describe('ExamResult - no choice tests:', () => {
+      let r = create1QR(AnswerType.NCQ, [], [-3.141])
 
-    it('Answers are checked fine', () => {
-      expect(() => create1QR(AnswerType.TFQ, choices2, [0], [2])).toThrow()
-      expect(() => create1QR(AnswerType.TFQ, choices2, [0], [1])).not.toThrow()
-      expect(() => create1QR(AnswerType.TFQ, choices2, [0], [1, 1])).toThrow()
-      expect(() => create1QR(AnswerType.MCQ, choices3, [0], [1])).not.toThrow()
-      expect(() => create1QR(AnswerType.MCQ, choices3, [0], [1, 1])).toThrow()
-      expect(() => create1QR(AnswerType.ARQ, choices5, [0], [1])).not.toThrow()
-      expect(() => create1QR(AnswerType.ARQ, choices5, [0], [1, 1])).toThrow()
-      expect(() => create1QR(AnswerType.MAQ, choices2, [0, 1], [1, 1])).not.toThrow()
-      expect(() => create1QR(AnswerType.MAQ, choices2, [0, 1], [1, 1, 0])).toThrow()
-    })
-
-    it('Lock works on create', () => {
-      let r = create1QR(AnswerType.MAQ, choices6, sols1, [], ExamStatus.DONE)
-      expect(r.isLocked()).toBeTruthy()
-      expect(() => r.clearAnswers(0)).toThrow()
-      expect(() => r.setAnswer(0, 1729)).toThrow()
-      expect(() => r.removeAnswer(0, 1729)).toThrow()
-    })
-  })
-
-  describe('ExamResult - single sol tests:', () => {
-    let choices: string[] = ['choice 1', 'choice 2']
-    let sols: number[] = [0]
-    let r = create1QR(AnswerType.TFQ, choices, sols)
-
-    xit('No answers, so not attempted', () => {
-      expect(r.isAttempted(0)).toBeFalsy()
-    })
-    it('Some answers, so attempted', () => {
-      r.setAnswer(0, 1)
-      expect(r.isAttempted(0)).toBeTruthy()
-    })
-    it('Multiple answers for tfq, mcq and arq, not alllowed', () => {
-      r.clearAnswers(0)
-      r.setAnswer(0, 1)
-      expect(r.isAnswer(0, 1)).toBeTruthy()
-      r.setAnswer(0, 0)
-      expect(r.isAnswer(0, 0)).toBeTruthy()
-      expect(r.isAnswer(0, 1)).toBeFalsy()
-    })
-    it('Out-of-bounds answer not allowed', () => {
-      r.clearAnswers(0)
-      expect(() => r.setAnswer(0, 2)).toThrow()
-    })
-    it('Clear answers - working', () => {
-      r.clearAnswers(0)
-      expect(r.isAttempted(0)).toBeFalsy()
-    })
-    it('No answers, so not correct', () => {
-      expect(r.isCorrect(0)).toBeFalsy()
-    })
-    it('Right answer so correct', () => {
-      r.setAnswer(0, 0)
-      expect(r.isCorrect(0)).toBeTruthy()
-      r.clearAnswers(0)
-    })
-    it('Wrong answer so not correct', () => {
-      r.setAnswer(0, 1)
-      expect(r.isCorrect(0)).toBeFalsy()
-      r.clearAnswers(0)
-    })
-  })
-
-  describe('ExamResult - many sol tests:', () => {
-    let choices: string[] = ['choice 1', 'choice 2', 'choice 3']
-    let sols: number[] = [0, 2]
-    let r = create1QR(AnswerType.MAQ, choices, sols)
-
-    it('Out-of-bounds answer not allowed', () => {
-      r.clearAnswers(0)
-      expect(() => r.setAnswer(0, 3)).toThrow()
-    })
-    it('Duplicate answer not allowed', () => {
-      r.clearAnswers(0)
-      expect(() => r.setAnswer(0, 1)).not.toThrow()
-      expect(() => r.setAnswer(0, 1)).toThrow()
-    })
-    it('One wrong answer alone so not correct', () => {
-      r.clearAnswers(0)
-      r.setAnswer(0, 1)
-      expect(r.isCorrect(0)).toBeFalsy()
-    })
-    it('One right answer alone so not correct', () => {
-      r.clearAnswers(0)
-      r.setAnswer(0, 0)
-      expect(r.isCorrect(0)).toBeFalsy()
-    })
-    xit('All and only right answers, so correct', () => {
-      r.setAnswer(0, 2)
-      expect(r.isCorrect(0)).toBeTruthy()
-    })
-    it('All right but one wrong answer too, so not correct', () => {
-      r.setAnswer(0, 1)
-      expect(r.isCorrect(0)).toBeFalsy()
-    })
-    it('Remove Answer exception - working', () => {
-      expect(r.removeAnswer(0, 21)).toBeFalsy()
-    })
-    xit('All and only right answers, so correct - remove working', () => {
-      r.removeAnswer(0, 1)
-      expect(r.isCorrect(0)).toBeTruthy()
-      r.clearAnswers(0)
-    })
-  })
-
-  describe('ExamResult - no choice tests:', () => {
-    let r = create1QR(AnswerType.NCQ, [], [-3.141])
-
-    it('accept any one answer', () => {
-      r.clearAnswers(0)
-      expect(() => r.setAnswer(0, 3)).not.toThrow()
-      expect(() => r.setAnswer(0, -3.141)).not.toThrow()
-    })
-    it('isAttempted working', () => {
-      r.clearAnswers(0)
-      expect(r.isAttempted(0)).toBeFalsy()
-      expect(() => r.setAnswer(0, 3)).not.toThrow()
-      expect(r.isAttempted(0)).toBeTruthy()
-    })
-    it('isCorrect working', () => {
-      r.clearAnswers(0)
-      expect(() => r.setAnswer(0, 3)).not.toThrow()
-      expect(r.isCorrect(0)).toBeFalsy()
-      expect(() => r.setAnswer(0, -3.141)).not.toThrow()
-      expect(r.isCorrect(0)).toBeTruthy()
+      it('accept any one answer', () => {
+        r.clearAnswers(0)
+        expect(() => r.setAnswer(0, 3)).not.toThrow()
+        expect(() => r.setAnswer(0, -3.141)).not.toThrow()
+      })
+      it('isAttempted working', () => {
+        r.clearAnswers(0)
+        expect(r.isAttempted(0)).toBeFalsy()
+        expect(() => r.setAnswer(0, 3)).not.toThrow()
+        expect(r.isAttempted(0)).toBeTruthy()
+      })
+      it('isCorrect working', () => {
+        r.clearAnswers(0)
+        expect(() => r.setAnswer(0, 3)).not.toThrow()
+        expect(r.isCorrect(0)).toBeFalsy()
+        expect(() => r.setAnswer(0, -3.141)).not.toThrow()
+        expect(r.isCorrect(0)).toBeTruthy()
+      })
     })
   })
 })
-

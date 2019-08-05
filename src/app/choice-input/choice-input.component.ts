@@ -113,10 +113,26 @@ export class ChoiceInputComponent implements OnInit {
   get ncqtext(): string {
     return this.getAnswer(0) + ''
   }
-
   set ncqtext(t: string) {
     this.exam.setAnswer(+this.qid, +t)
     this.service.saveExam()
+  }
+
+  get canEditMarks(): boolean {
+    return this.question.type == 5 && this.exam.isLocked() && this.exam.exam.markingScheme != 0
+  }
+
+  get marks(): number {
+    return this.getAnswer(0)
+  }
+  set marks(m: number) {
+    if (!this.service.isAdmin && !this.exam.isLocked()) return
+    try {
+      this.exam.setMarksAdminNAQ(+this.qid, m)
+      this.service.saveExamAdmin()
+    } catch (error) {
+      this.context.alert(error)
+    }
   }
 
   formatWhen(dt: Date): string {

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Lib } from '../model/lib';
-import { Scorer, Modes } from '../model/scorer';
+import { MarkingSchemeType } from 'app/model/marks';
 
 @Component({
   selector: 'app-result',
@@ -13,11 +13,11 @@ import { Scorer, Modes } from '../model/scorer';
 export class ResultComponent implements OnInit {
 
   exam: ExamResult = EMPTY_EXAM_RESULT
-
-  unit = 0
-  unitName = ""
-  scorer: Scorer = null
   array = []
+
+  get examMarkingScheme(): string {
+    return MarkingSchemeType[this.exam.exam.markingScheme]
+  }
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -30,31 +30,7 @@ export class ResultComponent implements OnInit {
       if (Lib.isNil(exam)) return
       this.exam = exam
       this.prepareChart()
-      this.scorer = new Scorer(exam)
-      this.changeUnit()
     })
-  }
-
-  changeUnit() {
-    //let pcent = (q: number) => (q / this.r3.q) * 100
-    //WARNING: This + is required!!
-    switch (+this.unit) {
-      case 0: {
-        this.scorer.mode = Modes.Simple
-        this.unitName = "Questions"
-        break
-      }
-      case 1: {
-        this.scorer.mode = Modes.JEE
-        this.unitName = "Marks"
-        break;
-      }
-      case 2: {
-        this.scorer.mode = Modes.Percent
-        this.unitName = "Percentage %"
-        break;
-      }
-    }
   }
 
   private prepareChart() {

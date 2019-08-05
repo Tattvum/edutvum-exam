@@ -44,11 +44,16 @@
       <mat-option *ngFor="let item of mytype" value={{item}}>{{item}}</mat-option>
     </mat-select>
   </mat-form-field>
+
   <br>
-  <button (click)="toggleOmission()">
+  <button (click)="toggleOmission()" class="btn btn-danger">
     <span *ngIf="!omission">Omit Question</span>
-    <span *ngIf="omission">Cancel Omission</span>
+    <span *ngIf="omission"><b>Cancel Omission</b></span>
   </button>
+  <div class="ncq" *ngIf="canEditMarks">
+    <div style="color: red;">Admin: Marks:</div>
+    <num [(value)]="marks" [min]="0" [max]="exam.questions[qid].solutions[0]"></num>
+  </div>
 </div>
 
 <hr>

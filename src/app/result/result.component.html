@@ -1,13 +1,13 @@
 <mat-tab-group>
-  <mat-tab label="JEE Marking Scheme">
+  <mat-tab label="{{examMarkingScheme}} Marking Scheme">
     <br>
-    <div *ngIf="scorer">
+    <div *ngIf="exam">
       <table style="border-collapse: separate; border-spacing: 24px;">
         <tr>
-          <td style="vertical-align: bottom;">
-            <span id="percent">{{ scorer.percent | number:'1.0-0' }}%</span>
+          <td style="vertical-align: middle;">
+            <span id="percent">{{ exam.score.percent | number:'1.0-0' }}%</span>
           </td>
-          <td style="vertical-align: bottom;">
+          <td style="vertical-align: middle;">
             <table id="report" class="table table-bordered" style="width: 30%;">
               <tr>
                 <td></td>
@@ -16,47 +16,27 @@
                 <td></td>
               </tr>
               <tr>
-                <th class="correct">Correct</th>
-                <td class="correct sure">{{ scorer.cs | number:'1.0-0' }}</td>
-                <td class="correct guess">{{ scorer.cg | number:'1.0-0' }}</td>
-                <td class="correct total grand">{{ scorer.c | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <th class="wrong">Wrong</th>
-                <td class="wrong sure">{{ scorer.ws | number:'1.0-0' }}</td>
-                <td class="wrong guess">{{ scorer.wg | number:'1.0-0' }}</td>
-                <td class="wrong total">{{ scorer.w | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td class="total sure">{{ scorer.s | number:'1.0-0' }}</td>
-                <td class="total guess">{{ scorer.g | number:'1.0-0' }}</td>
-                <td class="">{{ scorer.total | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <td colspan="4" style="text-align: right;"><i>( {{ unitName }} )</i></td>
+                <td>Marks</td>
+                <td class="total sure">{{ exam.score.sure | number:'1.0-0' }}</td>
+                <td class="total guess">{{ exam.score.guess | number:'1.0-0' }}</td>
+                <td class="">{{ exam.score.marks | number:'1.0-0' }}</td>
               </tr>
             </table>
           </td>
           <td style="text-align: left;">
             <div class="missed">
-              <span>{{ scorer.totalPossible | number:'1.0-0' }}</span>
-              <sp></sp> Total {{ unitName }}
+              <span>{{ exam.score.total | number:'1.0-0' }}</span>
+              <sp></sp> Total Marks
             </div>
             <div class="missed">
-              <span>{{ scorer.skipped | number:'1.0-0' }}</span>
-              <sp></sp> Skipped {{ unitName }}
+              <span>{{ exam.score.skipped | number:'1.0-0' }}</span>
+              <sp></sp> Skipped Marks
             </div>
             <div class="missed">
-              <span>{{ scorer.omitted | number:'1.0-0' }}</span>
-              <sp></sp> Omitted
+              <span>{{ exam.score.omitted | number:'1.0-0' }}</span>
+              <sp></sp> Omitted Marks
             </div>
             <br>
-            <mat-radio-group [(ngModel)]="unit" (change)="changeUnit()">
-              <mat-radio-button value="0"> Questions </mat-radio-button><br>
-              <mat-radio-button value="1"> Marks </mat-radio-button><br>
-              <mat-radio-button value="2"> Percentage </mat-radio-button><br>
-            </mat-radio-group>
           </td>
         </tr>
       </table>

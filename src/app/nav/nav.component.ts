@@ -12,6 +12,7 @@ import { Lib, KEY } from '../model/lib';
 import { Upload } from '../model/upload';
 import { FirebaseUpload } from '../model/firebase-upload.service';
 import { EMPTY_QUESTION } from 'app/model/question';
+import { MARKING_SCHEME_TYPE_NAMES, MarkingSchemeType } from 'app/model/marks';
 
 @Component({
   selector: 'app-nav',
@@ -154,6 +155,15 @@ export class NavComponent implements OnInit {
         this.router.navigate(['/student-dash'])
       })
     }
+  }
+
+  get markingScheme(): string {
+    return MARKING_SCHEME_TYPE_NAMES[this.exam.exam.markingScheme]
+  }
+  set markingScheme(value: string) {
+    console.log(value, (<any>MarkingSchemeType)[value])
+    this.exam.exam.markingScheme = (<any>MarkingSchemeType)[value]
+    this.service.editExamMarkingScheme(value, this.exam.exam.id)
   }
 
   onEditTitle(newtext) {

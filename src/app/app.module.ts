@@ -79,6 +79,7 @@ import { UserComponent } from './user/user.component';
 import { PopupComponent } from './popup/popup.component';
 
 import { SpaceComponent } from './common/sp.component';
+import { NumberInputComponent } from './common/num.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
@@ -139,6 +140,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     Editor1Component,
     MathJaxDirective,
     SpaceComponent,
+    NumberInputComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

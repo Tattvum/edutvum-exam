@@ -15,6 +15,7 @@ import { User, UserRole } from './user';
 import { FirebaseAPI } from 'app/model/firebase-api.service';
 import { QuestionGroup } from 'app/model/question-group';
 import { CommentList, Comment } from './comment';
+import { MarkingSchemeType } from './marks';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams/'
@@ -118,7 +119,9 @@ export function createE(obj): Exam {
   qkeys.forEach(key => questions.push(...createQ(qobj[key], key, id)))
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
-  return new Exam(id, title, questions, when, notes, explanation, status)
+  let markingScheme = MarkingSchemeType.OLD
+  if (obj.markingscheme) markingScheme = MarkingSchemeType['' + obj.markingscheme]
+  return new Exam(id, title, questions, when, notes, explanation, status, markingScheme)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -206,8 +209,13 @@ export function convertComment(comment: Comment): any {
   let co = {}
   co['title'] = comment.title
   co['when'] = comment.when.toISOString()
-  co['user'] = comment.user.name
-  co['uid'] = comment.user.uid
+  if (comment.user) {
+    co['user'] = comment.user.name
+    co['uid'] = comment.user.uid
+  } else {
+    //NOTE: Maybe due to older comments?
+    console.log('WARNING: No user!', comment)
+  }
   //console.log(JSON.stringify(co))
   return co
 }
@@ -328,6 +336,7 @@ export class FirebaseDataSource implements DataSource {
       case ExamEditType.ExamNotes: return editurl + '/notes/'
       case ExamEditType.QuestionChoicesAll: return editurl + '/choices/'
       case ExamEditType.QuestionGroupDisplay: return editurl + '/display/'
+      case ExamEditType.ExamMarkingScheme: return editurl + '/markingscheme/'
       default:
         console.log('editUrl', 'Unknown type', type)
         return null

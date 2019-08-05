@@ -79,12 +79,12 @@ export class Question {
     let type = AnswerType['' + typestr]
     let choices = this.choices
     let solutions = this.solutions
-    if (type === AnswerType.TFQ || type === AnswerType.ARQ 
+    if (type === AnswerType.TFQ || type === AnswerType.ARQ
       || type === AnswerType.NCQ || type === AnswerType.NAQ) {
       if (type === AnswerType.TFQ) choices = TFQChoices
       else if (type === AnswerType.ARQ) choices = ARQChoices
       else if (type === AnswerType.NCQ) choices = []
-      else if (type === AnswerType.NAQ) choices = []  
+      else if (type === AnswerType.NAQ) choices = []
       solutions = [0]
     } else {
       this.validate(this.id, this.title, type, choices, solutions)

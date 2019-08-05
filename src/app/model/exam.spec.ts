@@ -20,14 +20,6 @@ let questions1 = () => [tfq()]
 let questions2 = () => [tfq(), maq()]
 let questions8 = () => [tfq(), tfq(), mcq(), mcq(), arq(), arq(), maq(), maq()]
 
-let checkScore = (s: Score, t: number, c: number, w: number, l: number, p: number) => {
-  expect(s.total).toBe(t)
-  expect(s.correct).toBe(c)
-  expect(s.wrong).toBe(w)
-  expect(s.leftout).toBe(l)
-  expect(s.percent()).toBe(p)
-}
-
 describe('Exam:', () => {
   it('should have id', () => {
     expect(() => createE(questions1(), null, null)).toThrow()

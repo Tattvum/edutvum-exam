@@ -4,7 +4,8 @@ import { Question } from './question';
 import { Lib } from '../model/lib';
 import { CommentList, Comment } from './comment';
 import { EMPTY_USER, User } from './user';
-import { Scorer } from './scorer';
+import { Score } from './score';
+import { GeneralMarker, Marker } from './marks';
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
@@ -159,15 +160,36 @@ export class ExamResult extends Exam {
     this.omissions[qid] = !this.isOmitted(qid)
   }
 
+  public setMarksAdminNAQ(qid: number, marks: number) {
+    let q = this.questions[qid]
+    let max = q.solutions[0]
+    Lib.failif(marks > max, 'Marks cannot be more than max')
+    this.answers[qid] = [marks]
+  }
+
   public addComment(qid: number, c: Comment) {
     let cl = this.commentLists[qid]
     if (!cl) cl = this.commentLists[qid] = []
     cl.push(c)
   }
 
-  public get score(): Scorer {
-    return new Scorer(this)
+  public get score(): Score {
+    let sc = new Score()
+    let marker = Marker.get(this.exam.markingScheme)
+    let total = 0
+    this.questions.forEach((q, qid) => {
+      let marks = marker.marks(q.type, this.questions[qid].solutions, this.answers[qid])
+      if (!this.omissions[qid]) {
+        sc.total += marks.max
+        if (this.guessings[qid]) sc.guess += marks.value
+        else sc.sure += marks.value
+      } else {
+        sc.omitted += marks.max
+      }
+    })
+    return sc
   }
+
 }
 
 export const EMPTY_EXAM_RESULT = new ExamResult('00', 'Bingo', new Date(), EMPTY_EXAM)
