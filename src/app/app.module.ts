@@ -81,6 +81,7 @@ import { PopupComponent } from './popup/popup.component';
 import { SpaceComponent } from './common/sp.component';
 import { NumberInputComponent } from './common/num.component';
 import { SmallIntInputComponent } from './common/smallint.component';
+import { ListInputComponent } from './common/list.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
@@ -144,6 +145,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     SpaceComponent,
     NumberInputComponent,
     SmallIntInputComponent,
+    ListInputComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

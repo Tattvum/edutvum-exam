@@ -119,15 +119,20 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   get canEditMarks(): boolean {
-    return this.question.type == 5 && this.exam.isLocked() && this.exam.exam.markingScheme != 0
+    return this.question.type == 5 && this.exam.isLocked()
+  }
+  get schemeOLD(): boolean {
+    return this.exam.exam.markingScheme === 0
   }
 
   get marks(): number {
-    return this.getAnswer(0)
+    let ans = this.getAnswer(0)
+    return this.schemeOLD ? (ans == 0 ? 0 : 1) : ans
   }
   set marks(m: number) {
     if (!this.service.isAdmin && !this.exam.isLocked()) return
     try {
+      m = this.schemeOLD ? (m == 0 ? 0 : -1) : m
       this.exam.setMarksAdminNAQ(+this.qid, m)
       this.service.saveExamAdmin()
     } catch (error) {

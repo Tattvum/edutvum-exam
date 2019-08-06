@@ -52,7 +52,9 @@
   </button>
   <div class="ncq" *ngIf="canEditMarks">
     <div style="color: red;">Admin: Marks:</div>
-    <smallint [(value)]="marks" [min]="0" [max]="exam.questions[qid].solutions[0]"></smallint>
+    <list *ngIf="schemeOLD" [(value)]="marks" [array]="['Correct','Wrong']"></list>
+    <smallint *ngIf="!schemeOLD"
+        [(value)]="marks" [min]="0" [max]="exam.questions[qid].solutions[0]"></smallint>
   </div>
 </div>
 
