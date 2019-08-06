@@ -52,7 +52,7 @@
   </button>
   <div class="ncq" *ngIf="canEditMarks">
     <div style="color: red;">Admin: Marks:</div>
-    <num [(value)]="marks" [min]="0" [max]="exam.questions[qid].solutions[0]"></num>
+    <smallint [(value)]="marks" [min]="0" [max]="exam.questions[qid].solutions[0]"></smallint>
   </div>
 </div>
 
