@@ -8,6 +8,8 @@ import { Lib, KEY } from '../model/lib';
 import { GeneralContext } from 'app/model/general-context';
 import { Comment, CommentList } from 'app/model/comment';
 import * as moment from 'moment';
+import { ExamStatus } from 'app/model/exam';
+import { MarkingSchemeType } from 'app/model/marks';
 
 declare var MathJax: {
   Hub: {
@@ -62,6 +64,10 @@ export class ChoiceInputComponent implements OnInit {
 
   clearAll() {
     if (!this.exam.isLocked()) this.exam.clearAnswers(+this.qid)
+  }
+
+  get isPending(): boolean {
+    return this.exam.exam.status === ExamStatus.PENDING && this.service.isAdmin
   }
 
   setComment() {
@@ -212,6 +218,9 @@ export class ChoiceInputComponent implements OnInit {
     try {
       this.question.setType(newtext)
       this.service.editQuestionType(newtext, +this.qid)
+      if (this.exam.exam.markingScheme !== MarkingSchemeType.OLD && newtext === 'NAQ') {
+        this.editSolution('[1]');
+      }
     } catch (error) {
       console.log(newtext)
       this.context.alert(error)
