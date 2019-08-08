@@ -5,7 +5,7 @@ import { Lib } from '../model/lib';
 import { CommentList, Comment } from './comment';
 import { EMPTY_USER, User } from './user';
 import { Score } from './score';
-import { GeneralMarker, Marker } from './marks';
+import { GeneralMarker, Marker, MarkingSchemeType } from './marks';
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
@@ -148,6 +148,16 @@ export class ExamResult extends Exam {
     // all answers are given
     for (let ans of sols) if (!this.answers[qid].includes(ans)) return false
     return true
+  }
+
+  public isPartial(qid: number): boolean {
+    // no answers so not correct (also, solutions can never be empty)
+    if (!this.isAttempted(qid)) return false
+    if (this.exam.markingScheme === MarkingSchemeType.OLD) return false
+    if (this.questions[qid].type !== AnswerType.NAQ) return false
+    let total = this.questions[qid].solutions[0]
+    let mark = this.answers[qid][0]
+    return mark < total && mark > 0
   }
 
   public isOmitted(qid: number) {

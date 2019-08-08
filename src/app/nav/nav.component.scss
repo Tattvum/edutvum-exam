@@ -137,6 +137,9 @@ progress[value = "0"] {
       opacity: 0.7;
     }
     @include bgfg(red, white);
+    &.partial {
+      @include bgfg(orange, white);
+    }
     &.correct {
       @include bgfg(green, white);
     }

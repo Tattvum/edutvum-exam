@@ -57,6 +57,7 @@
     <span *ngFor="let q of exam.questions; let i=index"
         class="btn-group btn btn-info nav-button nav-number" role="group"
         [class.locked]="exam.isLocked()"
+        [class.partial]="exam.isPartial(i)"
         [class.correct]="exam.isCorrect(i)"
         [class.guessing]="exam.guessings[i]"
         [class.attempted]="exam.isAttempted(i)"
