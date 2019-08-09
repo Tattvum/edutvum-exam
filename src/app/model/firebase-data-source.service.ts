@@ -201,6 +201,7 @@ export function convertPureExam(exam: Exam, user: User): any {
   exam.questions.forEach(q => qs[q.id] = convertQuestion(q))
   eo['questions'] = qs
   eo['status'] = ExamStatus[exam.status]
+  eo['markingscheme'] = MarkingSchemeType[exam.markingScheme]
   return eo
 }
 

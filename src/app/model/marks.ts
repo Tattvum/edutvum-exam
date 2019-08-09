@@ -17,8 +17,8 @@ export const MARKING_SCHEME_TYPES = [
 export const MARKING_SCHEME_TYPE_NAMES = MARKING_SCHEME_TYPES.map(m => MarkingSchemeType[m])
 
 export interface Marks {
-  readonly value: number
-  readonly max: number
+  value: number
+  max: number
 }
 
 function unique(array: number[]): number[] {
@@ -45,13 +45,19 @@ function single(solutions: number[], answers: number[], type: string, pos: numbe
   return { 'value': solutions[0] === answers[0] ? pos : neg, 'max': pos }
 }
 
+const MARKER_MAKER = [
+  () => new OldMarker(),
+  () => new GeneralMarker(),
+  () => new JEEMarker(),
+]
+
+
 export abstract class Marker {
+  private static markers: Marker[] = []
   static get(scheme: MarkingSchemeType): Marker {
-    switch (scheme) {
-      case MarkingSchemeType.OLD: return new OldMarker()
-      case MarkingSchemeType.GENERAL: return new GeneralMarker
-      case MarkingSchemeType.JEE: return new JEEMarker
-    }
+    let marker = Marker.markers[scheme]
+    if (marker == null) Marker.markers[scheme] = marker = MARKER_MAKER[scheme]()
+    return marker
   }
   constructor(readonly right: number, readonly wrong: number) { }
   marks(type: AnswerType, solutions: number[], answers: number[]): Marks {

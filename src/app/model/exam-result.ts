@@ -5,7 +5,7 @@ import { Lib } from '../model/lib';
 import { CommentList, Comment } from './comment';
 import { EMPTY_USER, User } from './user';
 import { Score } from './score';
-import { GeneralMarker, Marker, MarkingSchemeType } from './marks';
+import { GeneralMarker, Marker, MarkingSchemeType, Marks } from './marks';
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
@@ -160,7 +160,7 @@ export class ExamResult extends Exam {
     return mark < total && mark > 0
   }
 
-  public isOmitted(qid: number) {
+  public isOmitted(qid: number): boolean {
     let curr = false
     if (this.omissions) curr = this.omissions[qid]
     return curr
@@ -183,16 +183,27 @@ export class ExamResult extends Exam {
     cl.push(c)
   }
 
+  public marks(qid: number): Marks {
+    let q = this.questions[qid]
+    let sol = q.solutions
+    let ans = this.answers[qid]
+    return Marker.get(this.exam.markingScheme).marks(q.type, sol, ans)
+  }
+
   public get score(): Score {
     let sc = new Score()
-    let marker = Marker.get(this.exam.markingScheme)
     let total = 0
     this.questions.forEach((q, qid) => {
-      let marks = marker.marks(q.type, this.questions[qid].solutions, this.answers[qid])
+      let marks = this.marks(qid)
       if (!this.omissions[qid]) {
         sc.total += marks.max
-        if (this.guessings[qid]) sc.guess += marks.value
-        else sc.sure += marks.value
+        if (this.isAttempted(qid)) {
+          if (this.guessings[qid]) sc.guess += marks.value
+          else sc.sure += marks.value
+        } else {
+          sc.skipped += marks.max
+          marks.value = 0 // NOTE: would be null otherwise
+        }
       } else {
         sc.omitted += marks.max
       }

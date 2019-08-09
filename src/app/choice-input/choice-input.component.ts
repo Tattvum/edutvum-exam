@@ -188,6 +188,9 @@ export class ChoiceInputComponent implements OnInit {
 
   setNaqDone() {
     this.exam.setAnswer(+this.qid, 0)
+    if (this.exam.exam.markingScheme !== MarkingSchemeType.OLD) {
+      this.exam.setAnswer(+this.qid, this.exam.marks(+this.qid).max)
+    }
     this.service.saveExam()
   }
 

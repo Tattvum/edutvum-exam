@@ -37,12 +37,15 @@ export class ResultComponent implements OnInit {
     let defval = (a, b) => Lib.isNil(a) ? b : a
     this.array = []
     this.exam.questions.forEach((q, qid) => {
-      let d = this.exam.durations[qid]
+      let marks = this.exam.marks(qid)
       this.array.push({
         value: defval(this.exam.durations[qid], 0),
         attempted: defval(this.exam.isAttempted(qid), false),
         correct: defval(this.exam.isCorrect(qid), false),
+        partial: defval(this.exam.isPartial(qid), false),
         guess: defval(this.exam.guessings[qid], false),
+        marks: defval(marks.value, 0),
+        max: defval(marks.max, 1),
         action: () => {
           console.log('action', qid)
           this.router.navigate(['/question', this.exam.id, qid])
