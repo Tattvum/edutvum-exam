@@ -1,10 +1,10 @@
 import { AnswerType } from './answer-type'
-import { Lib } from './lib';
 
 export enum MarkingSchemeType {
   OLD, // Old default, where NAQ is one
   GENERAL, // All one mark, but NAQ (Done) as specified in solution/answer
   JEE, // All one mark, but NAQ (Done) as specified in solution/answer
+  NSEJS, // All 3 marks, Almost all are MCQ, wrong -1
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -12,6 +12,7 @@ export const MARKING_SCHEME_TYPES = [
   MarkingSchemeType.OLD,
   MarkingSchemeType.GENERAL,
   MarkingSchemeType.JEE,
+  MarkingSchemeType.NSEJS,
 ]
 
 export const MARKING_SCHEME_TYPE_NAMES = MARKING_SCHEME_TYPES.map(m => MarkingSchemeType[m])
@@ -35,13 +36,11 @@ function subset(sup: number[], sub: number[]): boolean {
   return true
 }
 
-function singleCheck(solutions: number[], answers: number[], type: string) {
-  Lib.failif(solutions.length !== 1, type + ' should have only one solution')
-  Lib.failif(answers.length > 1, type + ' should have maximum one answer')
-}
-
 function single(solutions: number[], answers: number[], type: string, pos: number, neg: number): Marks {
-  singleCheck(solutions, answers, type)
+  let nope = { 'value': neg, 'max': pos }
+  if (answers.length == 0) return { 'value': 0, 'max': pos }
+  if (solutions.length !== 1) return nope //should have only one solution
+  if (answers.length > 1) return nope //should have maximum one answer
   return { 'value': solutions[0] === answers[0] ? pos : neg, 'max': pos }
 }
 
@@ -49,6 +48,7 @@ const MARKER_MAKER = [
   () => new OldMarker(),
   () => new GeneralMarker(),
   () => new JEEMarker(),
+  () => new NSEJSMarker(),
 ]
 
 
@@ -88,17 +88,21 @@ export abstract class Marker {
     return single(solutions, answers, 'NCQ', this.right, this.wrong)
   }
   maq(solutions: number[], answers: number[]): Marks {
-    Lib.failif(solutions.length < 1, 'MAQ should have atleast one solution')
-    Lib.failif(answers.length > solutions.length, 'MAQ cannot have more answers than solutions')
-    Lib.failif(!isUnique(answers), 'MAQ answers cannot have duplicates')
-    Lib.failif(!isUnique(solutions), 'MAQ solutions cannot have duplicates')
-    if (!subset(solutions, answers)) return { 'value': this.wrong, 'max': this.right }
-    if (!subset(answers, solutions)) return { 'value': this.wrong, 'max': this.right }
+    let nope = { 'value': this.wrong, 'max': this.right }
+    if (answers.length == 0) return { 'value': 0, 'max': this.right }
+    if (solutions.length < 1) return nope //MAQ should have atleast one solution
+    if (answers.length > solutions.length) return nope //MAQ cannot have more answers than solutions
+    if (!isUnique(answers)) return nope // MAQ answers cannot have duplicates
+    if (!isUnique(solutions)) return nope // MAQ solutions cannot have duplicates
+    if (!subset(solutions, answers)) return nope
+    if (!subset(answers, solutions)) return nope
     return { 'value': this.right, 'max': this.right }
   }
   naq(solutions: number[], answers: number[]): Marks {
-    singleCheck(solutions, answers, 'NAQ')
-    Lib.failif(solutions[0] < answers[0], 'NAQ solution should be grater than answer (it is marks)')
+    let nope = { 'value': 0, 'max': solutions[0] }
+    if (solutions.length !== 1) return nope // should have only one solution
+    if (answers.length > 1) return nope // should have maximum one answer
+    if (solutions[0] < answers[0]) return nope // NAQ solution should be grater than answer (it is marks)
     return { 'value': answers[0], 'max': solutions[0] }
   }
   abstract scheme(): MarkingSchemeType
@@ -140,5 +144,17 @@ export class JEEMarker extends Marker {
   }
   scheme(): MarkingSchemeType {
     return MarkingSchemeType.JEE
+  }
+}
+
+export class NSEJSMarker extends Marker {
+  constructor() {
+    super(3, 0)
+  }
+  mcq(solutions: number[], answers: number[]): Marks {
+    return single(solutions, answers, 'MCQ', this.right, -1)
+  }
+  scheme(): MarkingSchemeType {
+    return MarkingSchemeType.NSEJS
   }
 }
