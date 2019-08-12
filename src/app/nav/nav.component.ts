@@ -25,6 +25,7 @@ export class NavComponent implements OnInit {
   question = EMPTY_QUESTION
   isResultsPage = false
   qidn: number
+  // readonly schemes = MARKING_SCHEME_TYPE_NAMES
 
   selectedFiles: FileList;
   currentUpload: Upload;

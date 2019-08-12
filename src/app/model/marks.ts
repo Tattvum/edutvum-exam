@@ -3,16 +3,16 @@ import { AnswerType } from './answer-type'
 export enum MarkingSchemeType {
   OLD, // Old default, where NAQ is one
   GENERAL, // All one mark, but NAQ (Done) as specified in solution/answer
-  JEE, // All one mark, but NAQ (Done) as specified in solution/answer
-  NSEJS, // All 3 marks, Almost all are MCQ, wrong -1
+  NSEJS, // Also BITSAT. All 3 marks, Almost all are MCQ, wrong -1
+  JEEMAIN, // All 4 marks, Almost all are MCQ, wrong -1
   UNKNOWN_LAST // Just tag the end?
 }
 
 export const MARKING_SCHEME_TYPES = [
   MarkingSchemeType.OLD,
   MarkingSchemeType.GENERAL,
-  MarkingSchemeType.JEE,
   MarkingSchemeType.NSEJS,
+  MarkingSchemeType.JEEMAIN,
 ]
 
 export const MARKING_SCHEME_TYPE_NAMES = MARKING_SCHEME_TYPES.map(m => MarkingSchemeType[m])
@@ -47,8 +47,8 @@ function single(solutions: number[], answers: number[], type: string, pos: numbe
 const MARKER_MAKER = [
   () => new OldMarker(),
   () => new GeneralMarker(),
-  () => new JEEMarker(),
   () => new NSEJSMarker(),
+  () => new JEEMainMarker(),
 ]
 
 
@@ -143,7 +143,7 @@ export class JEEMarker extends Marker {
     return { 'value': 4, 'max': 4 }
   }
   scheme(): MarkingSchemeType {
-    return MarkingSchemeType.JEE
+    return MarkingSchemeType.JEEMAIN//TBD
   }
 }
 
@@ -156,5 +156,17 @@ export class NSEJSMarker extends Marker {
   }
   scheme(): MarkingSchemeType {
     return MarkingSchemeType.NSEJS
+  }
+}
+
+export class JEEMainMarker extends Marker {
+  constructor() {
+    super(4, 0)
+  }
+  mcq(solutions: number[], answers: number[]): Marks {
+    return single(solutions, answers, 'MCQ', this.right, -1)
+  }
+  scheme(): MarkingSchemeType {
+    return MarkingSchemeType.JEEMAIN
   }
 }
