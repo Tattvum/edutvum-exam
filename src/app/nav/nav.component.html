@@ -36,18 +36,20 @@
     </span>
   </div>
   <br>
+  <span *ngIf="service.isAdmin">
+    <mat-form-field>
+      <mat-label> <span style="color: red;">Marking Scheme:</span> </mat-label>
+      <mat-select [(value)]="markingScheme">
+        <mat-option value="OLD">OLD</mat-option>
+        <mat-option value="GENERAL">GENERAL</mat-option>
+        <mat-option value="NSEJS">NSEJS</mat-option>
+        <mat-option value="JEEMAIN">JEEMAIN</mat-option>
+        <!-- <mat-option *ngFor="let sc of schemes;" value="sc">{{sc}}</mat-option> -->
+      </mat-select><sp></sp>
+    </mat-form-field>
+  </span>
   <div *ngIf="isPending">
-    <span>
-      <mat-form-field>
-        <mat-label> <span style="color: red;">Marking Scheme:</span> </mat-label>
-        <mat-select [(value)]="markingScheme">
-          <mat-option value="GENERAL">GENERAL</mat-option>
-          <mat-option value="NSEJS">NSEJS</mat-option>
-          <mat-option value="JEEMAIN">JEEMAIN</mat-option>
-          <!-- <mat-option *ngFor="let sc of schemes;" value="sc">{{sc}}</mat-option> -->
-        </mat-select><sp></sp>
-      </mat-form-field>
-    </span><sp></sp><sp></sp>
+    <sp></sp><sp></sp>
     <button mat-raised-button (click)="addQuestion()">Add Question!</button>
     <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
     <button mat-raised-button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>
