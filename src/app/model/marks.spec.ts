@@ -1,4 +1,4 @@
-import { Marker, OldMarker, GeneralMarker, JEEMarker, NSEJSMarker, JEEMainMarker } from './marks';
+import { Marker, OldMarker, GeneralMarker, JEEMarker, NSEJSMarker, JEEMainMarker, NSEPMarker } from './marks';
 
 fdescribe('Default Marker tests:', () => {
   let marker = new OldMarker()
@@ -67,5 +67,19 @@ fdescribe('JEE Main Marker tests:', () => {
   it('mcq works', () => {
     expect(marker.mcq([0], [0]).value).toBe(4)
     expect(marker.mcq([0], [2]).value).toBe(-1)
+  })
+})
+
+fdescribe('NSEP Marker tests:', () => {
+  let marker = new NSEPMarker()
+  it('maq works', () => {
+    expect(marker.maq([1], [2]).value).toBe(0)
+    expect(marker.maq([], [2]).value).toBe(0)
+    expect(marker.maq([1], [2, 3]).value).toBe(0)
+    expect(marker.maq([1, 1], [2]).value).toBe(0)
+    expect(marker.maq([1, 2], [2, 2]).value).toBe(0)
+    expect(marker.maq([1, 2], [2, 1]).value).toBe(6)
+    expect(marker.maq([1, 2, 3], [2, 1]).value).toBe(0)
+    expect(marker.maq([1, 2, 3], [2, 3]).value).toBe(0)
   })
 })

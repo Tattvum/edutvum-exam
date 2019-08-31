@@ -5,6 +5,7 @@ export enum MarkingSchemeType {
   GENERAL, // All one mark, but NAQ (Done) as specified in solution/answer
   NSEJS, // Also BITSAT. All 3 marks, Almost all are MCQ, wrong -1
   JEEMAIN, // All 4 marks, Almost all are MCQ, wrong -1
+  NSEP, // Like BITSAT and NSEJS, but for MAQ all corect +6, even one wrong 0
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -13,6 +14,7 @@ export const MARKING_SCHEME_TYPES = [
   MarkingSchemeType.GENERAL,
   MarkingSchemeType.NSEJS,
   MarkingSchemeType.JEEMAIN,
+  MarkingSchemeType.NSEP,
 ]
 
 export const MARKING_SCHEME_TYPE_NAMES = MARKING_SCHEME_TYPES.map(m => MarkingSchemeType[m])
@@ -44,11 +46,23 @@ function single(solutions: number[], answers: number[], type: string, pos: numbe
   return { 'value': solutions[0] === answers[0] ? pos : neg, 'max': pos }
 }
 
+function maqAllOrNothing(solutions: number[], answers: number[]): boolean {
+  if (answers.length == 0) return false
+  if (solutions.length < 1) return false //MAQ should have atleast one solution
+  if (answers.length > solutions.length) return false //MAQ cannot have more answers than solutions
+  if (!isUnique(answers)) return false // MAQ answers cannot have duplicates
+  if (!isUnique(solutions)) return false // MAQ solutions cannot have duplicates
+  if (!subset(solutions, answers)) return false
+  if (!subset(answers, solutions)) return false
+  return true
+}
+
 const MARKER_MAKER = [
   () => new OldMarker(),
   () => new GeneralMarker(),
   () => new NSEJSMarker(),
   () => new JEEMainMarker(),
+  () => new NSEPMarker(),
 ]
 
 
@@ -143,7 +157,7 @@ export class JEEMarker extends Marker {
     return { 'value': 4, 'max': 4 }
   }
   scheme(): MarkingSchemeType {
-    return MarkingSchemeType.JEEMAIN//TBD
+    return MarkingSchemeType.JEEMAIN
   }
 }
 
@@ -168,5 +182,14 @@ export class JEEMainMarker extends Marker {
   }
   scheme(): MarkingSchemeType {
     return MarkingSchemeType.JEEMAIN
+  }
+}
+
+export class NSEPMarker extends NSEJSMarker {
+  maq(solutions: number[], answers: number[]): Marks {
+    return { 'value': maqAllOrNothing(solutions, answers) ? 6 : 0, 'max': 6 }
+  }
+  scheme(): MarkingSchemeType {
+    return MarkingSchemeType.NSEP
   }
 }
