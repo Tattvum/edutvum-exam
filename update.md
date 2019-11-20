@@ -29,7 +29,12 @@ cli still not updated.
 ```sh
 npm update
 npm run install (after changing package.json)
+
+ng update @angular/cli @angular/core
+npm install -g npm 
 ```
 Upgraded ng2-pagination control, just a name change.
 TBD: again that layout issue in exam listisg marks right alignment
 To update angular, need to commit
+Upgraded angular too
+
