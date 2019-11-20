@@ -39,16 +39,14 @@
       [class.pending]="ex.isPending()" style="margin-bottom: 4px;">
       <div fxLayout="column">
         <div class="light">{{ex.id}}</div>
-        <div fxLayout="row" fxLayoutWrap>
-          <div fxLayout="row">
+        <div gdAreas="side content" gdGap="4px">
+          <div fxLayout="row" gdArea="side">
             <div class="etitle actionable" fxFlexAlign="baseline"
               title="{{showWhen(ex.when)}}"(click)="takeExam(ex)">{{ex.title}}</div>
             <!-- <div class="light" fxFlexAlign="baseline" fxFlexOffset="10px">{{showWhen(ex.when)}}</div> -->
           </div>
-          <div style="flex-direction: row-reverse;" fxLayout="row-reverse" fxLayout.lt-sm="row" fxFlex.lt-sm="100%">
-            <div>
-              <button *ngIf="ex.isPending()" mat-raised-button (click)="publishExam(ex.id)">Publish</button>
-            </div>
+          <div fxLayout="row-reverse" gdArea="content">
+            <button *ngIf="ex.isPending()" mat-raised-button (click)="publishExam(ex.id)">Publish</button>
             <mat-chip-list>
               <mat-chip *ngFor="let rs of service.listResults(ex.id); let j=index"
                 color="{{rs.isLocked()? 'primary': 'warn'}}" selected="true" (click)="showExamResult(rs)"
