@@ -39,11 +39,15 @@
       [class.pending]="ex.isPending()" style="margin-bottom: 4px;">
       <div fxLayout="column">
         <div class="light">{{ex.id}}</div>
-        <div gdAreas="side content" gdGap="4px">
-          <div fxLayout="row" gdArea="side">
+        <div gdAreas="side content" gdGap="8px">
+          <div fxLayout="row" fxLayoutGap="16px" gdArea="side">
             <div class="etitle actionable" fxFlexAlign="baseline"
               title="{{showWhen(ex.when)}}"(click)="takeExam(ex)">{{ex.title}}</div>
-            <!-- <div class="light" fxFlexAlign="baseline" fxFlexOffset="10px">{{showWhen(ex.when)}}</div> -->
+            <div class="info" fxFlexAlign="baseline" fxLayoutGap="16px"
+                title="Questions : Marking Scheme : Total Marks">
+              <b>{{ex.qcount}}</b> :
+              {{ex.markingSchemeName}} : {{ex.totalMarks}}
+            </div>
           </div>
           <div fxLayout="row-reverse" gdArea="content">
             <button *ngIf="ex.isPending()" mat-raised-button (click)="publishExam(ex.id)">Publish</button>
@@ -56,6 +60,9 @@
               </mat-chip>
             </mat-chip-list>
           </div>
+        </div>
+        <div fxLayout="row" class="info" fxLayoutGap="16px">
+
         </div>
       </div>
     </mat-card>

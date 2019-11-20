@@ -3,7 +3,6 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Lib } from '../model/lib';
-import { MarkingSchemeType } from 'app/model/marks';
 
 @Component({
   selector: 'app-result',
@@ -14,10 +13,6 @@ export class ResultComponent implements OnInit {
 
   exam: ExamResult = EMPTY_EXAM_RESULT
   array = []
-
-  get examMarkingScheme(): string {
-    return MarkingSchemeType[this.exam.exam.markingScheme]
-  }
 
   constructor(private route: ActivatedRoute,
     private router: Router,
