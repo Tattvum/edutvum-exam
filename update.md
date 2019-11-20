@@ -36,5 +36,6 @@ npm install -g npm
 Upgraded ng2-pagination control, just a name change.
 TBD: again that layout issue in exam listisg marks right alignment
 To update angular, need to commit
-Upgraded angular too
+Upgraded angular too to 8.2
+
 

@@ -45,7 +45,7 @@
               title="{{showWhen(ex.when)}}"(click)="takeExam(ex)">{{ex.title}}</div>
             <!-- <div class="light" fxFlexAlign="baseline" fxFlexOffset="10px">{{showWhen(ex.when)}}</div> -->
           </div>
-          <div fxLayout="row-reverse" fxLayout.lt-sm="row" fxFlex.lt-sm="100%">
+          <div style="flex-direction: row-reverse;" fxLayout="row-reverse" fxLayout.lt-sm="row" fxFlex.lt-sm="100%">
             <div>
               <button *ngIf="ex.isPending()" mat-raised-button (click)="publishExam(ex.id)">Publish</button>
             </div>
