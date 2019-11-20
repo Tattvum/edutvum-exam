@@ -52,7 +52,7 @@ import { AppRoutingModule } from './app-routing.module';
 //https://medium.com/@tomsu/how-to-build-a-library-for-angular-apps-4f9b38b0ed11
 //import { IupacModule } from 'iupac';
 
-import { Ng2PaginationModule } from 'ng2-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AuthGuard } from './auth.guard';
 import { DataService, DataSource, SecuritySource } from './model/data.service';
@@ -104,7 +104,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
-    Ng2PaginationModule,
+    NgxPaginationModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
