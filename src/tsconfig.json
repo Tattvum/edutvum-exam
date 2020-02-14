@@ -23,5 +23,9 @@
         "../dist/iupac"
       ]
     }
-  }
+  },
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ]
 }

@@ -48,7 +48,7 @@ export class FirebaseUpload {
           console.log(fileLink)
           this.service.saveFile(qidn, fileLink).then(() => {
             console.log('uploaded and saved!')
-          })  
+          })
         })
       })
   }

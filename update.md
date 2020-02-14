@@ -39,3 +39,24 @@ To update angular, need to commit
 Upgraded angular too to 8.2
 
 
+2020-02-14 Fri - on 4.0.0
+The automatic route was messy. Says 'unhandled exception... update failed'...
+So went manual
+https://levelup.gitconnected.com/upgrade-to-angular-9-within-10-minutes-671c6fd6174b
+Did all in the above link, and then I had to ...
+1. Updated app.module.ts
+    import from @angular/material to @angular/material/card... etc.
+2. Updated firebase-api.service.ts
+    changed to '...data as {}' as in https://stackoverflow.com/a/59316300
+    The main link...
+    https://stackoverflow.com/questions/51189388/typescript-spread-types-may-only-be-created-from-object-types/51193091
+3. Updated tsconfig.json and dummied tsconfig.app.json
+    changed 'only keep entry points in files (main.ts and polyfills.ts)'
+    as in https://stackoverflow.com/a/57730727  
+    The main link...
+    https://stackoverflow.com/questions/57729518/how-to-get-rid-of-the-warning-ts-file-is-part-of-the-typescript-compilation-but
+4. Reverted back core-js in package.json
+    did 'npm i -S core-js@2.5.7' as in https://stackoverflow.com/a/56125576
+    The main link...
+    https://stackoverflow.com/questions/55398923/error-cant-resolve-core-js-es7-reflect-in-node-modules-angular-devkit-bui
+TBD: remove angularfire2 and use @angular/fire
