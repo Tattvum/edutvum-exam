@@ -60,3 +60,27 @@ Did all in the above link, and then I had to ...
     The main link...
     https://stackoverflow.com/questions/55398923/error-cant-resolve-core-js-es7-reflect-in-node-modules-angular-devkit-bui
 TBD: remove angularfire2 and use @angular/fire
+
+2020-03-29 Sun - on 4.0.2
+did global and then local
+`npm install -g @angular/cli`
+`npm install @angular/cli`
+Both came to 9.1.0
+using...
+https://stackoverflow.com/questions/56773528/repository-is-not-clean-please-commit-or-stash-any-changes-before-updating-in-a
+`ng update @angular/core @angular/material @angular/cdk --allow-dirty --force`
+(Repository is not clean. Update changes will be mixed with pre-existing changes.)
+But still upgraded to 9.1.0!
+`svr@tnr:~/lindata/edutvum/edutvum-exam$ ng update`
+  Using package manager: 'npm'
+  Collecting installed dependencies...
+  Found 55 dependencies.
+      We analyzed your package.json and everything seems to be in order. Good work!
+`npm run stage`
+working, but showed some errors about flattening source map for angular fire... so ...
+https://github.com/angular/angular/issues/35757
+Due to this, deleted package-lock.json and node_modules folder and did ...
+`npm install`
+then
+`npm run prod`
+working clean
