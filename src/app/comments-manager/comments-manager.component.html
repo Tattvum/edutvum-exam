@@ -1,0 +1,16 @@
+<div>
+  <div style="color: coral;">Comments:</div>
+  <app-editor1 heading="Add Comment" [content]="newcomment" (onedit)="addComment($event)">
+  </app-editor1>
+  <div>
+    <div *ngFor="let c of comments; let i=index">
+      <span class="comment-box-title">{{ c.title }}</span>
+      <sp></sp>
+      <sp></sp>
+      <span class="comment-box-user">{{ c.user }}</span>
+      <sp></sp>
+      <sp></sp>
+      <span class="comment-box-when" title="{{ formatWhen(c.when) }}">{{ showWhen(c.when) }}</span>
+    </div>
+  </div>
+</div>

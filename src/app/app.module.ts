@@ -20,6 +20,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -52,6 +54,8 @@ import { ExamComponent } from './exam/exam.component';
 import { NavComponent } from './nav/nav.component';
 import { DisplayComponent } from './display/display.component';
 import { ChoiceInputComponent } from './choice-input/choice-input.component';
+import { CommentsManagerComponent } from './comments-manager/comments-manager.component';
+import { TagsManagerComponent } from './tags-manager/tags-manager.component';
 import { ResultComponent } from './result/result.component';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
@@ -101,7 +105,9 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatCardModule,
     MatChipsModule,
     MatTabsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatIconModule,
+    MatAutocompleteModule
     //    IupacModule,
   ],
   declarations: [
@@ -112,6 +118,8 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     NavComponent,
     DisplayComponent,
     ChoiceInputComponent,
+    CommentsManagerComponent,
+    TagsManagerComponent,
     ResultComponent,
     LoginComponent,
     UserComponent,

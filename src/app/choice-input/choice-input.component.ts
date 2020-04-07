@@ -6,8 +6,6 @@ import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { Lib, KEY } from '../model/lib';
 import { GeneralContext } from 'app/model/general-context';
-import { Comment, CommentList } from 'app/model/comment';
-import * as moment from 'moment';
 import { ExamStatus } from 'app/model/exam';
 import { MarkingSchemeType } from 'app/model/marks';
 
@@ -32,7 +30,6 @@ export class ChoiceInputComponent implements OnInit {
   solutions = ''
   mytype = ANSWER_TYPE_NAMES
   type = 'MCQ'
-  newcomment = ''
 
   @ViewChild('first', { static: true }) private elementRef: ElementRef;
 
@@ -57,7 +54,6 @@ export class ChoiceInputComponent implements OnInit {
       this.question = this.service.getQuestion(eid, this.qid)
       this.setSolutions()
       this.setType()
-      this.setComment()
       MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
     })
   }
@@ -68,11 +64,6 @@ export class ChoiceInputComponent implements OnInit {
 
   get isPending(): boolean {
     return this.exam.exam.status === ExamStatus.PENDING && this.service.isAdmin
-  }
-
-  setComment() {
-    let cl = this.exam.commentLists[+this.qid]
-    this.newcomment = '#' + (cl == null ? 0 : cl.length)
   }
 
   setSolutions() {
@@ -146,14 +137,6 @@ export class ChoiceInputComponent implements OnInit {
     }
   }
 
-  formatWhen(dt: Date): string {
-    return moment(dt).format('llll')
-  }
-
-  showWhen(dt: Date): string {
-    return moment(dt).fromNow();
-  }
-
   get omission(): boolean {
     return this.exam.isOmitted(+this.qid)
   }
@@ -164,24 +147,6 @@ export class ChoiceInputComponent implements OnInit {
       this.exam.toggleOmission(+this.qid)
       this.service.saveExamAdmin()
     } catch (error) {
-      this.context.alert(error)
-    }
-  }
-
-  get comments(): CommentList {
-    let revChron = (a, b) => b.when.getTime() - a.when.getTime()
-    let list = this.exam.commentLists[+this.qid]
-    if (list) list = list.sort(revChron)
-    return list
-  }
-
-  addComment(newtext) {
-    try {
-      this.service.addComment(newtext, +this.qid).then(x => {
-        this.setComment()
-      })
-    } catch (error) {
-      console.log(newtext)
       this.context.alert(error)
     }
   }
