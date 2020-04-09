@@ -23,7 +23,7 @@ export class TagsManagerComponent implements OnInit {
   @Input() question: Question
   @Input() exam: ExamResult
 
-  filteredTags: Observable<Tag[]>;
+  filteredTags$: Observable<Tag[]>;
   tagCtrl = new FormControl();
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
@@ -33,18 +33,18 @@ export class TagsManagerComponent implements OnInit {
     private context: GeneralContext,
     public service: DataService
   ) {
-    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+    this.filteredTags$ = this.tagCtrl.valueChanges.pipe(
       startWith(''),
       map((title: string | null) => title ? this._filter(title) : this.service.tags.slice()))
   }
 
   private _filter(title: string): Tag[] {
     const filterValue = title.toLowerCase();
-    return this.service.tags.filter(tag => tag.title.toLowerCase().indexOf(filterValue) === 0);
+    return this.service.tags.filter(tag => tag.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
   ngOnInit(): void {
-    console.log("qid", this.qid, "question-id:", this.question.id, "exam-id:", this.exam.id)
+    // console.log("qid", this.qid, "question-id:", this.question.id, "exam-id:", this.exam.id)
   }
 
   get tags(): Tag[] {
@@ -58,11 +58,15 @@ export class TagsManagerComponent implements OnInit {
 
   private async createAndAddTag(title: string) {
     let tag = await this.service.createTag(title)
-    this.addTag(tag.id)
+    await this.addTag(tag.id)
+    this.tagCtrl.setValue(null)
   }
 
   addTagSelected(event: MatAutocompleteSelectedEvent): void {
-    this.addTag(event.option.value)
+    let tid = event.option.value.trim()
+    let title = event.option.viewValue
+    if (!this.question.tags.map(t => t.id).includes(tid)) this.addTag(tid)
+    else console.log("tag already added:", title)
     this.tagInput.nativeElement.value = ''
     this.tagCtrl.setValue(null)
   }

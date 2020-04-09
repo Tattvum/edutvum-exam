@@ -383,7 +383,7 @@ export class FirebaseDataSource implements DataSource {
 
   public editExamDetail(user: User, type: ExamEditType, diff: any,
     fullid: string, cid?: number): Promise<boolean> {
-    console.log(' - editExamDetail', ExamEditType[type], fullid, diff)
+    // console.log(' - editExamDetail', ExamEditType[type], fullid, diff)
     let url = this.editUrl(type, fullid, cid)
     // console.log(' - ', editurl)
     Lib.failif(Lib.isNil(url), 'Invalid ExamEditType', type)
@@ -462,7 +462,7 @@ export class FirebaseDataSource implements DataSource {
     let url = TAGS_URL
     return this.afbapi.listPush<Tag>(url, to, call => {
       let key = call.key
-      console.log('saved tag', url, key)
+      //console.log('saved tag', url, key)
       let tag = new Tag(key, title)
       this.holders.tags.push(tag)
       return tag
