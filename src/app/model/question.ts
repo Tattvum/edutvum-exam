@@ -2,6 +2,7 @@ import { AnswerType, TFQChoices, ARQChoices } from './answer-type';
 import { Lib } from './lib';
 import { FileLink } from './data.service';
 import { QuestionGroup } from './question-group';
+import { Tag } from './tag';
 
 export class Question {
   constructor(
@@ -15,6 +16,7 @@ export class Question {
     public readonly eid = '',
     public files: FileLink[] = [],
     public groups: QuestionGroup[] = [],
+    public tags: Tag[] = [],
   ) {
     this.validate(id, title, type, choices, solutions)
   }

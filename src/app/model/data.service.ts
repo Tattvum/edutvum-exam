@@ -14,6 +14,7 @@ import { AnswerType } from 'app/model/answer-type';
 import { GeneralContext } from 'app/model/general-context';
 import { QuestionGroup } from 'app/model/question-group';
 import { Comment } from 'app/model/comment';
+import { Tag } from './tag';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -25,6 +26,7 @@ export class Holders {
     public exams: Exam[] = [],
     public results: ExamResult[] = [],
     public users: User[] = [],
+    public tags: Tag[] = [],
   ) { }
 }
 
@@ -39,6 +41,7 @@ export enum ExamEditType {
   QuestionNotes,
   ExamNotes,
   QuestionChoicesAll,
+  QuestionTagsAll,
   QuestionGroupDisplay,
   ExamMarkingScheme,
   UNKNOWN_LAST // Just tag the end?
@@ -68,6 +71,7 @@ export abstract class DataSource {
   abstract deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean>
   abstract addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean>
   abstract deleteQuestion(user: User, fullid: string): Promise<boolean>
+  abstract createTag(user: User, title: string): Promise<Tag>
 }
 
 export abstract class SecuritySource {
@@ -86,13 +90,18 @@ interface Cache {
   [id: string]: Exam
 }
 
+interface TagCache {
+  [id: string]: Tag
+}
 
 @Injectable()
 export class DataService {
   private userCache: UserCache = {}
+  private tagCache: TagCache = {}
   private cache: Cache = {}
   private pendingResult: ExamResult
 
+  public tags: Tag[] = []
   public exams: Exam[] = []
   public results: ExamResult[] = []
   public users: User[] = []
@@ -102,6 +111,10 @@ export class DataService {
   public disableHotkeys = false
   public titleFilter = ''
   public showAll = false
+
+  public getTag(tid: string): Tag {
+    return this.tagCache[tid]
+  }
 
   private globalTimerAction: (number) => void
   private globalTimer = observableInterval(1000).subscribe(t => {
@@ -126,6 +139,9 @@ export class DataService {
     this.loading = true
     this.activeUser = user.uid
     this.dataSource.getHolders(user).then(hs => {
+      this.tagCache = {}
+      this.tags = hs.tags
+      this.tags.forEach(t => this.tagCache[t.id] = t)
       this.userCache = {}
       this.cache = {}
       this.users = hs.users
@@ -285,6 +301,10 @@ export class DataService {
   public editQuestionChoicesAll(diff: any, qidn: number): Promise<boolean> {
     return this.editQuestionDetail(diff, qidn, ExamEditType.QuestionChoicesAll)
   }
+  public editQuestionTagsAll(diff: Tag[], qidn: number): Promise<boolean> {
+    let objdiff = diff.map(t => t.id)
+    return this.editQuestionDetail(objdiff, qidn, ExamEditType.QuestionTagsAll)
+  }
 
   public editQuestionGroupDisplay(diff: any, fullid: string): Promise<boolean> {
     let type = ExamEditType.QuestionGroupDisplay
@@ -313,6 +333,16 @@ export class DataService {
   }
   public editExamMarkingScheme(diff: any, eid: string): Promise<boolean> {
     return this.editExamDetail(diff, eid, ExamEditType.ExamMarkingScheme)
+  }
+
+  public createTag(title: string): Promise<Tag> {
+    let call = u => this.dataSource.createTag(u, title)
+    return this.withUserPromise(call, tag => {
+      console.log('global tag saved!')
+      this.tags.push(tag)
+      this.tagCache[tag.id] = tag
+      return tag
+    })
   }
 
   public addComment(title: string, qidn: number): Promise<boolean> {

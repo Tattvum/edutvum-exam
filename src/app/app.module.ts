@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -86,6 +86,10 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     }),
     BrowserAnimationsModule,
     FormsModule,
+    //cant-bind-to-formcontrol-since-it-isnt-a-known-property-of-input-angular
+    //https://stackoverflow.com/a/43220824
+    //While using formControl, you have to import ReactiveFormsModule to your imports array.
+    ReactiveFormsModule,
     AppRoutingModule,
     NgxPaginationModule,
     AngularFireModule.initializeApp(firebaseConfig),

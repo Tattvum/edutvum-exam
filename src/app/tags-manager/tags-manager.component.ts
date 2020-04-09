@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 
 import { Observable } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -6,6 +6,11 @@ import { map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { ExamResult } from 'app/model/exam-result';
+import { GeneralContext } from 'app/model/general-context';
+import { DataService } from 'app/model/data.service';
+import { Question } from 'app/model/question';
+import { Tag } from 'app/model/tag';
 
 @Component({
   selector: 'app-tags-manager',
@@ -14,60 +19,70 @@ import { MatChipInputEvent } from '@angular/material/chips';
 })
 export class TagsManagerComponent implements OnInit {
 
-  fruitCtrl = new FormControl();
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  newtag = ''
-  filteredFruits: Observable<string[]>;
-  fruits: string[] = ['Lemon'];
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  @Input() qid: number
+  @Input() question: Question
+  @Input() exam: ExamResult
 
-  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+  filteredTags: Observable<Tag[]>;
+  tagCtrl = new FormControl();
+
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor() {
-    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-      startWith(null),
-      map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()))
+  constructor(
+    private context: GeneralContext,
+    public service: DataService
+  ) {
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+      startWith(''),
+      map((title: string | null) => title ? this._filter(title) : this.service.tags.slice()))
+  }
+
+  private _filter(title: string): Tag[] {
+    const filterValue = title.toLowerCase();
+    return this.service.tags.filter(tag => tag.title.toLowerCase().indexOf(filterValue) === 0);
   }
 
   ngOnInit(): void {
+    console.log("qid", this.qid, "question-id:", this.question.id, "exam-id:", this.exam.id)
   }
 
-  add(event: MatChipInputEvent): void {
+  get tags(): Tag[] {
+    return this.question.tags
+  }
+
+  private async addTag(tid: string) {
+    this.question.tags.push(this.service.getTag(tid));
+    await this.service.editQuestionTagsAll(this.question.tags, this.qid)
+  }
+
+  private async createAndAddTag(title: string) {
+    let tag = await this.service.createTag(title)
+    this.addTag(tag.id)
+  }
+
+  addTagSelected(event: MatAutocompleteSelectedEvent): void {
+    this.addTag(event.option.value)
+    this.tagInput.nativeElement.value = ''
+    this.tagCtrl.setValue(null)
+  }
+
+  addTagInput(event: MatChipInputEvent) {
+    if (!this.service.isAdmin) return
     const input = event.input;
-    const value = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.fruits.push(value.trim());
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-
-    this.fruitCtrl.setValue(null);
+    const title = event.value.trim();
+    if (title !== "") this.createAndAddTag(title)
+    if (input) input.value = '';
+    this.tagCtrl.setValue(null);
   }
 
-  remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
-
+  removeTag(tid: string): void {
+    const index = this.question.tags.map(t => t.id).indexOf(tid);
     if (index >= 0) {
-      this.fruits.splice(index, 1);
+      this.question.tags.splice(index, 1);
     }
-  }
+    this.service.editQuestionTagsAll(this.question.tags, this.qid)
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
   }
 
 }

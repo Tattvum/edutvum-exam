@@ -60,7 +60,7 @@
 </div>
 
 <hr>
-<app-comments-manager></app-comments-manager>
+<app-comments-manager [exam]="exam" [qid]="qid"></app-comments-manager>
 
 <hr>
-<app-tags-manager></app-tags-manager>
+<app-tags-manager [qid]="qid" [exam]="exam" [question]="question"></app-tags-manager>

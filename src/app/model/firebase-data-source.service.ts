@@ -16,17 +16,19 @@ import { FirebaseAPI } from 'app/model/firebase-api.service';
 import { QuestionGroup } from 'app/model/question-group';
 import { CommentList, Comment } from './comment';
 import { MarkingSchemeType } from './marks';
+import { Tag } from './tag';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams/'
 const RESULTS_URL = URL_VER + 'results/'
 const USERS_URL = URL_VER + 'users/'
+const TAGS_URL = URL_VER + 'tags/'
 
 // NOTE: PUBLIC for TEST sake ONLY
 export function fbObjToArr(obj): any[] {
   if (Lib.isNil(obj)) return []
   let arr = []
-  Object.keys(obj).forEach(function (key, index) {
+  Object.keys(obj).forEach((key, index) => {
     arr[+key] = obj[key]
   })
   return arr
@@ -36,11 +38,22 @@ export function fbObjToArr(obj): any[] {
 export function fbObjToFLArr(obj): FileLink[] {
   if (Lib.isNil(obj)) return []
   let arr = []
-  Object.keys(obj).forEach(function (key, index) {
+  Object.keys(obj).forEach((key, index) => {
     let fl = obj[key]
     fl.id = key
     arr[index] = fl
     // console.log(index, key, obj[key].file, arr[index].file)
+  })
+  return arr
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
+export function fbObjToTArr(obj, ts: { [key: string]: Tag }): Tag[] {
+  if (Lib.isNil(obj)) return []
+  let arr = []
+  Object.keys(obj).forEach((key, index) => {
+    let tid = obj[key]
+    arr[+key] = ts[tid]
   })
   return arr
 }
@@ -68,7 +81,7 @@ export function createA(type: AnswerType, given): string[] {
 let qcache: { [key: string]: Question } = {}
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] = []): Question[] {
+export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] = [], ts: { [key: string]: Tag }): Question[] {
   let qarr = []
   if (obj.kind === 'LINK') {
     let linkid = obj.eid.trim() + '.' + obj.qid.trim()
@@ -84,7 +97,7 @@ export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] =
       let qkeys = Object.keys(qobj).sort()
       for (let i = 0; i < qkeys.length; i++) {
         let k = qkeys[i]
-        let qs = createQ(qobj[k], k, eid, groups.slice(0))
+        let qs = createQ(qobj[k], k, eid, groups.slice(0), ts)
         qarr.push(...qs)
       }
     }
@@ -99,15 +112,23 @@ export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] =
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
   let files = fbObjToFLArr(obj.files)
+  let tags = fbObjToTArr(obj.tags, ts)
   let q = new Question(id, title, type, choices,
-    solutions, notes, explanation, eid, files, groups.slice(0))
+    solutions, notes, explanation, eid, files, groups.slice(0), tags)
   qcache[q.fullid()] = q
   // if (groups.length > 0) console.log('createQ GROUP', eid, q.fullid())
   return [q]
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createE(obj): Exam {
+export function createT(obj): Tag {
+  let id = obj.$key
+  let title = obj.title
+  return new Tag(id, title)
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
+export function createE(obj, ts: { [key: string]: Tag }): Exam {
   let id = obj.$key
   let title = obj.name
   let notes = obj.notes
@@ -116,7 +137,7 @@ export function createE(obj): Exam {
   let questions = []
   let qobj = obj.questions
   let qkeys = Object.keys(qobj).sort()
-  qkeys.forEach(key => questions.push(...createQ(qobj[key], key, id)))
+  qkeys.forEach(key => questions.push(...createQ(qobj[key], key, id, [], ts)))
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   let markingScheme = MarkingSchemeType.OLD
@@ -183,6 +204,7 @@ export function convertQuestion(question: Question): any {
   qo['explanation'] = question.explanation
   qo['choices'] = question.choices
   qo['solutions'] = question.solutions
+  qo['tags'] = question.tags
   qo['type'] = AnswerType[question.type]
   return qo
 }
@@ -255,13 +277,17 @@ export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
 
   private alles: { [key: string]: Exam } = {}
+  private allts: { [key: string]: Tag } = {}
 
   constructor(private afbapi: FirebaseAPI) { }
 
   async getHolders(user: User): Promise<Holders> {
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')
     this.holders = new Holders()
+    //NOTE: the below order of calls is important
+    //exams need tags, and results need exams
     await this.fetchU()
+    await this.fetchT()
     await this.fetchE()
     await this.fetchR(user)
     return this.holders
@@ -276,10 +302,19 @@ export class FirebaseDataSource implements DataSource {
     uobjs.forEach(u => this.holders.users.push(createU(u)))
   }
 
+  private async fetchT(): Promise<void> {
+    let tobjs = await this.afbapi.listFirstMap(TAGS_URL)
+    tobjs.forEach(t => {
+      let tag = createT(t)
+      this.allts[t.$key] = tag
+      this.holders.tags.push(tag)
+    })
+  }
+
   private async fetchE(): Promise<void> {
     let eobjs = await this.afbapi.listFirstMap(EXAMS_URL)
     eobjs.forEach(e => {
-      let exam = createE(e)
+      let exam = createE(e, this.allts)
       this.alles[e.$key] = exam
       this.holders.exams.push(exam)
     })
@@ -288,9 +323,10 @@ export class FirebaseDataSource implements DataSource {
 
   private async fetchR(user: User): Promise<void> {
     let robjs = await this.afbapi.listFirstMapR(this.resultsUrl(user))
-    fbObjToArr(robjs).forEach(
-      r => this.holders.results.push(createR(r, this.alles, user))
-    )
+    fbObjToArr(robjs).forEach(r => {
+      let result = createR(r, this.alles, user)
+      this.holders.results.push(result)
+    })
   }
 
   public deleteExam(user: User, rid: string): Promise<boolean> {
@@ -338,6 +374,7 @@ export class FirebaseDataSource implements DataSource {
       case ExamEditType.QuestionChoicesAll: return editurl + '/choices/'
       case ExamEditType.QuestionGroupDisplay: return editurl + '/display/'
       case ExamEditType.ExamMarkingScheme: return editurl + '/markingscheme/'
+      case ExamEditType.QuestionTagsAll: return editurl + '/tags/'
       default:
         console.log('editUrl', 'Unknown type', type)
         return null
@@ -416,6 +453,20 @@ export class FirebaseDataSource implements DataSource {
   public deleteQuestion(user: User, fullid: string): Promise<boolean> {
     let url = EXAMS_URL + fullid.replace(/\./g, '/questions/') + '/'
     return this.afbapi.objectRemoveBool(url)
+  }
+
+  public createTag(user: User, title: string): Promise<Tag> {
+    Lib.failifold(Lib.isNil(title) || title.trim() === "", 'tag cannot be undefined or empty')
+    let to = {}
+    to['title'] = title
+    let url = TAGS_URL
+    return this.afbapi.listPush<Tag>(url, to, call => {
+      let key = call.key
+      console.log('saved tag', url, key)
+      let tag = new Tag(key, title)
+      this.holders.tags.push(tag)
+      return tag
+    })
   }
 
 }
