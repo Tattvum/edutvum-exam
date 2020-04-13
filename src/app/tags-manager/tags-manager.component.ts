@@ -57,9 +57,14 @@ export class TagsManagerComponent implements OnInit {
   }
 
   private async createAndAddTag(title: string) {
-    let tag = await this.service.createTag(title)
-    await this.addTag(tag.id)
-    this.tagCtrl.setValue(null)
+    try {
+      Tag.validate(title)
+      let tag = await this.service.createTag(title)
+      await this.addTag(tag.id)
+      this.tagCtrl.setValue(null)
+    } catch (error) {
+      this.context.alert(error)
+    }
   }
 
   addTagSelected(event: MatAutocompleteSelectedEvent): void {
