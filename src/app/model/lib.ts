@@ -79,6 +79,11 @@ export class Lib {
       && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === false
   }
 
+  static isCtrlKey(ev: KeyboardEvent, k: KEY): boolean {
+    return ev.key === k && ev.metaKey === false
+      && ev.altKey === false && ev.shiftKey === false && ev.ctrlKey === true
+  }
+
   public static range(len: number): number[] {
     let arr = []
     for (let i = 0; i < len; i++) arr.push(i)

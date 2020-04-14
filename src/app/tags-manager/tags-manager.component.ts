@@ -22,6 +22,7 @@ export class TagsManagerComponent implements OnInit {
   @Input() qid: number
   @Input() question: Question
   @Input() exam: ExamResult
+  @Input() disabled: true
 
   filteredTags$: Observable<Tag[]>;
   tagCtrl = new FormControl();
@@ -58,7 +59,7 @@ export class TagsManagerComponent implements OnInit {
 
   private async createAndAddTag(title: string) {
     try {
-      Tag.validate(title)
+      title = Tag.clean(title)//Throws error if no colon
       let tag = await this.service.createTag(title)
       await this.addTag(tag.id)
       this.tagCtrl.setValue(null)

@@ -62,5 +62,10 @@
 <hr>
 <app-comments-manager [exam]="exam" [qid]="qid"></app-comments-manager>
 
+<div *ngIf="exam.isLocked()">
 <hr>
-<app-tags-manager [qid]="qid" [exam]="exam" [question]="question"></app-tags-manager>
+<app-tags-manager
+  [disabled]="!service.isAdmin"
+  [qid]="qid" [exam]="exam" [question]="question">
+</app-tags-manager>
+</div>

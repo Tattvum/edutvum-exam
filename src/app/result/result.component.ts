@@ -105,8 +105,8 @@ export class ResultComponent implements OnInit {
 
   private getTagStatTree(tag: Tag): MarkStat[] {
     let out = []
-    let pd = tag.parse
-    pd.paths.forEach(path => out.push(this.getTagStat(pd.type, path)))
+    let pd = tag.parseData
+    tag.paths.forEach(path => out.push(this.getTagStat(pd.type, path)))
     return out
   }
 

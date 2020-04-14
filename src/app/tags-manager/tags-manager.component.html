@@ -2,6 +2,7 @@
   <mat-chip-list #chipList aria-label="Tag selection">
     <mat-chip *ngFor="let tag of tags"
       [removable]="true"
+      [disabled]="disabled"
       [selectable]="true"
       (removed)="removeTag(tag.id)">
       {{tag.title}}
@@ -10,6 +11,7 @@
     <input
       placeholder="Tags..."
       #tagInput
+      [disabled]="disabled"
       [formControl]="tagCtrl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
