@@ -34,9 +34,22 @@
       <span id="seconds"> &nbsp;&nbsp; {{ qsec() }} </span>
       {{ tsec() }} &nbsp;&nbsp;
     </span>
+    <span *ngIf="!isPending && maxDuration >= 1">
+      <sp></sp><sp></sp>
+      <span style="color: blue;">Duration: <span>{{ maxDuration }}</span> (mins)</span>
+    </span>
   </div>
   <br>
   <span *ngIf="service.isAdmin">
+    <span *ngIf="isPending">
+      <mat-form-field>
+        <mat-label> <span style="color: red;">Duration (min):</span> </mat-label>
+        <input matInput type="number" placeholder="Ex. 60"
+          (change)="maxDurationChange($event.target.value)" [value]="maxDuration">
+        <sp></sp>
+      </mat-form-field>
+      <sp></sp><sp></sp>
+    </span>
     <mat-form-field>
       <mat-label> <span style="color: red;">Marking Scheme:</span> </mat-label>
       <mat-select [(value)]="markingScheme">
@@ -50,7 +63,6 @@
     </mat-form-field>
   </span>
   <div *ngIf="isPending">
-    <sp></sp><sp></sp>
     <button mat-raised-button (click)="addQuestion()">Add Question!</button>
     <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
     <button mat-raised-button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>

@@ -211,6 +211,13 @@ export class ExamResult extends Exam {
     return sc
   }
 
+  public static clone(r: ExamResult, rid: string): ExamResult {
+    return new ExamResult(
+      rid, r.title, r.when, r.exam,
+      [...r.answers], r.status, [...r.guessings], [...r.durations],
+      [...r.commentLists], r.user, [...r.omissions])
+  }
+
 }
 
 export const EMPTY_EXAM_RESULT = new ExamResult('00', 'Bingo', new Date(), EMPTY_EXAM)

@@ -45,7 +45,21 @@ export class NavComponent implements OnInit {
   }
 
   public timerAction(t: number) {
-    if (this.exam && !this.exam.isLocked()) this.exam.durationInc(this.qidn)
+    if (!this.exam || !!this.exam.isLocked()) return
+    this.exam.durationInc(this.qidn)
+
+    if (this.exam.exam.maxDuration < 1) return
+    let durTotal = this.exam.durationTotal()
+    if (durTotal % 60 !== 0) return
+    let mins = durTotal / 60
+    console.log(mins + " minutes..")
+
+    if (mins < this.exam.exam.maxDuration) return
+    console.log("EVENT!!")
+    if (!this.context.confirm('Do you want to continue the exam?')) return
+    this.service.finishExamYetContinue().then(er => {
+      console.log("Exam snapshot saved:", er.id)
+    })
   }
 
   constructor(private route: ActivatedRoute,
@@ -156,6 +170,16 @@ export class NavComponent implements OnInit {
         this.router.navigate(['/student-dash'])
       })
     }
+  }
+
+  get maxDuration(): number {
+    let value = this.exam.exam.maxDuration
+    return value ? value : 0
+  }
+
+  maxDurationChange(value: number) {
+    this.exam.exam.maxDuration = value
+    this.service.editExamMaxDuration(value, this.exam.exam.id)
   }
 
   get markingScheme(): string {

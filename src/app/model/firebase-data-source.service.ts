@@ -142,7 +142,8 @@ export function createE(obj, ts: { [key: string]: Tag }): Exam {
   if (obj.status) status = ExamStatus['' + obj.status]
   let markingScheme = MarkingSchemeType.OLD
   if (obj.markingscheme) markingScheme = MarkingSchemeType['' + obj.markingscheme]
-  return new Exam(id, title, questions, when, notes, explanation, status, markingScheme)
+  let maxDuration = obj.maxduration
+  return new Exam(id, title, questions, when, notes, explanation, status, markingScheme, maxDuration)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -224,6 +225,7 @@ export function convertPureExam(exam: Exam, user: User): any {
   eo['questions'] = qs
   eo['status'] = ExamStatus[exam.status]
   eo['markingscheme'] = MarkingSchemeType[exam.markingScheme]
+  eo['maxduration'] = exam.maxDuration
   return eo
 }
 
@@ -375,6 +377,7 @@ export class FirebaseDataSource implements DataSource {
       case ExamEditType.QuestionGroupDisplay: return editurl + '/display/'
       case ExamEditType.ExamMarkingScheme: return editurl + '/markingscheme/'
       case ExamEditType.QuestionTagsAll: return editurl + '/tags/'
+      case ExamEditType.ExamMaxDuration: return editurl + '/maxduration/'
       default:
         console.log('editUrl', 'Unknown type', type)
         return null

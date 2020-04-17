@@ -17,6 +17,7 @@ export class Exam extends AbstractThing {
     public explanation = '',
     public status = ExamStatus.DONE,
     public markingScheme = MarkingSchemeType.GENERAL,
+    public maxDuration: number = 0,
   ) {
     super(id, title, when)
     Lib.failif(Lib.isNil(questions), 'Exam questions cannot be undefined')

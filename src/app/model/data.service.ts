@@ -44,6 +44,7 @@ export enum ExamEditType {
   QuestionTagsAll,
   QuestionGroupDisplay,
   ExamMarkingScheme,
+  ExamMaxDuration,
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -231,6 +232,28 @@ export class DataService {
     })
   }
 
+  public async finishExamYetContinue(): Promise<ExamResult> {
+    try {
+      //Get current user
+      let user = await this.userWait()
+      Lib.failif(Lib.isNil(user), 'user cannot be null')
+      //Create new exam result id
+      let result = await this.dataSource.createExam(user, this.pendingResult.exam.id)
+      result = ExamResult.clone(this.pendingResult, result.id)
+      result.lock()
+      this.cache[result.id] = result
+      this.results.splice(0, 0, result)
+      //Save current result as is
+      let ok = await this.dataSource.updateExam(user, result)
+      Lib.failif(!ok, "Some error in finishing exam result")
+      //pretend like nothing happened
+      return result
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  }
+
   public pauseExam(): Promise<boolean> {
     this.globalTimerAction = null
     return this.saveExam()
@@ -333,6 +356,9 @@ export class DataService {
   }
   public editExamMarkingScheme(diff: any, eid: string): Promise<boolean> {
     return this.editExamDetail(diff, eid, ExamEditType.ExamMarkingScheme)
+  }
+  public editExamMaxDuration(diff: any, eid: string): Promise<boolean> {
+    return this.editExamDetail(diff, eid, ExamEditType.ExamMaxDuration)
   }
 
   public createTag(title: string): Promise<Tag> {
