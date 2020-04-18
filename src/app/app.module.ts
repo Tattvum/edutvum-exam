@@ -22,6 +22,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -111,7 +112,8 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatTabsModule,
     MatCheckboxModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatBadgeModule
     //    IupacModule,
   ],
   declarations: [

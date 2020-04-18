@@ -179,7 +179,7 @@ export class DataService {
 
   public listResults(eid: string): ExamResult[] {
     return this.results
-      .filter(r => r.exam.id === eid)
+      .filter(r => r.exam.id === eid && !r.snapshot)
       .sort((a, b) => b.when.getTime() - a.when.getTime())
   }
 
@@ -200,6 +200,10 @@ export class DataService {
 
   public getQuestion(eid: string, qid: string): Question {
     return this.getExam(eid).questions[+qid]
+  }
+
+  public getResultSnapshots(rid: string): ExamResult[] {
+    return (<ExamResult>this.cache[rid]).snapshotIds.map(srid => <ExamResult>this.cache[srid])
   }
 
   private withUserPromise<A, B>(call: (u: User) => Promise<A>, act: (a: A) => B): Promise<B> {
@@ -240,12 +244,17 @@ export class DataService {
       //Create new exam result id
       let result = await this.dataSource.createExam(user, this.pendingResult.exam.id)
       result = ExamResult.clone(this.pendingResult, result.id)
+      result.snapshot = true
       result.lock()
       this.cache[result.id] = result
       this.results.splice(0, 0, result)
       //Save current result as is
       let ok = await this.dataSource.updateExam(user, result)
-      Lib.failif(!ok, "Some error in finishing exam result")
+      Lib.failif(!ok, "Some error while saving the snapshot")
+      //Save pending result too with snapshot links
+      this.pendingResult.snapshotIds.push(result.id)
+      ok = await this.dataSource.updateExam(user, this.pendingResult)
+      Lib.failif(!ok, "Some error while the current exam result")
       //pretend like nothing happened
       return result
     } catch (error) {

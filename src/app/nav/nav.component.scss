@@ -193,3 +193,14 @@ progress[value = "0"] {
   line-height: 100%;
   vertical-align: middle;
 }
+
+.actionable {
+  cursor: pointer;
+}
+.snapshot-do {
+  background-color: #F90;
+}
+.snapshot-show {
+  background-color: #35B;
+  color: white;
+}

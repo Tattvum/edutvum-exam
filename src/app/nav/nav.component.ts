@@ -56,10 +56,26 @@ export class NavComponent implements OnInit {
 
     if (mins < this.exam.exam.maxDuration) return
     console.log("EVENT!!")
-    if (!this.context.confirm('Do you want to continue the exam?')) return
-    this.service.finishExamYetContinue().then(er => {
-      console.log("Exam snapshot saved:", er.id)
-    })
+    if (this.context.confirm('Time is up. Stop exam?')) {
+      this.service.finishExam().then(er => {
+        this.exam = er
+        this.router.navigate(['/results', this.exam.id])
+      })
+    } else {
+      this.service.finishExamYetContinue()
+    }
+  }
+
+  snapshot() {
+    if (this.exam.isLocked()) return
+    console.log("CAUTION: TBD: What if a snapshot is taken but then the exam is cancelled?")
+    return // CAUTION: TBD: What if a snapshot is taken but then the exam is cancelled?
+    //this.service.finishExamYetContinue()
+  }
+
+  showSnapshot(i: number) {
+    if (!this.exam.isLocked()) return
+    console.log("showSnapshot:", i)
   }
 
   constructor(private route: ActivatedRoute,
@@ -115,6 +131,10 @@ export class NavComponent implements OnInit {
   }
   tsec() {
     return Lib.timize(this.secondsTotal())
+  }
+
+  mins(secs: number) {
+    return Lib.timize(secs)
   }
 
   markGuess(guessed: boolean) {

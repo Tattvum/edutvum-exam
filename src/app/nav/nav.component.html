@@ -1,4 +1,5 @@
 <div>
+
   <div>
     <span class="eid">{{exam.exam.id}}</span>
     <span id="ename">
@@ -10,8 +11,9 @@
     <span class="eid"> ({{exam.id}})</span>
     <span class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
   </div>
+
   <br>
-  <div>
+  <div fxLayout="row" gdArea="content">
     <span id="pause" (click)="pauseExam()"
         [class.locked]="exam.isLocked()"
         data-toggle="tooltip" title="Pause Exam"
@@ -34,11 +36,29 @@
       <span id="seconds"> &nbsp;&nbsp; {{ qsec() }} </span>
       {{ tsec() }} &nbsp;&nbsp;
     </span>
-    <span *ngIf="!isPending && maxDuration >= 1">
+    <span *ngIf="!isPending && maxDuration >= 1" style="color: blue; padding-top: 4px;">
       <sp></sp><sp></sp>
-      <span style="color: blue;">Duration: <span>{{ maxDuration }}</span> (mins)</span>
+      <span>Duration: <span>{{ maxDuration }}</span> (mins)</span>
     </span>
+    <sp></sp><sp></sp>
+    <sp></sp><sp></sp>
+    <mat-chip-list>
+      <!-- <mat-chip [disabled]="exam.isLocked()" [class.actionable]="!exam.isLocked()" -->
+      <mat-chip [disabled]="true" [class.actionable]="false"
+          (click)="snapshot()">
+        <span>Snapshots:</span>
+      </mat-chip>
+    </mat-chip-list>
+    <sp></sp><sp></sp>
+    <mat-chip-list>
+      <mat-chip *ngFor="let snap of this.service.getResultSnapshots(exam.id); let j=index"
+          [disabled]="!exam.isLocked()" [class.actionable]="exam.isLocked()"
+          class="snapshot-show" (click)="showSnapshot(j)">
+        <span>{{ mins(snap.durationTotal()) }}</span>
+      </mat-chip>
+    </mat-chip-list>
   </div>
+
   <br>
   <span *ngIf="service.isAdmin">
     <span *ngIf="isPending">

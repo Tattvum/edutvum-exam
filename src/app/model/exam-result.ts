@@ -18,6 +18,8 @@ export class ExamResult extends Exam {
     readonly commentLists: CommentList[] = [],
     readonly user: User = EMPTY_USER,
     public omissions: boolean[] = [],
+    public readonly snapshotIds: string[] = [],
+    public snapshot: boolean = false,
   ) {
     super(id, title, exam.questions, when, '', '', status)
     this._secondsTotal = durations.filter(x => !Lib.isNil(x)).reduce((t, s) => t + s, 0)

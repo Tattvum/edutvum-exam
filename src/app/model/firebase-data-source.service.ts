@@ -161,7 +161,7 @@ export function asCList(obj): CommentList {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createR(obj, es: { [key: string]: Exam }, user: User): ExamResult {
+export function createR(obj, es: { [key: string]: Exam }, rs: { [key: string]: ExamResult }, user: User): ExamResult {
   let id = obj.$key
   let exam = es[obj.exam]
   let title = exam.title
@@ -184,7 +184,10 @@ export function createR(obj, es: { [key: string]: Exam }, user: User): ExamResul
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   if (status !== ExamStatus.DONE) console.log('status', id, obj.status)
-  return new ExamResult(id, title, when, exam, answers, status, guessings, durations, commentlists, user, omissions)
+  let snapshot: boolean = obj.snapshot
+  let snapshotIds = fbObjToArr(obj.snapshots)
+  return new ExamResult(id, title, when, exam, answers, status, guessings, durations,
+    commentlists, user, omissions, snapshotIds, snapshot)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -271,6 +274,8 @@ export function convertExamResult(result: ExamResult): any {
   ro['when'] = result.when.getTime()
   ro['revwhen'] = -result.when.getTime()
   ro['status'] = result.isLocked() ? 'DONE' : 'PENDING'
+  ro['snapshot'] = result.snapshot
+  ro['snapshots'] = result.snapshotIds
   return ro
 }
 
@@ -279,6 +284,7 @@ export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
 
   private alles: { [key: string]: Exam } = {}
+  private allrs: { [key: string]: ExamResult } = {}
   private allts: { [key: string]: Tag } = {}
 
   constructor(private afbapi: FirebaseAPI) { }
@@ -326,7 +332,8 @@ export class FirebaseDataSource implements DataSource {
   private async fetchR(user: User): Promise<void> {
     let robjs = await this.afbapi.listFirstMapR(this.resultsUrl(user))
     fbObjToArr(robjs).forEach(r => {
-      let result = createR(r, this.alles, user)
+      let result = createR(r, this.alles, this.allrs, user)
+      this.allrs[r.$key] = result
       this.holders.results.push(result)
     })
   }
