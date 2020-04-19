@@ -105,6 +105,12 @@ export interface QuestionDisplayContext {
   editQuestionGroupDisplay(diff: any, fullid: string): Promise<boolean>
 }
 
+export interface QuestionsManagerDisplayContext {
+  disableHotkeys: boolean
+  saveExam(): Promise<boolean>
+  finishExam(): Promise<ExamResult>
+}
+
 export interface ChoiceInputDisplayContext {
   isAdmin: boolean
   disableHotkeys: boolean

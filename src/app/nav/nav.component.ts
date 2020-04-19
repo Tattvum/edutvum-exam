@@ -29,20 +29,6 @@ export class NavComponent implements OnInit {
 
   context: NavDisplayContext
 
-  @HostListener('window:keydown', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (this.context.disableHotkeys) return
-    // console.log('window:keydown', event, event.key)
-    if (Lib.isCtrlKey(event, KEY.ARROW_RIGHT)) this.next()
-    else if (Lib.isCtrlKey(event, KEY.ARROW_LEFT)) this.prev()
-    else if (event.key === KEY.ENTER) {
-      if (event.ctrlKey === true) this.results()
-      else this.markGuess(event.altKey === true)
-    } if (event.key === KEY.ESCAPE) {
-      this.gotoDash()
-    }
-  }
-
   public timerAction(t: number) {
     if (!this.result || !!this.result.isLocked()) return
     this.result.durationInc(this.qidn)
@@ -75,6 +61,14 @@ export class NavComponent implements OnInit {
   showSnapshot(i: number) {
     if (!this.result.isLocked()) return
     console.log("showSnapshot:", i)
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (this.context.disableHotkeys) return
+    if (event.key === KEY.ESCAPE) {
+      this.gotoDash()
+    }
   }
 
   constructor(private route: ActivatedRoute,
@@ -136,29 +130,6 @@ export class NavComponent implements OnInit {
 
   mins(secs: number) {
     return Lib.timize(secs)
-  }
-
-  markGuess(guessed: boolean) {
-    if (!this.result.isAttempted(this.qidn) || this.result.isLocked()) return
-    this.result.guessings[this.qidn] = guessed
-    this.context.saveExam()
-    this.next()
-  }
-
-  next() {
-    let qid = this.result.nextq(this.qidn)
-    if (qid == null) this.results()
-    else this.select(+qid)
-  }
-
-  prev() {
-    let qid = this.result.prevq(this.qidn)
-    if (qid == null) this.results()
-    else this.select(+qid)
-  }
-
-  select(qid: number) {
-    this.router.navigate(['/question', this.result.id, qid])
   }
 
   results() {

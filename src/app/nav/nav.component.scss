@@ -50,46 +50,6 @@ progress[value = "0"] {
   color: lightcoral
 }
 
-.nav-button {
-  font-size: smaller;
-  height: 20px;
-}
-
-.nav-number {
-  white-space: nowrap;
-  height: 20px;
-  width: 30px;
-  margin: 1px;
-  padding: 1px;
-  text-align: center;
-}
-
-#results {
-  white-space: nowrap;
-  height: 20px;
-  width: unset;
-  background-color: slategray;
-  padding: 1px 6px;
-  border-color: slategray;
-  color: white;
-}
-
-@mixin selHigh() {
-  font-weight: bold;
-  border: 1px solid black;
-  border-width: 2px 1px 2px;
-}
-
-.nav-number.selected {
-  @include selHigh();
-  color: black;
-}
-
-#results.selected {
-  @include selHigh();
-  background-color: black;
-}
-
 #pause.locked {
   display: none;
 }
@@ -100,74 +60,6 @@ progress[value = "0"] {
 #done.locked {
   background-color: lightslategrey;
   border-color: transparent;
-}
-
-/*---- number button ----*/
-
-@mixin bgfg($bg, $fg) {
-  background-color: $bg;
-  color: $fg;
-}
-
-@mixin omit() {
-  border: 3px dotted darkblue;
-  text-decoration: line-through;
-}
-
-.nav-number.attempted {
-  &:not(.locked) {
-    @include bgfg(lightseagreen, white);
-    &.guessing {
-      @include bgfg(lightcoral, white);
-    }
-  }
-  &.locked {
-    &.guessing {
-      opacity: 0.7;
-    }
-    @include bgfg(red, white);
-    &.partial {
-      @include bgfg(orange, white);
-    }
-    &.correct {
-      @include bgfg(green, white);
-    }
-    &.omitted {
-      @include omit();
-    }
-  }
-}
-
-.nav-number.omitted {
-  @include omit();
-}
-
-//---- guessing button ----
-
-.btn-doubt:not(.attempted),
-.btn-doubt.disabled:not(.selected),
-#continue.attempted:not(.locked)  {
-  display: none;
-}
-.btn-doubt.locked  {
-  border: 1px solid yellow
-}
-
-@each $kind, $color in ('sure', lightseagreen), ('guess' lightcoral) {
-  #btn-#{$kind} {
-    &.selected {
-      @include bgfg(#{$color}, white);
-    }
-    &:not(.selected) {
-      border: 1px solid #{$color};
-      @include bgfg(white, #{$color});
-
-      &:not(.disabled):hover {
-        @include bgfg(#{$color}, white);
-        opacity: 0.8;
-      }
-    }
-  }
 }
 
 //---- ---- ----

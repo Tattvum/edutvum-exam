@@ -1,0 +1,43 @@
+<div class="btn-toolbar" role="toolbar">
+  <span *ngFor="let q of result.questions; let i=index">
+    <span
+      class="btn btn-info nav-button nav-number" role="group"
+      [class.locked]="result.isLocked()"
+      [class.partial]="result.isPartial(i)"
+      [class.correct]="result.isCorrect(i)"
+      [class.guessing]="result.guessings[i]"
+      [class.attempted]="result.isAttempted(i)"
+      [class.omitted]="result.isOmitted(i)"
+      [class.selected]="i == qidn"
+      (click)="select(i)"
+      id="b{{i}}"
+      type="button">
+      {{i+1}}
+    </span>
+  </span>
+  <span id="results" (click)="results()" [class.selected]="isResultsPage"
+      class="btn btn-info nav-button">
+    Results
+  </span>
+</div>
+<br>
+<span id="continue" (click)="next()"
+    [class.locked]="result.isLocked()"
+    [class.attempted]="result.isAttempted(qidn)"
+    class="btn btn-small btn-primary btn-sm" >
+  Continue <span class="glyphicon glyphicon-arrow-right glyph-span"></span>
+</span> <sp></sp>
+<span (click)="markGuess(false)" id="btn-sure"
+    [class.disabled]="result.isLocked()"
+    [class.attempted]="result.isAttempted(qidn)"
+    [class.selected]="!result.guessings[qidn]"
+    class="btn btn-small btn-sm btn-doubt" >
+  I'm sure
+</span> <sp></sp>
+<span (click)="markGuess(true)" id="btn-guess"
+    [class.disabled]="result.isLocked()"
+    [class.attempted]="result.isAttempted(qidn)"
+    [class.selected]="result.guessings[qidn]"
+    class="btn  btn-small btn-sm btn-doubt" >
+  I'm guessing
+</span>
