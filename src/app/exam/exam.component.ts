@@ -16,6 +16,7 @@ export class ExamComponent implements OnInit {
   isLocked = false
   result: ExamResult = EMPTY_EXAM_RESULT
   qid: string
+  qidn: number
   question: Question
 
   constructor(private route: ActivatedRoute, private service: DataService) { }
@@ -28,8 +29,11 @@ export class ExamComponent implements OnInit {
       this.isLocked = this.result.isLocked()
       this.qid = params['qid']
       this.isResultsPage = (Lib.isNil(this.qid))
-      if (this.isResultsPage) this.question = null
-      else this.question = this.service.getQuestion(eid, this.qid)
+      this.question = null
+      this.qidn = -1
+      if (this.isResultsPage) return
+      this.qidn = +this.qid
+      this.question = this.service.getQuestion(eid, this.qid)
     })
   }
 }

@@ -1,17 +1,15 @@
 import 'rxjs'
 
 import { Component, OnInit, HostListener, Input } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService, FileLink, NavDisplayContext } from '../model/data.service';
+import { Router } from '@angular/router';
+import { DataService, NavDisplayContext } from '../model/data.service';
 import { ExamStatus } from '../model/exam';
-import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
+import { ExamResult } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { Lib, KEY } from '../model/lib';
 
-import { Upload } from '../model/upload';
-import { FirebaseUpload } from '../model/firebase-upload.service';
-import { EMPTY_QUESTION } from 'app/model/question';
 import { MARKING_SCHEME_TYPE_NAMES, MarkingSchemeType } from 'app/model/marks';
+import { Question, EMPTY_QUESTION } from 'app/model/question';
 
 @Component({
   selector: 'app-nav',
@@ -21,13 +19,11 @@ import { MARKING_SCHEME_TYPE_NAMES, MarkingSchemeType } from 'app/model/marks';
 export class NavComponent implements OnInit {
 
   @Input() result: ExamResult
+  @Input() qidn: number
+  @Input() question: Question
 
-  question = EMPTY_QUESTION
   isResultsPage = false
-  qidn: number
   // readonly schemes = MARKING_SCHEME_TYPE_NAMES
-
-  context: NavDisplayContext
 
   public timerAction(t: number) {
     if (!this.result || !!this.result.isLocked()) return
@@ -71,32 +67,18 @@ export class NavComponent implements OnInit {
     }
   }
 
-  constructor(private route: ActivatedRoute,
-    private router: Router,
-    private generalContext: GeneralContext,
-    private uploader: FirebaseUpload,
-    private service: DataService) {
+  context: NavDisplayContext
+
+  constructor(private router: Router,
+    private generalContext: GeneralContext, service: DataService) {
     this.context = service
   }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      this.result = EMPTY_EXAM_RESULT
-      this.isResultsPage = false
-      this.qidn = -1
-      let eid = params['eid']
-      let exam = this.service.getExam(eid)
-      if (Lib.isNil(exam)) return
-      this.result = exam
-      let qid = params['qid']
-      this.isResultsPage = (Lib.isNil(qid))
-      if (this.isResultsPage) return
-      this.qidn = +qid
-      this.question = this.result.questions[this.qidn]
-      this.isResultsPage = false
-      console.log("ngOnInit-exam", this.result.id)
-      this.context.timerOnlyMe(t => this.timerAction(t))
-    })
+    this.isResultsPage = this.qidn < 0
+    this.context.timerOnlyMe(t => this.timerAction(t))
+    if (!this.isResultsPage) this.question = this.result.questions[this.qidn]
+    else this.question = EMPTY_QUESTION
   }
 
   get isPending(): boolean {

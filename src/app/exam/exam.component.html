@@ -1,6 +1,6 @@
 <app-user></app-user>
 <div class="container-fluid">
-  <app-nav [result]="result"></app-nav>
+  <app-nav [qidn]="qidn" [question]="question" [result]="result"></app-nav>
   <hr>
   <div *ngIf="!isResultsPage">
     <app-display [qid]="qid" [question]="question"></app-display>
