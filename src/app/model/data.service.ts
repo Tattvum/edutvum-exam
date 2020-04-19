@@ -100,6 +100,14 @@ export interface UserDisplayContext {
   logout(): Promise<void>
 }
 
+export interface TagsDisplayContext {
+  tags: Tag[]
+  isAdmin: boolean
+  getTag(tid: string): Tag
+  editQuestionTagsAll(diff: Tag[], qidn: number): Promise<boolean>
+  createTag(title: string): Promise<Tag>
+}
+
 export interface QuestionDisplayContext {
   editQuestionDisplay(diff: any, qidn: number): Promise<boolean>
   editQuestionGroupDisplay(diff: any, fullid: string): Promise<boolean>
@@ -152,7 +160,8 @@ export interface NavDisplayContext {
 @Injectable()
 export class DataService
   implements UserDisplayContext, QuestionDisplayContext, NavDisplayContext,
-  ChoiceInputDisplayContext, DetailsDisplayContext {
+  ChoiceInputDisplayContext, DetailsDisplayContext,
+  TagsDisplayContext, QuestionsManagerDisplayContext {
 
   private userCache: UserCache = {}
   private tagCache: TagCache = {}

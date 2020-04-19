@@ -8,7 +8,7 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ExamResult } from 'app/model/exam-result';
 import { GeneralContext } from 'app/model/general-context';
-import { DataService } from 'app/model/data.service';
+import { DataService, TagsDisplayContext } from 'app/model/data.service';
 import { Question } from 'app/model/question';
 import { Tag } from 'app/model/tag';
 
@@ -29,18 +29,18 @@ export class TagsManagerComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor(
-    private context: GeneralContext,
-    public service: DataService
-  ) {
+  context: TagsDisplayContext
+
+  constructor(private generalContext: GeneralContext, service: DataService) {
+    this.context = service
     this.filteredTags$ = this.tagCtrl.valueChanges.pipe(
       startWith(''),
-      map((title: string | null) => title ? this._filter(title) : this.service.tags.slice()))
+      map((title: string | null) => title ? this._filter(title) : this.context.tags.slice()))
   }
 
   private _filter(title: string): Tag[] {
     const filterValue = title.toLowerCase();
-    return this.service.tags.filter(tag => tag.title.toLowerCase().indexOf(filterValue) >= 0);
+    return this.context.tags.filter(tag => tag.title.toLowerCase().indexOf(filterValue) >= 0);
   }
 
   ngOnInit(): void {
@@ -52,18 +52,18 @@ export class TagsManagerComponent implements OnInit {
   }
 
   private async addTag(tid: string) {
-    this.question.tags.push(this.service.getTag(tid));
-    await this.service.editQuestionTagsAll(this.question.tags, this.qid)
+    this.question.tags.push(this.context.getTag(tid));
+    await this.context.editQuestionTagsAll(this.question.tags, this.qid)
   }
 
   private async createAndAddTag(title: string) {
     try {
       title = Tag.clean(title)//Throws error if no colon
-      let tag = await this.service.createTag(title)
+      let tag = await this.context.createTag(title)
       await this.addTag(tag.id)
       this.tagCtrl.setValue(null)
     } catch (error) {
-      this.context.alert(error)
+      this.generalContext.alert(error)
     }
   }
 
@@ -77,7 +77,7 @@ export class TagsManagerComponent implements OnInit {
   }
 
   addTagInput(event: MatChipInputEvent) {
-    if (!this.service.isAdmin) return
+    if (!this.context.isAdmin) return
     const input = event.input;
     const title = event.value.trim();
     if (title !== "") this.createAndAddTag(title)
@@ -90,7 +90,7 @@ export class TagsManagerComponent implements OnInit {
     if (index >= 0) {
       this.question.tags.splice(index, 1);
     }
-    this.service.editQuestionTagsAll(this.question.tags, this.qid)
+    this.context.editQuestionTagsAll(this.question.tags, this.qid)
 
   }
 
