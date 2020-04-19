@@ -1,9 +1,8 @@
 import 'rxjs'
-import { Observable } from 'rxjs';
 
 import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService, ExamEditType, FileLink } from '../model/data.service';
+import { DataService, FileLink, NavDisplayContext } from '../model/data.service';
 import { ExamStatus } from '../model/exam';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
@@ -28,12 +27,14 @@ export class NavComponent implements OnInit {
   qidn: number
   // readonly schemes = MARKING_SCHEME_TYPE_NAMES
 
+  context: NavDisplayContext
+
   selectedFiles: FileList;
   currentUpload: Upload;
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (this.service.disableHotkeys) return
+    if (this.context.disableHotkeys) return
     // console.log('window:keydown', event, event.key)
     if (Lib.isCtrlKey(event, KEY.ARROW_RIGHT)) this.next()
     else if (Lib.isCtrlKey(event, KEY.ARROW_LEFT)) this.prev()
@@ -58,12 +59,12 @@ export class NavComponent implements OnInit {
     if (mins < this.result.exam.maxDuration) return
     console.log("EVENT!!")
     if (this.generalContext.confirm('Time is up. Stop exam?')) {
-      this.service.finishExam().then(er => {
+      this.context.finishExam().then(er => {
         this.result = er
         this.router.navigate(['/results', this.result.id])
       })
     } else {
-      this.service.finishExamYetContinue()
+      this.context.finishExamYetContinue()
     }
   }
 
@@ -71,7 +72,7 @@ export class NavComponent implements OnInit {
     if (this.result.isLocked()) return
     console.log("CAUTION: TBD: What if a snapshot is taken but then the exam is cancelled?")
     return // CAUTION: TBD: What if a snapshot is taken but then the exam is cancelled?
-    //this.service.finishExamYetContinue()
+    //this.context.finishExamYetContinue()
   }
 
   showSnapshot(i: number) {
@@ -83,7 +84,8 @@ export class NavComponent implements OnInit {
     private router: Router,
     private generalContext: GeneralContext,
     private uploader: FirebaseUpload,
-    public service: DataService) {
+    private service: DataService) {
+    this.context = service
   }
 
   ngOnInit() {
@@ -102,12 +104,12 @@ export class NavComponent implements OnInit {
       this.question = this.result.questions[this.qidn]
       this.isResultsPage = false
       console.log("ngOnInit-exam", this.result.id)
-      this.service.timerOnlyMe(t => this.timerAction(t))
+      this.context.timerOnlyMe(t => this.timerAction(t))
     })
   }
 
   get isPending(): boolean {
-    return this.result.exam.status === ExamStatus.PENDING && this.service.isAdmin
+    return this.result.exam.status === ExamStatus.PENDING && this.context.isAdmin
   }
 
   isBelowVer6(): boolean {
@@ -142,7 +144,7 @@ export class NavComponent implements OnInit {
   markGuess(guessed: boolean) {
     if (!this.result.isAttempted(this.qidn) || this.result.isLocked()) return
     this.result.guessings[this.qidn] = guessed
-    this.service.saveExam()
+    this.context.saveExam()
     this.next()
   }
 
@@ -166,7 +168,7 @@ export class NavComponent implements OnInit {
     if (Lib.isNil(this.result)) return
     if (!this.result.isLocked()) {
       if (!this.generalContext.confirm('Done with the exam?!')) return
-      this.service.finishExam().then(er => {
+      this.context.finishExam().then(er => {
         this.result = er
         this.router.navigate(['/results', this.result.id])
       })
@@ -177,7 +179,7 @@ export class NavComponent implements OnInit {
 
   pauseExam() {
     if (!this.result.isLocked()) {
-      this.service.pauseExam().then(ok => {
+      this.context.pauseExam().then(ok => {
         this.generalContext.alert('The exam will be paused now. \nYou can resume from the dashboard.')
         this.router.navigate(['/student-dash'])
       })
@@ -188,7 +190,7 @@ export class NavComponent implements OnInit {
     if (this.result.isLocked()) {
       this.router.navigate(['/student-dash'])
     } else if (this.generalContext.confirm('Cancel the exam: Sure?!')) {
-      this.service.cancelExam().then(ok => {
+      this.context.cancelExam().then(ok => {
         this.router.navigate(['/student-dash'])
       })
     }
@@ -201,7 +203,7 @@ export class NavComponent implements OnInit {
 
   maxDurationChange(value: number) {
     this.result.exam.maxDuration = value
-    this.service.editExamMaxDuration(value, this.result.exam.id)
+    this.context.editExamMaxDuration(value, this.result.exam.id)
   }
 
   get markingScheme(): string {
@@ -210,16 +212,16 @@ export class NavComponent implements OnInit {
   set markingScheme(value: string) {
     console.log(value, (<any>MarkingSchemeType)[value])
     this.result.exam.markingScheme = (<any>MarkingSchemeType)[value]
-    this.service.editExamMarkingScheme(value, this.result.exam.id)
+    this.context.editExamMarkingScheme(value, this.result.exam.id)
   }
 
   onEditTitle(newtext) {
     this.result.exam.title = newtext
-    this.service.editExamTitle(newtext, this.result.exam.id)
+    this.context.editExamTitle(newtext, this.result.exam.id)
   }
 
   addQuestion() {
-    this.service.addQuestion(this.qidn).then(n => {
+    this.context.addQuestion(this.qidn).then(n => {
       this.router.navigate(['/question', this.result.id, n])
     })
   }
@@ -227,7 +229,7 @@ export class NavComponent implements OnInit {
   addLinkQuestion() {
     let fullid = this.generalContext.prompt('Please enter the LINK ExamID.QuestionID')
     if (fullid && fullid.length > 0) {
-      this.service.addLinkQuestion(fullid).then(ok => {
+      this.context.addLinkQuestion(fullid).then(ok => {
         this.router.navigate(['/question', this.result.id, this.result.questions.length - 1])
       })
     }
@@ -258,14 +260,14 @@ export class NavComponent implements OnInit {
   }
 
   startGroup() {
-    this.service.startGroup(this.qidn).then(ok => {
+    this.context.startGroup(this.qidn).then(ok => {
       this.router.navigate(['/question', this.result.id, this.result.questions.length - 1])
     })
   }
 
   deleteQuestion() {
     if (this.generalContext.confirm('Question deletion is irretrievable! Continue?!')) {
-      this.service.deleteQuestion(this.qidn).then(ok => {
+      this.context.deleteQuestion(this.qidn).then(ok => {
         this.router.navigate(['/results', this.result.id])
       })
     }

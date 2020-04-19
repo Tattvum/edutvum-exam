@@ -1,5 +1,5 @@
 
-import { interval as observableInterval, Observable } from 'rxjs';
+import { interval as observableInterval } from 'rxjs';
 import 'rxjs';
 
 

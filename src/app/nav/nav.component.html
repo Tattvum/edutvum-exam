@@ -51,7 +51,7 @@
     </mat-chip-list>
     <sp></sp><sp></sp>
     <mat-chip-list>
-      <mat-chip *ngFor="let snap of this.service.getResultSnapshots(result.id); let j=index"
+      <mat-chip *ngFor="let snap of this.context.getResultSnapshots(result.id); let j=index"
           [disabled]="!result.isLocked()" [class.actionable]="result.isLocked()"
           class="snapshot-show" (click)="showSnapshot(j)">
         <span>{{ mins(snap.durationTotal()) }}</span>
@@ -60,7 +60,7 @@
   </div>
 
   <br>
-  <span *ngIf="service.isAdmin">
+  <span *ngIf="context.isAdmin">
     <span *ngIf="isPending">
       <mat-form-field>
         <mat-label> <span style="color: red;">Duration (min):</span> </mat-label>
