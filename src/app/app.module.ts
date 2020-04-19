@@ -73,6 +73,7 @@ import { ChartComponent } from './chart/chart.component';
 import { EditorComponent } from './editor/editor.component';
 import { Editor1Component } from './editor1/editor1.component';
 import { MathJaxDirective } from './mathjax.directive';
+import { FilesManagerComponent } from './files-manager/files-manager.component';
 
 export const firebaseConfig = environment.firebaseConfig;
 
@@ -139,6 +140,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     NumberInputComponent,
     SmallIntInputComponent,
     ListInputComponent,
+    FilesManagerComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

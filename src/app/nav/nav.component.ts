@@ -29,9 +29,6 @@ export class NavComponent implements OnInit {
 
   context: NavDisplayContext
 
-  selectedFiles: FileList;
-  currentUpload: Upload;
-
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if (this.context.disableHotkeys) return
@@ -232,30 +229,6 @@ export class NavComponent implements OnInit {
       this.context.addLinkQuestion(fullid).then(ok => {
         this.router.navigate(['/question', this.result.id, this.result.questions.length - 1])
       })
-    }
-  }
-
-  uploadFiles(event) {
-    this.selectedFiles = event.target.files;
-    console.log(this.selectedFiles)
-    Lib.range(this.selectedFiles.length).forEach(i => {
-      this.currentUpload = new Upload(this.selectedFiles.item(i));
-      this.uploader.pushUpload(this.result.exam.id, this.qidn, this.currentUpload)
-    })
-  }
-
-  copyUrlToClipboard(f: FileLink, event) {
-    let selectbox = event.target.parentNode.querySelector('.selectbox')
-    selectbox.select()
-    document.execCommand('Copy')
-    console.log('copied', f.url)
-  }
-
-  removeFile(f: FileLink) {
-    if (this.generalContext.confirm(`Delete the file: ${f.file}. Sure?!
-      \n Please ensure that your existing tags are not using it.`)) {
-      console.log(f.id)
-      this.uploader.deleteFileStorage(this.result.exam.id, this.qidn, f)
     }
   }
 
