@@ -21,7 +21,6 @@ export class TagsManagerComponent implements OnInit {
 
   @Input() qid: number
   @Input() question: Question
-  @Input() exam: ExamResult
   @Input() disabled: true
 
   filteredTags$: Observable<Tag[]>;

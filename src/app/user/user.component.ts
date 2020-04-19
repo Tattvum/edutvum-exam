@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { DataService } from '../model/data.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { UserDisplayContext, DataService } from '../model/data.service';
 import { User } from '../model/user';
 import { Router } from '@angular/router';
 
@@ -10,12 +10,14 @@ import { Router } from '@angular/router';
 })
 export class UserComponent {
 
-  constructor(
-    public service: DataService,
-    private router: Router) { }
+  context: UserDisplayContext
+
+  constructor(private router: Router, service: DataService) {
+    this.context = service;
+  }
 
   logout() {
-    this.service.logout().then(() => {
+    this.context.logout().then(() => {
       this.router.navigate([''])
     })
   }

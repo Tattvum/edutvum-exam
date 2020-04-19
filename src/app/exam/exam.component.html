@@ -1,17 +1,17 @@
 <app-user></app-user>
 <div class="container-fluid">
-  <app-nav></app-nav>
+  <app-nav [result]="result"></app-nav>
   <hr>
   <div *ngIf="!isResultsPage">
-    <app-display></app-display>
+    <app-display [qid]="qid" [question]="question"></app-display>
     <hr>
-    <app-choice-input></app-choice-input>
+    <app-choice-input [qid]="qid" [question]="question" [result]="result"></app-choice-input>
     <div *ngIf="isLocked">
-      <app-details></app-details>
+      <app-details [qid]="qid" [question]="question" [result]="result"></app-details>
     </div>
   </div>
   <div *ngIf="isResultsPage">
-    <app-result></app-result>
+    <app-result [result]="result"></app-result>
   </div>
   <hr>
 </div>

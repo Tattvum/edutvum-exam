@@ -13,7 +13,7 @@ import { DataService } from 'app/model/data.service';
 export class CommentsManagerComponent implements OnInit {
 
   @Input() qid: number
-  @Input() exam: ExamResult = EMPTY_EXAM_RESULT
+  @Input() result: ExamResult = EMPTY_EXAM_RESULT
 
   newcomment = ''
 
@@ -34,13 +34,13 @@ export class CommentsManagerComponent implements OnInit {
   }
 
   setComment() {
-    let cl = this.exam.commentLists[this.qid]
+    let cl = this.result.commentLists[this.qid]
     this.newcomment = '#' + (cl == null ? 0 : cl.length)
   }
 
   get comments(): CommentList {
     let revChron = (a, b) => b.when.getTime() - a.when.getTime()
-    let list = this.exam.commentLists[this.qid]
+    let list = this.result.commentLists[this.qid]
     if (list) list = list.sort(revChron)
     return list
   }

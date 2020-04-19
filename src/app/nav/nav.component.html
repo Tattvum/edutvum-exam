@@ -1,36 +1,36 @@
 <div>
 
   <div>
-    <span class="eid">{{exam.exam.id}}</span>
+    <span class="eid">{{result.exam.id}}</span>
     <span id="ename">
       <app-editor heading="Edit Exam Title"
-        [content]="exam.exam.title"
+        [content]="result.exam.title"
         (onedit)="onEditTitle($event)" >
       </app-editor>
     </span>
-    <span class="eid"> ({{exam.id}})</span>
-    <span class="when"> {{exam.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
+    <span class="eid"> ({{result.id}})</span>
+    <span class="when"> {{result.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
   </div>
 
   <br>
   <div fxLayout="row" gdArea="content">
     <span id="pause" (click)="pauseExam()"
-        [class.locked]="exam.isLocked()"
+        [class.locked]="result.isLocked()"
         data-toggle="tooltip" title="Pause Exam"
         class="btn btn-small btn-danger btn-sm" >
       <span class="glyphicon glyphicon-pause"></span>
     </span> <sp></sp>
     <span id="cancel" (click)="gotoDash()"
-        [class.locked]="exam.isLocked()"
+        [class.locked]="result.isLocked()"
         class="btn btn-small btn-danger btn-sm" >
-      <span *ngIf="!exam.isLocked()">Cancel</span>
-      <span *ngIf="exam.isLocked()">Home</span>
+      <span *ngIf="!result.isLocked()">Cancel</span>
+      <span *ngIf="result.isLocked()">Home</span>
     </span> <sp></sp>
     <span id="done" (click)="results()"
-        [class.locked]="exam.isLocked()"
+        [class.locked]="result.isLocked()"
         class="btn btn-small btn-success btn-sm" >
-      <span *ngIf="!exam.isLocked()">Done</span>
-      <span *ngIf="exam.isLocked()">Results</span>
+      <span *ngIf="!result.isLocked()">Done</span>
+      <span *ngIf="result.isLocked()">Results</span>
     </span>
     <span [class.hidden]="isBelowVer6()">
       <span id="seconds"> &nbsp;&nbsp; {{ qsec() }} </span>
@@ -43,7 +43,7 @@
     <sp></sp><sp></sp>
     <sp></sp><sp></sp>
     <mat-chip-list>
-      <!-- <mat-chip [disabled]="exam.isLocked()" [class.actionable]="!exam.isLocked()" -->
+      <!-- <mat-chip [disabled]="result.isLocked()" [class.actionable]="!result.isLocked()" -->
       <mat-chip [disabled]="true" [class.actionable]="false"
           (click)="snapshot()">
         <span>Snapshots:</span>
@@ -51,8 +51,8 @@
     </mat-chip-list>
     <sp></sp><sp></sp>
     <mat-chip-list>
-      <mat-chip *ngFor="let snap of this.service.getResultSnapshots(exam.id); let j=index"
-          [disabled]="!exam.isLocked()" [class.actionable]="exam.isLocked()"
+      <mat-chip *ngFor="let snap of this.service.getResultSnapshots(result.id); let j=index"
+          [disabled]="!result.isLocked()" [class.actionable]="result.isLocked()"
           class="snapshot-show" (click)="showSnapshot(j)">
         <span>{{ mins(snap.durationTotal()) }}</span>
       </mat-chip>
@@ -91,15 +91,15 @@
   </div>
   <br>
   <div class="btn-toolbar" role="toolbar">
-    <span *ngFor="let q of exam.questions; let i=index">
+    <span *ngFor="let q of result.questions; let i=index">
       <span
         class="btn btn-info nav-button nav-number" role="group"
-        [class.locked]="exam.isLocked()"
-        [class.partial]="exam.isPartial(i)"
-        [class.correct]="exam.isCorrect(i)"
-        [class.guessing]="exam.guessings[i]"
-        [class.attempted]="exam.isAttempted(i)"
-        [class.omitted]="exam.isOmitted(i)"
+        [class.locked]="result.isLocked()"
+        [class.partial]="result.isPartial(i)"
+        [class.correct]="result.isCorrect(i)"
+        [class.guessing]="result.guessings[i]"
+        [class.attempted]="result.isAttempted(i)"
+        [class.omitted]="result.isOmitted(i)"
         [class.selected]="i == qidn"
         (click)="select(i)"
         id="b{{i}}"
@@ -114,22 +114,22 @@
   </div>
   <br>
   <span id="continue" (click)="next()"
-      [class.locked]="exam.isLocked()"
-      [class.attempted]="exam.isAttempted(qidn)"
+      [class.locked]="result.isLocked()"
+      [class.attempted]="result.isAttempted(qidn)"
       class="btn btn-small btn-primary btn-sm" >
     Continue <span class="glyphicon glyphicon-arrow-right glyph-span"></span>
   </span> <sp></sp>
   <span (click)="markGuess(false)" id="btn-sure"
-      [class.disabled]="exam.isLocked()"
-      [class.attempted]="exam.isAttempted(qidn)"
-      [class.selected]="!exam.guessings[qidn]"
+      [class.disabled]="result.isLocked()"
+      [class.attempted]="result.isAttempted(qidn)"
+      [class.selected]="!result.guessings[qidn]"
       class="btn btn-small btn-sm btn-doubt" >
     I'm sure
   </span> <sp></sp>
   <span (click)="markGuess(true)" id="btn-guess"
-      [class.disabled]="exam.isLocked()"
-      [class.attempted]="exam.isAttempted(qidn)"
-      [class.selected]="exam.guessings[qidn]"
+      [class.disabled]="result.isLocked()"
+      [class.attempted]="result.isAttempted(qidn)"
+      [class.selected]="result.guessings[qidn]"
       class="btn  btn-small btn-sm btn-doubt" >
     I'm guessing
   </span>

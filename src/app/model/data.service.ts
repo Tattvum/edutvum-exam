@@ -95,8 +95,59 @@ interface TagCache {
   [id: string]: Tag
 }
 
+export interface UserDisplayContext {
+  user(): User
+  logout(): Promise<void>
+}
+
+export interface QuestionDisplayContext {
+  editQuestionDisplay(diff: any, qidn: number): Promise<boolean>
+  editQuestionGroupDisplay(diff: any, fullid: string): Promise<boolean>
+}
+
+export interface ChoiceInputDisplayContext {
+  isAdmin: boolean
+  disableHotkeys: boolean
+  saveExam(): Promise<boolean>
+  saveExamAdmin(): Promise<boolean>
+  editQuestionChoice(diff: any, qidn: number, cid: number): Promise<boolean>
+  editQuestionSolution(diff: any, qidn: number): Promise<boolean>
+  editQuestionType(diff: any, qidn: number): Promise<boolean>
+  editQuestionChoicesAll(diff: any, qidn: number): Promise<boolean>
+}
+
+export interface DetailsDisplayContext {
+  isAdmin: boolean
+  editQuestionExplanation(diff: any, qidn: number): Promise<boolean>
+  editQuestionNotes(diff: any, qidn: number): Promise<boolean>
+  editExamExplanation(diff: any, eid: string): Promise<boolean>
+  editExamNotes(diff: any, eid: string): Promise<boolean>
+}
+
+export interface NavDisplayContext {
+  isAdmin: boolean
+  disableHotkeys: boolean
+  timerOnlyMe(onlyMe: (i: number) => void): void
+  finishExam(): Promise<ExamResult>
+  finishExamYetContinue(): Promise<ExamResult>
+  pauseExam(): Promise<boolean>
+  saveExam(): Promise<boolean>
+  cancelExam(): Promise<boolean>
+  editExamTitle(diff: any, eid: string): Promise<boolean>
+  editExamMarkingScheme(diff: any, eid: string): Promise<boolean>
+  editExamMaxDuration(diff: any, eid: string): Promise<boolean>
+  addQuestion(qidn: number, groups?: QuestionGroup[]): Promise<number>
+  addLinkQuestion(fullid: string): Promise<boolean>
+  startGroup(qidn: number): Promise<boolean>
+  deleteQuestion(qidn: number): Promise<boolean>
+  getResultSnapshots(rid: string): ExamResult[]
+}
+
 @Injectable()
-export class DataService {
+export class DataService
+  implements UserDisplayContext, QuestionDisplayContext, NavDisplayContext,
+  ChoiceInputDisplayContext, DetailsDisplayContext {
+
   private userCache: UserCache = {}
   private tagCache: TagCache = {}
   private cache: Cache = {}
@@ -117,7 +168,7 @@ export class DataService {
     return this.tagCache[tid]
   }
 
-  private globalTimerAction: (number) => void
+  private globalTimerAction: (i: number) => void
   private globalTimer = observableInterval(1000).subscribe(t => {
     if (this.globalTimerAction) this.globalTimerAction(t)
   })
@@ -173,7 +224,7 @@ export class DataService {
     })
   }
 
-  public timerOnlyMe(onlyMe: (number) => void) {
+  public timerOnlyMe(onlyMe: (i: number) => void): void {
     this.globalTimerAction = onlyMe
   }
 

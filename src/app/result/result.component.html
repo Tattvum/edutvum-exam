@@ -1,11 +1,11 @@
 <mat-tab-group>
-  <mat-tab label="{{ exam.exam.markingSchemeName }} Marking Scheme">
+  <mat-tab label="{{ result.exam.markingSchemeName }} Marking Scheme">
     <br>
-    <div *ngIf="exam">
+    <div *ngIf="result">
       <table style="border-collapse: separate; border-spacing: 24px;">
         <tr>
           <td style="vertical-align: middle;">
-            <span id="percent">{{ exam.score.percent | number:'1.0-0' }}%</span>
+            <span id="percent">{{ result.score.percent | number:'1.0-0' }}%</span>
           </td>
           <td style="vertical-align: middle;">
             <table id="report" class="table table-bordered" style="width: 30%;">
@@ -17,23 +17,23 @@
               </tr>
               <tr>
                 <td>Marks</td>
-                <td class="total sure">{{ exam.score.sure | number:'1.0-0' }}</td>
-                <td class="total guess">{{ exam.score.guess | number:'1.0-0' }}</td>
-                <td class="">{{ exam.score.marks | number:'1.0-0' }}</td>
+                <td class="total sure">{{ result.score.sure | number:'1.0-0' }}</td>
+                <td class="total guess">{{ result.score.guess | number:'1.0-0' }}</td>
+                <td class="">{{ result.score.marks | number:'1.0-0' }}</td>
               </tr>
             </table>
           </td>
           <td style="text-align: left;">
             <div class="missed">
-              <span>{{ exam.score.total | number:'1.0-0' }}</span>
+              <span>{{ result.score.total | number:'1.0-0' }}</span>
               <sp></sp> Total Marks
             </div>
             <div class="missed">
-              <span>{{ exam.score.skipped | number:'1.0-0' }}</span>
+              <span>{{ result.score.skipped | number:'1.0-0' }}</span>
               <sp></sp> Skipped Marks
             </div>
             <div class="missed">
-              <span>{{ exam.score.omitted | number:'1.0-0' }}</span>
+              <span>{{ result.score.omitted | number:'1.0-0' }}</span>
               <sp></sp> Omitted Marks
             </div>
             <br>
@@ -44,7 +44,7 @@
   </mat-tab>
   <mat-tab label="Tag Distribution">
     <br>
-    <div *ngIf="exam">
+    <div *ngIf="result">
       <table id="report" class="table table-bordered" style="width: 70%;">
         <tr class="maroon shade">
           <th class="left">Type</th>

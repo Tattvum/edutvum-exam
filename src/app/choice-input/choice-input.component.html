@@ -1,4 +1,4 @@
-<span (click)="clearAll()" [class.hidden]="exam.isLocked()" id="clear-all" class="btn">
+<span (click)="clearAll()" [class.hidden]="result.isLocked()" id="clear-all" class="btn">
   Clear answers
 </span>
 
@@ -9,7 +9,7 @@
         <label (click)="removeChoice(i)" class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
         <sp></sp>
         <input [type]="ctype" name="choices" [id]="'rd'+i" #first (click)="choiceClicked($event, i)"
-          [disabled]="exam.isLocked()" [checked]="exam.isAnswer(qid, i)" />
+          [disabled]="result.isLocked()" [checked]="result.isAnswer(qid, i)" />
         <sp></sp>
         <label class="opt" [for]="'rd'+i">
           <app-editor heading="Edit Choice Text" [content]="ch" (onedit)="editOption($event, i)">
@@ -19,18 +19,18 @@
     </div>
     <div class="ncq" *ngIf="question.type == 4">
       <div>Type your answer here:</div>
-      <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors()" [disabled]="exam.isLocked()" />
-      <div *ngIf="exam.isLocked()" [class.correct]="true">
-        ({{exam.questions[qid].solutions[0]}})
+      <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors()" [disabled]="result.isLocked()" />
+      <div *ngIf="result.isLocked()" [class.correct]="true">
+        ({{result.questions[qid].solutions[0]}})
       </div>
     </div>
   </div>
   <div class="naq" *ngIf="question.type == 5">
-    <button (click)="setNaqDone()" [class.hidden]="exam.isLocked()">Done</button>
+    <button (click)="setNaqDone()" [class.hidden]="result.isLocked()">Done</button>
   </div>
 </form>
 
-<div *ngIf="service.isAdmin">
+<div *ngIf="context.isAdmin">
   <hr>
   <button (click)="addChoice()">Add Choice</button>
   <br>
@@ -54,18 +54,18 @@
       <div style="color: red;">Admin: Marks:</div>
       <list *ngIf="schemeOLD" [(value)]="marks" [array]="['Correct','Wrong']"></list>
       <smallint *ngIf="!schemeOLD"
-          [(value)]="marks" [min]="0" [max]="exam.questions[qid].solutions[0]"></smallint>
+          [(value)]="marks" [min]="0" [max]="result.questions[qid].solutions[0]"></smallint>
     </div>
   </div>
 </div>
 
 <hr>
-<app-comments-manager [exam]="exam" [qid]="qid"></app-comments-manager>
+<app-comments-manager [result]="result" [qid]="qid"></app-comments-manager>
 
-<div *ngIf="exam.isLocked()">
+<div *ngIf="result.isLocked()">
 <hr>
 <app-tags-manager
-  [disabled]="!service.isAdmin"
-  [qid]="qid" [exam]="exam" [question]="question">
+  [disabled]="!context.isAdmin"
+  [qid]="qid" [question]="question">
 </app-tags-manager>
 </div>

@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { DataService } from '../model/data.service';
-import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
+import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { ExamResult } from '../model/exam-result';
 import { Lib } from '../model/lib';
 import { Tag } from 'app/model/tag';
 
@@ -49,44 +48,36 @@ interface MarkStatMap {
 })
 export class ResultComponent implements OnInit {
 
-  exam: ExamResult = EMPTY_EXAM_RESULT
+  @Input() result: ExamResult
   chartArray = []
 
   tagTotal = new MarkStat("", "Total")
 
   private tags: MarkStatMap = {}
 
-  constructor(private route: ActivatedRoute,
-    private router: Router,
-    private service: DataService) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      let eid = params['eid']
-      let exam = this.service.getExam(eid)
-      if (Lib.isNil(exam)) return
-      this.exam = exam
-      this.prepareChart()
-      this.prepareTagChart()
-    })
+    this.prepareChart()
+    this.prepareTagChart()
   }
 
   private prepareChart() {
     let defval = (a, b) => Lib.isNil(a) ? b : a
     this.chartArray = []
-    this.exam.questions.forEach((q, qid) => {
-      let marks = this.exam.marks(qid)
+    this.result.questions.forEach((q, qid) => {
+      let marks = this.result.marks(qid)
       this.chartArray.push({
-        value: defval(this.exam.durations[qid], 0),
-        attempted: defval(this.exam.isAttempted(qid), false),
-        correct: defval(this.exam.isCorrect(qid), false),
-        partial: defval(this.exam.isPartial(qid), false),
-        guess: defval(this.exam.guessings[qid], false),
+        value: defval(this.result.durations[qid], 0),
+        attempted: defval(this.result.isAttempted(qid), false),
+        correct: defval(this.result.isCorrect(qid), false),
+        partial: defval(this.result.isPartial(qid), false),
+        guess: defval(this.result.guessings[qid], false),
         marks: defval(marks.value, 0),
         max: defval(marks.max, 1),
         action: () => {
           console.log('action', qid)
-          this.router.navigate(['/question', this.exam.id, qid])
+          this.router.navigate(['/question', this.result.id, qid])
         }
       })
     })
@@ -113,11 +104,11 @@ export class ResultComponent implements OnInit {
   private prepareTagChart() {
     let defval = (a, b) => Lib.isNil(a) ? b : a
 
-    this.exam.questions.forEach((q, qid) => {
-      let omitted = defval(this.exam.isOmitted(qid), false)
-      let attempted = defval(this.exam.isAttempted(qid), false)
-      let guess = defval(this.exam.guessings[qid], false)
-      let marks = this.exam.marks(qid)
+    this.result.questions.forEach((q, qid) => {
+      let omitted = defval(this.result.isOmitted(qid), false)
+      let attempted = defval(this.result.isAttempted(qid), false)
+      let guess = defval(this.result.guessings[qid], false)
+      let marks = this.result.marks(qid)
 
       this.tagTotal.addMarks(marks.value, marks.max, omitted, attempted, guess)
       q.tags.forEach(t => {

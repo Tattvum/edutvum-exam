@@ -1,41 +1,34 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, Input } from '@angular/core';
 
-import { DataService, ExamEditType } from '../model/data.service';
+import { DataService, QuestionDisplayContext } from '../model/data.service';
 import { Question } from '../model/question';
-import { Lib } from '../model/lib';
 
 @Component({
   selector: 'app-display',
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.scss']
 })
-export class DisplayComponent implements OnInit {
+export class DisplayComponent {
 
-  qid
-  question: Question
+  @Input() qid: string
+  @Input() question: Question
 
-  constructor(private route: ActivatedRoute, private service: DataService) { }
+  private context: QuestionDisplayContext
 
-  ngOnInit() {
-    this.route.params
-      .subscribe((params: Params) => {
-        let eid = params['eid']
-        this.qid = params['qid']
-        this.question = this.service.getQuestion(eid, this.qid)
-      })
+  constructor(service: DataService) {
+    this.context = service
   }
 
   onEdit(newtext) {
     this.question.title = newtext
-    this.service.editQuestionDisplay(newtext, this.qid)
+    this.context.editQuestionDisplay(newtext, +this.qid)
   }
 
   onQgEdit(i: number, newtext) {
     let group = this.question.groups[i]
     group.title = newtext
     console.log('TBD onQgEdit', i, group.fullid(), newtext)
-    this.service.editQuestionGroupDisplay(newtext, group.fullid())
+    this.context.editQuestionGroupDisplay(newtext, group.fullid())
   }
 
 }
