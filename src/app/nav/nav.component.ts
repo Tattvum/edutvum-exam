@@ -1,6 +1,6 @@
 import 'rxjs'
 
-import { Component, OnInit, HostListener, Input } from '@angular/core';
+import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService, NavDisplayContext } from '../model/data.service';
 import { ExamStatus } from '../model/exam';
@@ -21,6 +21,13 @@ export class NavComponent implements OnInit {
   @Input() result: ExamResult
   @Input() qidn: number
   @Input() question: Question
+
+  @Input() snapshots: ExamResult[]
+  @Output() snapshotSelected = new EventEmitter<number>();
+
+  selectSnapshot(i: number) {
+    this.snapshotSelected.emit(i);
+  }
 
   isResultsPage = false
   // readonly schemes = MARKING_SCHEME_TYPE_NAMES
@@ -52,11 +59,6 @@ export class NavComponent implements OnInit {
     console.log("CAUTION: TBD: What if a snapshot is taken but then the exam is cancelled?")
     return // CAUTION: TBD: What if a snapshot is taken but then the exam is cancelled?
     //this.context.finishExamYetContinue()
-  }
-
-  showSnapshot(i: number) {
-    if (!this.result.isLocked()) return
-    console.log("showSnapshot:", i)
   }
 
   @HostListener('window:keydown', ['$event'])

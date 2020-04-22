@@ -1,4 +1,4 @@
-import { Component, Input, HostListener } from '@angular/core';
+import { Component, Input, HostListener, Output, EventEmitter } from '@angular/core';
 import { ExamResult } from '../model/exam-result';
 import { Router } from '@angular/router';
 import { Lib, KEY } from 'app/model/lib';
@@ -14,6 +14,12 @@ export class QuestionsManagerComponent {
 
   @Input() result: ExamResult
   @Input() qidn: number
+
+  @Output() clicked = new EventEmitter<number>()
+
+  click(i: number) {
+    this.clicked.emit(i);
+  }
 
   isResultsPage = false
   context: QuestionsManagerDisplayContext
@@ -45,10 +51,10 @@ export class QuestionsManagerComponent {
       if (!this.generalContext.confirm('Done with the exam?!')) return
       this.context.finishExam().then(er => {
         this.result = er
-        this.router.navigate(['/results', this.result.id])
+        this.click(-1)
       })
     } else {
-      this.router.navigate(['/results', this.result.id])
+      this.click(-1)
     }
   }
 
@@ -71,8 +77,8 @@ export class QuestionsManagerComponent {
     else this.select(+qid)
   }
 
-  select(qid: number) {
-    this.router.navigate(['/question', this.result.id, qid])
+  select(qidn: number) {
+    this.click(qidn)
   }
 
 }

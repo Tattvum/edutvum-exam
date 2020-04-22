@@ -269,7 +269,9 @@ export class DataService
   }
 
   public getResultSnapshots(rid: string): ExamResult[] {
-    return (<ExamResult>this.cache[rid]).snapshotIds.map(srid => <ExamResult>this.cache[srid])
+    let out: ExamResult[] = (<ExamResult>this.cache[rid]).snapshotIds.map(srid => <ExamResult>this.cache[srid])
+    out.push(<ExamResult>this.cache[rid])
+    return out
   }
 
   private withUserPromise<A, B>(call: (u: User) => Promise<A>, act: (a: A) => B): Promise<B> {

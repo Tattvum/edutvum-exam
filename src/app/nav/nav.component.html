@@ -51,9 +51,10 @@
     </mat-chip-list>
     <sp></sp><sp></sp>
     <mat-chip-list>
-      <mat-chip *ngFor="let snap of this.context.getResultSnapshots(result.id); let j=index"
+      <mat-chip *ngFor="let snap of snapshots; let i=index"
           [disabled]="!result.isLocked()" [class.actionable]="result.isLocked()"
-          class="snapshot-show" (click)="showSnapshot(j)">
+          [class.snapshot-main]="i===snapshots.length-1"
+          [title]="snap.id" class="snapshot-show" (click)="selectSnapshot(i)">
         <span>{{ mins(snap.durationTotal()) }}</span>
       </mat-chip>
     </mat-chip-list>
@@ -89,11 +90,4 @@
     <span class="gap"> {{question.fullid()}} </span>
     <button mat-raised-button *ngIf="!isResultsPage" class="gap" (click)="deleteQuestion()">Delete Question!</button>
   </div>
-  <hr>
-  <app-questions-manager [qidn]="qidn" [result]="result" ></app-questions-manager>
-</div>
-
-<div *ngIf="isPending && !isResultsPage">
-  <app-files-manager [eid]="this.result.exam.id" [qidn]="qidn" [files]="question.files">
-  </app-files-manager>
 </div>
