@@ -16,7 +16,6 @@ export class ExamComponent implements OnInit {
   isResultsPage = true
   isLocked = true
   result: ExamResult
-  qid: string
   qidn: number = -1
   question: Question
   sidn: number
@@ -34,23 +33,24 @@ export class ExamComponent implements OnInit {
       this.mainResult = this.service.getExam(rid)
       this.result = this.mainResult
       this.isLocked = this.result.isLocked()
+      this.isResultsPage = true
 
-      // let sid = params['sid']
-      // if (Lib.isNil(sid)) return
-      // this.showSnapshot(+sid)
+      let qid = params['qid']
+      if (Lib.isNil(qid)) return
+      this.setQuestion(+qid)
 
-      this.qid = params['qid']
-      if (Lib.isNil(this.qid)) return
-      this.isResultsPage = false
-      this.qidn = +this.qid
-      this.question = this.service.getQuestion(rid, this.qid)
+      let sid = params['sid']
+      if (Lib.isNil(sid)) return
+      this.setSnapshot(+sid)
     })
   }
 
-  showSnapshot(i: number) {
+  setSnapshot(i: number) {
     if (!this.mainResult.isLocked()) return
     this.sidn = i
-    this.result = this.snapshots[i]
+    if (this.sidn < 0) this.result = this.mainResult
+    else this.result = this.snapshots[i]
+    this.setQuestion(this.qidn)
   }
 
   public get snapshots(): ExamResult[] {
@@ -61,15 +61,18 @@ export class ExamComponent implements OnInit {
     return this.result.exam.status === ExamStatus.PENDING && this.service.isAdmin
   }
 
-  questionChanged(qidn: number) {
-    console.log("questionChanged:", qidn)
+  setQuestion(qidn: number) {
     this.qidn = qidn
     this.isResultsPage = qidn < 0
-    console.log(this.mainResult.id, this.sidn, this.result.id, this.qid, qidn)
-    if (this.isResultsPage) this.router.navigate(['/results', this.mainResult.id])
-    else {
-      this.question = this.service.getQuestion(this.result.id, this.qid)
-      this.router.navigate(['/question', this.mainResult.id, qidn])
-    }
+    if (this.isResultsPage) return
+
+    this.question = this.service.getQuestion(this.result.id, this.qidn + "")
+    console.log(this.mainResult.id, this.sidn, this.result.id, this.qidn)
+
+    // if (this.isResultsPage) this.router.navigate(['/results', this.mainResult.id])
+    // else {
+    //   this.question = this.service.getQuestion(this.result.id, this.qidn + "")
+    //   this.router.navigate(['/question', this.mainResult.id, qidn])
+    // }
   }
 }

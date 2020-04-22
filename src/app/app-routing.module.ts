@@ -14,10 +14,10 @@ const appRoutes: Routes = [
     path: 'student-dash', component: StudentDashComponent,
     canActivate: [AuthGuard]
   },
+  { path: 'question/:rid/:qid/:sid', component: ExamComponent },
   { path: 'question/:rid/:qid', component: ExamComponent },
-  { path: 'snapshot-question/:rid/:sid/:qid', component: ExamComponent },
+  { path: 'results/:rid/:sid', component: ExamComponent },
   { path: 'results/:rid', component: ExamComponent },
-  { path: 'snapshot-results/:rid/:sid', component: ExamComponent },
   { path: '', component: LoginComponent },
   { path: '**', component: PageNotFoundComponent }
 ];

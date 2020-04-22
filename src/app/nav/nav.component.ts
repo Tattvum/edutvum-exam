@@ -24,8 +24,10 @@ export class NavComponent implements OnInit {
 
   @Input() snapshots: ExamResult[]
   @Output() snapshotSelected = new EventEmitter<number>();
+  @Input() sidn: number = -1
 
   selectSnapshot(i: number) {
+    this.sidn = i
     this.snapshotSelected.emit(i);
   }
 
