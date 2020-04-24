@@ -84,3 +84,30 @@ Due to this, deleted package-lock.json and node_modules folder and did ...
 then
 `npm run prod`
 working clean
+
+2020-04-24 Sat - on 4.3.0
+did global and then local
+`npm install -g @angular/cli`
+`npm install @angular/cli`
+Both came to 9.1.3
+using...
+https://stackoverflow.com/questions/43931986/how-to-upgrade-angular-cli-to-the-latest-version
+(di the bigger dance of un install and install. But maybe install alone should have done!)
+Then...(did not work without allow-dirty and force)
+`ng update`
+`ng update @angular/core @angular/material @angular/cdk rxjs --allow-dirty --force`
+---
+✖ Package install failed, see above.
+✖ Migration failed. See above for further details.
+(package json updated)
+---
+But `ng update` again
+---
+Found 55 dependencies.
+    We analyzed your package.json and everything seems to be in order. Good work!
+---
+For safety, deleted package-lock.json and node_modules folder and did ...
+`npm install`
+then
+`npm run prod`
+working clean
