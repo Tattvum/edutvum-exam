@@ -2,44 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ExamResult } from '../model/exam-result';
 import { Lib } from '../model/lib';
-import { Tag } from 'app/model/tag';
-
-class MarkStat {
-  private _total = 0
-  private _omitted = 0
-  private _skipped = 0
-  private _sure = 0
-  private _guess = 0
-
-  public constructor(readonly type: string, readonly name: string) { }
-
-  public addMarks(scored: number, total: number,
-    isOmitted: boolean, isAttempted: boolean, isGuess: boolean) {
-
-    this._total += total
-    if (isOmitted) this._omitted += total
-    else if (!isAttempted) this._skipped += total
-    else if (isGuess) this._guess += scored
-    else this._sure += scored
-    //console.log("tag", this.name, "sure", this._sure, "guess", this._guess)
-  }
-
-  public get sure(): number { return this._sure }
-  public get guess(): number { return this._guess }
-  public get marks(): number { return this.sure + this.guess }
-  public get skipped(): number { return this._skipped }
-  public get omitted(): number { return this._omitted }
-  public get total(): number { return this._total }
-  public get totalEffective(): number { return this.total - this.omitted }
-  public get marksPercent(): number {
-    if (this.totalEffective === 0) return 0;
-    else return (this.marks / this.totalEffective) * 100
-  }
-}
-
-interface MarkStatMap {
-  [path: string]: MarkStat
-}
+import { Marks } from 'app/model/marks';
 
 @Component({
   selector: 'app-result',
@@ -51,19 +14,14 @@ export class ResultComponent implements OnInit {
   @Input() result: ExamResult
   chartArray = []
 
-  tagTotal = new MarkStat("", "Total")
-
-  private tags: MarkStatMap = {}
-
   constructor(private router: Router) { }
 
   ngOnInit() {
     this.prepareChart()
-    this.prepareTagChart()
   }
 
   private prepareChart() {
-    let defval = (a, b) => Lib.isNil(a) ? b : a
+    let defval = (a: number | boolean, b: number | boolean) => Lib.isNil(a) ? b : a
     this.chartArray = []
     this.result.questions.forEach((q, qid) => {
       let marks = this.result.marks(qid)
@@ -83,40 +41,50 @@ export class ResultComponent implements OnInit {
     })
   }
 
-  public get tagStats(): MarkStat[] {
-    return Object.keys(this.tags).sort().map(p => this.tags[p])
+  assess(omitted: boolean, attempted: boolean, guessed: boolean, marks: Marks): any[] {
+    let obj = { Sure: 0, Guess: 0, Marks: 0, Total: 0, Skipped: 0, Omitted: 0 }
+    obj.Total = marks.max
+    if (omitted) obj.Omitted = marks.max
+    else if (!attempted) obj.Skipped = marks.max
+    else if (guessed) obj.Guess = marks.value
+    else obj.Sure = marks.value
+    obj.Marks = obj.Sure + obj.Guess
+    return [obj.Sure, obj.Guess, obj.Marks, "percent", obj.Total, obj.Skipped, obj.Omitted]
   }
 
-  private getTagStat(type: string, name: string): MarkStat {
-    let key = type + ":" + name
-    let ms = this.tags[key]
-    if (Lib.isNil(ms)) ms = this.tags[key] = new MarkStat(type, name)
-    return ms
-  }
+  get data() {
+    let out = {
+      styles: ["color: black;", "color: gray;", "color: green;",
+        "color: maroon; font-weight: bold;",
+        "color: maroon;", "color: darkblue;", "color: red;"],
+      names: ["Sure", "Guess", "Marks", "%", "Total", "Skipped", "Omitted"],
+      suffixes: ["", "", "", "%", "", "", ""],
+      totals: [0, 0, 0, "percent", 0, 0, 0],
+      leaves: [],
+      functions: {
+        "percent": (arr) => (arr[2] / arr[4]) * 100
+      }
+    }
 
-  private getTagStatTree(tag: Tag): MarkStat[] {
-    let out = []
-    let pd = tag.parseData
-    tag.paths.forEach(path => out.push(this.getTagStat(pd.type, path)))
-    return out
-  }
-
-  private prepareTagChart() {
-    let defval = (a, b) => Lib.isNil(a) ? b : a
+    let defval = (a: boolean, b: boolean) => Lib.isNil(a) ? b : a
+    let isNum = (o) => typeof (o) === "number"
+    let addArrays = (d: any[], s: any[]) => d.forEach((v, i) => { if (isNum(v)) d[i] += s[i] })
 
     this.result.questions.forEach((q, qid) => {
-      let omitted = defval(this.result.isOmitted(qid), false)
-      let attempted = defval(this.result.isAttempted(qid), false)
+      let omitted = this.result.isOmitted(qid)
+      let attempted = this.result.isAttempted(qid)
       let guess = defval(this.result.guessings[qid], false)
       let marks = this.result.marks(qid)
+      addArrays(out.totals, this.assess(omitted, attempted, guess, marks))
 
-      this.tagTotal.addMarks(marks.value, marks.max, omitted, attempted, guess)
-      q.tags.forEach(t => {
-        this.getTagStatTree(t).forEach(ms => {
-          ms.addMarks(marks.value, marks.max, omitted, attempted, guess)
-        })
-      })
+      out.leaves.push(...q.tags
+        .map(t => t.title.split(":"))
+        .map(p => ({
+          type: p[0].trim(), name: p[1].trim(),
+          values: this.assess(omitted, attempted, guess, marks)
+        })))
     })
+    return out
   }
 
 }

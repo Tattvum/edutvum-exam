@@ -43,45 +43,12 @@
     </div>
   </mat-tab>
   <mat-tab label="Tag Distribution">
-    <br>
     <div *ngIf="result">
-      <table id="report" class="table table-bordered" style="width: 70%;">
-        <tr class="maroon shade">
-          <th class="left">Type</th>
-          <th class="left">Tag</th>
-          <th class="right ">Sure</th>
-          <th class="right gray">Guess</th>
-          <th class="right green">Marks</th>
-          <th class="right ">%</th>
-          <th class="right">Total</th>
-          <th class="right blue">Skipped</th>
-          <th class="right red">Omitted</th>
-        </tr>
-        <tr *ngFor="let tag of tagStats">
-          <td class="left">{{ tag.type }}</td>
-          <td class="left bold">{{ tag.name }}</td>
-          <td class="right ">{{ tag.sure | number:'1.0-0' }}</td>
-          <td class="right gray">{{ tag.guess | number:'1.0-0' }}</td>
-          <td class="right bold green">{{ tag.marks | number:'1.0-0' }}</td>
-          <td class="right bold">{{ tag.marksPercent | number:'1.0-0' }}%</td>
-          <td class="right">{{ tag.totalEffective | number:'1.0-0' }}</td>
-          <td class="right blue">{{ tag.skipped | number:'1.0-0' }}</td>
-          <td class="right red">{{ tag.omitted | number:'1.0-0' }}</td>
-        </tr>
-        <tr class="shade maroon">
-          <td class="left" colspan="2">{{ tagTotal.name }}</td>
-          <td class="right ">{{ tagTotal.sure | number:'1.0-0' }}</td>
-          <td class="right gray">{{ tagTotal.guess | number:'1.0-0' }}</td>
-          <td class="right bold green">{{ tagTotal.marks | number:'1.0-0' }}</td>
-          <td class="right bold">{{ tagTotal.marksPercent | number:'1.0-0' }}%</td>
-          <td class="right">{{ tagTotal.totalEffective | number:'1.0-0' }}</td>
-          <td class="right blue">{{ tagTotal.skipped | number:'1.0-0' }}</td>
-          <td class="right red">{{ tagTotal.omitted | number:'1.0-0' }}</td>
-        </tr>
-      </table>
+      <app-tree-table [data]="data"></app-tree-table>
     </div>
   </mat-tab>
 </mat-tab-group>
+
 Question-wise <b>Time</b> distribution:
 <br>
 <app-chart [width]="800" [height]="200" [array]="chartArray"></app-chart>

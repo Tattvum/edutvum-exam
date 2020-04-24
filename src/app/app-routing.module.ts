@@ -8,8 +8,10 @@ import { StudentDashComponent } from './student-dash/student-dash.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ExamComponent } from './exam/exam.component';
 import { ResultComponent } from './result/result.component';
+import { TreeTableComponent } from './common/treetable.component';
 
 const appRoutes: Routes = [
+  // { path: '**', component: TreeTableComponent },
   {
     path: 'student-dash', component: StudentDashComponent,
     canActivate: [AuthGuard]

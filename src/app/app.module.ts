@@ -23,6 +23,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -66,6 +67,7 @@ import { SpaceComponent } from './common/sp.component';
 import { NumberInputComponent } from './common/num.component';
 import { SmallIntInputComponent } from './common/smallint.component';
 import { ListInputComponent } from './common/list.component';
+import { TreeTableComponent } from './common/treetable.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
@@ -115,7 +117,8 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatCheckboxModule,
     MatIconModule,
     MatAutocompleteModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatSliderModule
     //    IupacModule,
   ],
   declarations: [
@@ -143,6 +146,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     ListInputComponent,
     FilesManagerComponent,
     QuestionsManagerComponent,
+    TreeTableComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

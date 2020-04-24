@@ -27,7 +27,7 @@ export class ExamComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      console.log("ExamComponent", params)
+      //console.log("ExamComponent", params)
       let rid = params['rid']
       if (Lib.isNil(rid)) return
       this.mainResult = this.service.getExam(rid)
@@ -67,7 +67,7 @@ export class ExamComponent implements OnInit {
     if (this.isResultsPage) return
 
     this.question = this.service.getQuestion(this.result.id, this.qidn + "")
-    console.log(this.mainResult.id, this.sidn, this.result.id, this.qidn)
+    //console.log(this.mainResult.id, this.sidn, this.result.id, this.qidn)
 
     // if (this.isResultsPage) this.router.navigate(['/results', this.mainResult.id])
     // else {
