@@ -114,7 +114,7 @@ export class NavComponent implements OnInit {
     return Lib.timize(this.secondsTotal())
   }
 
-  mins(secs: number) {
+  timize(secs: number) {
     return Lib.timize(secs)
   }
 

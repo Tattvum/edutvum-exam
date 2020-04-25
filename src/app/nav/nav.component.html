@@ -38,7 +38,7 @@
     </span>
     <span *ngIf="!isPending && maxDuration >= 1" style="color: blue; padding-top: 4px;">
       <sp></sp><sp></sp>
-      <span>Duration: <span>{{ maxDuration }}</span> (mins)</span>
+      <span>Duration: <span>{{ timize(maxDuration*60) }}</span></span>
     </span>
     <sp></sp><sp></sp>
     <sp></sp><sp></sp>
@@ -55,7 +55,7 @@
           [disabled]="!result.isLocked()" [class.actionable]="result.isLocked()"
           [selected]="sidn < 0? i === snapshots.length-1 : i === sidn" color="accent"
           [title]="snap.id" class="snapshot-show" (click)="selectSnapshot(i)">
-        <span>{{ mins(snap.durationTotal()) }}</span>
+        <span>{{ timize(snap.durationTotal()) }}</span>
       </mat-chip>
     </mat-chip-list>
     <span *ngIf="snapshots.length <=1">_</span>
