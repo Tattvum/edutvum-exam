@@ -38,7 +38,7 @@
     </span>
     <span *ngIf="!isPending && maxDuration >= 1" style="color: blue; padding-top: 4px;">
       <sp></sp><sp></sp>
-      <span>Duration: <span>{{ timize(maxDuration*60) }}</span></span>
+      <span>Max. Duration: <span>{{ timize(maxDuration*60) }}</span></span>
     </span>
     <sp></sp><sp></sp>
     <sp></sp><sp></sp>
@@ -88,7 +88,7 @@
     <button mat-raised-button (click)="addQuestion()">Add Question!</button>
     <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
     <button mat-raised-button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>
-    <span class="gap"> {{question.fullid()}} </span>
+    <span class="gap" *ngIf="!isResultsPage"> {{question.fullid()}} </span>
     <button mat-raised-button *ngIf="!isResultsPage" class="gap" (click)="deleteQuestion()">Delete Question!</button>
   </div>
 </div>

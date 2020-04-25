@@ -21,6 +21,7 @@ export class NavComponent implements OnInit {
   @Input() result: ExamResult
   @Input() qidn: number
   @Input() question: Question
+  @Input() isResultsPage: boolean = false
 
   @Input() snapshots: ExamResult[]
   @Output() snapshotSelected = new EventEmitter<number>();
@@ -31,7 +32,6 @@ export class NavComponent implements OnInit {
     this.snapshotSelected.emit(i);
   }
 
-  isResultsPage = false
   // readonly schemes = MARKING_SCHEME_TYPE_NAMES
 
   public timerAction(t: number) {
@@ -79,10 +79,7 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isResultsPage = this.qidn < 0
     this.context.timerOnlyMe(t => this.timerAction(t))
-    if (!this.isResultsPage) this.question = this.result.questions[this.qidn]
-    else this.question = EMPTY_QUESTION
   }
 
   get isPending(): boolean {
