@@ -17,7 +17,8 @@
             "tsConfig": "src/tsconfig.json",
             "assets": [
               "src/assets",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
@@ -42,7 +43,9 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             },
             "stage": {
               "fileReplacements": [
@@ -87,7 +90,8 @@
             ],
             "assets": [
               "src/assets",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/manifest.webmanifest"
             ]
           }
         },

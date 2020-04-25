@@ -86,9 +86,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
 @NgModule({
   imports: [
     BrowserModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', {
-      enabled: environment.production
-    }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule,
     FormsModule,
     //cant-bind-to-formcontrol-since-it-isnt-a-known-property-of-input-angular
@@ -118,7 +116,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatIconModule,
     MatAutocompleteModule,
     MatBadgeModule,
-    MatSliderModule
+    MatSliderModule,
     //    IupacModule,
   ],
   declarations: [
