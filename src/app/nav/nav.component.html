@@ -33,8 +33,20 @@
       <span *ngIf="result.isLocked()">Results</span>
     </span>
     <span [class.hidden]="isBelowVer6()">
-      <span id="seconds"> &nbsp;&nbsp; {{ qsec() }} </span>
-      {{ tsec() }} &nbsp;&nbsp;
+      &nbsp;&nbsp;
+      <span id="seconds" [class.hidden]="isResultsPage"> {{ qsec() }} - </span>
+      <span [class.descending]="isDescending && !result.isLocked() && maxDuration >= 1"
+          (click)="toggleDescending()"
+          [class.actionable]="!result.isLocked() && maxDuration >= 1">
+        {{ tsec() }}
+      </span>
+      <span class="glyphicon actionable" style="color: blue;"
+        [class.hidden]="result.isLocked() || maxDuration < 1"
+        [class.glyphicon-arrow-up]="!isDescending"
+        [class.glyphicon-arrow-down]="isDescending"
+        (click)="toggleDescending()">
+      </span>
+      &nbsp;&nbsp;
     </span>
     <span *ngIf="!isPending && maxDuration >= 1" style="color: blue; padding-top: 4px;">
       <sp></sp><sp></sp>
