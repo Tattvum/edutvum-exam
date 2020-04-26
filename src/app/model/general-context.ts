@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Lib } from './lib';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export abstract class GeneralContext {
@@ -11,8 +12,16 @@ export abstract class GeneralContext {
 
 @Injectable()
 export class GeneralContextImpl extends GeneralContext {
+  constructor(private _snackBar: MatSnackBar) {
+    super()
+  }
+
   public alert(msg: string) {
-    alert(msg)
+    // alert(msg)
+    let snackBarRef = this._snackBar.open(msg, "Dismiss", { duration: 2000 })
+    snackBarRef.onAction().subscribe(() => {
+      snackBarRef.dismiss()
+    })
   }
   public confirm(msg: string): boolean {
     return confirm(msg)

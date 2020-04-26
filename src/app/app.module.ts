@@ -24,6 +24,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -118,6 +120,8 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatAutocompleteModule,
     MatBadgeModule,
     MatSliderModule,
+    MatDialogModule,
+    MatSnackBarModule,
     //    IupacModule,
   ],
   declarations: [
