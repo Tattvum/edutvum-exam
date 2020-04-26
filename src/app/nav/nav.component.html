@@ -34,7 +34,7 @@
     </span>
     <sp></sp><sp></sp>
     <sp></sp><sp></sp>
-    <app-timer style="margin: 20px;" *ngIf="!isPending"
+    <app-timer *ngIf="!isPending"
       [showQSec]="!isResultsPage" [qSec]="qsec"
       [showTSecToggle]="!result.isLocked() && maxDuration >= 1" [tSec]="tsec"
       [showMSec]="maxDuration >= 1" [mSec]="maxDuration*60">
