@@ -68,6 +68,7 @@ import { NumberInputComponent } from './common/num.component';
 import { SmallIntInputComponent } from './common/smallint.component';
 import { ListInputComponent } from './common/list.component';
 import { TreeTableComponent } from './common/treetable.component';
+import { TimerComponent } from './common/timer.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
@@ -145,6 +146,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     FilesManagerComponent,
     QuestionsManagerComponent,
     TreeTableComponent,
+    TimerComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },
