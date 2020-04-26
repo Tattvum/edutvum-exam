@@ -41,11 +41,14 @@ export class NavComponent implements OnInit {
     if (this.result.exam.maxDuration < 1) return
     let durTotal = this.result.durationTotal()
     if (durTotal % 60 !== 0) return
-    let mins = durTotal / 60
-    console.log(mins + " minutes..")
+    let mins = Math.trunc(durTotal / 60)
+    console.log(mins + " minutes..",
+      this.result.exam.maxDuration === mins,
+      mins - this.result.exam.maxDuration >= 0.1)
 
+    //CAUTION: simple one, mins !== this.result.exam.maxDuration, is never true!?
     if (mins < this.result.exam.maxDuration) return
-    console.log("EVENT!!")
+    if (mins - this.result.exam.maxDuration >= 0.1) return
     if (this.generalContext.confirm('Time is up. Stop exam?')) {
       this.context.finishExam().then(er => {
         this.result = er

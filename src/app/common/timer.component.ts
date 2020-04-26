@@ -8,7 +8,7 @@ import { Lib } from 'app/model/lib';
       <span style="margin-top: 2px;" id="qsec" class="qsec" [class.hidden]="!showQSec" >
         {{ timize(qSec) }} <sp></sp>
       </span>
-      <span style="margin-top: 4px; padding: 0px 2px 0px 6px;" [class.descending]="showTSecToggleReally && isDescending"
+      <span style="margin-top: 4px; padding: 0px 2px 0px 4px;" [class.descending]="showTSecToggleReally && isDescending"
           (click)="toggleDescending()"
           [class.actionable]="showTSecToggleReally">
         {{ timize(tSecShow) }}

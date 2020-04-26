@@ -43,14 +43,16 @@ export class Lib {
   }
 
   static timize(t: number) {
+    let sign = t < 0 ? "- " : ""
+    let abst = Math.abs(t)
     let pad2 = x => ('0' + x).slice(-2)
-    let h = Math.trunc(t / 3600)
-    let hr = t % 3600
+    let h = Math.trunc(abst / 3600)
+    let hr = abst % 3600
     let m = Math.trunc(hr / 60)
-    let mr = t % 60
+    let mr = abst % 60
     let s = mr
-    if (h === 0) return m + ':' + pad2(s)
-    else return h + ':' + pad2(m) + ':' + pad2(s)
+    if (h === 0) return sign + m + ':' + pad2(s)
+    else return sign + h + ':' + pad2(m) + ':' + pad2(s)
   }
 
   // TBD: NOTE: bad name, same as failif.
