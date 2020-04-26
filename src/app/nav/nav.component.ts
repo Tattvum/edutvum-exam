@@ -86,7 +86,7 @@ export class NavComponent implements OnInit {
   }
 
   get isPending(): boolean {
-    return this.result.exam.status === ExamStatus.PENDING && this.context.isAdmin
+    return this.result.exam.isPending() && this.context.isAdmin
   }
 
   isBelowVer6(): boolean {

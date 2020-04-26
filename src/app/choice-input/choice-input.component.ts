@@ -24,13 +24,13 @@ export class ChoiceInputComponent implements OnInit {
   @Input() qid: string
   @Input() question: Question = EMPTY_QUESTION
   @Input() result: ExamResult = EMPTY_EXAM_RESULT
+  @Input() solutions: string = ''
+  @Input() type: string = 'MCQ'
 
   context: ChoiceInputDisplayContext
 
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-  solutions = ''
   mytype = ANSWER_TYPE_NAMES
-  type = 'MCQ'
 
   @ViewChild('first', { static: true }) private elementRef: ElementRef;
 
@@ -46,8 +46,6 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setSolutions()
-    this.setType()
     MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
   }
 

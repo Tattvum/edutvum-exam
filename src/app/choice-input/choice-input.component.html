@@ -59,8 +59,10 @@
   </div>
 </div>
 
+<div *ngIf="!result.exam.isPending()">
 <hr>
 <app-comments-manager [result]="result" [qid]="qid"></app-comments-manager>
+</div>
 
 <div *ngIf="result.isLocked()">
 <hr>

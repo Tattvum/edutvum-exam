@@ -5,6 +5,7 @@ import { Lib } from '../model/lib';
 import { EMPTY_EXAM_RESULT, ExamResult } from 'app/model/exam-result';
 import { Question } from 'app/model/question';
 import { ExamStatus } from 'app/model/exam';
+import { AnswerType } from 'app/model/answer-type';
 
 @Component({
   selector: 'app-exam',
@@ -18,6 +19,8 @@ export class ExamComponent implements OnInit {
   result: ExamResult
   qidn: number = -1
   question: Question
+  solutions: string
+  type: string
   sidn: number
 
   mainResult: ExamResult
@@ -67,6 +70,8 @@ export class ExamComponent implements OnInit {
     if (this.isResultsPage) return
 
     this.question = this.service.getQuestion(this.result.id, this.qidn + "")
+    this.solutions = JSON.stringify(this.question.solutions)
+    this.type = AnswerType[this.question.type]
     //console.log(this.mainResult.id, this.sidn, this.result.id, this.qidn)
 
     // if (this.isResultsPage) this.router.navigate(['/results', this.mainResult.id])

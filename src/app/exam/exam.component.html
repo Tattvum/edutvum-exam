@@ -16,7 +16,8 @@
   <div *ngIf="!isResultsPage">
     <app-display [qid]="qidn" [question]="question"></app-display>
     <hr>
-    <app-choice-input [qid]="qidn" [question]="question" [result]="result">
+    <app-choice-input [qid]="qidn" [question]="question" [result]="result"
+        [solutions]="solutions" [type]="type">
     </app-choice-input>
     <div *ngIf="isLocked">
       <app-details [qid]="qidn" [question]="question" [result]="result">
