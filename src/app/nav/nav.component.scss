@@ -2,12 +2,6 @@ a {
   cursor: pointer;
 }
 
-#seconds {
-  color: salmon;
-  font-size: larger;
-  font-weight: bold;
-}
-
 #ename {
   color: maroon;
 }
@@ -89,8 +83,4 @@ progress[value = "0"] {
   background-color: #228;
   color: yellow;
   font-weight: bold;
-}
-
-.descending {
-  background-color: yellow;
 }

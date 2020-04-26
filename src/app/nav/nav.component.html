@@ -32,26 +32,13 @@
       <span *ngIf="!result.isLocked()">Done</span>
       <span *ngIf="result.isLocked()">Results</span>
     </span>
-    <span [class.hidden]="isBelowVer6()">
-      &nbsp;&nbsp;
-      <span id="seconds" [class.hidden]="isResultsPage"> {{ qsec() }} - </span>
-      <span [class.descending]="isDescending && !result.isLocked() && maxDuration >= 1"
-          (click)="toggleDescending()"
-          [class.actionable]="!result.isLocked() && maxDuration >= 1">
-        {{ tsec() }}
-      </span>
-      <span class="glyphicon actionable" style="color: blue;"
-        [class.hidden]="result.isLocked() || maxDuration < 1"
-        [class.glyphicon-arrow-up]="!isDescending"
-        [class.glyphicon-arrow-down]="isDescending"
-        (click)="toggleDescending()">
-      </span>
-      &nbsp;&nbsp;
-    </span>
-    <span *ngIf="!isPending && maxDuration >= 1" style="color: blue; padding-top: 4px;">
-      <sp></sp><sp></sp>
-      <span>Max. Duration: <span>{{ timize(maxDuration*60) }}</span></span>
-    </span>
+    <sp></sp><sp></sp>
+    <sp></sp><sp></sp>
+    <app-timer style="margin: 20px;" *ngIf="!isPending"
+      [showQSec]="!isResultsPage" [qSec]="qsec"
+      [showTSecToggle]="!result.isLocked() && maxDuration >= 1" [tSec]="tsec"
+      [showMSec]="maxDuration >= 1" [mSec]="maxDuration*60">
+    </app-timer>
     <sp></sp><sp></sp>
     <sp></sp><sp></sp>
     <mat-chip-list>

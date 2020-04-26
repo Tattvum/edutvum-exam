@@ -4,38 +4,36 @@ import { Lib } from 'app/model/lib';
 @Component({
   selector: 'app-timer',
   template: `
-    <div>
-      <table>
-        <tr>
-          <td id="qsec" [class.hidden]="!showQSec">
-            <span class="qsec">
-              {{ timize(qSec) }} - &nbsp;
-            </span>
+    <table>
+      <tr>
+        <td>
+          <span id="qsec" class="qsec" [class.hidden]="!showQSec" >
+            {{ timize(qSec) }} - <sp></sp>
+          </span>
+        <td>
+        <td>
+          <span [class.descending]="showTSecToggleReally && isDescending"
+              (click)="toggleDescending()"
+              [class.actionable]="showTSecToggleReally">
+            {{ timize(tSecShow) }}
+          </span>
           <td>
-          <td>
-            <span [class.descending]="isDescending && showTSecToggle"
-                (click)="toggleDescending()"
-                [class.actionable]="showTSecToggle">
-              {{ timize(tSecShow) }}
-            </span>
-            <td>
-          <td>
-            <span class="glyphicon actionable" style="color: blue;"
-              [class.hidden]="!showTSecToggle"
-              [class.glyphicon-arrow-up]="!isDescending"
-              [class.glyphicon-arrow-down]="isDescending"
-              (click)="toggleDescending()">
-            </span>
-          <td>
-          <td>
-            <span *ngIf="showTSecToggle" style="color: blue; padding-top: 4px;">
-              <sp></sp><sp></sp>
-              <span>Max. Duration: <span>{{ timize(mSec) }}</span></span>
-            </span>
-          <td>
-        </tr>
-      </table>
-    </div>
+        <td>
+          <span class="glyphicon actionable" style="color: blue;"
+            [class.hidden]="!showTSecToggleReally"
+            [class.glyphicon-arrow-up]="!isDescending"
+            [class.glyphicon-arrow-down]="isDescending"
+            (click)="toggleDescending()">
+          </span>
+        <td>
+        <td>
+          <span *ngIf="showMSec" style="color: blue; padding-top: 4px;">
+            <sp></sp><sp></sp><sp></sp><sp></sp>
+            <span>Max. Duration: <span>{{ timize(mSec) }}</span></span>
+          </span>
+        <td>
+      </tr>
+    </table>
   `,
   styles: [
     '.descending { background-color: yellow; }',
@@ -49,6 +47,7 @@ export class TimerComponent implements OnInit {
   @Input() qSec: number = 1 * 60 + 5
   @Input() showTSecToggle: boolean = true
   @Input() tSec: number = 23 * 60 + 5
+  @Input() showMSec: boolean = true
   @Input() mSec: number = 1 * 60 * 60 + 30 * 60
 
 
@@ -59,7 +58,7 @@ export class TimerComponent implements OnInit {
 
   get tSecShow(): number {
     let secs = this.tSec
-    if (this.showTSecToggle && this.isDescending) {
+    if (this.showTSecToggleReally && this.isDescending) {
       secs = this.mSec - secs
     }
     return secs
@@ -69,8 +68,12 @@ export class TimerComponent implements OnInit {
     return Lib.timize(secs)
   }
 
+  get showTSecToggleReally() {
+    return this.showMSec && this.showTSecToggle
+  }
+
   toggleDescending() {
-    if (!this.showTSecToggle) return
+    if (!this.showTSecToggleReally) return
     this.isDescending = !this.isDescending
   }
 

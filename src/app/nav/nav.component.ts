@@ -72,12 +72,6 @@ export class NavComponent implements OnInit {
   }
 
   context: NavDisplayContext
-  isDescending: boolean = true
-
-  toggleDescending() {
-    if (this.result.isLocked() || this.maxDuration < 0) return
-    this.isDescending = !this.isDescending
-  }
 
   constructor(private router: Router,
     private generalContext: GeneralContext, service: DataService) {
@@ -104,21 +98,17 @@ export class NavComponent implements OnInit {
     if (s === NaN) return 0
     return s
   }
-  qsec() {
-    if (this.isResultsPage) return ''
-    else return Lib.timize(this.seconds())
+  get qsec(): number {
+    if (this.isResultsPage) return 0
+    else return this.seconds()
   }
 
   private secondsTotal(): number {
     if (this.result) return this.result.durationTotal()
     else return 0
   }
-  tsec() {
-    let secs = this.secondsTotal()
-    if (!this.result.isLocked() && this.maxDuration >= 1 && this.isDescending) {
-      secs = (this.maxDuration * 60) - secs
-    }
-    return Lib.timize(secs)
+  get tsec(): number {
+    return this.secondsTotal()
   }
 
   timize(secs: number) {
