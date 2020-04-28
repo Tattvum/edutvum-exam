@@ -24,8 +24,12 @@ const XOFFSET = 10
 
 @Component({
   selector: 'app-chart',
-  templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.scss']
+  template: `
+    <canvas #canvas></canvas>
+  `,
+  styles: [
+    'canvas { cursor: pointer; }'
+  ]
 })
 export class ChartComponent implements AfterViewInit {
   @ViewChild('canvas', { static: true }) public canvas: ElementRef

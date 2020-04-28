@@ -64,6 +64,8 @@ import { ResultComponent } from './result/result.component';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
 import { PopupComponent } from './popup/popup.component';
+import { FilesManagerComponent } from './files-manager/files-manager.component';
+import { QuestionsManagerComponent } from './questions-manager/questions-manager.component';
 
 import { SpaceComponent } from './common/sp.component';
 import { NumberInputComponent } from './common/num.component';
@@ -71,15 +73,13 @@ import { SmallIntInputComponent } from './common/smallint.component';
 import { ListInputComponent } from './common/list.component';
 import { TreeTableComponent } from './common/treetable.component';
 import { TimerComponent } from './common/timer.component';
+import { ChartComponent } from './common/chart.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
-import { ChartComponent } from './chart/chart.component';
 import { EditorComponent } from './editor/editor.component';
 import { Editor1Component } from './editor1/editor1.component';
 import { MathJaxDirective } from './mathjax.directive';
-import { FilesManagerComponent } from './files-manager/files-manager.component';
-import { QuestionsManagerComponent } from './questions-manager/questions-manager.component';
 
 export const firebaseConfig = environment.firebaseConfig;
 
