@@ -9,8 +9,8 @@
 /coverage
 
 #secret
-src/environments/environment.prod.ts
-src/environments/environment.stage.ts
+src/environments/*.*
+!src/environments/environment.ts
 
 #firebase-cli
 firebase-debug.log
