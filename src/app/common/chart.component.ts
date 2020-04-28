@@ -1,22 +1,16 @@
 import 'rxjs'
-import { Observable, fromEvent } from 'rxjs'
-
+import { fromEvent } from 'rxjs'
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core'
-import { Lib } from '../model/lib';
 
 interface Point {
   x: number,
   y: number
 }
 
-export interface Data {
+export interface Bar {
   value: number,
-  attempted: boolean,
-  correct: boolean,
-  partial: boolean,
-  guess: boolean,
-  marks: number,
-  max: number,
+  color: string;
+  flags: (n: number) => string[],
   action: () => void,
 }
 
@@ -36,9 +30,8 @@ export class ChartComponent implements AfterViewInit {
 
   @Input() public width = 800
   @Input() public height = 200
-  @Input() public array: Data[] = []
+  @Input() public bars: Bar[] = []
 
-  private p: Point = { x: 0, y: 0 }
   private w = 0
   private max = 0
 
@@ -55,27 +48,28 @@ export class ChartComponent implements AfterViewInit {
     canvasEl.width = this.width
     canvasEl.height = this.height
 
-    this.w = (this.width - 40) / this.array.length
-    this.max = Math.max(...this.array.map(x => x.value))
+    this.w = (this.width - 40) / this.bars.length
+    this.max = Math.max(...this.bars.map(x => x.value))
 
-    this.draw()
+    this.drawBars()
 
-    fromEvent<MouseEvent>(canvasEl, 'mousemove')
-      .subscribe((event: MouseEvent) => {
-        this.p = { x: event.offsetX, y: event.offsetY }
-        this.drawMouseMove()
-      })
-    fromEvent<MouseEvent>(canvasEl, 'mouseleave')
-      .subscribe((event: MouseEvent) => {
-        this.draw()
-      })
-    fromEvent<MouseEvent>(canvasEl, 'click')
-      .subscribe((event: MouseEvent) => {
-        let n = this.x2n(event.offsetX)
-        if (n >= 0 && n < this.array.length) {
-          this.array[n].action()
-        }
-      })
+    fromEvent<MouseEvent>(canvasEl, 'mousemove').subscribe((event: MouseEvent) => {
+      this.drawBars()
+      let px = event.offsetX
+      let n = this.x2n(px)
+      if (px > XOFFSET) this.drawFlag(n)
+    })
+
+    fromEvent<MouseEvent>(canvasEl, 'mouseleave').subscribe((event: MouseEvent) => {
+      this.drawBars()
+    })
+
+    fromEvent<MouseEvent>(canvasEl, 'click').subscribe((event: MouseEvent) => {
+      let n = this.x2n(event.offsetX)
+      if (n >= 0 && n < this.bars.length) {
+        this.bars[n].action()
+      }
+    })
   }
 
   private line(x1: number, y1: number, x2: number, y2: number) {
@@ -85,47 +79,34 @@ export class ChartComponent implements AfterViewInit {
     this.ctx.stroke();
   }
 
-  private drawMouseMove() {
-    if (!this.ctx) { return }
+  private drawFlag(n: number) {
+    if (!this.ctx) return
+
+    let bar = this.bars[n]
+    if (!bar) return
 
     const LINE_HEIGHT = 16
-
-    this.draw()
-    let n = this.x2n(this.p.x)
-    if (this.p.x > XOFFSET && n >= 0 && n < this.array.length) {
-      this.ctx.fillStyle = 'blue'
-      let x = XOFFSET + n * this.w
-      this.line(x, 0, x, this.height)
-      let hh = 6 + 3 * LINE_HEIGHT
-      this.ctx.fillRect(x, hh, 50, -hh)
-      this.ctx.fillStyle = 'white'
-      this.ctx.font = '14px Arial'
-      let val = Lib.timize(this.array[n].value)
-      this.ctx.fillText(' ' + (n + 1), x, hh - 3 * LINE_HEIGHT + 10)
-      this.ctx.fillText(' ' + val, x, hh - 2 * LINE_HEIGHT + 10)
-      let marks = this.array[n].marks
-      let max = this.array[n].max
-      this.ctx.fillText(' ' + marks + '/' + max, x, hh - 1 * LINE_HEIGHT + 10)
-    }
+    this.ctx.fillStyle = 'blue'
+    let x = XOFFSET + n * this.w
+    this.line(x, 0, x, this.height)
+    let yh = 6 + 3 * LINE_HEIGHT
+    this.ctx.fillRect(x, yh, 50, -yh)
+    this.ctx.fillStyle = 'white'
+    this.ctx.font = '14px Arial'
+    let y = (i: number) => yh - (i + 1) * LINE_HEIGHT + 10
+    bar.flags(n).forEach((f, i) => this.ctx.fillText(' ' + f, x, y(i)))
   }
 
-  private draw() {
+  private drawBars() {
     if (!this.ctx) { return }
 
     this.ctx.clearRect(0, 0, this.width, this.height)
     this.ctx.fillStyle = 'black'
-    this.array.forEach((obj, i) => {
-      let color = '49,176,213,1' // blue
-      if (obj.attempted) {
-        if (obj.correct) color = '0,128,0'
-        else if (obj.partial) color = '255,165,0'
-        else color = '255,0,0'
-        if (obj.guess) color += ',0.7'
-        else color += ',1'
-      }
-      this.ctx.fillStyle = 'rgba(' + color + ')'
-      let h = (this.height - 10) * (obj.value / this.max)
-      this.ctx.fillRect(XOFFSET + i * this.w, this.height - h, this.w - 5, h)
+    this.bars.forEach((bar, i) => {
+      this.ctx.fillStyle = 'rgba(' + bar.color + ')'
+      let h = (this.height - 10) * (bar.value / this.max)
+      let w = (i: number) => XOFFSET + i * this.w
+      this.ctx.fillRect(w(i), this.height - h, this.w - 5, h)
     })
   }
 
