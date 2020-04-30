@@ -32,6 +32,8 @@ export class ExamResult extends Exam {
     }
   }
 
+  public states = {}
+
   private checkAnsInChoice(qans: any[], q: Question, ctx: string) {
     let chlen = q.choices.length
     ctx += '.' + q.id
