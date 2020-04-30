@@ -57,6 +57,10 @@ export class ChoiceInputComponent implements OnInit {
     return this.result.exam.status === ExamStatus.PENDING && this.context.isAdmin
   }
 
+  get qidn(): number {
+    return +this.qid
+  }
+
   setSolutions() {
     this.solutions = JSON.stringify(this.question.solutions)
   }
@@ -82,10 +86,9 @@ export class ChoiceInputComponent implements OnInit {
 
   colors(i: number) {
     if (!this.result.isLocked()) return {}
-    let qidn = +this.qid
     let ans = (i != null) ? i : this.getAnswer(0)
-    let isans = this.result.isAnswer(qidn, ans)
-    let issol = this.result.isSolution(qidn, ans)
+    let isans = this.result.isAnswer(this.qidn, ans)
+    let issol = this.result.isSolution(this.qidn, ans)
     let result = {
       'correct': issol,
       'done': isans && issol,

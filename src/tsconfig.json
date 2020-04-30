@@ -4,10 +4,6 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [
-      "es2016",
-      "dom"
-    ],
     "downlevelIteration": true,
     "mapRoot": "./",
     "module": "es6",
@@ -15,17 +11,20 @@
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "target": "ES2015",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "typeRoots": [
       "../node_modules/@types",
-    ],
-    "paths": {
-      "iupac": [
-        "../dist/iupac"
-      ]
-    }
+    ]
   },
   "files": [
     "main.ts",
     "polyfills.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }
