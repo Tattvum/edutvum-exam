@@ -36,7 +36,7 @@ export class ChartComponent implements AfterViewInit {
   @ViewChild('canvas', { static: true }) public canvas: ElementRef
 
   private flag = (n: number) => () => ["Boo: " + n, "ting"]
-  private action = (n: number) => () => console.log("Bingo action")
+  private action = (n: number) => () => console.log("Bingo action", n)
 
   @Input() public width = 800
   @Input() public height = 400
@@ -58,11 +58,13 @@ export class ChartComponent implements AfterViewInit {
   }
   @Input() set bars(value: Bar[]) {
     this._bars = value
-    this.drawBars()
+    //NOTE: Important hack, as otherwise, mosemove is not triggered?!
+    if (!this.mouseInside) this.drawBars()
   }
 
   private w = 0
   private max = 0
+  mouseInside = false
 
   private ctx: CanvasRenderingContext2D
 
@@ -83,6 +85,7 @@ export class ChartComponent implements AfterViewInit {
     this.drawBars()
 
     fromEvent<MouseEvent>(canvasEl, 'mousemove').subscribe((event: MouseEvent) => {
+      this.mouseInside = true
       this.drawBars()
       let px = event.offsetX
       let n = this.x2n(px)
@@ -90,6 +93,7 @@ export class ChartComponent implements AfterViewInit {
     })
 
     fromEvent<MouseEvent>(canvasEl, 'mouseleave').subscribe((event: MouseEvent) => {
+      this.mouseInside = false
       this.drawBars()
     })
 
