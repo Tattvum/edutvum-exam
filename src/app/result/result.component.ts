@@ -30,13 +30,10 @@ interface ResultObj {
 export class ResultComponent implements OnInit {
 
   @Input() result: ExamResult
-  chartArray: Bar[] = []
 
   constructor(private router: Router) { }
 
-  ngOnInit() {
-    this.prepareChart()
-  }
+  ngOnInit() { }
 
   private resultObj(qid: number): ResultObj {
     let defbool = (a: boolean, b: boolean) => Lib.isNil(a) ? b : a
@@ -74,18 +71,22 @@ export class ResultComponent implements OnInit {
     return color
   }
 
-  private prepareChart() {
-    this.chartArray = []
-    this.result.questions.forEach((_, qid) => {
+  get bars() {
+    let out: Bar[] = []
+    this.result.questions.forEach((q, qid) => {
       let ro = this.resultObj(qid)
       let score = ro.scored + '/' + ro.max
-      this.chartArray.push({
+      let prefix = this.result.states["selection"]
+      // console.log(qid, prefix, q.tags.map(t => t.title))
+      out.push({
         value: ro.duration,
         color: this.data2color(ro),
-        flags: (n: number) => ["" + score, Lib.timize(ro.duration), "" + (n + 1)],
-        action: () => this.router.navigate(['/question', this.result.id, qid])
+        flags: () => ["" + score, Lib.timize(ro.duration), "" + (qid + 1)],
+        action: () => this.router.navigate(['/question', this.result.id, qid]),
+        selected: q.tags.filter(t => t.title.startsWith(prefix)).length > 0
       })
     })
+    return out
   }
 
   get data() {

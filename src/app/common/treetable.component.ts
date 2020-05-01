@@ -94,7 +94,6 @@ export class TreeTableComponent implements OnInit {
   private _selection: string
   @Output() selectionChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() set selection(value: string) {
-    console.log("@Input selection:", value)
     this._selection = value
     this.rows.forEach(r => r.selected = false)
     this.rows.filter(r => r.key.startsWith(value)).forEach(r => {
@@ -139,7 +138,7 @@ export class TreeTableComponent implements OnInit {
         })
       })
     })
-    console.log("onInit")
+    //console.log("onInit")
     this.selection = this._selection
     if (Lib.isNil(this.level)) this.level = 1
   }

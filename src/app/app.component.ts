@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <router-outlet></router-outlet>
+
     <!-- <div style="margin: 20px;">
       <app-timer style="margin: 20px;"
         [showQSec]="true" [qSec]="65"
@@ -46,7 +47,12 @@ import { Component } from '@angular/core';
         [showMSec]="false" [mSec]="1*60*60 + 30*60">
       </app-timer>
     </div> -->
-  `,
+
+    <!-- <div style="margin: 20px;">
+      <app-chart [width]="800" [height]="400"></app-chart>
+    </div> -->
+
+`,
   styles: []
 })
 export class AppComponent {
