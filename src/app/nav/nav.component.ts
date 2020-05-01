@@ -127,6 +127,7 @@ export class NavComponent implements OnInit {
         this.router.navigate(['/results', this.result.id])
       })
     } else {
+      console.log("navigate:", '/results', this.result.id)
       this.router.navigate(['/results', this.result.id])
     }
   }

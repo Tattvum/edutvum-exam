@@ -8,7 +8,13 @@ import { Lib } from '../model/lib';
       <mat-slider [max]="maxLevels" [min]="1" [step]="1" [thumbLabel]="true"
         style="margin-left: 10px;"
         [(ngModel)]="internalLevel">
-      </mat-slider> <sp></sp><sp></sp> <b>{{filteredRows.length}}</b> rows
+      </mat-slider>
+      <sp></sp><sp></sp>
+      <b>{{filteredRows.length}}</b> rows
+      <sp></sp><sp></sp><sp></sp><sp></sp><sp></sp><sp></sp>
+      <span class="actionable" (click)="clearSelections()" [class.hidden]="!hasSelections()" >
+        Clear selections
+      </span>
 
       <table id="report" class="table table-bordered" style="width: 90%;">
         <tr class="maroon shade">
@@ -66,6 +72,9 @@ import { Lib } from '../model/lib';
     '.glyph-ext {-webkit-text-stroke: 2px white; color: blue; cursor: pointer;}',
     '.highlight:hover {background-color: #ffd; cursor: pointer;}',
     '.selected {color: red;}',
+    '.hidden { display: none; }',
+    '.actionable { cursor: pointer; }',
+    '.actionable:hover { color: blue; }',
   ]
 })
 export class TreeTableComponent implements OnInit {
@@ -93,6 +102,9 @@ export class TreeTableComponent implements OnInit {
 
   private _selection: string
   @Output() selectionChange: EventEmitter<string> = new EventEmitter<string>();
+  get selection(): string {
+    return this._selection
+  }
   @Input() set selection(value: string) {
     this._selection = value
     this.rows.forEach(r => r.selected = false)
@@ -158,6 +170,14 @@ export class TreeTableComponent implements OnInit {
 
   highlighted(row: any) {
     this.selectionChange.emit(row.type + " : " + row.name);
+  }
+
+  clearSelections() {
+    this.selectionChange.emit("::");
+  }
+
+  hasSelections(): boolean {
+    return this.selection && this.selection.trim() !== "::"
   }
 
 }
