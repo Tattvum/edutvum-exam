@@ -13,15 +13,23 @@ import { DataService, QuestionsManagerDisplayContext } from 'app/model/data.serv
 export class QuestionsManagerComponent {
 
   @Input() result: ExamResult
-  @Input() qidn: number
+
+  isResultsPage = false
+
+  private _qidn: number
+  get qidn(): number {
+    return this._qidn
+  }
+  @Input() set qidn(value: number) {
+    this._qidn = value
+    this.isResultsPage = this.qidn < 0
+  }
 
   @Output() clicked = new EventEmitter<number>()
-
   click(i: number) {
     this.clicked.emit(i);
   }
 
-  isResultsPage = false
   context: QuestionsManagerDisplayContext
 
   @HostListener('window:keydown', ['$event'])
@@ -41,9 +49,7 @@ export class QuestionsManagerComponent {
     this.context = service
   }
 
-  ngOnInit() {
-    this.isResultsPage = this.qidn < 0
-  }
+  ngOnInit() { }
 
   results() {
     if (Lib.isNil(this.result)) return
