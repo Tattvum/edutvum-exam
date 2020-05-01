@@ -4,8 +4,12 @@
   padding: 8px 20px;
   width: 100%;
 }
-a:hover {
-  text-decoration: none;
+.actionable {
+  cursor: pointer;
+  color: #009;
+}
+.actionable:hover {
+  color: blue;
 }
 h4 {
   color: gray;

@@ -111,3 +111,9 @@ For safety, deleted package-lock.json and node_modules folder and did ...
 then
 `npm run prod`
 working clean
+
+2020-05-01 Sat - on 4.6.8
+did global and then local
+`npm install -g @angular/cli`
+`npm install @angular/cli`
+Both came to 9.1.4

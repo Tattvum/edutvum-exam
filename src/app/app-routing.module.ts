@@ -10,13 +10,15 @@ import { ExamComponent } from './exam/exam.component';
 import { ResultComponent } from './result/result.component';
 import { TreeTableComponent } from './common/treetable.component';
 import { TimerComponent } from './common/timer.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const appRoutes: Routes = [
   // { path: '**', component: TimerComponent },
   {
-    path: 'student-dash', component: StudentDashComponent,
+    path: 'student-dash', component: UserProfileComponent,
     canActivate: [AuthGuard]
   },
+  { path: 'exam-list', component: StudentDashComponent },
   { path: 'question/:rid/:qid/:sid', component: ExamComponent },
   { path: 'question/:rid/:qid', component: ExamComponent },
   { path: 'results/:rid/:sid', component: ExamComponent },

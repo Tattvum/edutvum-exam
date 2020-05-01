@@ -1,6 +1,12 @@
 <div fxLayout="row" fxLayout.lt-sm="column" class="mynav">
   <div fxFlex> <h4>Edutvum Exam</h4> </div>
   <div fxLayout="row-reverse"  fxFlexAlign="center" fxLayout.lt-sm="row" fxFlexAlign.lt-sm="start">
-    <div title="Logout" (click)="logout()"><a href="#">{{context.user() + ''}}</a></div>
+    <span class="actionable" (click)="logout()" title="Logout">
+      <span class="glyphicon glyphicon-log-out"></span>
+    </span>
+    <sp></sp><sp></sp><sp></sp><sp></sp>
+    <span class="actionable" [title]="'Profile :  '+context.user().email" (click)="userProfile()">
+      {{context.user().name}}
+    </span>
   </div>
 </div>

@@ -26,6 +26,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -66,6 +67,7 @@ import { UserComponent } from './user/user.component';
 import { PopupComponent } from './popup/popup.component';
 import { FilesManagerComponent } from './files-manager/files-manager.component';
 import { QuestionsManagerComponent } from './questions-manager/questions-manager.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 import { SpaceComponent } from './common/sp.component';
 import { NumberInputComponent } from './common/num.component';
@@ -122,7 +124,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatSliderModule,
     MatDialogModule,
     MatSnackBarModule,
-    //    IupacModule,
+    MatToolbarModule,
   ],
   declarations: [
     AppComponent,
@@ -151,6 +153,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     QuestionsManagerComponent,
     TreeTableComponent,
     TimerComponent,
+    UserProfileComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

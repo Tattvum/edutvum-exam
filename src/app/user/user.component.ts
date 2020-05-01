@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UserDisplayContext, DataService } from '../model/data.service';
-import { User } from '../model/user';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,9 +15,14 @@ export class UserComponent {
     this.context = service;
   }
 
+  userProfile() {
+    this.router.navigate(['/student-dash'])
+  }
+
   logout() {
     this.context.logout().then(() => {
       this.router.navigate([''])
     })
   }
+
 }
