@@ -112,8 +112,39 @@ then
 `npm run prod`
 working clean
 
-2020-05-01 Sat - on 4.6.8
+2020-05-01 Fri - on 4.6.8
 did global and then local
 `npm install -g @angular/cli`
 `npm install @angular/cli`
 Both came to 9.1.4
+
+2020-05-02 Sat - on 4.7.0
+svr@tnr:~/lindata/edutvum/edutvum-exam$ ng add @angular/material
+Skipping installation: Package already installed
+[ Preview: https://material.angular.io?theme=indigo-pink ]
+? Set up global Angular Material typography styles? Yes
+? Set up browser animations for Angular Material? Yes
+UPDATE package.json (2650 bytes)
+✖ Package install failed, see above.
+The Schematic workflow failed. See above.
+---
+`ng update @angular/cdk @angular/core @angular/material`
+Repository is not clean. Please commit or stash any changes before updating.
+---
+`ng update @angular/cdk @angular/core @angular/material --allow-dirty --force`
+UPDATE package.json (2650 bytes)Found 54 dependencies.
+Fetching dependency metadata from registry...
+    Updating package.json with dependency @angular/cdk @ "9.2.2" (was "9.2.1")...
+    ...
+✖ Package install failed, see above.
+✖ Migration failed. See above for further details.
+---
+But `ng update` again
+---
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 54 dependencies.
+    We analyzed your package.json and everything seems to be in order. Good work!
+---
+`npm run stage`
+All working!
