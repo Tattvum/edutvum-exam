@@ -33,7 +33,7 @@ export class ExamComponent implements OnInit {
       //console.log("ExamComponent", params)
       let rid = params['rid']
       if (Lib.isNil(rid)) return
-      this.mainResult = this.service.getExam(rid)
+      this.mainResult = this.service.getExamResult(rid)
       this.result = this.mainResult
       this.isLocked = this.result.isLocked()
       this.isResultsPage = true

@@ -188,17 +188,45 @@ export class DataService
     if (this.globalTimerAction) this.globalTimerAction(t)
   })
 
-  public filteredExams(): Exam[] {
+  public filterExams(all: boolean = true, filter: string = ""): Exam[] {
     let revChron = (a, b) => b.when.getTime() - a.when.getTime()
     let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
-    let tFilter = (e: Exam) => cistrcomp(e.title, this.titleFilter)
-    if (this.showAll) {
+    let tFilter = (e: Exam) => cistrcomp(e.title, filter)
+    if (all) {
       return this.exams.filter(tFilter)
     } else {
       let eids = [...new Set(this.results.map(r => r.exam.id))]
       let topr = eid => this.results.filter(r => r.exam.id === eid).sort(revChron)[0]
       return eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
     }
+  }
+
+  public filterExamResults(all: boolean = true, filter: string = ""): Exam[] {
+    let revChron = (a, b) => b.when.getTime() - a.when.getTime()
+    let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
+    let tFilter = (e: Exam) => cistrcomp(e.title, filter)
+    if (all) {
+      return this.exams.filter(tFilter)
+    } else {
+      let eids = [...new Set(this.results.map(r => r.exam.id))]
+      let topr = eid => this.results.filter(r => r.exam.id === eid).sort(revChron)[0]
+      return eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
+    }
+  }
+
+  public examStats(): { all: number, taken: number, timeTaken: number, pending: number } {
+    let examsAll = this.filterExams(true)
+    let examsTaken = this.filterExams(false)
+    return {
+      all: examsAll.length,
+      taken: examsTaken.length,
+      timeTaken: this.results.map(r => r.durationTotal()).reduce((tot, d) => tot + d, 0),
+      pending: this.results.filter(r => r.status === ExamStatus.PENDING).length,
+    }
+  }
+
+  public filteredExams(): Exam[] {
+    return this.filterExams(this.showAll, this.titleFilter)
   }
 
   init(user: User, dolast = () => { }) {
@@ -253,7 +281,7 @@ export class DataService
     this.init(this.userCache[uid])
   }
 
-  public getExam(eid: string): ExamResult {
+  public getExamResult(eid: string): ExamResult {
     Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
     if (this.pendingResult && this.pendingResult.id === eid) return this.pendingResult
 
@@ -264,8 +292,15 @@ export class DataService
     return result
   }
 
+  public getPureExam(eid: string): Exam {
+    Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
+    let exam = this.cache[eid]
+    Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined', eid)
+    return exam
+  }
+
   public getQuestion(eid: string, qid: string): Question {
-    return this.getExam(eid).questions[+qid]
+    return this.getExamResult(eid).questions[+qid]
   }
 
   public getResultSnapshots(rid: string): ExamResult[] {

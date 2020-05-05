@@ -1,3 +1,59 @@
 <app-user></app-user>
 
-<button mat-button color="primary" (click)="examListing()">Exam Listing...</button>
+<div style="margin: 10px;">
+  <div *ngIf="service.loading">
+    <mat-spinner [diameter]="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!service.loading" fxLayout="column" fxLayoutGap="20px">
+
+    <div *ngIf="service.isAdmin" style="background-color: antiquewhite;">
+      <mat-form-field>
+        <mat-select [(ngModel)]="this.currentUser" (selectionChange)="userChanged()" placeholder="User">
+          <mat-option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row"  fxLayoutGap="40px">
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <div>
+          <button mat-raised-button color="primary" (click)="examListing()">Exam Listing...</button>
+        </div>
+      </div>
+      <div fxLayout="column">
+        <div style="font-size: xx-large;"> {{ service.examStats().all }} </div>
+        <div> Exams Available </div>
+      </div>
+      <div fxLayout="column">
+        <div style="font-size: xx-large;"> {{ service.examStats().taken }} </div>
+        <div> Exams Taken </div>
+      </div>
+      <div fxLayout="column">
+        <div style="font-size: xx-large;" title="hours : minutes : secs">
+          {{ timize(service.examStats().timeTaken) }}
+        </div>
+        <div> Total Time Taken </div>
+      </div>
+      <div fxLayout="column">
+        <div style="font-size: xx-large;"> {{ service.examStats().pending }} </div>
+        <div> Exams Pending </div>
+      </div>
+    </div>
+
+    <div fxLayout="row">
+      <div fxLayout="column">
+        <span style="font-size: xx-large;" fxFlexAlign="center">Charting a test</span>
+
+        <app-chart [width]="800" [height]="200" [bars]="bars"></app-chart>
+
+        <app-auto-chip placeholder="Pick Exams..."
+            [old]="oldExamResults" [all]="allTakenExams"
+           (removed)="removeExam($event)" (added)="addExam($event)">
+        </app-auto-chip>
+        <span>{{bars.length}}</span>
+      </div>
+    </div>
+
+  </div>
+</div>

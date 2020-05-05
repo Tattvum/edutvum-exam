@@ -27,6 +27,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -76,6 +77,8 @@ import { ListInputComponent } from './common/list.component';
 import { TreeTableComponent } from './common/treetable.component';
 import { TimerComponent } from './common/timer.component';
 import { ChartComponent } from './common/chart.component';
+import { AutoInputComponent } from './common/autoinput.component';
+import { AutoChipComponent } from './common/autochip.component';
 
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
@@ -125,6 +128,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatDialogModule,
     MatSnackBarModule,
     MatToolbarModule,
+    MatTooltipModule,
   ],
   declarations: [
     AppComponent,
@@ -154,6 +158,8 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     TreeTableComponent,
     TimerComponent,
     UserProfileComponent,
+    AutoInputComponent,
+    AutoChipComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },

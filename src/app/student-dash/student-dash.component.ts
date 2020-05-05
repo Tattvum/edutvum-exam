@@ -69,7 +69,7 @@ export class StudentDashComponent implements OnInit {
   }
 
   showExamResult(result: ExamResult) {
-    let er = this.service.getExam(result.id)
+    let er = this.service.getExamResult(result.id)
     if (er.isLocked()) this.router.navigate(['/results', result.id])
     else {
       if (!confirm('Ready to continue the exam?!')) return

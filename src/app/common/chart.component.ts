@@ -62,14 +62,12 @@ export class ChartComponent implements AfterViewInit {
     if (!this.mouseInside) this.drawBars()
   }
 
-  private w = 0
-  private max = 0
-  mouseInside = false
-
+  private mouseInside = false
   private ctx: CanvasRenderingContext2D
 
   private x2n(x: number): number {
-    return Math.floor((x - XMARGIN) / this.w)
+    let w = (this.width - 40) / this.bars.length
+    return Math.floor((x - XMARGIN) / w)
   }
 
   public ngAfterViewInit() {
@@ -78,9 +76,6 @@ export class ChartComponent implements AfterViewInit {
 
     canvasEl.width = this.width
     canvasEl.height = this.height
-
-    this.w = (this.width - 40) / this.bars.length
-    this.max = Math.max(...this.bars.map(x => x.value))
 
     this.drawBars()
 
@@ -118,9 +113,11 @@ export class ChartComponent implements AfterViewInit {
     let bar = this.bars[n]
     if (!bar) return
 
+    let w = (this.width - 40) / this.bars.length
+
     const LINE_HEIGHT = 16
     this.ctx.fillStyle = 'blue'
-    let x = XMARGIN + n * this.w
+    let x = XMARGIN + n * w
     this.line(x, 0, x, this.height - YMARGIN)
     let yh = 6 + bar.flags().length * LINE_HEIGHT
     this.ctx.fillRect(x, yh, 50, -yh)
@@ -133,17 +130,20 @@ export class ChartComponent implements AfterViewInit {
   private drawBars() {
     if (!this.ctx) { return }
 
+    let wide = (this.width - 40) / this.bars.length
+    let max = Math.max(...this.bars.map(x => x.value))
+
     this.ctx.clearRect(0, 0, this.width, this.height)
     //this.ctx.strokeRect(0, 0, this.width, this.height)
     this.ctx.fillStyle = 'black'
     this.bars.forEach((bar, i) => {
       this.ctx.fillStyle = 'rgba(' + bar.color + ')'
-      let h = (this.height - YMARGIN - SELHEIGHT) * (bar.value / this.max)
-      let w = (i: number) => XMARGIN + i * this.w
-      this.ctx.fillRect(w(i), this.height - SELHEIGHT - h, this.w - XGAP, h)
+      let h = (this.height - YMARGIN - SELHEIGHT) * (bar.value / max)
+      let w = (i: number) => XMARGIN + i * wide
+      this.ctx.fillRect(w(i), this.height - SELHEIGHT - h, wide - XGAP, h)
       this.ctx.fillStyle = 'maroon'
       let hh = this.height - SELHEIGHT + YGAP
-      if (bar.selected) this.ctx.fillRect(w(i), hh, this.w - XGAP, SELHEIGHT)
+      if (bar.selected) this.ctx.fillRect(w(i), hh, wide - XGAP, SELHEIGHT)
     })
   }
 

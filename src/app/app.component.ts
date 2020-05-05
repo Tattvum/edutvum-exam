@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-root',
@@ -49,11 +50,55 @@ import { Component } from '@angular/core';
     </div> -->
 
     <!-- <div style="margin: 20px;">
-      <app-chart [width]="800" [height]="400"></app-chart>
+      <button mat-button (click)="addBar()">Add</button>
+      <app-chart [width]="800" [height]="400" [bars]="bars"></app-chart>
+      {{bars.length}}
     </div> -->
 
+    <!-- <div style="margin: 20px;">
+      <app-auto-chip placeholder="Hola!" [old]="old" [all]="all"
+        (removed)="removeSelection($event)" (added)="addSelection($event)" >
+      </app-auto-chip>
+    </div> -->
 `,
   styles: []
 })
 export class AppComponent {
+
+  // bars = [
+  //   { value: 10, color: "0,128,0", flags: () => ["a"], action: () => console.log(0) },
+  // ]
+
+  // addBar() {
+  //   let rndval = Math.random() * 10
+  //   this.bars.push({ value: rndval, color: "0,128,20", flags: () => ["b"], action: () => console.log(1) })
+  // }
+
+  //----
+
+  // old = [
+  //   { id: "one", title: "One is the name of neo" },
+  //   { id: "two", title: "Two are the eyes" },
+  // ]
+
+  // all = [
+  //   { id: "one", title: "One is the name of neo" },
+  //   { id: "two", title: "Two are the eyes" },
+  //   { id: "three", title: "Three are the gunas" },
+  //   { id: "four", title: "Four are the directions" },
+  //   { id: "five", title: "Five are the old elements" },
+  // ]
+
+  // addSelection(id: string) {
+  //   console.log("add1", id)
+  //   const obj = this.all.find(o => o.id === id)
+  //   console.log("add2", obj)
+  //   this.old.push(obj)
+  // }
+  // removeSelection(id: string) {
+  //   console.log("remove", id)
+  //   const i = this.old.findIndex(o => o.id === id)
+  //   if (i >= 0) this.old.splice(i, 1)
+  // }
+
 }
