@@ -18,7 +18,8 @@
       <button fxFlexOffset="10px" fxFlexAlign="start" mat-raised-button [disabled]="!service.titleFilter"
         (click)="service.titleFilter=''">Reset</button>
     </div>
-    <div *ngIf="service.isAdmin && service.showAll" fxFlexAlign="baseline">
+
+    <div *ngIf="service.isAdmin && service.showAll" fxFlexAlign="center">
       <button mat-raised-button color="primary" id="create-exam-button" (click)="createExam()">Create Exam!</button>
     </div>
   </div>

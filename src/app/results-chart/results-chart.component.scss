@@ -1,0 +1,25 @@
+.highlight:hover {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
+.actionable:hover {
+  background-color: lightyellow;
+  cursor: pointer;
+}
+
+mat-icon {
+  vertical-align: middle;
+}
+
+mat-icon:hover {
+  background-color: lightyellow;
+  cursor: pointer;
+}
+
+.lightblue {
+  color: lightblue;
+}
+.lightred {
+  color: lightcoral;
+}

@@ -35,61 +35,11 @@
     </div>
 
     <div fxLayout="row">
-      <div fxLayout="column">
-        <app-chart [width]="200" [height]="100" [bars]="bars"></app-chart>
-
-        <span style="font-size: x-large;" fxFlexAlign="center">
-          <span class="actionable" (click)="chartEditTitle()">
-            {{chart.title}}
-          </span> <sp></sp><sp></sp>
-          <mat-icon class="lightblue" matTooltip="Configure..." (click)="chartConfig()">
-            settings
-          </mat-icon><sp></sp>
-          <mat-icon class="lightred" matTooltip="Remove..." (click)="chartRemove()">
-            clear
-          </mat-icon>
-        </span>
-
-      </div>
+      <app-results-chart [width]="200" [height]="100" [(title)]="title"
+        [all]="service.filterExams(false)" [some]="some" [convert]="convert"
+        (added)="addExam($event)" (removed)="removeExam($event)">
+      </app-results-chart>
     </div>
 
   </div>
 </div>
-
-<ng-template #chartConfigTemplate>
-  <h1 mat-dialog-title>Configure Chart</h1>
-  <div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
-    <app-auto-input placeholder="Pick an Exam" [list]="allTakenExams" (added)="addExam($event)" >
-    </app-auto-input>
-    <mat-list style="max-height: 200px; overflow: auto;">
-      <mat-list-item class="highlight" *ngFor="let er of oldExamResults">
-        <div mat-line>{{er.id}}</div>
-        <mat-icon mat-list-icon color="primary">done</mat-icon>
-      </mat-list-item>
-    </mat-list>
-  </div>
-  <div mat-dialog-actions>
-    <button mat-raised-button mat-dialog-close cdkFocusInitial>Ok</button>
-  </div>
-</ng-template>
-
-<ng-template #chartEditTitleTemplate>
-  <h1 mat-dialog-title>Edit Chart Title</h1>
-  <div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
-    <mat-form-field>
-      <mat-label>Title</mat-label>
-      <input matInput cdkFocusInitial [(ngModel)]="chart.title">
-    </mat-form-field>
-  </div>
-  <div mat-dialog-actions>
-    <button mat-raised-button mat-dialog-close>Ok</button>
-  </div>
-</ng-template>
-
-<ng-template #chartRemoveTemplate>
-  <h1 mat-dialog-title>Remove Chart ?</h1>
-  <div mat-dialog-actions>
-    <button mat-raised-button [mat-dialog-close]="{value: 5}">Cancel</button>
-    <button mat-raised-button [mat-dialog-close]="{value: 23}" cdkFocusInitial>Ok</button>
-  </div>
-</ng-template>

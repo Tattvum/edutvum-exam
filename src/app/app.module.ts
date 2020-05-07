@@ -69,6 +69,7 @@ import { PopupComponent } from './popup/popup.component';
 import { FilesManagerComponent } from './files-manager/files-manager.component';
 import { QuestionsManagerComponent } from './questions-manager/questions-manager.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ResultsChartComponent } from './results-chart/results-chart.component';
 
 import { SpaceComponent } from './common/sp.component';
 import { NumberInputComponent } from './common/num.component';
@@ -160,6 +161,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     UserProfileComponent,
     AutoInputComponent,
     AutoChipComponent,
+    ResultsChartComponent,
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },
