@@ -1,7 +1,10 @@
 <app-user></app-user>
-<div class="container-fluid">
+<app-user-profile></app-user-profile>
+<hr>
 
-  <div class="center" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column">
+<div *ngIf="!service.loading">
+
+  <div style="margin: 10px;" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column">
     <div fxFlexAlign="baseline" class="h2">Exam Dashboard</div>
     <div fxFlexAlign="baseline">
       <mat-checkbox class="mycheckbox"
@@ -15,23 +18,12 @@
       <button fxFlexOffset="10px" fxFlexAlign="start" mat-raised-button [disabled]="!service.titleFilter"
         (click)="service.titleFilter=''">Reset</button>
     </div>
-    <div *ngIf="service.isAdmin" fxFlexAlign="baseline">
-      <mat-form-field>
-        <mat-select [(ngModel)]="currentUser" (selectionChange)="userChanged()" placeholder="User">
-          <mat-option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
     <div *ngIf="service.isAdmin && service.showAll" fxFlexAlign="baseline">
       <button mat-raised-button color="primary" id="create-exam-button" (click)="createExam()">Create Exam!</button>
     </div>
   </div>
 
-  <div [style.visibility]="service.loading ? 'visible' : 'hidden'" id="loading">
-    <mat-spinner [diameter]="40"></mat-spinner>
-  </div>
-
-  <div class="center">
+  <div style="margin: 10px;">
     <h3 class="bright" *ngIf="service.showAll">All Exams</h3>
     <h3 class="bright" *ngIf="!service.showAll">My Recent Exams</h3>
     <mat-card

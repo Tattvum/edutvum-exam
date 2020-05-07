@@ -1,5 +1,3 @@
-<app-user></app-user>
-
 <div style="margin: 10px;">
   <div *ngIf="service.loading">
     <mat-spinner [diameter]="40"></mat-spinner>
@@ -7,7 +5,7 @@
 
   <div *ngIf="!service.loading" fxLayout="column" fxLayoutGap="20px">
 
-    <div *ngIf="service.isAdmin" style="background-color: antiquewhite;">
+    <div *ngIf="service.isAdmin" fxLayout="row"  fxLayoutGap="40px" style="background-color: antiquewhite; padding: 10px;">
       <mat-form-field>
         <mat-select [(ngModel)]="this.currentUser" (selectionChange)="userChanged()" placeholder="User">
           <mat-option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</mat-option>
@@ -16,11 +14,6 @@
     </div>
 
     <div fxLayout="row"  fxLayoutGap="40px">
-      <div fxLayout="column" fxLayoutAlign="space-around center">
-        <div>
-          <button mat-raised-button color="primary" (click)="examListing()">Exam Listing...</button>
-        </div>
-      </div>
       <div fxLayout="column">
         <div style="font-size: xx-large;"> {{ service.examStats().all }} </div>
         <div> Exams Available </div>
@@ -43,17 +36,60 @@
 
     <div fxLayout="row">
       <div fxLayout="column">
-        <span style="font-size: xx-large;" fxFlexAlign="center">Charting a test</span>
+        <app-chart [width]="200" [height]="100" [bars]="bars"></app-chart>
 
-        <app-chart [width]="800" [height]="200" [bars]="bars"></app-chart>
+        <span style="font-size: x-large;" fxFlexAlign="center">
+          <span class="actionable" (click)="chartEditTitle()">
+            {{chart.title}}
+          </span> <sp></sp><sp></sp>
+          <mat-icon class="lightblue" matTooltip="Configure..." (click)="chartConfig()">
+            settings
+          </mat-icon><sp></sp>
+          <mat-icon class="lightred" matTooltip="Remove..." (click)="chartRemove()">
+            clear
+          </mat-icon>
+        </span>
 
-        <app-auto-chip placeholder="Pick Exams..."
-            [old]="oldExamResults" [all]="allTakenExams"
-           (removed)="removeExam($event)" (added)="addExam($event)">
-        </app-auto-chip>
-        <span>{{bars.length}}</span>
       </div>
     </div>
 
   </div>
 </div>
+
+<ng-template #chartConfigTemplate>
+  <h1 mat-dialog-title>Configure Chart</h1>
+  <div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+    <app-auto-input placeholder="Pick an Exam" [list]="allTakenExams" (added)="addExam($event)" >
+    </app-auto-input>
+    <mat-list style="max-height: 200px; overflow: auto;">
+      <mat-list-item class="highlight" *ngFor="let er of oldExamResults">
+        <div mat-line>{{er.id}}</div>
+        <mat-icon mat-list-icon color="primary">done</mat-icon>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close cdkFocusInitial>Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #chartEditTitleTemplate>
+  <h1 mat-dialog-title>Edit Chart Title</h1>
+  <div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input matInput cdkFocusInitial [(ngModel)]="chart.title">
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close>Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #chartRemoveTemplate>
+  <h1 mat-dialog-title>Remove Chart ?</h1>
+  <div mat-dialog-actions>
+    <button mat-raised-button [mat-dialog-close]="{value: 5}">Cancel</button>
+    <button mat-raised-button [mat-dialog-close]="{value: 23}" cdkFocusInitial>Ok</button>
+  </div>
+</ng-template>

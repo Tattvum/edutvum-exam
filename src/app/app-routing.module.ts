@@ -15,10 +15,9 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 const appRoutes: Routes = [
   // { path: '**', component: TimerComponent },
   {
-    path: 'student-dash', component: UserProfileComponent,
+    path: 'student-dash', component: StudentDashComponent,
     canActivate: [AuthGuard]
   },
-  { path: 'exam-list', component: StudentDashComponent },
   { path: 'question/:rid/:qid/:sid', component: ExamComponent },
   { path: 'question/:rid/:qid', component: ExamComponent },
   { path: 'results/:rid/:sid', component: ExamComponent },

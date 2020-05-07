@@ -1,14 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { Lib } from '../model/lib';
+import { Lib, Selection } from '../model/lib';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-
-export interface Selection {
-  id: string
-  title: string
-}
 
 @Component({
   selector: 'app-auto-chip',
