@@ -8,6 +8,11 @@ export enum KEY {
   ARROW_DOWN = 'ArrowDown',
 }
 
+export interface Selection {
+  id: string
+  title: string
+}
+
 export class Lib {
   static times(n: number): number[] {
     let arr = []

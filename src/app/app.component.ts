@@ -4,7 +4,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 @Component({
   selector: 'app-root',
   template: `
-    <router-outlet></router-outlet>
+    <!-- <router-outlet></router-outlet> -->
 
     <!-- <div style="margin: 20px;">
       <app-timer style="margin: 20px;"
@@ -60,10 +60,33 @@ import { MatChipInputEvent } from '@angular/material/chips';
         (removed)="removeSelection($event)" (added)="addSelection($event)" >
       </app-auto-chip>
     </div> -->
+
+    <div style="margin: 20px;">
+      <app-auto-input placeholder="Hola!" [list]="list"
+        (added)="addedAutoInput($event)" >
+      </app-auto-input> {{selectedFromList}}
+    </div>
 `,
   styles: []
 })
 export class AppComponent {
+
+  selectedFromList: string
+
+  list = [
+    { id: "one", title: "1 is the name of neo" },
+    { id: "two", title: "2 are the eyes" },
+    { id: "three", title: "3 are the gunas" },
+    { id: "four", title: "4 are the directions" },
+    { id: "five", title: "5 are the old elements" },
+  ]
+
+  addedAutoInput(id: string) {
+    console.log("addedAutoInput", id)
+    this.selectedFromList = id
+  }
+
+  //----
 
   // bars = [
   //   { value: 10, color: "0,128,0", flags: () => ["a"], action: () => console.log(0) },
@@ -95,6 +118,7 @@ export class AppComponent {
   //   console.log("add2", obj)
   //   this.old.push(obj)
   // }
+
   // removeSelection(id: string) {
   //   console.log("remove", id)
   //   const i = this.old.findIndex(o => o.id === id)
