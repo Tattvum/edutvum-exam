@@ -34,11 +34,15 @@
       </div>
     </div>
 
-    <div fxLayout="row">
-      <app-results-chart [width]="200" [height]="100" [(title)]="title"
-        [all]="service.filterExams(false)" [some]="some" [convert]="convert"
-        (added)="addExam($event)" (removed)="removeExam($event)">
+    <div fxLayout="row wrap" fxLayoutGap="20px">
+      <app-results-chart *ngFor="let chart of charts; let n=index"
+        [width]="200" [height]="100" [(title)]="chart.title"
+        [all]="service.filterExams(false)" [some]="chart.some" [convert]="convert"
+        (added)="addExam($event, n)" (removed)="removeExam($event, n)">
       </app-results-chart>
+      <button mat-raised-button (click)="addChart()" fxFlexAlign="end">
+        Add Chart <sp></sp> <mat-icon>add</mat-icon>
+      </button>
     </div>
 
   </div>

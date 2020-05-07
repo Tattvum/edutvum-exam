@@ -19,8 +19,8 @@ export class UserProfileComponent implements OnInit {
 
   currentUser: string
 
-  some: ExamResult[] = []
-  title: string = "Bingo"
+  charts = [
+  ]
 
   constructor(private router: Router, public service: DataService) { }
 
@@ -28,16 +28,16 @@ export class UserProfileComponent implements OnInit {
     this.currentUser = this.service.activeUser
   }
 
-  addExam(eid: string) {
+  addExam(eid: string, n: number) {
     const ers = this.service.listResults(eid)
-    this.some.push(...ers)
-    console.log("add:", eid, ers.length, this.some.length)
+    this.charts[n].some.push(...ers)
+    console.log("add:", eid, ers.length, this.charts[n].some.length)
   }
 
-  removeExam(id: string) {
-    const i = this.some.findIndex(e => e.exam.id === id)
-    if (i >= 0) this.some.splice(i, 1)
-    console.log("remove:", i, this.some.length)
+  removeExam(id: string, n: number) {
+    const i = this.charts[n].some.findIndex(e => e.exam.id === id)
+    if (i >= 0) this.charts[n].some.splice(i, 1)
+    console.log("remove:", i, this.charts[n].some.length)
   }
 
   examListing() {
@@ -61,6 +61,10 @@ export class UserProfileComponent implements OnInit {
       action: () => this.router.navigate(['/results', er.id]),
       selected: false
     }
+  }
+
+  addChart() {
+    this.charts.push({ title: "Chart " + this.charts.length, some: [] })
   }
 
 }
