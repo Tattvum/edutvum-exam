@@ -186,7 +186,7 @@ export class DataService
 
   public isAdmin = false
   public loading = false
-  public activeUser: string
+  public activeUser: User
   public disableHotkeys = false
   public titleFilter = ''
   public showAll = false
@@ -244,7 +244,7 @@ export class DataService
   init(user: User, dolast = () => { }) {
     Lib.failifold(Lib.isNil(user), 'user cannot be null')
     this.loading = true
-    this.activeUser = user.uid
+    this.activeUser = user
     this.dataSource.getHolders(user).then(hs => {
       this.tagCache = {}
       this.tags = hs.tags
@@ -425,6 +425,7 @@ export class DataService
     try {
       let user = await this.userWait()
       Lib.failif(Lib.isNil(user), 'user cannot be null')
+      if (this.isAdmin) user = this.activeUser
       let chart = await this.dataSource.createChart(user)
       Lib.failif(!chart, "Some error while updating the chart", chart)
       this.chartCache[chart.id] = chart
@@ -441,6 +442,7 @@ export class DataService
     try {
       let user = await this.userWait()
       Lib.failif(Lib.isNil(user), 'user cannot be null')
+      if (this.isAdmin) user = this.activeUser
       let ok = await this.dataSource.updateChart(user, chart)
       Lib.failif(!ok, "Some error while updating the chart", chart)
       console.log("Chart Updated:", chart.id)
@@ -455,6 +457,7 @@ export class DataService
     try {
       let user = await this.userWait()
       Lib.failif(Lib.isNil(user), 'user cannot be null')
+      if (this.isAdmin) user = this.activeUser
       let ok = await this.dataSource.deleteChart(user, cid)
       Lib.failif(!ok, "Some error while deleting the chart", cid)
       const index = this.charts.indexOf(this.chartCache[cid]);

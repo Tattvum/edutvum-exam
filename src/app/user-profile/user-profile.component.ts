@@ -21,7 +21,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private router: Router, public service: DataService) { }
 
   ngOnInit(): void {
-    this.currentUser = this.service.activeUser
+    this.currentUser = this.service.activeUser.uid
   }
 
   timize(secs: number) {

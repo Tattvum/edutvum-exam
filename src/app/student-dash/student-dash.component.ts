@@ -32,7 +32,6 @@ export class StudentDashComponent implements OnInit {
 
   public pageExam
   public pageResult
-  public currentUser
 
   public ok = false
 
@@ -44,17 +43,10 @@ export class StudentDashComponent implements OnInit {
     private context: GeneralContext,
     private router: Router) { }
 
-  ngOnInit(): void {
-    this.currentUser = this.service.activeUser
-  }
+  ngOnInit(): void { }
 
   showWhen(dt: Date): string {
     return moment(dt).fromNow();
-  }
-
-  userChanged() {
-    // console.log(this.currentUser)
-    if (this.currentUser) this.service.switchUser(this.currentUser)
   }
 
   takeExam(exam: Exam) {
