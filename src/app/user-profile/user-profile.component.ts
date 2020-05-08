@@ -35,7 +35,7 @@ export class UserProfileComponent implements OnInit {
   convert(s: Selection): Bar {
     let er = <ExamResult>s
     return {
-      value: er.score.percent,
+      value: Math.round(er.score.percent),
       color: "0,128,10",
       flags: () => [er.score.percent + "", er.exam.id.substr(0, 5) + "..."],
       action: () => this.router.navigate(['/results', er.id]),
@@ -53,8 +53,11 @@ export class UserProfileComponent implements OnInit {
 
   addExamResult(eid: string, n: number) {
     const ers = this.service.listResults(eid)
-    this.service.charts[n].results.push(...ers)
-    console.log("added:", eid, ers.length, this.service.charts[n].results.length)
+    let results = this.service.charts[n].results
+    //only unique results are added! alert?
+    let notexists = (id: string) => results.filter(r => r.id === id).length < 1
+    ers.forEach(er => { if (notexists(er.id)) results.push(er) })
+    console.log("added:", eid, ers.length, results.length)
   }
 
   removeExamResult(eid: string, n: number) {
