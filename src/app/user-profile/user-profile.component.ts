@@ -3,9 +3,8 @@ import { Router } from '@angular/router';
 
 import { DataService } from '../model/data.service';
 import { Lib, Selection } from '../model/lib';
-import { Bar } from '../common/chart.component';
 import { ExamResult } from '../model/exam-result';
-import { Exam } from 'app/model/exam';
+import { Bar } from '../common/chart.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -19,29 +18,10 @@ export class UserProfileComponent implements OnInit {
 
   currentUser: string
 
-  charts = [
-  ]
-
   constructor(private router: Router, public service: DataService) { }
 
   ngOnInit(): void {
     this.currentUser = this.service.activeUser
-  }
-
-  addExam(eid: string, n: number) {
-    const ers = this.service.listResults(eid)
-    this.charts[n].some.push(...ers)
-    console.log("add:", eid, ers.length, this.charts[n].some.length)
-  }
-
-  removeExam(id: string, n: number) {
-    const i = this.charts[n].some.findIndex(e => e.exam.id === id)
-    if (i >= 0) this.charts[n].some.splice(i, 1)
-    console.log("remove:", i, this.charts[n].some.length)
-  }
-
-  examListing() {
-    this.router.navigate(['/exam-list'])
   }
 
   timize(secs: number) {
@@ -52,7 +32,7 @@ export class UserProfileComponent implements OnInit {
     if (this.currentUser) this.service.switchUser(this.currentUser)
   }
 
-  convert(s: Selection) {
+  convert(s: Selection): Bar {
     let er = <ExamResult>s
     return {
       value: er.score.percent,
@@ -63,8 +43,34 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  show(s: Selection): Selection {
+    let er = <ExamResult>s
+    return {
+      id: er.exam.id,
+      title: er.title,
+    }
+  }
+
+  addExamResult(eid: string, n: number) {
+    const ers = this.service.listResults(eid)
+    this.service.charts[n].results.push(...ers)
+    console.log("added:", eid, ers.length, this.service.charts[n].results.length)
+  }
+
+  removeExamResult(eid: string, n: number) {
+    const i = this.service.charts[n].results.findIndex(e => e.id === eid)
+    if (i >= 0) this.service.charts[n].results.splice(i, 1)
+    console.log("removed:", this.service.charts[n].results.length)
+  }
+
   addChart() {
-    this.charts.push({ title: "Chart " + this.charts.length, some: [] })
+    this.service.createChart()
+  }
+  deleteChart(n: number) {
+    this.service.deleteChart(this.service.charts[n].id)
+  }
+  updateChart(n: number) {
+    this.service.updateChart(this.service.charts[n])
   }
 
 }

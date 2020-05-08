@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { Selection } from '../model/lib';
 import { Bar } from '../common/chart.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-results-chart',
@@ -11,31 +12,28 @@ import { Bar } from '../common/chart.component';
   styleUrls: ['./results-chart.component.scss']
 })
 export class ResultsChartComponent implements OnInit {
-  @ViewChild('chartEditTitleTemplate') chartEditTitleTemplate: TemplateRef<any>
   @ViewChild('chartConfigTemplate') chartConfigTemplate: TemplateRef<any>
   @ViewChild('chartRemoveTemplate') chartRemoveTemplate: TemplateRef<any>
 
   @Input() width = 800
   @Input() height = 400
 
-  @Input() all: Selection[] = []
-  @Input() some: Selection[] = []
+  @Input() all: Selection[]
+  @Input() some: Selection[]
 
-  @Input() convert: (s: Selection) => Bar = (s) => ({
-    value: Math.round(Math.random() * 100),
-    color: "0,128,10",
-    flags: () => [s.id.substr(0, 5) + "...", s.title.substr(0, 5) + "..."],
-    action: () => this.router.navigate(['/results', s.id]),
-    selected: false
-  })
+  @Input() convert: (s: Selection) => Bar
+  @Input() show: (s: Selection) => Selection
 
   @Output() titleChange = new EventEmitter<string>()
-  @Input() title: string = "<Title>"
+  @Input() title: string
 
   @Output() added = new EventEmitter<string>()
   @Output() removed = new EventEmitter<string>()
+  @Output() updated = new EventEmitter()
 
-  constructor(private router: Router, public dialog: MatDialog) { }
+  @Output() deleted = new EventEmitter()
+
+  constructor(private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void { }
 
@@ -44,36 +42,23 @@ export class ResultsChartComponent implements OnInit {
   }
 
   chartConfig(): void {
-    const dialogRef = this.dialog.open(this.chartConfigTemplate);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-    });
-  }
-
-  chartEditTitle(): void {
-    const config = {
-      width: '250px',
-      data: { value: 5 }
-    }
-    const dialogRef = this.dialog.open(this.chartEditTitleTemplate, config);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+    const dialogRef = this.dialog.open(this.chartConfigTemplate, { width: '600px' });
+    dialogRef.afterClosed().subscribe(ok => {
+      this.titleChange.emit(this.title)
+      this.updated.emit()
     });
   }
 
   chartRemove(): void {
     const dialogRef = this.dialog.open(this.chartRemoveTemplate, { width: '250px' });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Not Implemented yet!', result);
+    dialogRef.afterClosed().subscribe(ok => {
+      if (ok) this.deleted.emit()
     });
   }
 
-  doit(n: number) {
-    console.log(n)
-  }
-
-  onNoClick() {
-    console.log("No clicked!")
+  selectionRemove(sid: string) {
+    this.removed.emit(sid)
+    this.snackBar.open(`Selection (${sid}) Removed!`, "", { duration: 2000 })
   }
 
 }

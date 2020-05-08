@@ -17,12 +17,14 @@ import { QuestionGroup } from 'app/model/question-group';
 import { CommentList, Comment } from './comment';
 import { MarkingSchemeType } from './marks';
 import { Tag } from './tag';
+import { Chart } from './chart';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams/'
 const RESULTS_URL = URL_VER + 'results/'
 const USERS_URL = URL_VER + 'users/'
 const TAGS_URL = URL_VER + 'tags/'
+const CHARTS_URL = URL_VER + 'charts/'
 
 // NOTE: PUBLIC for TEST sake ONLY
 export function fbObjToArr(obj): any[] {
@@ -191,6 +193,15 @@ export function createR(obj, es: { [key: string]: Exam }, rs: { [key: string]: E
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
+export function createC(obj, rs: { [key: string]: ExamResult }): Chart {
+  let id = obj.$key
+  let when = new Date(obj.when)
+  let title = obj.title
+  let results = fbObjToArr(obj.results).map(rid => rs[rid])
+  return new Chart(id, title, when, results)
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
 export function createU(obj): User {
   let uid = obj.localId
   let name = obj.displayName
@@ -279,6 +290,16 @@ export function convertExamResult(result: ExamResult): any {
   return ro
 }
 
+// NOTE: PUBLIC for TEST sake ONLY
+export function convertChart(chart: Chart): any {
+  console.log(chart)
+  let co = {}
+  co['title'] = chart.title
+  co['when'] = chart.when.toISOString()
+  co['results'] = chart.results.map(r => r.id)
+  return co
+}
+
 @Injectable()
 export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
@@ -286,6 +307,7 @@ export class FirebaseDataSource implements DataSource {
   private alles: { [key: string]: Exam } = {}
   private allrs: { [key: string]: ExamResult } = {}
   private allts: { [key: string]: Tag } = {}
+  private allcs: { [key: string]: Chart } = {}
 
   constructor(private afbapi: FirebaseAPI) { }
 
@@ -298,11 +320,16 @@ export class FirebaseDataSource implements DataSource {
     await this.fetchT()
     await this.fetchE()
     await this.fetchR(user)
+    await this.fetchC(user)
     return this.holders
   }
 
   private resultsUrl(user: User): string {
     return RESULTS_URL + user.uid + '/'
+  }
+
+  private chartsUrl(user: User): string {
+    return CHARTS_URL + user.uid + '/'
   }
 
   private async fetchU(): Promise<void> {
@@ -335,6 +362,42 @@ export class FirebaseDataSource implements DataSource {
       let result = createR(r, this.alles, this.allrs, user)
       this.allrs[r.$key] = result
       this.holders.results.push(result)
+    })
+  }
+
+  private async fetchC(user: User): Promise<void> {
+    let cobjs = await this.afbapi.listFirstMapR(this.chartsUrl(user))
+    fbObjToArr(cobjs).forEach(c => {
+      let chart = createC(c, this.allrs)
+      this.allcs[c.$key] = chart
+      this.holders.charts.push(chart)
+    })
+  }
+
+  public deleteChart(user: User, cid: string): Promise<boolean> {
+    let url = this.chartsUrl(user) + cid + '/'
+    return this.afbapi.objectRemoveBool(url)
+  }
+
+  public updateChart(user: User, chart: Chart): Promise<boolean> {
+    let co = convertChart(chart)
+    // TBD NOTE: This null trsformation is required!
+    // https://github.com/firebase/quickstart-js/issues/64
+    co = JSON.parse(JSON.stringify(co))
+    // console.log(JSON.stringify(ro))
+    let url = this.chartsUrl(user) + chart.id + '/'
+    return this.afbapi.objectSetBool(url, co)
+  }
+
+  public createChart(user: User): Promise<Chart> {
+    let c = new Chart("-", "Chart Title", new Date(), [])
+    let co = convertChart(c)
+    let url = this.chartsUrl(user)
+    return this.afbapi.listPush<Chart>(url, co, call => {
+      let key = call.key
+      let chart = new Chart(key, c.title, c.when, c.results)
+      this.allcs[key] = chart
+      return chart
     })
   }
 

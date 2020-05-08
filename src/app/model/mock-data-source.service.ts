@@ -12,6 +12,7 @@ import { ExamResult } from './exam-result';
 import { QuestionGroup } from 'app/model/question-group';
 import { Comment } from 'app/model/comment';
 import { Tag } from './tag';
+import { Chart } from './chart';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question('00', title, type, choices, sols)
@@ -137,4 +138,18 @@ export class MockDataSource implements DataSource {
   public createTag(user: User, title: string): Promise<Tag> {
     return Promise.resolve(new Tag("00", title))
   }
+
+  public createChart(user: User): Promise<Chart> {
+    let chart = new Chart("-", "Dummy Chart", new Date(), [])
+    return Promise.resolve(chart)
+  }
+
+  public updateChart(user: User, result: Chart): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
+  public deleteChart(user: User, rid: string): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
 }

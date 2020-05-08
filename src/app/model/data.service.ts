@@ -14,6 +14,7 @@ import { AnswerType } from 'app/model/answer-type';
 import { GeneralContext } from 'app/model/general-context';
 import { QuestionGroup } from 'app/model/question-group';
 import { Comment } from 'app/model/comment';
+import { Chart } from 'app/model/chart';
 import { Tag } from './tag';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
@@ -27,6 +28,7 @@ export class Holders {
     public results: ExamResult[] = [],
     public users: User[] = [],
     public tags: Tag[] = [],
+    public charts: Chart[] = [],
   ) { }
 }
 
@@ -73,6 +75,9 @@ export abstract class DataSource {
   abstract addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean>
   abstract deleteQuestion(user: User, fullid: string): Promise<boolean>
   abstract createTag(user: User, title: string): Promise<Tag>
+  abstract createChart(user: User): Promise<Chart>
+  abstract updateChart(user: User, chart: Chart): Promise<boolean>
+  abstract deleteChart(user: User, cid: string): Promise<boolean>
 }
 
 export abstract class SecuritySource {
@@ -93,6 +98,10 @@ interface Cache {
 
 interface TagCache {
   [id: string]: Tag
+}
+
+interface ChartCache {
+  [id: string]: Chart
 }
 
 export interface UserDisplayContext {
@@ -166,12 +175,15 @@ export class DataService
   private userCache: UserCache = {}
   private tagCache: TagCache = {}
   private cache: Cache = {}
+  private chartCache: ChartCache = {}
   private pendingResult: ExamResult
 
   public tags: Tag[] = []
   public exams: Exam[] = []
   public results: ExamResult[] = []
   public users: User[] = []
+  public charts: Chart[] = []
+
   public isAdmin = false
   public loading = false
   public activeUser: string
@@ -246,6 +258,8 @@ export class DataService
       this.exams.filter(e => e.isPending()).forEach(e => this.shadowPendingExam(e.id))
       this.results = hs.results
       this.results.forEach(r => this.cache[r.id] = r)
+      this.charts = hs.charts
+      this.charts.forEach(c => this.chartCache[c.id] = c)
       Lib.failifold(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
     }).then(dolast).then(() => this.loading = false)
   }
@@ -405,6 +419,54 @@ export class DataService
       this.results.splice(i, 1)
       return true
     })
+  }
+
+  public async createChart(): Promise<Chart> {
+    try {
+      let user = await this.userWait()
+      Lib.failif(Lib.isNil(user), 'user cannot be null')
+      let chart = await this.dataSource.createChart(user)
+      Lib.failif(!chart, "Some error while updating the chart", chart)
+      this.chartCache[chart.id] = chart
+      this.charts.push(chart)
+      console.log("Chart Created:", chart.id)
+      return chart
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  }
+
+  public async updateChart(chart: Chart): Promise<boolean> {
+    try {
+      let user = await this.userWait()
+      Lib.failif(Lib.isNil(user), 'user cannot be null')
+      let ok = await this.dataSource.updateChart(user, chart)
+      Lib.failif(!ok, "Some error while updating the chart", chart)
+      console.log("Chart Updated:", chart.id)
+      return ok
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  }
+
+  public async deleteChart(cid: string): Promise<boolean> {
+    try {
+      let user = await this.userWait()
+      Lib.failif(Lib.isNil(user), 'user cannot be null')
+      let ok = await this.dataSource.deleteChart(user, cid)
+      Lib.failif(!ok, "Some error while deleting the chart", cid)
+      const index = this.charts.indexOf(this.chartCache[cid]);
+      Lib.failif(index < 0, "Some error, the chart is missing!!", cid)
+      this.charts.splice(index, 1);
+      delete this.chartCache[cid]
+      console.log("Chart Deleted:", cid)
+      return ok
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
 
   private editQuestionDetail(diff: any, qidn: number, type: ExamEditType, cid?: number): Promise<boolean> {

@@ -4,7 +4,6 @@
 }
 
 .actionable:hover {
-  background-color: lightyellow;
   cursor: pointer;
 }
 
@@ -13,13 +12,17 @@ mat-icon {
 }
 
 mat-icon:hover {
-  background-color: lightyellow;
   cursor: pointer;
 }
 
-.lightblue {
-  color: lightblue;
+.iconcolor {
+  color: grey;
 }
-.lightred {
-  color: lightcoral;
+.iconcolor:hover {
+  color: black;
 }
+
+.gray {
+  color: gray;
+}
+
