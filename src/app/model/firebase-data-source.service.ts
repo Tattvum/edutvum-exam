@@ -292,7 +292,6 @@ export function convertExamResult(result: ExamResult): any {
 
 // NOTE: PUBLIC for TEST sake ONLY
 export function convertChart(chart: Chart): any {
-  console.log(chart)
   let co = {}
   co['title'] = chart.title
   co['when'] = chart.when.toISOString()
