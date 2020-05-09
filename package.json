@@ -11,6 +11,7 @@
     "e2e": "ng e2e",
     "dev": "ng serve -c dev",
     "stage": "ng serve -c stage",
+    "stage-tt2": "ng serve -c stage-tt2",
     "prod": "ng serve --prod",
     "build": "ng build --prod",
     "lint": "ng lint",

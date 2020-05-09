@@ -148,3 +148,55 @@ Found 54 dependencies.
 ---
 `npm run stage`
 All working!
+
+2020-05-08 Fri - on 4.7.3 (after 4 alpha, 2 beta, 1 rc)
+svr@tnr:~/lindata/edutvum/edutvum-exam$ firebase init emulators
+...
+You're about to initialize a Firebase project in this directory:
+  /home/svr/lindata/edutvum/edutvum-exam
+Before we get started, keep in mind:
+  * You are initializing in an existing Firebase project directory
+=== Project Setup
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add, 
+but for now we'll just set up a default project.
+i  .firebaserc already has a default project, using edutvum-exam.
+=== Emulators Setup
+? Which Firebase emulators do you want to set up? Press Space to select emulators, then Enter to confirm yo
+ur choices. Functions, Firestore, Database, Hosting, Pubsub
+? Which port do you want to use for the functions emulator? 5001
+? Which port do you want to use for the firestore emulator? 9080
+? Which port do you want to use for the database emulator? 9000
+? Which port do you want to use for the hosting emulator? 5000
+? Which port do you want to use for the pubsub emulator? 8085
+? Would you like to download the emulators now? Yes
+i  firestore: downloading cloud-firestore-emulator-v1.11.3.jar...
+Progress: =================================================================================> (100% of 64MB
+i  pubsub: downloading pubsub-emulator-0.1.0.zip...
+Progress: =================================================================================> (100% of 37MB
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+✔  Firebase initialization complete!
+
+svr@tnr:~/lindata/edutvum/edutvum-exam$ firebase emulators:start --only database
+i  emulators: Starting emulators: database
+✔  hub: emulator hub started at http://localhost:4400
+⚠  database: Did not find a Realtime Database rules file specified in a firebase.json config file.
+⚠  database: The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+i  database: database emulator logging to database-debug.log
+✔  database: database emulator started at http://localhost:9000
+i  database: For testing set FIREBASE_DATABASE_EMULATOR_HOST=localhost:9000
+✔  emulators: All emulators started, it is now safe to connect.
+
+svr@tnr:~/Downloads$ curl -X POST -d @edutvum-exam-export.json  http://localhost:9000/.json
+{"name":"-M6p9ppYF1teDOrYXRgb"}
+
+svr@tnr:~/lindata/edutvum/edutvum-exam$ curl http://localhost:9000/-M6p9ppYF1teDOrYXRgb/ver5/users/.json
+.../-M6p9ppYF1teDOrYXRgb/ver5/exams/.json
+.../-M6p9ppYF1teDOrYXRgb/ver5/tags/.json
+.../-M6p9ppYF1teDOrYXRgb/ver5/charts/.json
+.../-M6p9ppYF1teDOrYXRgb/ver5/results/.json
+(this brings back the data inside)
+svr@tnr:~/lindata/edutvum/edutvum-exam$ curl http://localhost:9000/-M6qx7JtX-qW7UOQkYsN/ver5/charts/.json
+null
+(if the path is non existant, null returned)

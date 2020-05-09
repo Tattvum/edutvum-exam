@@ -54,6 +54,22 @@
                   "with": "src/environments/environment.stage.ts"
                 }
               ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
+            "stage-tt2": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stage-tt2.ts"
+                }
+              ]
             }
           }
         },
@@ -68,6 +84,12 @@
             },
             "stage": {
               "browserTarget": "edutvum-exam:build:stage"
+            },
+            "stage-tt2": {
+              "browserTarget": "edutvum-exam:build:stage-tt2"
+            },
+            "stage-dev": {
+              "browserTarget": "edutvum-exam:build:stage-dev"
             }
           }
         },
