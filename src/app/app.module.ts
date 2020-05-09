@@ -3,6 +3,7 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
 
@@ -53,6 +54,9 @@ import { FirebaseAPI } from './model/firebase-api.service';
 import { FirebaseSecuritySource } from './model/firebase-security-source.service';
 import { FirebaseDataSource } from './model/firebase-data-source.service';
 
+import { LocalFirebaseAPI } from './model/local-firebase-api.service';
+import { LocalFirebaseDataSource } from './model/local-firebase-data-source.service';
+
 import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -89,8 +93,16 @@ import { MathJaxDirective } from './mathjax.directive';
 
 export const firebaseConfig = environment.firebaseConfig;
 
-let DATA_SOURCE = environment.firebase ? FirebaseDataSource : MockDataSource
-let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuritySource
+if (!environment.mock && !environment.firebase)
+  throw "ERROR: Both mock and firebase cannot be false togather!";
+
+let DATA_SOURCE = !environment.firebase ? MockDataSource :
+  environment.mock ? LocalFirebaseDataSource : FirebaseDataSource
+let SECURITY_SOURCE = !environment.firebase ? MockSecuritySource :
+  environment.mock ? MockSecuritySource : FirebaseSecuritySource
+
+// console.log(DATA_SOURCE, SECURITY_SOURCE)
+if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
 
 @NgModule({
   imports: [
@@ -130,6 +142,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     MatSnackBarModule,
     MatToolbarModule,
     MatTooltipModule,
+    HttpClientModule,
   ],
   declarations: [
     AppComponent,
@@ -167,6 +180,7 @@ let SECURITY_SOURCE = environment.firebase ? FirebaseSecuritySource : MockSecuri
     { provide: GeneralContext, useClass: GeneralContextImpl },
     { provide: DataSource, useClass: DATA_SOURCE },
     { provide: SecuritySource, useClass: SECURITY_SOURCE },
+    LocalFirebaseAPI,
     FirebaseAPI,
     FirebaseUpload,
     DataService,

@@ -13,5 +13,5 @@ export const EMPTY_USER = {
   uid: 'u1',
   name: 'Bingo User',
   email: 'bingo@gmail.com',
-  role: UserRole.USER
+  role: UserRole.ADMIN
 }

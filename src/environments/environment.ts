@@ -5,6 +5,7 @@
 
 export const environment = {
   production: false,
+  mock: true,
   firebase: false,
   firebaseConfig: {
     apiKey: 'xxx',

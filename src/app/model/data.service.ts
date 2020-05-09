@@ -267,7 +267,7 @@ export class DataService
   constructor(private dataSource: DataSource,
     private context: GeneralContext,
     private securitySource: SecuritySource) {
-    console.clear()
+    //console.clear()
     this.isAdmin = false
     this.userWait().then(user => {
       this.init(user, () => {

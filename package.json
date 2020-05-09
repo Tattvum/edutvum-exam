@@ -59,6 +59,7 @@
     "@angular/pwa": "^0.901.3",
     "@types/jasmine": "^3.5.3",
     "@types/node": "^13.7.1",
+    "axios": "^0.19.2",
     "codelyzer": "^5.2.1",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "^5.0.2",

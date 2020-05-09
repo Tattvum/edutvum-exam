@@ -200,3 +200,22 @@ svr@tnr:~/lindata/edutvum/edutvum-exam$ curl http://localhost:9000/-M6p9ppYF1teD
 svr@tnr:~/lindata/edutvum/edutvum-exam$ curl http://localhost:9000/-M6qx7JtX-qW7UOQkYsN/ver5/charts/.json
 null
 (if the path is non existant, null returned)
+
+2020-05-08 Sat - on 4.7.4-alpha.1
+svr@tnr:~/lindata/edutvum/edutvum-exam$ firebase emulators:export firebase-emulator-export
+i  Found running emulator hub for project edutvum-exam at http://localhost:4400
+i  Creating export directory /home/svr/lindata/edutvum/edutvum-exam/firebase-emulator-export
+i  Exporting data to: /home/svr/lindata/edutvum/edutvum-exam/firebase-emulator-export
+
+Error: Export request failed, see emulator logs for more information.
+
+Having trouble? Try firebase [command] --help
+----
+https://firebase.google.com/docs/emulator-suite/install_and_configure
+"Cloud Firestore emulator. Export data from a running Cloud Firestore emulator instance"
+(so only for firestore)
+in the firebase rtdb (run time database) emulator window...
+----
+i  emulators: Received export request. Exporting data to /home/svr/lindata/edutvum/edutvum-exam/firebase-emulator-export.
+⚠  emulators: Export failed: No running emulators support import/export.
+----
