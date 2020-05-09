@@ -299,6 +299,17 @@ export function convertChart(chart: Chart): any {
   return co
 }
 
+export abstract class AbstractFirebaseAPI {
+  abstract objectFirstMap(url: string): Promise<any>
+  abstract listFirstMap(url: string): Promise<any>
+  abstract listFirstMapR(url: string): Promise<any>
+  abstract objectRemoveBool(url: string): Promise<boolean>
+  abstract objectSetBool(url: string, obj: any): Promise<boolean>
+  abstract objectUpdate<T>(url: string, obj: any, fn: (x) => T): Promise<T>
+  abstract objectUpdateBool(url: string, obj: any): Promise<boolean>
+  abstract listPush<T>(url: string, obj: any, fn: (x) => T): Promise<T>
+}
+
 @Injectable()
 export class FirebaseDataSource implements DataSource {
   private holders = new Holders()
@@ -308,7 +319,7 @@ export class FirebaseDataSource implements DataSource {
   private allts: { [key: string]: Tag } = {}
   private allcs: { [key: string]: Chart } = {}
 
-  constructor(private afbapi: FirebaseAPI) { }
+  constructor(private afbapi: AbstractFirebaseAPI) { }
 
   async getHolders(user: User): Promise<Holders> {
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')

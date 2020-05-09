@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { AbstractFirebaseAPI } from './firebase-data-source.service';
 
 //svr@tnr:~/lindata/edutvum/edutvum-exam$ firebase emulators:start --only database
 //...
@@ -67,7 +68,7 @@ function pr2pr2<T>(pr: Promise<any>, fn: (x) => T): Promise<T> {
 //https://github.com/firebase/firebase-tools/issues/1485 (IMPORTANT: REST API)
 
 @Injectable()
-export class LocalFirebaseAPI {
+export class LocalFirebaseAPI implements AbstractFirebaseAPI {
 
   constructor(private http: HttpClient) { }
 

@@ -52,10 +52,9 @@ import { FirebaseUpload } from './model/firebase-upload.service';
 
 import { FirebaseAPI } from './model/firebase-api.service';
 import { FirebaseSecuritySource } from './model/firebase-security-source.service';
-import { FirebaseDataSource } from './model/firebase-data-source.service';
+import { FirebaseDataSource, AbstractFirebaseAPI } from './model/firebase-data-source.service';
 
 import { LocalFirebaseAPI } from './model/local-firebase-api.service';
-import { LocalFirebaseDataSource } from './model/local-firebase-data-source.service';
 
 import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
@@ -96,8 +95,8 @@ export const firebaseConfig = environment.firebaseConfig;
 if (!environment.mock && !environment.firebase)
   throw "ERROR: Both mock and firebase cannot be false togather!";
 
-let DATA_SOURCE = !environment.firebase ? MockDataSource :
-  environment.mock ? LocalFirebaseDataSource : FirebaseDataSource
+let DATA_API_SOURCE = environment.mock ? LocalFirebaseAPI : FirebaseAPI
+let DATA_SOURCE = !environment.firebase ? MockDataSource : FirebaseDataSource
 let SECURITY_SOURCE = !environment.firebase ? MockSecuritySource :
   environment.mock ? MockSecuritySource : FirebaseSecuritySource
 
@@ -178,6 +177,7 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
   ],
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },
+    { provide: AbstractFirebaseAPI, useClass: DATA_API_SOURCE },
     { provide: DataSource, useClass: DATA_SOURCE },
     { provide: SecuritySource, useClass: SECURITY_SOURCE },
     LocalFirebaseAPI,

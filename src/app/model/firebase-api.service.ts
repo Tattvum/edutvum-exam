@@ -8,9 +8,10 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { ThenableReference } from '@firebase/database-types';
+import { AbstractFirebaseAPI } from './firebase-data-source.service';
 
 @Injectable()
-export class FirebaseAPI {
+export class FirebaseAPI implements AbstractFirebaseAPI {
   //NOTE AF5 changes
   //https://github.com/angular/angularfire2/blob/master/docs/version-5-upgrade.md
   private order = (child: string) => ref => ref.orderByChild(child)
