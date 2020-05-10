@@ -13,5 +13,9 @@ export const environment = {
     databaseURL: 'https://xxx.firebaseio.com',
     projectId: 'xxx',
     storageBucket: 'xxx.appspot.com',
+  },
+  emulatorConfig: {
+    HOST: "http://localhost:9000/",
+    DB: "xxx"
   }
 };

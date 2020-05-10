@@ -201,7 +201,7 @@ svr@tnr:~/lindata/edutvum/edutvum-exam$ curl http://localhost:9000/-M6qx7JtX-qW7
 null
 (if the path is non existant, null returned)
 
-2020-05-08 Sat - on 4.7.4-alpha.1
+2020-05-09 Sat - on 4.7.4-alpha.1
 svr@tnr:~/lindata/edutvum/edutvum-exam$ firebase emulators:export firebase-emulator-export
 i  Found running emulator hub for project edutvum-exam at http://localhost:4400
 i  Creating export directory /home/svr/lindata/edutvum/edutvum-exam/firebase-emulator-export
@@ -219,3 +219,13 @@ in the firebase rtdb (run time database) emulator window...
 i  emulators: Received export request. Exporting data to /home/svr/lindata/edutvum/edutvum-exam/firebase-emulator-export.
 ⚠  emulators: Export failed: No running emulators support import/export.
 ----
+
+2020-05-10 Sun - on 4.7.4-rc.1
+```
+  res = await axios1.get('ver5/users.json');
+  let users = res.data
+  users[13].localId = 'u1'
+  await axios1.put('ver5/users.json', users);
+```
+This takes care of the ADMIN rights for the dummy 'u1' user.
+Basically I change the SVR staging user's localId to u1

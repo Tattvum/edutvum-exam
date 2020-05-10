@@ -54,7 +54,7 @@ import { FirebaseAPI } from './model/firebase-api.service';
 import { FirebaseSecuritySource } from './model/firebase-security-source.service';
 import { FirebaseDataSource, AbstractFirebaseAPI } from './model/firebase-data-source.service';
 
-import { LocalFirebaseAPI } from './model/local-firebase-api.service';
+import { LocalFirebaseAPI, EMULATOR_CONFIG } from './model/local-firebase-api.service';
 
 import { AppComponent } from './app.component';
 import { StudentDashComponent } from './student-dash/student-dash.component';
@@ -90,7 +90,8 @@ import { EditorComponent } from './editor/editor.component';
 import { Editor1Component } from './editor1/editor1.component';
 import { MathJaxDirective } from './mathjax.directive';
 
-export const firebaseConfig = environment.firebaseConfig;
+const firebaseConfig = environment.firebaseConfig;
+const emulatorConfig = environment.emulatorConfig;
 
 if (!environment.mock && !environment.firebase)
   throw "ERROR: Both mock and firebase cannot be false togather!";
@@ -178,6 +179,7 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
   providers: [
     { provide: GeneralContext, useClass: GeneralContextImpl },
     { provide: AbstractFirebaseAPI, useClass: DATA_API_SOURCE },
+    { provide: EMULATOR_CONFIG, useValue: emulatorConfig },
     { provide: DataSource, useClass: DATA_SOURCE },
     { provide: SecuritySource, useClass: SECURITY_SOURCE },
     LocalFirebaseAPI,
