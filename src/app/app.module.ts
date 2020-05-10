@@ -90,7 +90,7 @@ import { EditorComponent } from './editor/editor.component';
 import { Editor1Component } from './editor1/editor1.component';
 import { MathJaxDirective } from './mathjax.directive';
 
-const firebaseConfig = environment.firebaseConfig;
+const firebaseConfig = environment.firebaseConfig
 const emulatorConfig = environment.emulatorConfig;
 
 if (!environment.mock && !environment.firebase)

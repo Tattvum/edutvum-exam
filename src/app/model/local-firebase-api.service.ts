@@ -56,6 +56,12 @@ function pr2pr2<T>(pr: Promise<any>, fn: (x) => T): Promise<T> {
   })
 }
 
+function stringify(obj: any): string {
+  let str = JSON.stringify(obj)
+  console.log(str)
+  return str
+}
+
 export interface EmulatorConfig {
   HOST: string;
   DB: string;
@@ -115,25 +121,28 @@ export class LocalFirebaseAPI implements AbstractFirebaseAPI {
 
   async objectSetBool(url: string, obj: any): Promise<boolean> {
     // return this.promiseBool(this.lafDb.object(url).set(obj))
-    let pr = this.http.put(this.emurl(url), obj).toPromise()
+    let pr = this.http.put(this.emurl(url), stringify(obj)).toPromise()
     return promiseBool(pr)
   }
 
-  async objectUpdate<T>(url: string, obj: any, fn: (x) => T): Promise<T> {
+  async objectUpdate<T>(url: string, objcover: any, fn: (x) => T): Promise<T> {
     // return this.promise<T>(this.lafDb.object(url).update(obj), fn)
-    let pr = this.http.put(this.emurl(url), obj).toPromise()
+    let id = Object.keys(objcover)[0]
+    let obj = objcover[id]
+    console.log("objectUpdate<T>", id, stringify(Object.keys(obj)))
+    let pr = this.http.put(this.emurl(url + id + "/"), stringify(obj)).toPromise()
     return pr2pr<T>(pr, fn)
   }
 
   async objectUpdateBool(url: string, obj: any): Promise<boolean> {
     // return this.promiseBool(this.lafDb.object(url).update(obj))
-    let pr = this.http.put(this.emurl(url), obj).toPromise()
+    let pr = this.http.put(this.emurl(url), stringify(obj)).toPromise()
     return promiseBool(pr)
   }
 
   async listPush<T>(url: string, obj: any, fn: (x) => T): Promise<T> {
     // return this.pr2pr<T>(this.tr2p(this.lafDb.list(url).push(obj)), fn)
-    let pr = this.http.post(this.emurl(url), obj).toPromise()
+    let pr = this.http.post(this.emurl(url), stringify(obj)).toPromise()
     return pr2pr2<T>(pr, fn)
   }
 

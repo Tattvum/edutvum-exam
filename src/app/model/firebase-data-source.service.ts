@@ -478,6 +478,7 @@ export class FirebaseDataSource implements DataSource {
     let eocover = {}
     eocover[exam.id] = convertPureExam(exam, user)
     let url = EXAMS_URL
+    // console.log("defineExam", Object.keys(eocover))
     return this.afbapi.objectUpdate<boolean>(url, eocover, call => {
       this.alles[exam.id] = exam
       this.holders.exams.push(exam)
