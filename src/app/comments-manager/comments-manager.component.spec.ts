@@ -2,15 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommentsManagerComponent } from './comments-manager.component';
 
-describe('CommentsManagerComponent', () => {
+xdescribe('CommentsManagerComponent', () => {
   let component: CommentsManagerComponent;
   let fixture: ComponentFixture<CommentsManagerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CommentsManagerComponent ]
+      declarations: [CommentsManagerComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

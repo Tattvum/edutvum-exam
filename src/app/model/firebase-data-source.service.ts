@@ -50,7 +50,7 @@ export function fbObjToFLArr(obj): FileLink[] {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function fbObjToTArr(obj, ts: { [key: string]: Tag }): Tag[] {
+export function fbObjToTArr(obj, ts: { [key: string]: Tag } = {}): Tag[] {
   if (Lib.isNil(obj)) return []
   let arr = []
   Object.keys(obj).forEach((key, index) => {
@@ -83,7 +83,7 @@ export function createA(type: AnswerType, given): string[] {
 let qcache: { [key: string]: Question } = {}
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] = [], ts: { [key: string]: Tag }): Question[] {
+export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] = [], ts: { [key: string]: Tag } = {}): Question[] {
   let qarr = []
   if (obj.kind === 'LINK') {
     let linkid = obj.eid.trim() + '.' + obj.qid.trim()
@@ -130,7 +130,7 @@ export function createT(obj): Tag {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createE(obj, ts: { [key: string]: Tag }): Exam {
+export function createE(obj, ts: { [key: string]: Tag } = {}): Exam {
   let id = obj.$key
   let title = obj.name
   let notes = obj.notes

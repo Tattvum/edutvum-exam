@@ -50,7 +50,7 @@ describe('DataService tests:', () => {
     expect(service.testMe(2)).toBe(4)
   }));
 
-  it('creation flow works', fakeAsync(inject([DataService], (service: DataService) => {
+  xit('creation flow works', fakeAsync(inject([DataService], (service: DataService) => {
     discardPeriodicTasks() // WOW! https://github.com/angular/angular/issues/8251
     tick()
     expect(service).toBeTruthy();
@@ -109,9 +109,9 @@ describe('DataService tests:', () => {
     let eid = HOLDERS.exams[0].id
     let qid = HOLDERS.exams[0].questions[0].id
 
-    expect(() => service.getExam('89')).toThrow()
+    expect(() => service.getExamResult('89')).toThrow()
     expect(console.log).toHaveBeenCalledTimes(1);
-    expect(() => service.getExam(eid)).not.toThrow()
+    expect(() => service.getExamResult(eid)).not.toThrow()
     expect(console.log).toHaveBeenCalledTimes(1);
     expect(service.getQuestion(eid, '89')).toBeUndefined()
     expect(service.getQuestion(eid, qid).id).toBe(qid)

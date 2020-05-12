@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "test": "ng test",
+    "test": "ng test --watch",
     "test:ci": "ng test --code-coverage --single-run",
     "e2e": "ng e2e",
     "dev": "ng serve -c dev",

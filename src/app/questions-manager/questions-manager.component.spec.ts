@@ -2,15 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QuestionsManagerComponent } from './questions-manager.component';
 
-describe('QuestionsManagerComponent', () => {
+xdescribe('QuestionsManagerComponent', () => {
   let component: QuestionsManagerComponent;
   let fixture: ComponentFixture<QuestionsManagerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QuestionsManagerComponent ]
+      declarations: [QuestionsManagerComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
