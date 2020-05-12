@@ -157,11 +157,9 @@ export class ExamResult extends Exam {
   public isPartial(qid: number): boolean {
     // no answers so not correct (also, solutions can never be empty)
     if (!this.isAttempted(qid)) return false
-    if (this.exam.markingScheme === MarkingSchemeType.OLD) return false
-    if (this.questions[qid].type !== AnswerType.NAQ) return false
-    let total = this.questions[qid].solutions[0]
-    let mark = this.answers[qid][0]
-    return mark < total && mark > 0
+    let mks = this.marks(qid)
+    return mks.value < mks.max && mks.value > 0
+    //This takes of negative marks too, as anything below zero is minimum
   }
 
   public isOmitted(qid: number): boolean {

@@ -2,6 +2,7 @@ import { AnswerType } from './answer-type';
 import { Question } from './question';
 import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
+import { MarkingSchemeType } from './marks';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question('00', title, type, choices, sols)
@@ -22,10 +23,19 @@ let tfq = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
 let mcq = () => createQ(AnswerType.MCQ, ['C1', 'C2', 'C3'], [2])
 let arq = () => createQ(AnswerType.ARQ, ['C1', 'C2', 'C3', 'C4', 'C5'], [3])
 let maq = () => createQ(AnswerType.MAQ, ['C1', 'C2', 'C3'], [0, 2])
+let ncq = () => createQ(AnswerType.NCQ, [], [10])//sols is THE answer
+let naq = () => createQ(AnswerType.NAQ, [], [10])//sols is max marks
+
 let questions0 = () => []
 let questions1 = () => [tfq()]
 let questions2 = () => [tfq(), maq()]
-let questions8 = () => [tfq(), tfq(), mcq(), mcq(), arq(), arq(), maq(), maq()]
+let questions10 = () => [
+  tfq(), tfq(),
+  mcq(), mcq(),
+  arq(), arq(),
+  maq(), maq(),
+  ncq(), ncq(),
+]
 
 let choices0: string[] = []
 let choices1: string[] = ['choice 1']
@@ -45,7 +55,6 @@ let create1QR = (type: AnswerType, choices: string[], sols: number[], ans: numbe
   return new ExamResult(e.id, e.title, new Date(), e, [ans], status)
 }
 
-//describe('ExamResult - all:', () => {
 describe('ExamResult1:', () => {
   it('TFQ Creation checks works', () => {
     expect(() => createR2([tfq()], [])).not.toThrow()
@@ -259,5 +268,35 @@ describe('ExamResult2:', () => {
       expect(r.isCorrect(0)).toBeTruthy()
     })
   })
+
+  describe('ExamResult - marks :', () => {
+    let er = (q: Question, ans: number[], ms: MarkingSchemeType = MarkingSchemeType.GENERAL) => {
+      let e = new Exam('00', 'TEST E', [q], new Date(), "", "", ExamStatus.DONE, ms)
+      return new ExamResult(e.id, e.title, new Date(), e, [ans], ExamStatus.DONE)
+    }
+    let JA = MarkingSchemeType.JEEADV
+
+    it('isPartial works', () => {
+      expect(er(tfq(), [0]).isPartial(0)).toBeFalse()
+      expect(er(tfq(), [1]).isPartial(0)).toBeFalse()
+      expect(er(mcq(), [2]).isPartial(0)).toBeFalse()
+      expect(er(mcq(), [1]).isPartial(0)).toBeFalse()
+
+      expect(er(naq(), [5]).isPartial(0)).toBeTrue()
+      expect(er(naq(), [0]).isPartial(0)).toBeFalse()
+      expect(er(naq(), [10]).isPartial(0)).toBeFalse()
+      //No change for NAQ
+      expect(er(naq(), [5], JA).isPartial(0)).toBeTrue()
+      expect(er(naq(), [0], JA).isPartial(0)).toBeFalse()
+      expect(er(naq(), [10], JA).isPartial(0)).toBeFalse()
+
+      expect(er(maq(), [0, 2]).isPartial(0)).toBeFalse()
+      expect(er(maq(), [0, 1]).isPartial(0)).toBeFalse()
+      expect(er(maq(), [0]).isPartial(0)).toBeFalse()
+      //changes for JEE ADV
+      expect(er(maq(), [0, 2], JA).isPartial(0)).toBeFalse()
+      expect(er(maq(), [0, 1], JA).isPartial(0)).toBeFalse()
+      expect(er(maq(), [0], JA).isPartial(0)).toBeTrue()//ONLY CHANGE!
+    })
+  })
 })
-//})
