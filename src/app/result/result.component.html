@@ -16,10 +16,28 @@
                 <td></td>
               </tr>
               <tr>
-                <td>Marks</td>
-                <td class="total sure">{{ result.score.sure | number:'1.0-0' }}</td>
-                <td class="total guess">{{ result.score.guess | number:'1.0-0' }}</td>
-                <td class="">{{ result.score.marks | number:'1.0-0' }}</td>
+                <td>Correct</td>
+                <td class="total sure">{{ result.score.sureCorrect | number:'1.0-0' }}</td>
+                <td class="total guess">{{ result.score.guessCorrect | number:'1.0-0' }}</td>
+                <td class="bglight">{{ (result.score.sureCorrect + result.score.guessCorrect)  | number:'1.0-0' }}</td>
+              </tr>
+              <tr>
+                <td>Partial</td>
+                <td class="total sure">{{ result.score.surePartial | number:'1.0-0' }}</td>
+                <td class="total guess">{{ result.score.guessPartial | number:'1.0-0' }}</td>
+                <td class="bglight">{{ (result.score.surePartial + result.score.guessPartial)  | number:'1.0-0' }}</td>
+              </tr>
+              <tr>
+                <td>Wrong</td>
+                <td class="total sure">{{ result.score.sureWrong | number:'1.0-0' }}</td>
+                <td class="total guess">{{ result.score.guessWrong | number:'1.0-0' }}</td>
+                <td class="bglight">{{ (result.score.sureWrong + result.score.guessWrong)  | number:'1.0-0' }}</td>
+              </tr>
+              <tr>
+                <th>Total</th>
+                <td class="total sure bglight">{{ result.score.sure | number:'1.0-0' }}</td>
+                <td class="total guess bglight">{{ result.score.guess | number:'1.0-0' }}</td>
+                <th class="bgdark">{{ result.score.marks | number:'1.0-0' }}</th>
               </tr>
             </table>
           </td>

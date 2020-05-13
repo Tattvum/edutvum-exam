@@ -200,8 +200,15 @@ export class ExamResult extends Exam {
       if (!this.omissions[qid]) {
         sc.total += marks.max
         if (this.isAttempted(qid)) {
-          if (this.guessings[qid]) sc.guess += marks.value
-          else sc.sure += marks.value
+          if (this.guessings[qid]) {
+            if (this.isPartial(qid)) sc.guessPartial += marks.value
+            else if (this.isCorrect(qid)) sc.guessCorrect += marks.value
+            else sc.guessWrong += marks.value
+          } else {
+            if (this.isPartial(qid)) sc.surePartial += marks.value
+            else if (this.isCorrect(qid)) sc.sureCorrect += marks.value
+            else sc.sureWrong += marks.value
+          }
         } else {
           sc.skipped += marks.max
           marks.value = 0 // NOTE: would be null otherwise
