@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
 import { DataService, ChoiceInputDisplayContext } from '../model/data.service';
-import { AnswerType, ANSWER_TYPE_NAMES } from '../model/answer-type';
+import { AnswerType, ANSWER_TYPE_NAMES, ANSWER_TYPES } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { GeneralContext } from 'app/model/general-context';
@@ -24,8 +24,13 @@ export class ChoiceInputComponent implements OnInit {
   @Input() qid: string
   @Input() question: Question = EMPTY_QUESTION
   @Input() result: ExamResult = EMPTY_EXAM_RESULT
-  @Input() solutions: string = ''
-  @Input() type: string = 'MCQ'
+
+  get solutions(): string {
+    return JSON.stringify(this.question.solutions)
+  }
+  get type(): string {
+    return AnswerType[this.question.type]
+  }
 
   context: ChoiceInputDisplayContext
 
@@ -59,14 +64,6 @@ export class ChoiceInputComponent implements OnInit {
 
   get qidn(): number {
     return +this.qid
-  }
-
-  setSolutions() {
-    this.solutions = JSON.stringify(this.question.solutions)
-  }
-
-  setType() {
-    this.type = AnswerType[this.question.type]
   }
 
   get ctype(): string {
@@ -173,7 +170,6 @@ export class ChoiceInputComponent implements OnInit {
       console.log(newtext)
       this.generalContext.alert(error)
     }
-    this.setSolutions()
   }
 
   editType(newtext) {
@@ -187,7 +183,6 @@ export class ChoiceInputComponent implements OnInit {
       console.log(newtext)
       this.generalContext.alert(error)
     }
-    this.setType()
   }
 
   removeChoice(i: number) {

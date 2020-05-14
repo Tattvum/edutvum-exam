@@ -40,7 +40,7 @@
   <br>
   <mat-form-field>
     <mat-label> <span style="color: red;">Type:</span> </mat-label>
-    <mat-select [(value)]="type" (selectionChange)="editType($event.value)">
+    <mat-select [value]="type" (selectionChange)="editType($event.value)">
       <mat-option *ngFor="let item of mytype" value={{item}}>{{item}}</mat-option>
     </mat-select>
   </mat-form-field>
