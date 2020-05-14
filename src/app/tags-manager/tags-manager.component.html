@@ -10,6 +10,8 @@
     </mat-chip>
     <input
       placeholder="Tags..."
+      (focus)="onFocus()"
+      (focusout)="onFocusOut()"
       #tagInput
       [disabled]="disabled"
       [formControl]="tagCtrl"

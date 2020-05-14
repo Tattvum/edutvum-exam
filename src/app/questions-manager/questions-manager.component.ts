@@ -36,8 +36,8 @@ export class QuestionsManagerComponent {
   keyEvent(event: KeyboardEvent) {
     if (this.context.disableHotkeys) return
     // console.log('window:keydown', event, event.key)
-    if (Lib.isCtrlKey(event, KEY.ARROW_RIGHT)) this.next()
-    else if (Lib.isCtrlKey(event, KEY.ARROW_LEFT)) this.prev()
+    if (Lib.isPlainKey(event, KEY.ARROW_RIGHT)) this.next()
+    else if (Lib.isPlainKey(event, KEY.ARROW_LEFT)) this.prev()
     else if (event.key === KEY.ENTER) {
       if (event.ctrlKey === true) this.results()
       else this.markGuess(event.altKey === true)

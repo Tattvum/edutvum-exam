@@ -31,7 +31,7 @@ export class TagsManagerComponent implements OnInit {
 
   context: TagsDisplayContext
 
-  constructor(private generalContext: GeneralContext, service: DataService) {
+  constructor(private generalContext: GeneralContext, private service: DataService) {
     this.context = service
     this.filteredTags$ = this.tagCtrl.valueChanges.pipe(
       startWith(''),
@@ -92,6 +92,13 @@ export class TagsManagerComponent implements OnInit {
     }
     this.context.editQuestionTagsAll(this.question.tags, this.qid)
 
+  }
+
+  onFocus() {
+    this.service.disableHotkeys = true
+  }
+  onFocusOut() {
+    this.service.disableHotkeys = false
   }
 
 }
