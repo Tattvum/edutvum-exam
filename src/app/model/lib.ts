@@ -13,6 +13,10 @@ export interface Selection {
   title: string
 }
 
+const mudder = require('mudder');
+const mudnum = new mudder.SymbolTable('0123456789')
+const mudhex = new mudder.SymbolTable('0123456789abcdefg')
+
 export class Lib {
   static times(n: number): number[] {
     let arr = []
@@ -64,15 +68,19 @@ export class Lib {
   static failifold(condition: boolean, message: string, ...things) {
     if (condition) {
       console.log('Assertion failed: ', message, ...things)
-      throw new Error('Assertion failed: ' + message)
+      throw new Error('Assertion ERROR: ' + message)
     }
   }
   static failif(condition: boolean, message: string, ...things) {
-    if (condition) throw new Error('Assertion failed: ' + message + ': ' + things.join(', '))
+    if (condition) throw new Error('Assertion ERROR: ' + message + ': ' + things.join(', '))
   }
 
   static assert(condition: boolean, message: string, ...things) {
-    if (!condition) throw new Error('Assertion failed: ' + message + ': ' + things.join(', '))
+    if (!condition) throw new Error('Assertion ERROR: ' + message + ': ' + things.join(', '))
+  }
+
+  static warn(condition: boolean, message: string, ...things) {
+    if (condition) throw console.log('Assertion WARNING: ' + message + ': ' + things.join(', '))
   }
 
   static isNil(obj): boolean {
@@ -97,8 +105,31 @@ export class Lib {
     return arr
   }
 
-  public static n2s(n: number) {
-    return ('0' + n).slice(-2);
+  public static repeat(str: string, size: number): string {
+    Lib.assert(str != null && str !== "", "The input repeat string cannot be null or empty.")
+    Lib.assert(size > 0, "The repeat size cannot be zero or negative.")
+    let n = size / str.length
+    let out = ""
+    for (let i = 0; i < n; i++) out += str
+    return out.slice(0, size)
+  }
+
+  public static n2s(n: number, size: number = 2): string {
+    Lib.assert(n >= 0, "The n2s n cannot be negative.")
+    Lib.assert(size > 0, "The n2s size cannot be zero or negative.")
+    let ns = "" + n
+    if (ns.length >= size) return ns
+    ns = Lib.repeat("0", size) + ns
+    return ns.slice(-size);
+  }
+
+  public static numNext(ns: string): string {
+    let n = parseInt(ns)//Can Throw error!
+    return Lib.n2s(n + 1, ns.length)
+  }
+
+  public static numBetween(as: string, bs: string, n: number = 1) {
+    return mudnum.mudder(as, bs, n)[0]
   }
 
   public static n9(d: string) {

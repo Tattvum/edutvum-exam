@@ -44,6 +44,7 @@
     "jsonfile": "^5.0.0",
     "jsonschema": "^1.2.4",
     "moment": "^2.24.0",
+    "mudder": "^1.0.9",
     "ngx-pagination": "^4.1.0",
     "npm": "^6.13.1",
     "popper.js": "^1.16.0",

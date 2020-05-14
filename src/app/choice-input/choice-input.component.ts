@@ -205,7 +205,7 @@ export class ChoiceInputComponent implements OnInit {
   addChoice() {
     if (!this.context.isAdmin) return
     try {
-      let choicestr = 'New Choice'
+      let choicestr = Question.createChoice(this.question.choices.length + 1)
       this.question.addChoice(choicestr)
       this.context.editQuestionChoicesAll(this.question.choices, +this.qid)
     } catch (error) {

@@ -68,3 +68,44 @@ describe('array indexOf test', () => {
     expect(check('prmo').length).toBe(0)
   })
 })
+
+describe('repeat test', () => {
+  it('basic', () => {
+    expect(Lib.repeat('a', 4)).toBe('aaaa')
+    expect(Lib.repeat('abc', 4)).toBe('abca')
+    expect(Lib.repeat('abcde', 4)).toBe('abcd')
+    expect(() => Lib.repeat('', 4)).toThrow()
+    expect(() => Lib.repeat('a', 0)).toThrow()
+  })
+})
+
+describe('n2s test', () => {
+  it('basic', () => {
+    expect(Lib.n2s(3)).toBe('03')
+    expect(Lib.n2s(3, 3)).toBe('003')
+    expect(Lib.n2s(12)).toBe('12')
+    expect(Lib.n2s(12, 3)).toBe('012')
+    expect(Lib.n2s(0)).toBe('00')
+    expect(Lib.n2s(123)).toBe('123')
+  })
+})
+
+describe('numNext test', () => {
+  it('basic', () => {
+    expect(() => Lib.numNext('ab')).toThrow()
+    expect(Lib.numNext('0')).toBe('1')
+    expect(Lib.numNext('123')).toBe('124')
+    expect(Lib.numNext('003')).toBe('004')
+  })
+})
+
+describe('numBetween test', () => {
+  it('basic', () => {
+    expect(Lib.numBetween('', '')).toBe('4')
+    expect(Lib.numBetween('01', '10')).toBe('05')
+    expect(Lib.numBetween('04', '05')).toBe('045')
+    expect(Lib.numBetween('12', '13')).toBe('125')
+    expect(Lib.numBetween('012', Lib.numNext('012'))).toBe('0125')
+    expect(Lib.numBetween('1', '23')).toBe('16')
+  })
+})

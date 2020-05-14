@@ -124,6 +124,16 @@ export class Question {
   public isSolution(n: number): boolean {
     return this.solutions.indexOf(n) > -1
   }
+
+  public static create(qid: string, eid: string, groups: QuestionGroup[] = []): Question {
+    return new Question(qid, 'New Question ' + qid, AnswerType.MCQ, ['New Choice 1', 'New Choice 2'], [0],
+      'Question Notes:', 'Question Explanation:', eid, [], groups)
+  }
+
+  public static createChoice(n: number): string {
+    return "New Choice " + n
+  }
+
 }
 
 export const EMPTY_QUESTION = new Question('00', 'Qbing', AnswerType.TFQ, ['A', 'B'], [0])

@@ -577,11 +577,7 @@ export class DataService
 
   defineExam(eid: string): Promise<boolean> {
     this.validateExamId(eid)
-    let qid = eid + 'q01'
-    let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ,
-      ['Choice 1', 'Choice 2'], [0], 'Question Notes:', 'Question Explanation', eid)
-    let newExam = new Exam(eid, 'New Exam ' + eid, [newQuestion], new Date(),
-      'Exam Notes:', 'Exam Explanation', ExamStatus.PENDING)
+    let newExam = Exam.create(eid)
     let call = u => this.dataSource.defineExam(u, newExam)
     return this.withUserPromise(call, ok => {
       console.log('pure exam saved!')
@@ -595,11 +591,11 @@ export class DataService
   addQuestion(qidn: number, groups: QuestionGroup[] = []): Promise<number> {
     let exam = this.pendingResult.exam
     let eid = exam.id
-    console.log('addQuestion-1', qidn, QuestionGroup.path(groups), groups.length)
+    console.log('addQuestion1:', qidn, QuestionGroup.path(groups), groups.length)
     if (qidn >= 0) groups = exam.questions[qidn].groups.slice(0)
-    let qid = eid + 'q' + Lib.n2s(exam.questions.length + 1)
-    let newQuestion = new Question(qid, 'New Question', AnswerType.MCQ, ['Choice 1', 'Choice 2'],
-      [0], 'Question Notes:', 'Question Explanation', eid, [], groups)
+    // let newqid = eid + 'q' + Lib.n2s(exam.questions.length + 1)
+    let newqid = Exam.newqid(exam, qidn)
+    let newQuestion = Question.create(newqid, eid, groups)
     let call = u => this.dataSource.addQuestion(u, eid, newQuestion)
     return this.withUserPromise(call, ok => {
       let newn = 0
@@ -610,7 +606,7 @@ export class DataService
         newn = qidn + 1
         exam.questions.splice(newn, 0, newQuestion)
       }
-      console.log('addQuestion-2', 'new question saved!', newn, newQuestion.fullid())
+      console.log('addQuestion2:', 'new question saved!', newn, newQuestion.fullid())
       return newn
     })
   }
