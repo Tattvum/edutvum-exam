@@ -698,7 +698,7 @@ export class DataService
       groups = q.groups.slice(0)
       qgpath = QuestionGroup.path(groups)
     }
-    let qgid = 'g' + Lib.rndn(899, 100)
+    let qgid = Exam.newqid(exam, qidn)
     let qg = new QuestionGroup(qgid, qgpath, 'New Group ' + qgid, eid)
     groups.push(qg)
     console.log('startGroup-2', qidn, QuestionGroup.path(groups))

@@ -67,7 +67,7 @@ export class Exam extends AbstractThing {
   }
 
   public static newqid(exam: Exam, qidn: number): string {
-    let prefix = exam.id + "q"
+    let prefix = "q"
     let isEnd = qidn < 0 || qidn === exam.questions.length - 1
     let lastqidns = exam.questions[exam.questions.length - 1].id.substr(prefix.length)
     let newqidns = Lib.numNext(lastqidns)
@@ -81,7 +81,7 @@ export class Exam extends AbstractThing {
   }
 
   public static create(eid: string): Exam {
-    let newQuestion = Question.create(eid + 'q00', eid)
+    let newQuestion = Question.create('q00', eid)
     return new Exam(eid, 'New Exam ' + eid, [newQuestion], new Date(),
       'Exam Notes:', 'Exam Explanation:', ExamStatus.PENDING)
   }
