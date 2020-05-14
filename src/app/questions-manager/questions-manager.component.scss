@@ -26,6 +26,7 @@
   padding: 1px 6px;
   border-color: slategray;
   color: white;
+  margin-top: 6px;
 }
 
 .nav-number.selected {
@@ -107,3 +108,28 @@
 }
 
 //---- ---- ----
+
+.num-top {
+  height: 4px;
+  margin: 0px 2px;
+}
+.num-top.selected {
+  background-color: lightcoral;
+}
+
+.num-bottom {
+  height: 4px;
+  margin: 0px 2px;
+}
+.num-bottom.selected {
+  background-color: blue;
+}
+
+.num-right {
+  width: 4px;
+  margin-top: 6px;
+  margin-left: -2px;
+}
+.num-right.selected {
+  background-color: yellow;
+}

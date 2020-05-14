@@ -87,4 +87,8 @@ export class QuestionsManagerComponent {
     this.click(qidn)
   }
 
+  isGrouped(qidn: number): boolean {
+    return this.result.exam.questions[qidn].groups.length > 0
+  }
+
 }

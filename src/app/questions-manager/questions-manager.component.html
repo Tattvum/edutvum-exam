@@ -1,23 +1,29 @@
-<div class="btn-toolbar" role="toolbar">
+<div fxLayout="row wrap">
   <span *ngFor="let q of result.questions; let i=index">
-    <span
-      class="btn btn-info nav-button nav-number" role="group"
-      [class.locked]="result.isLocked()"
-      [class.partial]="result.isPartial(i)"
-      [class.correct]="result.isCorrect(i)"
-      [class.guessing]="result.guessings[i]"
-      [class.attempted]="result.isAttempted(i)"
-      [class.omitted]="result.isOmitted(i)"
-      [class.selected]="i == qidn"
-      (click)="select(i)"
-      id="b{{i}}"
-      type="button">
-      {{i+1}}
+    <span fxLayout="row" fxLayoutGap="2px">
+      <span (click)="select(i)" fxLayout="column">
+        <span [class.selected]="isGrouped(i)" class="nav-button num-top"></span>
+        <span class="btn btn-info nav-button nav-number" id="b{{i}}"
+          [class.locked]="result.isLocked()"
+          [class.partial]="result.isPartial(i)"
+          [class.correct]="result.isCorrect(i)"
+          [class.guessing]="result.guessings[i]"
+          [class.attempted]="result.isAttempted(i)"
+          [class.omitted]="result.isOmitted(i)"
+          [class.selected]="i == qidn"
+          type="button">
+            {{i+1}}
+        </span>
+        <span [class.selected]="i == qidn" class="nav-button num-bottom"></span>
+      </span>
+        <span [class.selected]="i == qidn" class="nav-button num-right0"></span>
     </span>
   </span>
-  <span id="results" (click)="results()" [class.selected]="isResultsPage"
-      class="btn btn-info nav-button">
-    Results
+  <span>
+    <span id="results" (click)="results()" [class.selected]="isResultsPage"
+        class="btn nav-button">
+      Results
+    </span>
   </span>
 </div>
 <br>
