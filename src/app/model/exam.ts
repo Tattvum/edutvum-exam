@@ -81,7 +81,7 @@ export class Exam extends AbstractThing {
   }
 
   public static create(eid: string): Exam {
-    let newQuestion = Question.create('q00', eid)
+    let newQuestion = Question.create(eid + 'q00', eid)
     return new Exam(eid, 'New Exam ' + eid, [newQuestion], new Date(),
       'Exam Notes:', 'Exam Explanation:', ExamStatus.PENDING)
   }

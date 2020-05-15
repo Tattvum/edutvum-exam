@@ -119,7 +119,7 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(true)
   }
 
-  public saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string> {
+  public saveFile(user: User, question: Question, fileLink: FileLink): Promise<string> {
     return Promise.resolve('')
   }
 

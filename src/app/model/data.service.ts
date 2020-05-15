@@ -70,7 +70,7 @@ export abstract class DataSource {
   abstract addQuestion(user: User, eid: string, question: Question): Promise<boolean>
   abstract addLinkQuestion(user: User, eid: string, qid: string, leid: string, lqid: string): Promise<boolean>
   abstract publishExam(user: User, eid: string): Promise<boolean>
-  abstract saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string>
+  abstract saveFile(user: User, question: Question, fileLink: FileLink): Promise<string>
   abstract deleteFile(user: User, eid: string, qid: string, fid: string): Promise<boolean>
   abstract addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean>
   abstract deleteQuestion(user: User, fullid: string): Promise<boolean>
@@ -651,9 +651,7 @@ export class DataService
   public saveFile(qidn: number, fileLink: FileLink): Promise<string> {
     let result = this.pendingResult
     let q = this.pendingResult.questions[qidn]
-    let qid = q.id
-    let eid = q.eid
-    let call = u => this.dataSource.saveFile(u, eid, qid, fileLink)
+    let call = u => this.dataSource.saveFile(u, q, fileLink)
     return this.withUserPromise(call, fid => {
       fileLink.id = fid
       result.exam.questions[qidn].files.push(fileLink)

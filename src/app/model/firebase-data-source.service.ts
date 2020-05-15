@@ -508,8 +508,9 @@ export class FirebaseDataSource implements DataSource {
     return this.afbapi.objectSetBool(url, 'DONE')
   }
 
-  public saveFile(user: User, eid: string, qid: string, fileLink: FileLink): Promise<string> {
-    let url = EXAMS_URL + eid + '/questions/' + qid + '/files/'
+  public saveFile(user: User, question: Question, fileLink: FileLink): Promise<string> {
+    let path = question.fullid().replace(/\./g, '/questions/')
+    let url = EXAMS_URL + path + '/files/'
     return this.afbapi.listPush<string>(url, fileLink, call => {
       let key = call.key + ''
       console.log('saved fileLink', url, key)
