@@ -109,3 +109,18 @@ describe('numBetween test', () => {
     expect(Lib.numBetween('1', '23')).toBe('16')
   })
 })
+
+describe('newqid test', () => {
+  const names = ['oneq00', 'q01', 'twoq02', 'q003', 'threeq04']
+  it('generic', () => {
+    expect(() => Lib.newqid(names, -2)).toThrow()
+    expect(() => Lib.newqid(names, -1)).not.toThrow()//assumed outside right end
+    expect(() => Lib.newqid(names, 4)).not.toThrow()
+    expect(() => Lib.newqid(names, 5)).toThrow()
+
+    expect(Lib.newqid(names, -1)).toBe('threeq05')
+    expect(Lib.newqid(names, 4)).toBe('threeq05')
+    expect(Lib.newqid(names, 0)).toBe('q005')
+    expect(Lib.newqid(names, 1)).toBe('q015')
+  })
+})

@@ -132,6 +132,30 @@ export class Lib {
     return mudnum.mudder(as, bs, n)[0]
   }
 
+  public static newqid(names: string[], qidn: number): string {
+    Lib.assert(qidn >= -1, "newqid: qidn should be -1, 0 or positive", qidn)
+    Lib.assert(qidn < names.length, "newqid: qidn should be inside names", qidn, names.length)
+
+    const isEnd = qidn < 0 || qidn === names.length - 1
+
+    const split = (name: string) => {
+      const re = /(.*)q([0-9]+)/
+      const rer = re.exec(name)
+      Lib.assert(rer.length === 3, "newqid: A name should of the form /(.*)q([0-9]+)/", name, rer)
+      return { prefix: rer[1], num: rer[2] }
+    }
+
+    if (isEnd) {
+      const ss = split(names[names.length - 1])
+      return ss.prefix + 'q' + Lib.numNext(ss.num)
+    } else {
+      const sst = split(names[qidn])
+      const ssn = split(names[qidn + 1])
+      const prefix = sst.prefix.length < ssn.prefix.length ? sst.prefix : ssn.prefix
+      return prefix + 'q' + Lib.numBetween(sst.num, ssn.num)
+    }
+  }
+
   public static n9(d: string) {
     if (d === '-' || d === 'T' || d === ':' || d === '.' || d === 'Z') return d
     else return 9 - (+d)

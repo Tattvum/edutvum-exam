@@ -67,21 +67,11 @@ export class Exam extends AbstractThing {
   }
 
   public static newqid(exam: Exam, qidn: number): string {
-    let prefix = exam.id + "q"
-    let isEnd = qidn < 0 || qidn === exam.questions.length - 1
-    let lastqidns = exam.questions[exam.questions.length - 1].id.substr(prefix.length)
-    let newqidns = Lib.numNext(lastqidns)
-    if (!isEnd) {
-      let thisqidns = exam.questions[qidn].id.substr(prefix.length)
-      let nextqidns = exam.questions[qidn + 1].id.substr(prefix.length)
-      newqidns = Lib.numBetween(thisqidns, nextqidns)
-      console.log("--", thisqidns, "[", newqidns, "]", nextqidns)
-    }
-    return prefix + newqidns
+    return Lib.newqid(exam.questions.map(q => q.id), qidn)
   }
 
   public static create(eid: string): Exam {
-    let newQuestion = Question.create(eid + 'q00', eid)
+    let newQuestion = Question.create('q00', eid)
     return new Exam(eid, 'New Exam ' + eid, [newQuestion], new Date(),
       'Exam Notes:', 'Exam Explanation:', ExamStatus.PENDING)
   }
