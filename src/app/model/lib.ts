@@ -115,8 +115,8 @@ export class Lib {
   }
 
   public static n2s(n: number, size: number = 2): string {
-    Lib.assert(n >= 0, "The n2s n cannot be negative.")
-    Lib.assert(size > 0, "The n2s size cannot be zero or negative.")
+    Lib.assert(n >= 0, "n2s: The n cannot be negative.")
+    Lib.assert(size > 0, "n2s: The size cannot be zero or negative.")
     let ns = "" + n
     if (ns.length >= size) return ns
     ns = Lib.repeat("0", size) + ns

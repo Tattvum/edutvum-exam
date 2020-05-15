@@ -67,7 +67,7 @@ export class Exam extends AbstractThing {
   }
 
   public static newqid(exam: Exam, qidn: number): string {
-    let prefix = "q"
+    let prefix = exam.id + "q"
     let isEnd = qidn < 0 || qidn === exam.questions.length - 1
     let lastqidns = exam.questions[exam.questions.length - 1].id.substr(prefix.length)
     let newqidns = Lib.numNext(lastqidns)
