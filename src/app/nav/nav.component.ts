@@ -197,10 +197,14 @@ export class NavComponent implements OnInit {
   }
 
   deleteQuestion() {
-    if (this.generalContext.confirm('Question deletion is irretrievable! Continue?!')) {
-      this.context.deleteQuestion(this.qidn).then(ok => {
-        this.router.navigate(['/results', this.result.id])
-      })
+    if (this.result.questions.length <= 1) {
+      this.generalContext.alert("At least one question should be there.")
+    } else {
+      if (this.generalContext.confirm('Question deletion is irretrievable! Continue?!')) {
+        this.context.deleteQuestion(this.qidn).then(ok => {
+          this.router.navigate(['/results', this.result.id])
+        })
+      }
     }
   }
 
