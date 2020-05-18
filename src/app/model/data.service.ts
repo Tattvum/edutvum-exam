@@ -16,6 +16,7 @@ import { QuestionGroup } from 'app/model/question-group';
 import { Comment } from 'app/model/comment';
 import { Chart } from 'app/model/chart';
 import { Tag } from './tag';
+import { Upload } from './upload';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -80,12 +81,17 @@ export abstract class DataSource {
   abstract deleteChart(user: User, cid: string): Promise<boolean>
 }
 
-export abstract class SecuritySource {
+export abstract class SecurityAPI {
   abstract user(): User
   abstract userWait(): Promise<User>
   abstract isLoggedIn(): boolean
   abstract login(): Promise<any>
   abstract logout(): Promise<void>
+}
+
+export abstract class UploaderAPI {
+  abstract pushUpload(eid: string, qidn: number, upload: Upload): void
+  abstract deleteFileStorage(eid: string, qidn: number, f: FileLink): void
 }
 
 interface UserCache {
@@ -266,7 +272,7 @@ export class DataService
 
   constructor(private dataSource: DataSource,
     private context: GeneralContext,
-    private securitySource: SecuritySource) {
+    private securitySource: SecurityAPI) {
     //console.clear()
     this.isAdmin = false
     this.userWait().then(user => {

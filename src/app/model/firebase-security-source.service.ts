@@ -8,7 +8,7 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { SecuritySource } from './data.service';
+import { SecurityAPI } from './data.service';
 import { User, UserRole } from './user';
 import { Lib } from './lib';
 
@@ -33,7 +33,7 @@ class UserFbImpl implements User {
 }
 
 @Injectable()
-export class FirebaseSecuritySource implements SecuritySource {
+export class FirebaseSecuritySource implements SecurityAPI {
   readonly fbProvider = new firebase.auth.GoogleAuthProvider()
 
   constructor(protected afAuth: AngularFireAuth, private router: Router) {

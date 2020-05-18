@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import 'rxjs'
-import { Subject, Observable } from 'rxjs';
 
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase } from 'angularfire2/database';
 
-import { DataService, FileLink } from './data.service';
+import { DataService, FileLink, UploaderAPI } from './data.service';
 
 import { Upload } from './upload';
 
@@ -15,7 +14,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 
 // https://angularfirebase.com/lessons/angular-file-uploads-to-firebase-storage/
 @Injectable()
-export class FirebaseUpload {
+export class FirebaseUpload implements UploaderAPI {
 
   // https://github.com/angular/angularfire2/issues/1015#issuecomment-323777639
   // 'So even though I don't use auth and db,

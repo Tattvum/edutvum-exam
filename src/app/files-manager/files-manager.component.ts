@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FileLink } from 'app/model/data.service';
-import { FirebaseUpload } from 'app/model/firebase-upload.service';
+import { FileLink, UploaderAPI } from 'app/model/data.service';
 import { GeneralContext } from 'app/model/general-context';
 import { Upload } from 'app/model/upload';
 import { Lib } from 'app/model/lib';
@@ -20,7 +19,7 @@ export class FilesManagerComponent {
   currentUpload: Upload;
 
   constructor(private generalContext: GeneralContext,
-    private uploader: FirebaseUpload) { }
+    private uploader: UploaderAPI) { }
 
   uploadFiles(event) {
     this.selectedFiles = event.target.files;

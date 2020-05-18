@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { SecuritySource } from './data.service';
+import { SecurityAPI } from './data.service';
 import { User, EMPTY_USER } from './user';
 
 @Injectable()
-export class MockSecuritySource implements SecuritySource {
+export class MockSecuritySource implements SecurityAPI {
   private _user = EMPTY_USER
 
   constructor() {

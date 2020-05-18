@@ -43,7 +43,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AuthGuard } from './auth.guard';
-import { DataService, DataSource, SecuritySource } from './model/data.service';
+import { DataService, DataSource, SecurityAPI, UploaderAPI } from './model/data.service';
 import { GeneralContext, GeneralContextImpl } from './model/general-context';
 
 import { MockDataSource } from './model/mock-data-source.service';
@@ -181,10 +181,8 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
     { provide: AbstractFirebaseAPI, useClass: DATA_API_SOURCE },
     { provide: EMULATOR_CONFIG, useValue: emulatorConfig },
     { provide: DataSource, useClass: DATA_SOURCE },
-    { provide: SecuritySource, useClass: SECURITY_SOURCE },
-    LocalFirebaseAPI,
-    FirebaseAPI,
-    FirebaseUpload,
+    { provide: SecurityAPI, useClass: SECURITY_SOURCE },
+    { provide: UploaderAPI, useClass: FirebaseUpload },
     DataService,
     AuthGuard,
   ],
