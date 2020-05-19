@@ -4,7 +4,7 @@
   </app-editor1>
   <div>
     <div *ngFor="let c of comments; let i=index">
-      <span class="comment-box-title">{{ c.title }}</span>
+      <span class="comment-box-title" [innerHTML]="c.title"></span>
       <sp></sp>
       <sp></sp>
       <span class="comment-box-user">{{ c.user }}</span>
