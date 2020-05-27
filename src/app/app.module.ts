@@ -96,10 +96,11 @@ const emulatorConfig = environment.emulatorConfig;
 if (!environment.mock && !environment.firebase)
   throw "ERROR: Both mock and firebase cannot be false togather!";
 
-let UPLOADER_API = environment.mock ? LocalUpload : FirebaseUpload
-let DATA_API_SOURCE = environment.mock ? LocalFirebaseAPI : FirebaseAPI
-let DATA_SOURCE = !environment.firebase ? MockDataSource : FirebaseDataSource
-let SECURITY_SOURCE = !environment.firebase ? MockSecuritySource :
+// let UPLOADER_API = environment.mock ? LocalUpload : FirebaseUpload
+const UPLOADER_API = FirebaseUpload
+const DATA_API_SOURCE = environment.mock ? LocalFirebaseAPI : FirebaseAPI
+const DATA_SOURCE = !environment.firebase ? MockDataSource : FirebaseDataSource
+const SECURITY_SOURCE = !environment.firebase ? MockSecuritySource :
   environment.mock ? MockSecuritySource : FirebaseSecuritySource
 
 // console.log(DATA_SOURCE, SECURITY_SOURCE)
