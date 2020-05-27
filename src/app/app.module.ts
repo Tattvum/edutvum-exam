@@ -1,8 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -49,6 +48,7 @@ import { GeneralContext, GeneralContextImpl } from './model/general-context';
 import { MockDataSource } from './model/mock-data-source.service';
 import { MockSecuritySource } from './model/mock-security-source.service';
 import { FirebaseUpload } from './model/firebase-upload.service';
+import { LocalUpload } from './model/local-upload.service';
 
 import { FirebaseAPI } from './model/firebase-api.service';
 import { FirebaseSecuritySource } from './model/firebase-security-source.service';
@@ -96,6 +96,7 @@ const emulatorConfig = environment.emulatorConfig;
 if (!environment.mock && !environment.firebase)
   throw "ERROR: Both mock and firebase cannot be false togather!";
 
+let UPLOADER_API = environment.mock ? LocalUpload : FirebaseUpload
 let DATA_API_SOURCE = environment.mock ? LocalFirebaseAPI : FirebaseAPI
 let DATA_SOURCE = !environment.firebase ? MockDataSource : FirebaseDataSource
 let SECURITY_SOURCE = !environment.firebase ? MockSecuritySource :
@@ -182,7 +183,7 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
     { provide: EMULATOR_CONFIG, useValue: emulatorConfig },
     { provide: DataSource, useClass: DATA_SOURCE },
     { provide: SecurityAPI, useClass: SECURITY_SOURCE },
-    { provide: UploaderAPI, useClass: FirebaseUpload },
+    { provide: UploaderAPI, useClass: UPLOADER_API },
     DataService,
     AuthGuard,
   ],

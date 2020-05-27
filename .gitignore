@@ -57,6 +57,6 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
-.firebase/hosting.ZGlzdA.cache
+.firebase/hosting.ZGl*zdA.cache
 edutvum-exam-export*.json
-database-debug.log
+*debug.log

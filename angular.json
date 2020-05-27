@@ -89,7 +89,8 @@
               "browserTarget": "edutvum-exam:build:stage-tt2"
             },
             "dev": {
-              "browserTarget": "edutvum-exam:build:dev"
+              "browserTarget": "edutvum-exam:build:dev",
+              "proxyConfig": "proxy.conf.json"
             }
           }
         },
