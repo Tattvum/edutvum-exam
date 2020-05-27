@@ -5,7 +5,9 @@
 <app-popup [(visible)]="showPopup" (visibleChange)="closeEdit()">
   <h1>{{ heading }}</h1>
   <div *ngIf="safe">SAFE!</div>
-  <textarea [(ngModel)]="content" #textbox (focus)="textbox.select()" rows="2" autofocus></textarea>
-  <quill-editor [(ngModel)]="content" preserveWhitespace="true"></quill-editor>
+  <quill-editor [(ngModel)]="content"
+    preserveWhitespace="true">
+  </quill-editor>
+  <br>
   <button (click)="edit()" class="btn">Save</button>
 </app-popup>
