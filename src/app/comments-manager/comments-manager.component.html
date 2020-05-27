@@ -1,7 +1,8 @@
 <div>
   <div style="color: coral;">Comments:</div>
-  <app-editor1 heading="Add Comment" [content]="newcomment" (onedit)="addComment($event)">
-  </app-editor1>
+  <app-editor heading="Add Comment" safe="true"
+      [content]="newcomment" (onedit)="addComment($event)">
+  </app-editor>
   <div>
     <div *ngFor="let c of comments; let i=index">
       <span class="comment-box-title" [innerHTML]="c.title"></span>

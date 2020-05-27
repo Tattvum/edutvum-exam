@@ -87,8 +87,8 @@ import { AutoChipComponent } from './common/autochip.component';
 import { environment } from '../environments/environment';
 import { DetailsComponent } from './details/details.component';
 import { EditorComponent } from './editor/editor.component';
-import { Editor1Component } from './editor1/editor1.component';
 import { MathJaxDirective } from './mathjax.directive';
+import { QuillModule } from 'ngx-quill'
 
 const firebaseConfig = environment.firebaseConfig
 const emulatorConfig = environment.emulatorConfig;
@@ -145,6 +145,25 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
     MatToolbarModule,
     MatTooltipModule,
     HttpClientModule,
+    //https://github.com/KillerCodeMonkey/ngx-quill
+    QuillModule.forRoot({
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'],         // toggled buttons
+
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+
+          [{ 'color': [] }, { 'background': [] }],           // dropdown with defaults from theme
+          [{ 'font': [] }],
+          [{ 'align': [] }],
+
+          ['clean'],                                         // remove formatting button
+
+          ['link', 'image', 'video'],                        // link and image, video
+        ]
+      }
+    }),
   ],
   declarations: [
     AppComponent,
@@ -163,7 +182,6 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
     ChartComponent,
     PopupComponent,
     EditorComponent,
-    Editor1Component,
     MathJaxDirective,
     SpaceComponent,
     NumberInputComponent,

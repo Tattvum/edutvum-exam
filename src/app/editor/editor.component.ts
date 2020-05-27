@@ -14,6 +14,7 @@ export class EditorComponent {
 
   @Input() heading = 'Edit Display'
   @Input() content = '[blank]'
+  @Input() safe: boolean = false
   @Output() onedit: EventEmitter<string> = new EventEmitter<string>()
 
   @ViewChild('textbox', { static: true }) private textbox: ElementRef;
@@ -23,9 +24,13 @@ export class EditorComponent {
 
   constructor(public service: DataService) { }
 
+  private ok(): boolean {
+    return this.service.isAdmin || this.safe
+  }
+
   showEdit(event) {
     // if (!event.ctrlKey) return
-    if (!(this.service.isAdmin)) return
+    if (!this.ok) return
     this.backupContent = this.content
     this.showPopup = true
     this.service.disableHotkeys = true
@@ -48,7 +53,7 @@ export class EditorComponent {
   }
 
   edit() {
-    if (!(this.service.isAdmin)) return
+    if (!this.ok) return
     this.endEdit()
     this.onedit.emit(this.content);
   }
