@@ -2,8 +2,9 @@ import {
   Component, OnInit, ElementRef, ViewChild, EventEmitter,
   Output, Input, SimpleChanges, OnChanges, Directive
 } from '@angular/core';
-import { DataService } from 'app/model/data.service';
+import { DataService, UploaderAPI } from 'app/model/data.service';
 import { Lib } from '../model/lib';
+import { Upload } from 'app/model/upload';
 
 @Component({
   selector: 'app-editor',
@@ -21,8 +22,9 @@ export class EditorComponent {
 
   showPopup = false
   backupContent = ''
+  quillEditorRef;
 
-  constructor(public service: DataService) { }
+  constructor(public service: DataService, private uploader: UploaderAPI) { }
 
   private ok(): boolean {
     return this.service.isAdmin || this.safe
@@ -36,10 +38,10 @@ export class EditorComponent {
     this.service.disableHotkeys = true
     // https://stackoverflow.com/questions/38307060/how-to-set-focus-on-element-with-binding
     // https://stackoverflow.com/a/45306425/6205090
-    setTimeout(() => {
-      this.textbox.nativeElement.focus()
-      this.textbox.nativeElement.select()
-    }, 10);
+    // setTimeout(() => {
+    //   this.textbox.nativeElement.focus()
+    //   this.textbox.nativeElement.select()
+    // }, 10);
   }
 
   private endEdit() {
@@ -57,4 +59,32 @@ export class EditorComponent {
     this.endEdit()
     this.onedit.emit(this.content);
   }
+
+
+  getEditorInstance(editorInstance: any) {
+    const imageHandler = (image, callback) => {
+      this.pickUploadSaveUrl(this.quillEditorRef.getSelection().index)
+    }
+    this.quillEditorRef = editorInstance
+    const toolbar = editorInstance.getModule('toolbar')
+    toolbar.addHandler('image', imageHandler.bind(this))
+  }
+
+  pickUploadSaveUrl(loc: number) {
+    const Imageinput = document.createElement('input');
+    Imageinput.setAttribute('type', 'file')
+    Imageinput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+    Imageinput.classList.add('ql-image')
+
+    Imageinput.addEventListener('change', async () => {
+      const file = Imageinput.files[0]
+      if (Imageinput.files == null || Imageinput.files[0] == null) return
+      const url = await this.uploader.pushUpload('test', 0, new Upload(file))
+      //NOTE: assuming loc has not changed after upload starting.
+      this.quillEditorRef.insertEmbed(loc, 'image', url, 'user');
+    })
+
+    Imageinput.click();
+  }
+
 }

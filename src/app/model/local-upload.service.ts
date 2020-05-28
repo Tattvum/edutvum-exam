@@ -10,7 +10,7 @@ import { HttpClient, HttpEventType } from "@angular/common/http";
 
 @Injectable()
 export class LocalUpload implements UploaderAPI {
-  constructor(private service: DataService, private http: HttpClient) {}
+  constructor(private service: DataService, private http: HttpClient) { }
 
   private uploadFiles(upload: Upload) {
     console.log("bingo-start");
@@ -39,16 +39,18 @@ export class LocalUpload implements UploaderAPI {
     console.log("bingo-end");
   }
 
-  public pushUpload(eid: string, qidn: number, upload: Upload) {
+  public async pushUpload(eid: string, qidn: number, upload: Upload): Promise<string> {
     let qid = this.service.getQuestionId(qidn);
     let path = `exams/${eid}/questions/${qid}/files/${upload.file.name}`;
     console.log("TBD..ing: impletement local Upload:", path);
     this.uploadFiles(upload);
+    return ""
   }
 
-  public deleteFileStorage(eid: string, qidn: number, f: FileLink) {
+  public async deleteFileStorage(eid: string, qidn: number, f: FileLink): Promise<boolean> {
     let qid = this.service.getQuestionId(qidn);
     let path = `exams/${eid}/questions/${qid}/files/${f.file}`;
     console.log("TBD: impletement local delete:", path);
+    return true
   }
 }

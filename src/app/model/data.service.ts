@@ -90,8 +90,8 @@ export abstract class SecurityAPI {
 }
 
 export abstract class UploaderAPI {
-  abstract pushUpload(eid: string, qidn: number, upload: Upload): void
-  abstract deleteFileStorage(eid: string, qidn: number, f: FileLink): void
+  abstract pushUpload(eid: string, qidn: number, upload: Upload): Promise<string>
+  abstract deleteFileStorage(eid: string, qidn: number, f: FileLink): Promise<boolean>
 }
 
 interface UserCache {
