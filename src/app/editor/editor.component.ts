@@ -6,6 +6,15 @@ import { DataService, UploaderAPI } from 'app/model/data.service';
 import { Lib } from '../model/lib';
 import { Upload } from 'app/model/upload';
 
+function stripPIfSingle(txt: string): string {
+  if (txt.indexOf('<p>', 3) < 0) {
+    txt = txt.trim()
+    if (txt.startsWith('<p>')) txt = txt.slice(3)
+    if (txt.endsWith('</p>')) txt = txt.slice(0, txt.length - 4)
+  }
+  return txt
+}
+
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
@@ -14,15 +23,32 @@ import { Upload } from 'app/model/upload';
 export class EditorComponent {
 
   @Input() heading = 'Edit Display'
-  @Input() content = '[blank]'
   @Input() safe: boolean = false
   @Output() onedit: EventEmitter<string> = new EventEmitter<string>()
+  @Input() content: string = '[blank]'
 
   @ViewChild('textbox', { static: true }) private textbox: ElementRef;
 
   showPopup = false
   backupContent = ''
   quillEditorRef;
+
+  modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],         // toggled buttons
+
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+
+      [{ 'color': [] }, { 'background': [] }],           // dropdown with defaults from theme
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+
+      ['clean'],                                         // remove formatting button
+
+      ['link', 'image', 'video'],                        // link and image, video
+    ]
+  }
 
   constructor(public service: DataService, private uploader: UploaderAPI) { }
 
@@ -57,13 +83,14 @@ export class EditorComponent {
   edit() {
     if (!this.ok) return
     this.endEdit()
-    this.onedit.emit(this.content);
+    this.onedit.emit(stripPIfSingle(this.content));
   }
 
-
-  getEditorInstance(editorInstance: any) {
+  onEditorCreated(editorInstance: any) {
+    editorInstance.focus()
+    editorInstance.setSelection(0, 5);
     const imageHandler = (image, callback) => {
-      this.pickUploadSaveUrl(this.quillEditorRef.getSelection().index)
+      this.pickUploadSaveUrl(this.quillEditorRef.getSelection(true).index)
     }
     this.quillEditorRef = editorInstance
     const toolbar = editorInstance.getModule('toolbar')

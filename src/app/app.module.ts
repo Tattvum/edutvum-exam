@@ -146,24 +146,7 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
     MatTooltipModule,
     HttpClientModule,
     //https://github.com/KillerCodeMonkey/ngx-quill
-    QuillModule.forRoot({
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline', 'strike'],         // toggled buttons
-
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-
-          [{ 'color': [] }, { 'background': [] }],           // dropdown with defaults from theme
-          [{ 'font': [] }],
-          [{ 'align': [] }],
-
-          ['clean'],                                         // remove formatting button
-
-          ['link', 'image', 'video'],                        // link and image, video
-        ]
-      }
-    }),
+    QuillModule.forRoot(),
   ],
   declarations: [
     AppComponent,

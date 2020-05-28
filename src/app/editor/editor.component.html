@@ -1,14 +1,27 @@
-<span (click)="showEdit($event)" [MathJax]="content"></span>
+<span (click)="showEdit($event)" [MathJax]="content" class="ql-editor"></span>
 <span *ngIf="service.isAdmin" (click)="showEdit($event)" class="link"> [ edit ]
 </span>
 
 <app-popup [(visible)]="showPopup" (visibleChange)="closeEdit()">
   <h1>{{ heading }}</h1>
-  <textarea [(ngModel)]="content" rows="2"></textarea>
-  <button (click)="edit()" class="btn">Save</button>
-  <quill-editor [(ngModel)]="content"
-    (onEditorCreated)="getEditorInstance($event)"
-    preserveWhitespace="true">
-  </quill-editor>
-  <br>
+  <mat-tab-group>
+    <mat-tab label="Editor">
+      <quill-editor [(ngModel)]="content"
+        (onEditorCreated)="onEditorCreated($event)"
+        [styles]="{ 'font-size': '120%' }"
+        [modules]="modules"
+        preserveWhitespace="true">
+      </quill-editor>
+    </mat-tab>
+    <mat-tab label="Raw">
+      <textarea [(ngModel)]="content" rows="2"></textarea>
+    </mat-tab>
+    <mat-tab disabled>
+      <ng-template mat-tab-label>
+        <button mat-icon-button (click)="edit()">
+          <mat-icon style="color: blue;">save</mat-icon>
+        </button>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
 </app-popup>
