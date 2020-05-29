@@ -90,8 +90,8 @@ export abstract class SecurityAPI {
 }
 
 export abstract class UploaderAPI {
-  abstract pushUpload(eid: string, qidn: number, upload: Upload): Promise<string>
-  abstract deleteFileStorage(eid: string, qidn: number, f: FileLink): Promise<boolean>
+  abstract uploadUrl(upload: Upload): Promise<string>
+  // abstract deleteFileStorage(eid: string, qidn: number, f: FileLink): Promise<boolean>
 }
 
 interface UserCache {
@@ -172,11 +172,16 @@ export interface NavDisplayContext {
   getResultSnapshots(rid: string): ExamResult[]
 }
 
+export interface UploadContext {
+  getQuestionId(qidn: number): string
+  saveFile(qidn: number, fileLink: FileLink): Promise<string>
+}
+
 @Injectable()
 export class DataService
   implements UserDisplayContext, QuestionDisplayContext, NavDisplayContext,
   ChoiceInputDisplayContext, DetailsDisplayContext,
-  TagsDisplayContext, QuestionsManagerDisplayContext {
+  TagsDisplayContext, QuestionsManagerDisplayContext, UploadContext {
 
   private userCache: UserCache = {}
   private tagCache: TagCache = {}
@@ -688,6 +693,10 @@ export class DataService
   }
 
   public getQuestionId(qidn: number): string {
+    return this.pendingResult.exam.questions[qidn].id
+  }
+
+  public pendingqidn2id(qidn: number): string {
     return this.pendingResult.exam.questions[qidn].id
   }
 

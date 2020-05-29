@@ -3,7 +3,7 @@ import {
   discardPeriodicTasks, tick, getTestBed,
 } from '@angular/core/testing';
 
-import { Holders, DataService, DataSource, SecuritySource, isin } from './data.service';
+import { Holders, DataService, DataSource, SecurityAPI, isin } from './data.service';
 import { User, UserRole, EMPTY_USER } from './user';
 
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
@@ -37,7 +37,7 @@ describe('DataService tests:', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: DataSource, useValue: dataSourceMock },
-        { provide: SecuritySource, useValue: securitySourceMock },
+        { provide: SecurityAPI, useValue: securitySourceMock },
         { provide: GeneralContext, useValue: generalContextMock },
         { provide: DataService, useClass: DataService },
       ]
@@ -130,3 +130,5 @@ describe('isin tests:', () => {
     expect(isin([], 1)).toBeFalsy()
   })
 })
+
+//npm run test (only all tests togather will work!)

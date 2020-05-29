@@ -124,3 +124,15 @@ describe('newqid test', () => {
     expect(Lib.newqid(names, 1)).toBe('q015')
   })
 })
+
+describe('dtstrISO test', () => {
+  const dt = new Date(2020, 4, 29, 19, 15, 51, 357)//IST +5:30, month zero based
+  it('generic', () => {
+    expect(dt.toISOString()).toBe('2020-05-29T13:45:51.357Z')//IST +5:30, month zero based
+    expect(Lib.dtstrISO(dt)).toBe('20200529T134551')
+    expect(/\d{8}T\d{6}/.test(Lib.dtstrISO())).toBeTruthy()//uses now
+  })
+})
+
+//To run this test file alone
+//npm run test -- --main src/app/model/lib.spec.ts

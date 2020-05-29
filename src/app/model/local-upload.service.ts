@@ -7,6 +7,7 @@ import { DataService, FileLink, UploaderAPI } from "./data.service";
 
 import { Upload } from "./upload";
 import { HttpClient, HttpEventType } from "@angular/common/http";
+import { Lib } from "./lib";
 
 @Injectable()
 export class LocalUpload implements UploaderAPI {
@@ -39,10 +40,17 @@ export class LocalUpload implements UploaderAPI {
     console.log("bingo-end");
   }
 
-  public async pushUpload(eid: string, qidn: number, upload: Upload): Promise<string> {
-    let qid = this.service.getQuestionId(qidn);
-    let path = `exams/${eid}/questions/${qid}/files/${upload.file.name}`;
-    console.log("TBD..ing: impletement local Upload:", path);
+  dtFileFullPath(dt: Date, fileName: string): string {
+    const month = Lib.n2s(dt.getUTCMonth() + 1) //months from 1-12
+    const day = Lib.n2s(dt.getUTCDate())
+    const year = dt.getUTCFullYear()
+    const dtiso = Lib.dtstrISO(dt)
+    return year + "/" + month + "/" + day + "/" + dtiso + '-' + fileName;
+  }
+
+  public async uploadUrl(upload: Upload): Promise<string> {
+    const fullname = this.dtFileFullPath(new Date(), upload.file.name)
+    console.log("TBD..ing: impletement local Upload:", fullname);
     this.uploadFiles(upload);
     return ""
   }

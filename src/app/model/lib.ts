@@ -167,4 +167,9 @@ export class Lib {
     return dd.join('')
   }
 
+  public static dtstrISO(dt?: Date): string {
+    if (dt == null) dt = new Date()
+    return dt.toISOString().replace(/-/g, '').replace(/:/g, '').replace(/\..+/, '')
+  }
+
 }

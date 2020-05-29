@@ -89,7 +89,7 @@ export class EditorComponent {
   onEditorCreated(editorInstance: any) {
     editorInstance.focus()
     editorInstance.setSelection(0, 5);
-    const imageHandler = (image, callback) => {
+    const imageHandler = (image: any, callback: any) => {
       this.pickUploadSaveUrl(this.quillEditorRef.getSelection(true).index)
     }
     this.quillEditorRef = editorInstance
@@ -106,7 +106,7 @@ export class EditorComponent {
     Imageinput.addEventListener('change', async () => {
       const file = Imageinput.files[0]
       if (Imageinput.files == null || Imageinput.files[0] == null) return
-      const url = await this.uploader.pushUpload('test', 0, new Upload(file))
+      const url = await this.uploader.uploadUrl(new Upload(file))
       //NOTE: assuming loc has not changed after upload starting.
       this.quillEditorRef.insertEmbed(loc, 'image', url, 'user');
     })

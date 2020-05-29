@@ -7,11 +7,6 @@
   <hr>
   <app-questions-manager [qidn]="qidn" [result]="result" (clicked)="setQuestion($event)">
   </app-questions-manager>
-  <hr>
-  <div *ngIf="isPending && !isResultsPage">
-    <app-files-manager [eid]="this.result.exam.id" [qidn]="qidn" [files]="question.files">
-    </app-files-manager>
-  </div>
 
   <div *ngIf="!isResultsPage">
     <app-display [qid]="qidn" [question]="question"></app-display>
