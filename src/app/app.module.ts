@@ -68,7 +68,6 @@ import { TagsManagerComponent } from './tags-manager/tags-manager.component';
 import { ResultComponent } from './result/result.component';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
-import { PopupComponent } from './popup/popup.component';
 import { QuestionsManagerComponent } from './questions-manager/questions-manager.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ResultsChartComponent } from './results-chart/results-chart.component';
@@ -162,7 +161,6 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
     UserComponent,
     DetailsComponent,
     ChartComponent,
-    PopupComponent,
     EditorComponent,
     MathJaxDirective,
     SpaceComponent,

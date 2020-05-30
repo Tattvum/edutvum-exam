@@ -1,11 +1,9 @@
-import {
-  Component, OnInit, ElementRef, ViewChild, EventEmitter,
-  Output, Input, SimpleChanges, OnChanges, Directive
-} from '@angular/core';
+import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef } from '@angular/core';
 import { DataService, UploaderAPI } from 'app/model/data.service';
-import { Lib } from '../model/lib';
 import { Upload } from 'app/model/upload';
+import { MatDialog } from '@angular/material/dialog';
 
+//NOTE: Since the Quill component adds a p tag on any edit
 function stripPIfSingle(txt: string): string {
   if (txt.indexOf('<p>', 3) < 0) {
     txt = txt.trim()
@@ -27,7 +25,7 @@ export class EditorComponent {
   @Output() onedit: EventEmitter<string> = new EventEmitter<string>()
   @Input() content: string = '[blank]'
 
-  @ViewChild('textbox', { static: true }) private textbox: ElementRef;
+  @ViewChild('popup') popupTemplate: TemplateRef<any>
 
   showPopup = false
   backupContent = ''
@@ -50,45 +48,26 @@ export class EditorComponent {
     ]
   }
 
-  constructor(public service: DataService, private uploader: UploaderAPI) { }
+  constructor(public service: DataService,
+    private dialog: MatDialog, private uploader: UploaderAPI) { }
 
-  private ok(): boolean {
-    return this.service.isAdmin || this.safe
-  }
-
-  showEdit(event) {
-    // if (!event.ctrlKey) return
-    if (!this.ok) return
+  doPopup(): void {
+    if (!this.service.isAdmin && !this.safe) return
     this.backupContent = this.content
-    this.showPopup = true
     this.service.disableHotkeys = true
-    // https://stackoverflow.com/questions/38307060/how-to-set-focus-on-element-with-binding
-    // https://stackoverflow.com/a/45306425/6205090
-    // setTimeout(() => {
-    //   this.textbox.nativeElement.focus()
-    //   this.textbox.nativeElement.select()
-    // }, 10);
+    const dialogRef = this.dialog.open(this.popupTemplate, { width: '600px' });
+    dialogRef.afterClosed().subscribe(save => {
+      this.service.disableHotkeys = false
+      if (save) this.onedit.emit(stripPIfSingle(this.content))
+      else this.content = this.backupContent
+    });
   }
 
-  private endEdit() {
-    this.showPopup = false
-    this.service.disableHotkeys = false
-  }
-
-  closeEdit() {
-    this.content = this.backupContent
-    this.endEdit()
-  }
-
-  edit() {
-    if (!this.ok) return
-    this.endEdit()
-    this.onedit.emit(stripPIfSingle(this.content));
-  }
+  //------------------------------------------------------------------------------
 
   onEditorCreated(editorInstance: any) {
+    // editorInstance.setSelection(0, 10, 'user');
     editorInstance.focus()
-    editorInstance.setSelection(0, 5);
     const imageHandler = (image: any, callback: any) => {
       this.pickUploadSaveUrl(this.quillEditorRef.getSelection(true).index)
     }

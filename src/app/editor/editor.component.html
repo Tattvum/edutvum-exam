@@ -1,9 +1,11 @@
-<span (click)="showEdit($event)" [MathJax]="content" class="ql-editor"></span>
-<span *ngIf="service.isAdmin" (click)="showEdit($event)" class="link"> [ edit ]
-</span>
 
-<app-popup [(visible)]="showPopup" (visibleChange)="closeEdit()">
-  <h1>{{ heading }}</h1>
+<span (click)="doPopup()" [MathJax]="content" class="ql-editor"></span>
+<span *ngIf="service.isAdmin" (click)="doPopup()" class="link">[edit]</span>
+
+<!-- ----------------------------------------------------------------------- -->
+
+<ng-template #popup>
+  <h1 mat-dialog-title>{{ heading }}</h1>
   <mat-tab-group>
     <mat-tab label="Editor">
       <quill-editor [(ngModel)]="content"
@@ -14,14 +16,11 @@
       </quill-editor>
     </mat-tab>
     <mat-tab label="Raw">
-      <textarea [(ngModel)]="content" rows="2"></textarea>
-    </mat-tab>
-    <mat-tab disabled>
-      <ng-template mat-tab-label>
-        <button mat-icon-button (click)="edit()">
-          <mat-icon style="color: blue;">save</mat-icon>
-        </button>
-      </ng-template>
+      <textarea [(ngModel)]="content" rows="5"></textarea>
     </mat-tab>
   </mat-tab-group>
-</app-popup>
+  <div mat-dialog-actions>
+    <button mat-raised-button [mat-dialog-close]="true" cdkFocusInitial>Save</button>
+    <button mat-raised-button [mat-dialog-close]="false">Cancel</button>
+  </div>
+</ng-template>
