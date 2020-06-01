@@ -1,7 +1,8 @@
-import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef } from '@angular/core';
-import { DataService, UploaderAPI } from 'app/model/data.service';
-import { Upload } from 'app/model/upload';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef } from '@angular/core'
+import { DataService, UploaderAPI } from 'app/model/data.service'
+import { Upload } from 'app/model/upload'
+import { MatDialog } from '@angular/material/dialog'
+import { Overlay } from '@angular/cdk/overlay'
 
 //NOTE: Since the Quill component adds a p tag on any edit
 function stripPIfSingle(txt: string): string {
@@ -49,13 +50,17 @@ export class EditorComponent {
   }
 
   constructor(public service: DataService,
-    private dialog: MatDialog, private uploader: UploaderAPI) { }
+    private dialog: MatDialog, private overlay: Overlay, private uploader: UploaderAPI) { }
 
   doPopup(): void {
     if (!this.service.isAdmin && !this.safe) return
     this.backupContent = this.content
     this.service.disableHotkeys = true
-    const dialogRef = this.dialog.open(this.popupTemplate, { width: '600px' });
+    const dialogRef = this.dialog.open(this.popupTemplate, {
+      width: '600px',
+      autoFocus: false,
+      scrollStrategy: this.overlay.scrollStrategies.noop(),
+    });
     dialogRef.afterClosed().subscribe(save => {
       this.service.disableHotkeys = false
       if (save) this.onedit.emit(stripPIfSingle(this.content))
@@ -66,8 +71,9 @@ export class EditorComponent {
   //------------------------------------------------------------------------------
 
   onEditorCreated(editorInstance: any) {
-    // editorInstance.setSelection(0, 10, 'user');
     editorInstance.focus()
+    const isSmall = this.content.length <= 32
+    if (isSmall) editorInstance.setSelection(0, editorInstance.getLength(), 'user');
     const imageHandler = (image: any, callback: any) => {
       this.pickUploadSaveUrl(this.quillEditorRef.getSelection(true).index)
     }
