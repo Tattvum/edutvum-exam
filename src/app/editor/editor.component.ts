@@ -1,4 +1,4 @@
-import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef } from '@angular/core'
+import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef, HostListener, OnInit } from '@angular/core'
 import { DataService, UploaderAPI } from 'app/model/data.service'
 import { Upload } from 'app/model/upload'
 import { MatDialog } from '@angular/material/dialog'
@@ -19,7 +19,7 @@ function stripPIfSingle(txt: string): string {
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })
-export class EditorComponent {
+export class EditorComponent implements OnInit {
 
   @Input() heading = 'Edit Display'
   @Input() safe: boolean = false
@@ -31,6 +31,8 @@ export class EditorComponent {
   showPopup = false
   backupContent = ''
   quillEditorRef;
+  innerHeight: number
+  innerWidth: number
 
   modules = {
     toolbar: [
@@ -52,12 +54,28 @@ export class EditorComponent {
   constructor(public service: DataService,
     private dialog: MatDialog, private overlay: Overlay, private uploader: UploaderAPI) { }
 
+  recordWindowInnerSizes() {
+    this.innerHeight = window.innerHeight;
+    this.innerWidth = window.innerWidth;
+    // console.log(this.innerHeight, this.innerWidth)
+  }
+
+  ngOnInit() {
+    this.recordWindowInnerSizes()
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.recordWindowInnerSizes()
+  }
+
   doPopup(): void {
     if (!this.service.isAdmin && !this.safe) return
     this.backupContent = this.content
     this.service.disableHotkeys = true
     const dialogRef = this.dialog.open(this.popupTemplate, {
       width: '600px',
+      maxHeight: this.innerHeight - 50,
       autoFocus: false,
       scrollStrategy: this.overlay.scrollStrategies.noop(),
     });
