@@ -1,46 +1,53 @@
 <div>
+  <span class="eid">{{result.exam.id}}</span>
+  <span id="ename">
+    <app-editor heading="Edit Exam Title"
+      [content]="result.exam.title"
+      (onedit)="onEditTitle($event)" >
+    </app-editor>
+  </span>
+  <span class="eid"> ({{result.id}})</span>
+  <span class="when"> {{result.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
+</div>
 
-  <div>
-    <span class="eid">{{result.exam.id}}</span>
-    <span id="ename">
-      <app-editor heading="Edit Exam Title"
-        [content]="result.exam.title"
-        (onedit)="onEditTitle($event)" >
-      </app-editor>
-    </span>
-    <span class="eid"> ({{result.id}})</span>
-    <span class="when"> {{result.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
-  </div>
+<br>
+<div fxLayout="row" gdArea="content" fxLayoutGap="8px" fxLayoutAlign="start center">
+  <span id="pause" (click)="pauseExam()"
+      [class.locked]="result.isLocked()"
+      data-toggle="tooltip" title="Pause Exam"
+      class="btn btn-small btn-danger btn-sm" >
+    <span class="glyphicon glyphicon-pause"></span>
+  </span>
 
-  <br>
-  <div fxLayout="row" gdArea="content">
-    <span id="pause" (click)="pauseExam()"
-        [class.locked]="result.isLocked()"
-        data-toggle="tooltip" title="Pause Exam"
-        class="btn btn-small btn-danger btn-sm" >
-      <span class="glyphicon glyphicon-pause"></span>
-    </span> <sp></sp>
-    <span id="cancel" (click)="gotoDash()"
-        [class.locked]="result.isLocked()"
-        class="btn btn-small btn-danger btn-sm" >
-      <span *ngIf="!result.isLocked()">Cancel</span>
-      <span *ngIf="result.isLocked()">Home</span>
-    </span> <sp></sp>
-    <span id="done" (click)="results()"
-        [class.locked]="result.isLocked()"
-        class="btn btn-small btn-success btn-sm" >
-      <span *ngIf="!result.isLocked()">Done</span>
-      <span *ngIf="result.isLocked()">Results</span>
-    </span>
-    <sp></sp><sp></sp>
-    <sp></sp><sp></sp>
-    <app-timer *ngIf="!isPending"
-      [showQSec]="!isResultsPage" [qSec]="qsec"
-      [showTSecToggle]="!result.isLocked() && maxDuration >= 1" [tSec]="tsec"
-      [showMSec]="maxDuration >= 1" [mSec]="maxDuration*60">
-    </app-timer>
-    <sp></sp><sp></sp>
-    <sp></sp><sp></sp>
+  <span id="cancel" (click)="gotoDash()"
+      [class.locked]="result.isLocked()"
+      class="btn btn-small btn-danger btn-sm" >
+    <span *ngIf="!result.isLocked()">Cancel</span>
+    <span *ngIf="result.isLocked()">Home</span>
+  </span>
+  <span id="done" (click)="results()"
+      [class.locked]="result.isLocked()"
+      class="btn btn-small btn-success btn-sm" >
+    <span *ngIf="!result.isLocked()">Done</span>
+    <span *ngIf="result.isLocked()">Results</span>
+  </span>
+
+  <span *ngIf="context.isAdmin && isPending">
+    <mat-form-field fxFlexOffset="20px">
+      <mat-label> <span style="color: red;">Duration (min):</span> </mat-label>
+      <input matInput type="number" placeholder="Ex. 60"
+        (change)="maxDurationChange($event.target.value)" [value]="maxDuration">
+      <sp></sp>
+    </mat-form-field>
+  </span>
+
+  <app-timer *ngIf="!isPending"
+    [showQSec]="!isResultsPage" [qSec]="qsec"
+    [showTSecToggle]="!result.isLocked() && maxDuration >= 1" [tSec]="tsec"
+    [showMSec]="maxDuration >= 1" [mSec]="maxDuration*60">
+  </app-timer>
+
+  <span *ngIf="!isPending" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
     <mat-chip-list>
       <!-- <mat-chip [disabled]="result.isLocked()" [class.actionable]="!result.isLocked()" -->
       <mat-chip [disabled]="true" [class.actionable]="false"
@@ -48,7 +55,6 @@
         <span>Snapshots:</span>
       </mat-chip>
     </mat-chip-list>
-    <sp></sp><sp></sp>
     <mat-chip-list *ngIf="snapshots.length > 1" selectable="false">
       <mat-chip *ngFor="let snap of snapshots; let i=index"
           [disabled]="!result.isLocked()" [class.actionable]="result.isLocked()"
@@ -58,20 +64,10 @@
       </mat-chip>
     </mat-chip-list>
     <span *ngIf="snapshots.length <=1">_</span>
-  </div>
+  </span>
 
-  <br>
   <span *ngIf="context.isAdmin">
-    <span *ngIf="isPending">
-      <mat-form-field>
-        <mat-label> <span style="color: red;">Duration (min):</span> </mat-label>
-        <input matInput type="number" placeholder="Ex. 60"
-          (change)="maxDurationChange($event.target.value)" [value]="maxDuration">
-        <sp></sp>
-      </mat-form-field>
-      <sp></sp><sp></sp>
-    </span>
-    <mat-form-field>
+    <mat-form-field fxFlexOffset="20px">
       <mat-label> <span style="color: red;">Marking Scheme:</span> </mat-label>
       <mat-select [(value)]="markingScheme">
         <mat-option value="OLD">OLD</mat-option>
@@ -84,11 +80,13 @@
       </mat-select><sp></sp>
     </mat-form-field>
   </span>
-  <div *ngIf="isPending">
-    <button mat-raised-button (click)="addQuestion()">Add Question!</button>
-    <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
-    <button mat-raised-button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>
-    <span class="gap" *ngIf="!isResultsPage"> {{question.fullid()}} </span>
-    <button mat-raised-button *ngIf="!isResultsPage" class="gap" (click)="deleteQuestion()">Delete Question!</button>
-  </div>
+
+</div>
+
+<div *ngIf="isPending">
+  <button mat-raised-button (click)="addQuestion()">Add Question!</button>
+  <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
+  <button mat-raised-button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>
+  <span class="gap" *ngIf="!isResultsPage"> {{question.fullid()}} </span>
+  <button mat-raised-button *ngIf="!isResultsPage" class="gap" (click)="deleteQuestion()">Delete Question!</button>
 </div>
