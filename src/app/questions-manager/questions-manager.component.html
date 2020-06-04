@@ -53,7 +53,7 @@
 
 <sp></sp><sp></sp>
 <mat-slide-toggle
-  *ngIf="!isResultsPage && !result.exam.isPending() && result.isLocked() && result.practice"
+  *ngIf="!isResultsPage && !result.exam.isPending() && result.isLocked() && result.review"
   [checked]="result.getReveal(qidn)"
   (change)="result.setReveal(qidn, $event.checked)"
   color="primary">Reveal Solution</mat-slide-toggle>

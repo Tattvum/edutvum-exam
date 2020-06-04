@@ -231,8 +231,8 @@ export class ExamResult extends Exam {
 
   private states = {}
 
-  get practice(): boolean { return this.states['practice'] ?? true }
-  set practice(val: boolean) { this.states['practice'] = val }
+  get review(): boolean { return this.states['review'] ?? true }
+  set review(val: boolean) { this.states['review'] = val }
 
   get tab(): number { return this.states['tab'] ?? 0 }
   set tab(val: number) { this.states['tab'] = val }
@@ -244,7 +244,7 @@ export class ExamResult extends Exam {
   set level(val: number) { this.states['level'] = val }
 
   getReveal(qidn: number): boolean {
-    if (!this.practice) return true
+    if (!this.review) return true
     const reveal = this.states['reveal']
     if (!reveal) return false
     return reveal['' + qidn] ?? false
