@@ -104,6 +104,7 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   get ncqtext(): string {
+    if (!this.reveal) return ''
     return this.getAnswer(0) + ''
   }
   set ncqtext(t: string) {

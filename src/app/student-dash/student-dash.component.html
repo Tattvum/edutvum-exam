@@ -35,7 +35,7 @@
         <div gdAreas="side content" gdGap="8px">
           <div fxLayout="row" fxLayoutGap="16px" gdArea="side">
             <div class="etitle actionable" fxFlexAlign="baseline"
-              title="{{showWhen(ex.when)}}"(click)="takeExam(ex)">{{ex.title}}</div>
+              title="{{showWhen(ex.when)}}"(click)="takeExam(ex)" [innerHTML]="ex.title"></div>
             <div class="info" fxFlexAlign="baseline" fxLayoutGap="16px"
                 title="Questions : Marking Scheme : Total Marks">
               <b>{{ex.qcount}}</b> :
