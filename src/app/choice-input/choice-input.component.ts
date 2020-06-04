@@ -81,8 +81,13 @@ export class ChoiceInputComponent implements OnInit {
     return ans
   }
 
+  get reveal(): boolean {
+    return this.result.getReveal(this.qidn)
+  }
+
   colors(i: number) {
     if (!this.result.isLocked()) return {}
+    if (!this.reveal) return {}
     let ans = (i != null) ? i : this.getAnswer(0)
     let isans = this.result.isAnswer(this.qidn, ans)
     let issol = this.result.isSolution(this.qidn, ans)

@@ -14,6 +14,10 @@ export class DetailsComponent {
   @Input() result: ExamResult
   @Input() question: Question
 
+  get reveal(): boolean {
+    return this.result.getReveal(this.qid)
+  }
+
   context: DetailsDisplayContext
 
   constructor(service: DataService) {

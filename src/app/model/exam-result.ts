@@ -244,14 +244,16 @@ export class ExamResult extends Exam {
   set level(val: number) { this.states['level'] = val }
 
   getReveal(qidn: number): boolean {
+    if (!this.practice) return true
     const reveal = this.states['reveal']
-    if (!reveal) return !this.practice
-    return reveal['' + qidn] ?? !this.practice
+    if (!reveal) return false
+    return reveal['' + qidn] ?? false
   }
   setReveal(qidn: number, val: boolean) {
     let reveal = this.states['reveal']
     if (!reveal) reveal = this.states['reveal'] = {}
     reveal['' + qidn] = val
+    console.log(this.states)
   }
 
 }
