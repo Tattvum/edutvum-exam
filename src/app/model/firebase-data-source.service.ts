@@ -167,6 +167,7 @@ export function createR(obj, es: { [key: string]: Exam }, rs: { [key: string]: E
   let exam = es[obj.exam]
   let title = exam.title
   let when = new Date(obj.when)
+  let isPracticeMode: boolean = obj.practice
   let aobj = obj.answers
   let answers: number[][] = []
   if (aobj) exam.questions.forEach((q, i) => answers[i] = aobj[q.id])
@@ -187,7 +188,7 @@ export function createR(obj, es: { [key: string]: Exam }, rs: { [key: string]: E
   if (status !== ExamStatus.DONE) console.log('status', id, obj.status)
   let snapshot: boolean = obj.snapshot
   let snapshotIds = fbObjToArr(obj.snapshots)
-  return new ExamResult(id, title, when, exam, answers, status, guessings, durations,
+  return new ExamResult(id, title, when, exam, isPracticeMode, answers, status, guessings, durations,
     commentlists, user, omissions, snapshotIds, snapshot)
 }
 
@@ -270,6 +271,7 @@ export function convertCommentList(commentList: CommentList): any {
 export function convertExamResult(result: ExamResult): any {
   let ro = {}
   ro['exam'] = result.exam.id
+  ro['practice'] = result.isPracticeMode
   let roanss = ro['answers'] = {}
   let qs = result.exam.questions
   result.answers.forEach((ans: number[], i) => roanss[qs[i].id] = ans)
@@ -425,16 +427,17 @@ export class FirebaseDataSource implements DataSource {
     return this.afbapi.objectSetBool(url, ro)
   }
 
-  public createExam(user: User, eid: string): Promise<ExamResult> {
+  public createExam(user: User, eid: string, isPractice: boolean = false): Promise<ExamResult> {
     Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
     let exam = this.alles[eid]
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined', eid)
-    let er = new ExamResult(eid, exam.title, new Date(), exam)
+    let er = new ExamResult(eid, exam.title, new Date(), exam, isPractice)
     let ro = convertExamResult(er)
     let url = this.resultsUrl(user)
     return this.afbapi.listPush<ExamResult>(url, ro, call => {
       let key = call.key
-      let result = new ExamResult(key, er.title, er.when, er.exam, er.answers, ExamStatus.PENDING, er.guessings)
+      let result = new ExamResult(key, er.title, er.when, er.exam, er.isPracticeMode,
+        er.answers, ExamStatus.PENDING, er.guessings)
       this.alles[key] = result
       return result
     })

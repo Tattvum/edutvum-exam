@@ -81,7 +81,7 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(this.holders)
   }
 
-  public createExam(user: User, eid: string): Promise<ExamResult> {
+  public createExam(user: User, eid: string, isPractice: boolean = false): Promise<ExamResult> {
     console.log('starting exam!', eid)
     Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
     let exam = alles[eid]

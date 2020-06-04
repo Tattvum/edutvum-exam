@@ -11,6 +11,7 @@ export class ExamResult extends Exam {
   private _secondsTotal = 0
   constructor(id: string, title: string, when: Date,
     readonly exam: Exam,
+    readonly isPracticeMode: boolean = false,
     readonly answers: number[][] = [],
     status: ExamStatus = ExamStatus.PENDING,
     public guessings: boolean[] = [],
@@ -220,7 +221,7 @@ export class ExamResult extends Exam {
 
   public static clone(r: ExamResult, rid: string): ExamResult {
     return new ExamResult(
-      rid, r.title, r.when, r.exam,
+      rid, r.title, r.when, r.exam, r.isPracticeMode,
       [...r.answers], r.status, [...r.guessings], [...r.durations],
       [...r.commentLists], r.user, [...r.omissions])
   }

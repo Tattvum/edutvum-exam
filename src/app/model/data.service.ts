@@ -62,7 +62,7 @@ export class FileLink {
 
 export abstract class DataSource {
   abstract getHolders(user: User): Promise<Holders>
-  abstract createExam(user: User, eid: string): Promise<ExamResult>
+  abstract createExam(user: User, eid: string, isPractice?: boolean): Promise<ExamResult>
   abstract updateExam(user: User, result: ExamResult): Promise<boolean>
   abstract deleteExam(user: User, rid: string): Promise<boolean>
   abstract editExamDetail(user: User, type: ExamEditType, diff: any,
@@ -343,8 +343,8 @@ export class DataService
     })
   }
 
-  public startExam(eid: string): Promise<string> {
-    let call = u => this.dataSource.createExam(u, eid)
+  public startExam(eid: string, isPractice: boolean = false): Promise<string> {
+    let call = u => this.dataSource.createExam(u, eid, isPractice)
     return this.withUserPromise(call, result => {
       // console.log(result.id, 'exam started!')
       this.cache[result.id] = result

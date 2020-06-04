@@ -35,7 +35,7 @@
         <div gdAreas="side content" gdGap="8px">
           <div fxLayout="row" fxLayoutGap="16px" gdArea="side">
             <div class="etitle actionable" fxFlexAlign="baseline"
-              title="{{showWhen(ex.when)}}"(click)="takeExam(ex)" [innerHTML]="ex.title"></div>
+              title="{{showWhen(ex.when)}}" (click)="takeExam(ex)" [innerHTML]="ex.title"></div>
             <div class="info" fxFlexAlign="baseline" fxLayoutGap="16px"
                 title="Questions : Marking Scheme : Total Marks">
               <b>{{ex.qcount}}</b> :
@@ -53,6 +53,8 @@
                 <span *ngIf="rs.isLocked()" class="actionable">{{rs.score.percent | number:'1.0-0'}}%</span>
                 <span *ngIf="!rs.isLocked()" class="actionable">...%</span>
               </mat-chip>
+              <!-- <mat-chip *ngIf="!ex.isPending()" (click)="takeExam(ex, true)">Practice</mat-chip> -->
+              <mat-chip *ngIf="!ex.isPending()" (click)="takeExam(ex)">Take Exam</mat-chip>
             </mat-chip-list>
           </div>
         </div>
