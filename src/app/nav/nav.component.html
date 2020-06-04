@@ -41,7 +41,7 @@
     </mat-form-field>
   </span>
 
-  <app-timer *ngIf="!isPending"
+  <app-timer *ngIf="!result.exam.isPending()"
     [showQSec]="!isResultsPage" [qSec]="qsec"
     [showTSecToggle]="!result.isLocked() && maxDuration >= 1" [tSec]="tsec"
     [showMSec]="maxDuration >= 1" [mSec]="maxDuration*60">
@@ -80,6 +80,9 @@
       </mat-select><sp></sp>
     </mat-form-field>
   </span>
+
+  <mat-slide-toggle *ngIf="result.isLocked() && !result.exam.isPending()"
+      color="primary" [(ngModel)]="result.practice">Practice Mode</mat-slide-toggle>
 
 </div>
 

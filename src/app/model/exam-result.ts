@@ -32,8 +32,6 @@ export class ExamResult extends Exam {
     }
   }
 
-  public states = {}
-
   private checkAnsInChoice(qans: any[], q: Question, ctx: string) {
     let chlen = q.choices.length
     ctx += '.' + q.id
@@ -225,6 +223,35 @@ export class ExamResult extends Exam {
       rid, r.title, r.when, r.exam,
       [...r.answers], r.status, [...r.guessings], [...r.durations],
       [...r.commentLists], r.user, [...r.omissions])
+  }
+
+  //------------------------------------------------------------------------------
+  // Temporary browser session storage
+  //------------------------------------------------------------------------------
+
+  private states = {}
+
+  get practice(): boolean { return this.states['practice'] ?? true }
+  set practice(val: boolean) { this.states['practice'] = val }
+
+  get tab(): number { return this.states['tab'] ?? 0 }
+  set tab(val: number) { this.states['tab'] = val }
+
+  get selection(): string { return this.states['selection'] ?? "" }
+  set selection(val: string) { this.states['selection'] = val }
+
+  get level(): number { return this.states['level'] ?? 0 }
+  set level(val: number) { this.states['level'] = val }
+
+  getReveal(qidn: number): boolean {
+    const reveal = this.states['reveal']
+    if (!reveal) return !this.practice
+    return reveal['' + qidn] ?? !this.practice
+  }
+  setReveal(qidn: number, val: boolean) {
+    let reveal = this.states['reveal']
+    if (!reveal) reveal = this.states['reveal'] = {}
+    reveal['' + qidn] = val
   }
 
 }

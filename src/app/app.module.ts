@@ -28,6 +28,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -142,6 +143,7 @@ if (DATA_SOURCE == null) throw "ERROR: DATA_SOURCE cannot be null!";
     MatSnackBarModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatSlideToggleModule,
     HttpClientModule,
     //https://github.com/KillerCodeMonkey/ngx-quill
     QuillModule.forRoot(),

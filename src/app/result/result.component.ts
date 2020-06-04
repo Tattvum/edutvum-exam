@@ -76,7 +76,7 @@ export class ResultComponent implements OnInit {
     this.result.questions.forEach((q, qid) => {
       let ro = this.resultObj(qid)
       let score = ro.scored + '/' + ro.max
-      let prefix = this.result.states["selection"]
+      let prefix = this.result.selection
       // console.log(qid, prefix, q.tags.map(t => t.title))
       out.push({
         value: ro.duration,

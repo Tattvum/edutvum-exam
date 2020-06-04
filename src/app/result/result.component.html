@@ -1,4 +1,4 @@
-<mat-tab-group [(selectedIndex)]="result.states['tab']">
+<mat-tab-group [(selectedIndex)]="result.tab">
   <mat-tab label="{{ result.exam.markingSchemeName }} Marking Scheme">
     <br>
     <div *ngIf="result">
@@ -64,8 +64,8 @@
     <div *ngIf="result">
       <app-tree-table
         [data]="data"
-        [(level)]="result.states['level']"
-        [(selection)]="result.states['selection']" >
+        [(level)]="result.level"
+        [(selection)]="result.selection" >
       </app-tree-table>
     </div>
   </mat-tab>
