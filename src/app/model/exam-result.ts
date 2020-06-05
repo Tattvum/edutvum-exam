@@ -226,9 +226,21 @@ export class ExamResult extends Exam {
       [...r.commentLists], r.user, [...r.omissions])
   }
 
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+
+  get isFuture(): boolean {
+    return this.exam.isPending()
+  }
+  get isPresent(): boolean {
+    return !this.isLocked()
+  }
+  get isPast(): boolean {
+    return !this.isFuture && !this.isPresent
+  }
+
+  //----------------------------------------------------------------------------
   // Temporary browser session storage
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
 
   private states = {}
 
@@ -238,7 +250,7 @@ export class ExamResult extends Exam {
   get tab(): number { return this.states['tab'] ?? 0 }
   set tab(val: number) { this.states['tab'] = val }
 
-  get selection(): string { return this.states['selection'] ?? "" }
+  get selection(): string { return this.states['selection'] ?? "JUNK-u7JqNwfU3W" }
   set selection(val: string) { this.states['selection'] = val }
 
   get level(): number { return this.states['level'] ?? 0 }

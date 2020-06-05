@@ -86,8 +86,7 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   colors(i: number) {
-    if (!this.result.isLocked()) return {}
-    if (!this.reveal) return {}
+    if (this.result.isPresent || this.result.isPast && !this.reveal) return {}
     let ans = (i != null) ? i : this.getAnswer(0)
     let isans = this.result.isAnswer(this.qidn, ans)
     let issol = this.result.isSolution(this.qidn, ans)
@@ -104,7 +103,7 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   get ncqtext(): string {
-    if (!this.reveal) return ''
+    if (this.result.isLocked() && !this.reveal) return ''
     return this.getAnswer(0) + ''
   }
   set ncqtext(t: string) {
