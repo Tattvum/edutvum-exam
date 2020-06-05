@@ -9,7 +9,7 @@
         <label (click)="removeChoice(i)" class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
         <sp></sp>
         <input [type]="ctype" name="choices" [id]="'rd'+i" #first (click)="choiceClicked($event, i)"
-          [disabled]="result.isLocked()"
+          [disabled]="!result.allowEdit(qidn)"
           [checked]="result.isAnswer(qidn, i) && result.showAnswer(qidn)" />
         <sp></sp>
         <label class="opt" [for]="'rd'+i">
@@ -20,7 +20,8 @@
     </div>
     <div class="ncq" *ngIf="question.type == 4">
       <div>Type your answer here:</div>
-      <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors(null)" [disabled]="result.isLocked()" />
+      <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors(null)"
+        [disabled]="!result.allowEdit(qidn)" />
       <div *ngIf="result.showSolution(qidn)" [class.correct]="true">
         ({{result.questions[qid].solutions[0]}})
       </div>

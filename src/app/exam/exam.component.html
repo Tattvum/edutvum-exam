@@ -13,7 +13,7 @@
     <hr>
     <app-choice-input [qid]="qidn" [question]="question" [result]="result">
     </app-choice-input>
-    <div *ngIf="isLocked">
+    <div *ngIf="result.showSolution(qidn)">
       <app-details [qid]="qidn" [question]="question" [result]="result">
       </app-details>
     </div>

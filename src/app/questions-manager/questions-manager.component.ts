@@ -64,7 +64,7 @@ export class QuestionsManagerComponent {
     if (!this.result.isAttempted(this.qidn) || this.result.isLocked()) return
     this.result.guessings[this.qidn] = guessed
     this.context.saveExam()
-    this.next()
+    if (!this.result.isPracticeMode) this.next()
   }
 
   next() {

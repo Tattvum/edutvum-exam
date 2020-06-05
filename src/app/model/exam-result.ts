@@ -269,8 +269,12 @@ export class ExamResult extends Exam {
     return !this.isFuture && !this.isPresent
   }
 
+  allowEdit(qidn: number): boolean {
+    return this.isPresent && !this.showSolution(qidn)
+  }
   //Show Solution, shows Answer too
   showSolution(qidn: number): boolean {
+    if (this.isPresent && this.isPracticeMode) return this.guessings[qidn] != null
     return this.isFuture || this.isPast && this.getReveal(qidn)
   }
   //Show Answer need not show solution (while taking an exam)
