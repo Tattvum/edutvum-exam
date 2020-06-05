@@ -227,18 +227,6 @@ export class ExamResult extends Exam {
   }
 
   //----------------------------------------------------------------------------
-
-  get isFuture(): boolean {
-    return this.exam.isPending()
-  }
-  get isPresent(): boolean {
-    return !this.isLocked()
-  }
-  get isPast(): boolean {
-    return !this.isFuture && !this.isPresent
-  }
-
-  //----------------------------------------------------------------------------
   // Temporary browser session storage
   //----------------------------------------------------------------------------
 
@@ -267,6 +255,27 @@ export class ExamResult extends Exam {
     if (!reveal) reveal = this.states['reveal'] = {}
     reveal['' + qidn] = val
     console.log(this.states)
+  }
+
+  //----------------------------------------------------------------------------
+
+  get isFuture(): boolean {
+    return this.exam.isPending()
+  }
+  get isPresent(): boolean {
+    return !this.isLocked()
+  }
+  get isPast(): boolean {
+    return !this.isFuture && !this.isPresent
+  }
+
+  //Show Solution, shows Answer too
+  showSolution(qidn: number): boolean {
+    return this.isFuture || this.isPast && this.getReveal(qidn)
+  }
+  //Show Answer need not show solution (while taking an exam)
+  showAnswer(qidn: number): boolean {
+    return this.isPresent || this.isPast && this.getReveal(qidn)
   }
 
 }

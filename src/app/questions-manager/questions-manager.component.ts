@@ -51,17 +51,13 @@ export class QuestionsManagerComponent {
 
   ngOnInit() { }
 
-  results() {
+  async results() {
     if (Lib.isNil(this.result)) return
-    if (!this.result.isLocked()) {
+    if (!this.result.isLocked() && !this.result.isPracticeMode) {
       if (!this.generalContext.confirm('Done with the exam?!')) return
-      this.context.finishExam().then(er => {
-        this.result = er
-        this.click(-1)
-      })
-    } else {
-      this.click(-1)
+      this.result = await this.context.finishExam()
     }
+    this.click(-1)
   }
 
   markGuess(guessed: boolean) {

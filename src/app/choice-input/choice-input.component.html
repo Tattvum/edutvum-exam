@@ -10,7 +10,7 @@
         <sp></sp>
         <input [type]="ctype" name="choices" [id]="'rd'+i" #first (click)="choiceClicked($event, i)"
           [disabled]="result.isLocked()"
-          [checked]="result.isAnswer(qidn, i) && (!result.isLocked() || reveal)" />
+          [checked]="result.isAnswer(qidn, i) && result.showAnswer(qidn)" />
         <sp></sp>
         <label class="opt" [for]="'rd'+i">
           <app-editor heading="Edit Choice Text" [content]="ch" (onedit)="editOption($event, i)">
@@ -21,7 +21,7 @@
     <div class="ncq" *ngIf="question.type == 4">
       <div>Type your answer here:</div>
       <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors(null)" [disabled]="result.isLocked()" />
-      <div *ngIf="isPending || result.isLocked() && reveal" [class.correct]="true">
+      <div *ngIf="result.showSolution(qidn)" [class.correct]="true">
         ({{result.questions[qid].solutions[0]}})
       </div>
     </div>

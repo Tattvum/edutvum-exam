@@ -14,10 +14,6 @@ export class DetailsComponent {
   @Input() result: ExamResult
   @Input() question: Question
 
-  get okreveal(): boolean {
-    return this.result.isFuture || this.result.isPast && this.result.getReveal(this.qid)
-  }
-
   context: DetailsDisplayContext
 
   constructor(service: DataService) {

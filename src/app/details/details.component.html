@@ -1,8 +1,8 @@
 <div>
   <hr>
   <div class="explanationQ">
-    <div *ngIf="!okreveal">[Question Explantion HIDDEN]</div>
-    <app-editor *ngIf="okreveal"
+    <div *ngIf="!result.showSolution(qid)">[Question Explantion HIDDEN]</div>
+    <app-editor *ngIf="result.showSolution(qid)"
       heading="Edit Question Explantion"
       [content]="question.explanation"
       (onedit)="editExplanationQ($event)" >
@@ -13,8 +13,8 @@
 <div>
   <hr>
   <div class="explanationE">
-    <div *ngIf="!okreveal">[Exam Explantion HIDDEN]</div>
-    <app-editor *ngIf="okreveal"
+    <div *ngIf="!result.showSolution(qid)">[Exam Explantion HIDDEN]</div>
+    <app-editor *ngIf="result.showSolution(qid)"
       heading="Edit Exam Explantion"
       [content]="result.exam.explanation"
       (onedit)="editExplanationE($event)" >
