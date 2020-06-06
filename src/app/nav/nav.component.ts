@@ -121,7 +121,7 @@ export class NavComponent implements OnInit {
   results() {
     if (Lib.isNil(this.result)) return
     if (!this.result.isLocked()) {
-      if (!this.generalContext.confirm('Done with the exam?!')) return
+      if (!this.generalContext.confirm(`Done with the ${this.result.name}?!`)) return
       this.context.finishExam().then(er => {
         this.result = er
         this.router.navigate(['/results', this.result.id])
@@ -135,7 +135,7 @@ export class NavComponent implements OnInit {
   pauseExam() {
     if (!this.result.isLocked()) {
       this.context.pauseExam().then(ok => {
-        this.generalContext.alert('The exam will be paused now. \nYou can resume from the dashboard.')
+        this.generalContext.alert(`The ${this.result.name} will be paused now. \nYou can resume from the dashboard.`)
         this.router.navigate(['/student-dash'])
       })
     }
@@ -144,10 +144,14 @@ export class NavComponent implements OnInit {
   gotoDash() {
     if (this.result.isLocked()) {
       this.router.navigate(['/student-dash'])
-    } else if (this.generalContext.confirm('Cancel the exam: Sure?!')) {
-      this.context.cancelExam().then(ok => {
-        this.router.navigate(['/student-dash'])
-      })
+    } else {
+      if (this.result.isPracticeMode) {
+        this.generalContext.alert('Cancel Failed.')
+      } else if (this.generalContext.confirm(`Cancel the exam: Sure?!`)) {
+        this.context.cancelExam().then(ok => {
+          this.router.navigate(['/student-dash'])
+        })
+      }
     }
   }
 

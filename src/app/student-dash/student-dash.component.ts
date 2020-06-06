@@ -53,7 +53,8 @@ export class StudentDashComponent implements OnInit {
     if (exam.isPending()) {
       this.router.navigate(['/results', this.service.pendingId(exam.id)])
     } else {
-      if (!this.context.confirm('Ready to start the exam?!')) return
+      const name = isPractice ? 'practice' : 'exam'
+      if (!this.context.confirm(`Ready to start the ${name}?!`)) return
       this.service.startExam(exam.id, isPractice).then(rid => {
         this.router.navigate(['/question', rid, 0])
       })
@@ -64,7 +65,7 @@ export class StudentDashComponent implements OnInit {
     let er = this.service.getExamResult(result.id)
     if (er.isLocked()) this.router.navigate(['/results', result.id])
     else {
-      if (!confirm('Ready to continue the exam?!')) return
+      if (!confirm(`Ready to continue the ${result.name}?!`)) return
       this.router.navigate(['/question', result.id, 0])
     }
   }

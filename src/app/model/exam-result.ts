@@ -282,6 +282,10 @@ export class ExamResult extends Exam {
     return this.isPresent || this.isPast && this.getReveal(qidn)
   }
 
+  get name(): string {
+    return this.isPracticeMode ? 'practice' : 'exam'
+  }
+
 }
 
 export const EMPTY_EXAM_RESULT = new ExamResult('00', 'Bingo', new Date(), EMPTY_EXAM)

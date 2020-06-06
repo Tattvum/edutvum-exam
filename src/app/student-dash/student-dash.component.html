@@ -48,7 +48,7 @@
               <mat-chip *ngFor="let rs of service.listResults(ex.id); let j=index"
                 [matBadge]="rs.snapshotIds.length" matBadgeSize="small" matBadgeColor="accent"
                 [matBadgeHidden]="rs.snapshotIds.length<=0"
-                color="{{rs.isLocked()? 'primary': 'warn'}}" selected="true" (click)="showExamResult(rs)"
+                [color]="rs.isPast ? 'primary' : 'warn'" selected (click)="showExamResult(rs)"
                 [class.locked]="rs.isLocked()" title="{{showWhen(rs.when)}}">
                 <span *ngIf="rs.isLocked()" class="actionable">{{rs.score.percent | number:'1.0-0'}}%</span>
                 <span *ngIf="!rs.isLocked()" class="actionable">...%</span>

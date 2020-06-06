@@ -99,7 +99,7 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   get ncqtext(): string {
-    if (!this.result.showSolution(this.qidn)) return ''
+    if (!this.result.showAnswer(this.qidn)) return ''
     return this.getAnswer(0) + ''
   }
   set ncqtext(t: string) {
