@@ -203,7 +203,7 @@ export function createC(obj, rs: { [key: string]: ExamResult }): Chart {
 
 // NOTE: PUBLIC for TEST sake ONLY
 export function createU(obj): User {
-  let uid = obj.localId
+  let uid = obj.uid
   let name = obj.displayName
   let email = obj.email
   let role = UserRole.USER
