@@ -1,6 +1,6 @@
 
 <span (click)="doPopup()" [MathJax]="content" class="ql-editor"></span>
-<span *ngIf="service.isAdmin" (click)="doPopup()" class="link">[edit]</span>
+<span *ngIf="safe || service.isAdmin" (click)="doPopup()" class="link">[edit]</span>
 
 <!-- ----------------------------------------------------------------------- -->
 
