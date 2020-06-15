@@ -106,7 +106,7 @@ export class ResultComponent implements OnInit {
     let isNum = (o: any) => typeof (o) === "number"
     let addArrays = (d: any[], s: any[]) => d.forEach((v, i) => { if (isNum(v)) d[i] += s[i] })
     let o2a = (o: ResultObj) => [
-      o.sure, o.guess, o.scored, "percent", o.max, o.skipped, o.isOmitted
+      o.sure, o.guess, o.scored, "percent", o.max, o.skipped, o.omitted
     ]
 
     this.result.questions.forEach((q, qid) => {
