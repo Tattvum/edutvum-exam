@@ -155,6 +155,7 @@ export function asCList(obj): CommentList {
     let cl = obj[key]
     //CAUTION: This typecasting is essential. Typescript is unaware, till last moment.
     cl.when = new Date(cl.when)
+    cl.user = { uid: cl?.uid, name: cl?.user }
     arr[index] = cl
     // console.log(index, key, obj[key].file, arr[index].file)
   })
