@@ -13,6 +13,8 @@ interface ResultObj {
   isPartial: boolean,
 
   duration: number,
+  maxTime: number,
+  count: number,
 
   max: number,
   omitted: number,
@@ -47,13 +49,16 @@ export class ResultComponent implements OnInit {
     let guess = (!isOmitted && isAttempted && isGuessing) ? marks.value : 0
     let sure = (!isOmitted && isAttempted && !isGuessing) ? marks.value : 0
     let duration = defnum(this.result.durations[qid], 0)
+    //CAUTION: TBD: simply result.maxDuration is 0! as it is silently inheritred, but broken!
+    let maxTime = this.result.exam.maxDuration * 60 * (marks.max / this.result.exam.totalMarks)
+    let count = 1
     let omitted = (isOmitted) ? marks.max : 0
     let skipped = (!isOmitted && !isAttempted) ? marks.max : 0
     let scored = sure + guess
     return {
       isOmitted: isOmitted, isAttempted: isAttempted, isCorrect: isCorrect,
       isPartial: isPartial, isGuessing: isGuessing,
-      duration: duration,
+      duration: duration, maxTime: maxTime, count: count,
       max: marks.max, omitted: omitted, skipped: skipped,
       guess: guess, sure: sure, scored: scored
     }
@@ -90,30 +95,41 @@ export class ResultComponent implements OnInit {
   }
 
   get data() {
+    const marksPercent = (arr: any[]) => Math.round((arr[2] / arr[4]) * 100) + "%"
+    const timizesec = (arr: any[]) => Lib.timize(arr[8])
+    const timizesectotal = (arr: any[]) => Lib.timize(arr[9])
+    const timePercent = (arr: any[]) => Math.round((arr[8] / arr[9]) * 100) + "%"
+
     let out = {
-      styles: ["color: black;", "color: gray;", "color: green;",
-        "color: maroon; font-weight: bold;",
-        "color: maroon;", "color: darkblue;", "color: red;"],
-      names: ["Sure", "Guess", "Marks", "%", "Total", "Skipped", "Omitted"],
-      suffixes: ["", "", "", "%", "", "", ""],
-      totals: [0, 0, 0, "percent", 0, 0, 0],
-      leaves: [],
-      functions: {
-        "percent": (arr: any[]) => (arr[2] / arr[4]) * 100
-      }
+      cols: [
+        { name: "Sure", style: "color: black;", },
+        { name: "Guess", style: "color: gray;", },
+        { name: "Marks", style: "color: green;", },
+        { name: "%", style: "color: maroon; font-weight: bold;", format: marksPercent },
+        { name: "Total Marks", style: "color: maroon;", },
+        { name: "Total #", style: "color: #609;", },
+        { name: "Skipped", style: "color: darkblue;", },
+        { name: "Omitted", style: "color: red;", },
+        { name: "Time", style: "color: blue;", format: timizesec },
+        { name: "Total Time", style: "color: #0AF;", format: timizesectotal },
+        { name: "Time %", style: "color: #069;", format: timePercent },
+      ],
+      totals: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+      rows: [],
     }
 
     let isNum = (o: any) => typeof (o) === "number"
     let addArrays = (d: any[], s: any[]) => d.forEach((v, i) => { if (isNum(v)) d[i] += s[i] })
     let o2a = (o: ResultObj) => [
-      o.sure, o.guess, o.scored, "percent", o.max, o.skipped, o.omitted
+      o.sure, o.guess, o.scored, null, o.max, o.count,
+      o.skipped, o.omitted, o.duration, o.maxTime, null,
     ]
 
     this.result.questions.forEach((q, qid) => {
       let ro = this.resultObj(qid)
       addArrays(out.totals, o2a(ro))
 
-      out.leaves.push(...q.tags.map(t => t.title.split(":")).map(p => ({
+      out.rows.push(...q.tags.map(t => t.title.split(":")).map(p => ({
         type: p[0].trim(), name: p[1].trim(),
         values: o2a(ro)
       })))
