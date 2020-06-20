@@ -50,7 +50,7 @@ export class ResultComponent implements OnInit {
     let sure = (!isOmitted && isAttempted && !isGuessing) ? marks.value : 0
     let duration = defnum(this.result.durations[qid], 0)
     //CAUTION: TBD: simply result.maxDuration is 0! as it is silently inheritred, but broken!
-    let maxTime = this.result.exam.maxDuration * 60 * (marks.max / this.result.exam.totalMarks)
+    let maxTime = this.result.exam.maxDuration * 60 * (marks.max / this.result.score.total)
     let count = 1
     let omitted = (isOmitted) ? marks.max : 0
     let skipped = (!isOmitted && !isAttempted) ? marks.max : 0
