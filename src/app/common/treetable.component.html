@@ -12,7 +12,7 @@
 
   <table id="report" class="table table-bordered" style="width: 90%;">
     <tr class="maroon shade">
-      <!-- <th width="50px"></th> -->
+      <!-- <th width="3%" class=""></th> -->
       <th width="10%" class="left">Type</th>
       <th width="3%" class=""></th>
       <th width="35%" class="left">Name</th>
@@ -21,9 +21,8 @@
       </th>
     </tr>
     <tr *ngFor="let row of filteredRows" class="highlight" (click)="highlighted(row)">
-      <!-- <td>
+      <!-- <td [title]="row.levels" >
         <span class="glyphicon glyphicon-plus glyph-ext"></span>
-        {{ row.levels}}
       </td> -->
       <td class="left" [class.selected]="row.selected">{{ row.type }}</td>
       <td>
@@ -38,6 +37,7 @@
       </td>
     </tr>
     <tr class="shade maroon">
+      <!-- <td colspan="3"></td> -->
       <td colspan="2"></td>
       <td class="left">Total</td>
       <td class="right" *ngFor="let t of data.totals; let i = index;"

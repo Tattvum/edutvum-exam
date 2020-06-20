@@ -72,6 +72,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
       [(selection)]="selection" >
     </app-tree-table>
     {{selection}} -->
+
 `,
   styles: []
 })

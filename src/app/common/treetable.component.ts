@@ -88,7 +88,7 @@ export class TreeTableComponent implements OnInit {
   }
 
   public get filteredRows(): any[] {
-    return this.rows.filter(r => r.levels <= this.level)
+    return this.rows.filter(r => r.levels <= this.level || r.selected)
   }
 
   show(arr: any[], i: number): any {
