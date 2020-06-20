@@ -1,0 +1,49 @@
+<div style="margin: 20px;">
+  <mat-slider [max]="maxLevels" [min]="1" [step]="1" [thumbLabel]="true"
+    style="margin-left: 10px;"
+    [(ngModel)]="internalLevel">
+  </mat-slider>
+  <sp></sp><sp></sp>
+  <b>{{filteredRows.length}}</b> rows
+  <sp></sp><sp></sp><sp></sp><sp></sp><sp></sp><sp></sp>
+  <span class="actionable" (click)="clearSelections()" [class.hidden]="!hasSelections()" >
+    Clear selections
+  </span>
+
+  <table id="report" class="table table-bordered" style="width: 90%;">
+    <tr class="maroon shade">
+      <!-- <th width="50px"></th> -->
+      <th width="10%" class="left">Type</th>
+      <th width="3%" class=""></th>
+      <th width="35%" class="left">Name</th>
+      <th class="right" *ngFor="let col of data.cols; let i = index;" [style]="col.style">
+        {{ col.name }}
+      </th>
+    </tr>
+    <tr *ngFor="let row of filteredRows" class="highlight" (click)="highlighted(row)">
+      <!-- <td>
+        <span class="glyphicon glyphicon-plus glyph-ext"></span>
+        {{ row.levels}}
+      </td> -->
+      <td class="left" [class.selected]="row.selected">{{ row.type }}</td>
+      <td>
+        <span class="glyphicon"
+          [class.selected]="row.selected"
+          [class.glyphicon-bookmark]="row.selected"></span>
+      </td>
+      <td class="left bold" [class.selected]="row.selected">{{ row.name }}</td>
+      <td class="right" *ngFor="let rv of row.values; let i = index;"
+          [style]="data.cols[i].style">
+        {{ show(row.values, i)}}
+      </td>
+    </tr>
+    <tr class="shade maroon">
+      <td colspan="2"></td>
+      <td class="left">Total</td>
+      <td class="right" *ngFor="let t of data.totals; let i = index;"
+          [style]="data.cols[i].style">
+        {{ show(data.totals, i)}}
+      </td>
+    </tr>
+  </table>
+</div>

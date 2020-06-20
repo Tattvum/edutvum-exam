@@ -1,0 +1,77 @@
+  th td {
+    text-align: center;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .left {
+    text-align: left;
+  }
+
+  .maroon {
+    color: maroon;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .shade {
+    background-color: #dddddd;
+  }
+
+  .gray {
+    color: grey;
+  }
+
+  .blue {
+    color: #000099;
+  }
+
+  .red {
+    color: red;
+  }
+
+  .green {
+    color: #009900;
+  }
+
+  .table-bordered {
+    table-layout: fixed;
+  }
+
+  .table-bordered th,
+  .table-bordered td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  //https://stackoverflow.com/questions/42686104/reduce-the-weight-of-a-glyphicon
+  .glyph-ext {
+    -webkit-text-stroke: 2px white;
+    color: blue;
+    cursor: pointer;
+  }
+
+  .highlight:hover {
+    background-color: #ffd;
+    cursor: pointer;
+  }
+
+  .selected {
+    color: red;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .actionable {
+    cursor: pointer;
+  }
+
+  .actionable:hover {
+    color: blue;
+  }
