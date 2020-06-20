@@ -12,7 +12,7 @@ export class TreeTableComponent implements OnInit {
     cols: [
       { name: "Marks", style: "color: red;", },
       { name: "Total", style: "color: blue;", },
-      { name: "%", style: "color: green;", format: (arr: any[]) => (arr[0] / arr[1]) * 100 },
+      { name: "%", style: "color: green;", format: (arr: any[]) => Math.round((arr[0] / arr[1]) * 100) },
     ],
     totals: [4, 16, null],
     rows: [
@@ -98,7 +98,12 @@ export class TreeTableComponent implements OnInit {
   }
 
   highlighted(row: any) {
-    this.selectionChange.emit(row.type + " : " + row.name);
+    const value = row.type + " : " + row.name
+    if (this._selection === value) {
+      this.clearSelections()
+    } else {
+      this.selectionChange.emit(value);
+    }
   }
 
   clearSelections() {

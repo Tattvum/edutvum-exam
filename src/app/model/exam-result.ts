@@ -241,7 +241,7 @@ export class ExamResult extends Exam {
   get selection(): string { return this.states['selection'] ?? "JUNK-u7JqNwfU3W" }
   set selection(val: string) { this.states['selection'] = val }
 
-  get level(): number { return this.states['level'] ?? 0 }
+  get level(): number { return this.states['level'] ?? 1 }
   set level(val: number) { this.states['level'] = val }
 
   getReveal(qidn: number): boolean {

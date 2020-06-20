@@ -66,6 +66,12 @@ import { MatChipInputEvent } from '@angular/material/chips';
         (added)="addedAutoInput($event)" >
       </app-auto-input> {{selectedFromList}}
     </div> -->
+
+    <!-- <app-tree-table
+      [(level)]="level"
+      [(selection)]="selection" >
+    </app-tree-table>
+    {{selection}} -->
 `,
   styles: []
 })
@@ -124,5 +130,9 @@ export class AppComponent {
   //   const i = this.old.findIndex(o => o.id === id)
   //   if (i >= 0) this.old.splice(i, 1)
   // }
+
+  //app-tree-table
+  // selection = "4^324ee"
+  // level = 3
 
 }
