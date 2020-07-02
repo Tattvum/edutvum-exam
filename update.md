@@ -229,3 +229,117 @@ i  emulators: Received export request. Exporting data to /home/svr/lindata/edutv
 ```
 This takes care of the ADMIN rights for the dummy 'u1' user.
 Basically I change the SVR staging user's localId to u1
+
+
+2020-07-02 Thu - on 4.12.2
+`...edutvum-exam$ ng version`
+
+...
+Angular CLI: 9.1.4
+Node: 12.18.1
+OS: linux x64
+
+Angular: 9.1.4
+... animations, cli, common, compiler, compiler-cli, core, forms
+... language-service, platform-browser, platform-browser-dynamic
+... platform-server, router, service-worker
+Ivy Workspace: <error>
+
+Package                           Version
+-----------------------------------------------------------
+@angular-devkit/architect         0.900.7
+@angular-devkit/build-angular     0.900.7
+@angular-devkit/build-optimizer   0.900.7
+@angular-devkit/build-webpack     0.900.7
+@angular-devkit/core              9.0.7
+@angular-devkit/schematics        9.1.3
+@angular/cdk                      9.2.2
+@angular/fire                     6.0.0
+@angular/flex-layout              9.0.0-beta.29
+@angular/material                 9.2.2
+@angular/pwa                      0.901.3
+@ngtools/webpack                  9.0.7
+@schematics/angular               9.1.3
+@schematics/update                0.901.4
+rxjs                              6.5.5
+typescript                        3.8.3
+webpack                           4.43.0
+---
+using https://update.angular.io/#9.0:10.0
+---
+`svr@tnr:~$ npm list -g @angular/cli --depth=0`
+
+/home/svr/.npm-global/lib
+`-- @angular/cli@9.1.4 
+---
+https://angular.io/guide/ivy#speeding-up-ngcc-compilation
+In package.json...
+Don't use --create-ivy-entry-points as this will cause Node not to resolve the Ivy version of the packages correctly.
+---
+Update global
+`npm install -g @angular/cli`
+...
++ @angular/cli@10.0.1
+removed 2 packages and updated 25 packages in 61.279s
+---
+`npm i typescript`
++ typescript@3.9.6
+updated 1 package and audited 2294 packages in 16.464s
+---
+The main update in the project folder...
+`npm install @angular/cli@latest`
++ @angular/cli@10.0.1
+added 18 packages from 3 contributors, removed 2 packages, updated 15 packages and audited 2310 packages in 19.014s
+---
+`ng update @angular/core @angular/material @angular/cdk --allow-dirty --force`
+Repository is not clean. Update changes will be mixed with pre-existing changes.
+... (but still updating)
+Package "@angular/flex-layout" has an incompatible peer dependency to "@angular/cdk" (requires "^9.0.0-rc.8", would install "10.0.1").
+✖ Package install failed, see above.
+✖ Migration failed. See above for further details.
+Using: command not found
+---
+(but still package.json updated to 10.0.2)
+---
+`ng version`
+Angular CLI: 10.0.1
+Node: 12.18.1
+OS: linux x64
+
+Angular: 10.0.2
+... animations, common, compiler, compiler-cli, core, forms
+... language-service, platform-browser, platform-browser-dynamic
+... platform-server, router, service-worker
+Ivy Workspace: <error>
+
+Package                           Version
+-----------------------------------------------------------
+@angular-devkit/architect         0.900.7
+@angular-devkit/build-angular     0.900.7
+@angular-devkit/build-optimizer   0.900.7
+@angular-devkit/build-webpack     0.900.7
+@angular-devkit/core              9.0.7
+@angular-devkit/schematics        9.1.3
+@angular/cdk                      10.0.1
+@angular/cli                      10.0.1
+@angular/fire                     6.0.0
+@angular/flex-layout              9.0.0-beta.29
+@angular/material                 10.0.1
+@angular/pwa                      0.901.3
+@ngtools/webpack                  9.0.7
+@schematics/angular               9.1.3
+@schematics/update                0.1000.1
+rxjs                              6.5.5
+typescript                        3.9.6
+webpack                           4.43.0
+---
+`npm run dev`
+...
+.ngtypecheck.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig
+...(but run server, all working!)
+---
+`npm install @types/node --save-dev`
+For mudder lib in model/lib.ts require
+---
+
