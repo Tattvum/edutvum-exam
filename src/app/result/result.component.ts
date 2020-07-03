@@ -4,6 +4,7 @@ import { ExamResult } from '../model/exam-result';
 import { Lib } from '../model/lib';
 import { Marks } from 'app/model/marks';
 import { Bar } from 'app/common/chart.component';
+import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from 'app/model/answer-type';
 
 interface ResultObj {
   isOmitted: boolean,
@@ -126,15 +127,31 @@ export class ResultComponent implements OnInit {
       o.skipped, o.omitted, o.duration, o.maxTime, null,
     ]
 
+    const types: { [key: number]: number[] } = {
+      0: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+      1: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+      2: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+      3: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+      4: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+      5: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+    }
+
     this.result.questions.forEach((q, qid) => {
       let ro = this.resultObj(qid)
       addArrays(out.totals, o2a(ro))
-
+      addArrays(types[q.type], o2a(ro))
       out.rows.push(...q.tags.map(t => t.title.split(":")).map(p => ({
         type: p[0].trim(), name: p[1].trim(),
         values: o2a(ro)
       })))
     })
+
+    ANSWER_TYPES
+      .map((typ, i) => ({ name: ANSWER_TYPE_NAMES[i], arr: types[typ] }))
+      .filter(obj => obj.arr[5] > 0).forEach(obj => {
+        out.rows.push({ type: "[Type]", name: obj.name, values: obj.arr })
+      })
+
     return out
   }
 
