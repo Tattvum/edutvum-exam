@@ -63,7 +63,7 @@
   <mat-tab label="Tag Distribution">
     <div *ngIf="result">
       <app-tree-table
-        [data]="data"
+        [data]="tags"
         [(level)]="result.level"
         [(selection)]="result.selection" >
       </app-tree-table>

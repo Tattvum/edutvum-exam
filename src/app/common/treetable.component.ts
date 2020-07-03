@@ -10,7 +10,7 @@ export class TreeTableComponent implements OnInit {
 
   @Input() data = {
     cols: [
-      { name: "Marks", style: "color: red;", },
+      { name: "Marks", style: "color: red;", note: "This is a note!" },
       { name: "Total", style: "color: blue;", },
       { name: "%", style: "color: green;", format: (arr: any[]) => Math.round((arr[0] / arr[1]) * 100) },
     ],
@@ -95,6 +95,12 @@ export class TreeTableComponent implements OnInit {
     const format = this.data.cols[i].format
     if (Lib.isNil(format)) return arr[i]
     else return format(arr)
+  }
+
+  showNote(i: number): string {
+    const note = this.data.cols[i].note
+    if (Lib.isNil(note)) return ""
+    else return note
   }
 
   highlighted(row: any) {

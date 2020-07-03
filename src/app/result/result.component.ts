@@ -94,11 +94,12 @@ export class ResultComponent implements OnInit {
     return out
   }
 
-  get data() {
+  get tags() {
     const marksPercent = (arr: any[]) => Math.round((arr[2] / arr[4]) * 100) + "%"
     const timizesec = (arr: any[]) => Lib.timize(arr[8])
     const timizesectotal = (arr: any[]) => Lib.timize(arr[9])
     const timePercent = (arr: any[]) => Math.round((arr[8] / arr[9]) * 100) + "%"
+    const roundOffNote = "There could be round off errors."
 
     let out = {
       cols: [
@@ -111,8 +112,8 @@ export class ResultComponent implements OnInit {
         { name: "Skipped", style: "color: darkblue;", },
         { name: "Omitted", style: "color: red;", },
         { name: "Time", style: "color: blue;", format: timizesec },
-        { name: "Total Time", style: "color: #0AF;", format: timizesectotal },
-        { name: "Time %", style: "color: #069;", format: timePercent },
+        { name: "*Total Time", style: "color: #0AF;", format: timizesectotal, note: roundOffNote },
+        { name: "*Time %", style: "color: #069;", format: timePercent, note: roundOffNote },
       ],
       totals: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
       rows: [],

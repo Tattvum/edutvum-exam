@@ -16,7 +16,8 @@
       <th width="10%" class="left">Type</th>
       <th width="3%" class=""></th>
       <th width="35%" class="left">Name</th>
-      <th class="right" *ngFor="let col of data.cols; let i = index;" [style]="col.style">
+      <th class="right" *ngFor="let col of data.cols; let i = index;"
+          [style]="col.style" [title]="showNote(i)">
         {{ col.name }}
       </th>
     </tr>
@@ -41,7 +42,7 @@
       <td colspan="2"></td>
       <td class="left">Total</td>
       <td class="right" *ngFor="let t of data.totals; let i = index;"
-          [style]="data.cols[i].style">
+          [style]="data.cols[i].style" [title]="showNote(i)">
         {{ show(data.totals, i)}}
       </td>
     </tr>
