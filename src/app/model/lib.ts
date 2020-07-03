@@ -173,4 +173,28 @@ export class Lib {
     return dt.toISOString().replace(/-/g, '').replace(/:/g, '').replace(/\..+/, '')
   }
 
+  //----------------------------------------------------------------------------
+  //enum MyTypes { Alpha, Bravo, Charlie, Delta }
+  //Lib.enumLen(MyTypes)
+
+  public static enumLen(enumObj: Object): number {
+    return Object.values(enumObj).filter(k => typeof k !== 'number').length
+  }
+
+  public static enumNames(enumObj: Object): string[] {
+    const sz = this.enumLen(enumObj)
+    return Object.keys(enumObj).slice(-sz)
+  }
+
+  public static enumValues<E>(enumObj: Object): E[] {
+    const sz = this.enumLen(enumObj)
+    return Object.values(enumObj).slice(-sz)
+  }
+
+  public static enumK2V(enumObj: Object, key: string): string {
+    return '' + enumObj[key]
+  }
+
+  //----------------------------------------------------------------------------
+
 }

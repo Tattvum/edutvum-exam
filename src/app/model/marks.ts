@@ -1,4 +1,7 @@
 import { AnswerType } from './answer-type'
+import { Lib } from './lib'
+
+//------------------------------------------------------------------------------
 
 export enum MarkingSchemeType {
   OLD, // Old default, where NAQ is one
@@ -10,21 +13,16 @@ export enum MarkingSchemeType {
   UNKNOWN_LAST // Just tag the end?
 }
 
-export const MARKING_SCHEME_TYPES = [
-  MarkingSchemeType.OLD,
-  MarkingSchemeType.GENERAL,
-  MarkingSchemeType.NSEJS,
-  MarkingSchemeType.JEEMAIN,
-  MarkingSchemeType.NSEP,
-  MarkingSchemeType.JEEADV,
-]
+export const MARKING_SCHEME_TYPES = Lib.enumValues<MarkingSchemeType>(MarkingSchemeType)
 
-export const MARKING_SCHEME_TYPE_NAMES = MARKING_SCHEME_TYPES.map(m => MarkingSchemeType[m])
+export const MARKING_SCHEME_TYPE_NAMES = Lib.enumNames(MarkingSchemeType)
 
 export interface Marks {
   value: number
   max: number
 }
+
+//------------------------------------------------------------------------------
 
 function unique(array: number[]): number[] {
   return [...new Set(array)]
@@ -68,6 +66,7 @@ const MARKER_MAKER = [
   () => new JEEAdvMarker(),
 ]
 
+//------------------------------------------------------------------------------
 
 export abstract class Marker {
   private static markers: Marker[] = []
@@ -76,7 +75,8 @@ export abstract class Marker {
     if (marker == null) Marker.markers[scheme] = marker = MARKER_MAKER[scheme]()
     return marker
   }
-  constructor(readonly right: number, readonly wrong: number) { }
+  constructor(readonly right: number, readonly wrong: number,
+    readonly markingSchemeType: MarkingSchemeType) { }
   marks(type: AnswerType, solutions: number[], answers: number[]): Marks {
     if (!answers) answers = []
     switch (type) {
@@ -122,33 +122,28 @@ export abstract class Marker {
     if (solutions[0] < answers[0]) return nope // NAQ solution should be grater than answer (it is marks)
     return { 'value': answers[0], 'max': solutions[0] }
   }
-  abstract scheme(): MarkingSchemeType
 }
 
-export class OldMarker extends Marker {
+//------------------------------------------------------------------------------
+
+class OldMarker extends Marker {
   constructor() {
-    super(1, 0)
+    super(1, 0, MarkingSchemeType.OLD)
   }
   naq(solutions: number[], answers: number[]): Marks {
     return single(solutions, answers, 'NAQ', this.right, this.wrong)
   }
-  scheme(): MarkingSchemeType {
-    return MarkingSchemeType.OLD
+}
+
+class GeneralMarker extends Marker {
+  constructor() {
+    super(1, 0, MarkingSchemeType.GENERAL)
   }
 }
 
-export class GeneralMarker extends Marker {
+class JEEAdvMarker extends Marker {
   constructor() {
-    super(1, 0)
-  }
-  scheme(): MarkingSchemeType {
-    return MarkingSchemeType.GENERAL
-  }
-}
-
-export class JEEAdvMarker extends Marker {
-  constructor() {
-    super(3, 0)
+    super(3, 0, MarkingSchemeType.JEEADV)
   }
   mcq(solutions: number[], answers: number[]): Marks {
     return single(solutions, answers, 'MCQ', this.right, -1)
@@ -159,40 +154,35 @@ export class JEEAdvMarker extends Marker {
     if (!subset(answers, solutions)) return { 'value': answers.length, 'max': 4 }
     return { 'value': 4, 'max': 4 }
   }
-  scheme(): MarkingSchemeType {
-    return MarkingSchemeType.JEEADV
-  }
 }
 
-export class NSEJSMarker extends Marker {
+class NSEJSMarker extends Marker {
   constructor() {
-    super(3, 0)
+    super(3, 0, MarkingSchemeType.NSEJS)
   }
   mcq(solutions: number[], answers: number[]): Marks {
     return single(solutions, answers, 'MCQ', this.right, -1)
   }
-  scheme(): MarkingSchemeType {
-    return MarkingSchemeType.NSEJS
-  }
 }
 
-export class JEEMainMarker extends Marker {
+class NSEPMarker extends Marker {
   constructor() {
-    super(4, 0)
+    super(3, 0, MarkingSchemeType.NSEP)
   }
   mcq(solutions: number[], answers: number[]): Marks {
     return single(solutions, answers, 'MCQ', this.right, -1)
   }
-  scheme(): MarkingSchemeType {
-    return MarkingSchemeType.JEEMAIN
-  }
-}
-
-export class NSEPMarker extends NSEJSMarker {
   maq(solutions: number[], answers: number[]): Marks {
     return { 'value': maqAllOrNothing(solutions, answers) ? 6 : 0, 'max': 6 }
   }
-  scheme(): MarkingSchemeType {
-    return MarkingSchemeType.NSEP
+}
+
+class JEEMainMarker extends Marker {
+  constructor() {
+    super(4, 0, MarkingSchemeType.JEEMAIN)
+  }
+  mcq(solutions: number[], answers: number[]): Marks {
+    return single(solutions, answers, 'MCQ', this.right, -1)
   }
 }
+

@@ -12,11 +12,11 @@ let createE = (questions: Question[], title = 'TEST E...', id = '00'): Exam => {
 }
 let createR = (questions: Question[], title = 'TEST E...', id = '00', answers: number[][] = []): ExamResult => {
   let e = createE(questions, title, id)
-  return new ExamResult(e.id, e.title, new Date(), e, answers)
+  return new ExamResult(e.id, e.title, new Date(), e, false, answers)
 }
 let createR2 = (questions: Question[], answers: number[][], durations: number[] = []): ExamResult => {
   let e = createE(questions)
-  return new ExamResult(e.id, e.title, new Date(), e, answers, null, null, durations)
+  return new ExamResult(e.id, e.title, new Date(), e, false, answers, null, null, durations)
 }
 
 let tfq = () => createQ(AnswerType.TFQ, ['C1', 'C2'], [0])
@@ -52,7 +52,7 @@ let create1QR = (type: AnswerType, choices: string[], sols: number[], ans: numbe
   status = ExamStatus.PENDING): ExamResult => {
   let q = [new Question('00', 'TEST Q...', type, choices, sols)]
   let e = new Exam('00', 'TEST E', q)
-  return new ExamResult(e.id, e.title, new Date(), e, [ans], status)
+  return new ExamResult(e.id, e.title, new Date(), e, false, [ans], status)
 }
 
 describe('ExamResult1:', () => {
@@ -272,7 +272,7 @@ describe('ExamResult2:', () => {
   describe('ExamResult - marks :', () => {
     let er = (q: Question, ans: number[], ms: MarkingSchemeType = MarkingSchemeType.GENERAL) => {
       let e = new Exam('00', 'TEST E', [q], new Date(), "", "", ExamStatus.DONE, ms)
-      return new ExamResult(e.id, e.title, new Date(), e, [ans], ExamStatus.DONE)
+      return new ExamResult(e.id, e.title, new Date(), e, false, [ans], ExamStatus.DONE)
     }
     let JA = MarkingSchemeType.JEEADV
 

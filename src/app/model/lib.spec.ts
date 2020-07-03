@@ -134,5 +134,39 @@ describe('dtstrISO test', () => {
   })
 })
 
+describe('enum tests', () => {
+  enum MyType { Alpha, Bravo, Charlie }
+  enum MyTypeNum { Alpha, Bravo = 23, Charlie }
+  enum MyTypeStr { Alpha = "One", Bravo = "Two", Charlie = "Three" }
+  enum MyTypeHetro { Alpha, Bravo = 23, Charlie = "Three" }
+
+  it('enumLen', () => {
+    expect(Lib.enumLen(MyType)).toBe(3)
+    expect(Lib.enumLen(MyTypeNum)).toBe(3)
+    expect(Lib.enumLen(MyTypeStr)).toBe(3)
+    expect(Lib.enumLen(MyTypeHetro)).toBe(3)
+  })
+  it('enumNames', () => {
+    expect(Lib.enumNames(MyType).length).toBe(3)
+    expect(Lib.enumNames(MyType)[0]).toBe('Alpha')
+    expect(Lib.enumNames(MyTypeStr).length).toBe(3)
+    expect(Lib.enumNames(MyTypeStr)[1]).toBe('Bravo')
+    expect(Lib.enumNames(MyTypeHetro).length).toBe(3)
+    expect(Lib.enumNames(MyTypeHetro)[2]).toBe('Charlie')
+  })
+  it('enumValues', () => {
+    expect(Lib.enumValues<MyType>(MyType)[0]).toBe(MyType.Alpha)
+    expect(Lib.enumValues<MyTypeNum>(MyTypeNum)[1]).toBe(MyTypeNum.Bravo)
+    expect(Lib.enumValues<MyTypeStr>(MyTypeStr)[2]).toBe(MyTypeStr.Charlie)
+    expect(Lib.enumValues<MyTypeHetro>(MyTypeHetro)[2]).toBe(MyTypeHetro.Charlie)
+  })
+  it('enumK2V', () => {
+    expect(Lib.enumK2V(MyType, 'Charlie')).toBe('2')
+    expect(Lib.enumK2V(MyTypeNum, 'Charlie')).toBe('24')
+    expect(Lib.enumK2V(MyTypeStr, 'Charlie')).toBe('Three')
+    expect(Lib.enumK2V(MyTypeHetro, 'Charlie')).toBe('Three')
+  })
+})
+
 //To run this test file alone
 //npm run test -- --main src/app/model/lib.spec.ts

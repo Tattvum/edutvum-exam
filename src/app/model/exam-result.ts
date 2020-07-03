@@ -5,7 +5,7 @@ import { Lib } from '../model/lib';
 import { CommentList, Comment } from './comment';
 import { EMPTY_USER, User } from './user';
 import { Score } from './score';
-import { GeneralMarker, Marker, MarkingSchemeType, Marks } from './marks';
+import { Marker, MarkingSchemeType, Marks } from './marks';
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
