@@ -79,7 +79,7 @@ export class LocalFirebaseAPI implements AbstractFirebaseAPI {
   constructor(@Inject(EMULATOR_CONFIG) private config: EmulatorConfig, private http: HttpClient) { }
 
   private emurl(url: string): string {
-    let out = this.config.HOST + this.config.DB + "/" + url + ".json"
+    let out = this.config.HOST + this.config.DB + "/" + url + ".json?ns=edutvum-exam"
     console.log(out)
     return out
   }
