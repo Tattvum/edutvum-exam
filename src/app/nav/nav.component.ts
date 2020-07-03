@@ -165,6 +165,10 @@ export class NavComponent implements OnInit {
     this.context.editExamMaxDuration(value, this.result.exam.id)
   }
 
+  get markingSchemes(): string[] {
+    return MARKING_SCHEME_TYPE_NAMES
+  }
+
   get markingScheme(): string {
     return MARKING_SCHEME_TYPE_NAMES[this.result.exam.markingScheme]
   }

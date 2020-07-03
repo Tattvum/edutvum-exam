@@ -10,7 +10,7 @@ export enum MarkingSchemeType {
   JEEMAIN, // All 4 marks, Almost all are MCQ, wrong -1
   NSEP, // Like BITSAT and NSEJS, but for MAQ all corect +6, even one wrong 0
   JEEADV, // mcq +3/-1, numerical +3/0, maq +4**/-2
-  UNKNOWN_LAST // Just tag the end?
+  JEEADV2015, //Same as JEEADV, but ncq is +4 instead of +3
 }
 
 export const MARKING_SCHEME_TYPES = Lib.enumValues<MarkingSchemeType>(MarkingSchemeType)
@@ -64,6 +64,7 @@ const MARKER_MAKER = [
   () => new JEEMainMarker(),
   () => new NSEPMarker(),
   () => new JEEAdvMarker(),
+  () => new JEEAdv2015Marker(),
 ]
 
 //------------------------------------------------------------------------------
@@ -153,6 +154,24 @@ class JEEAdvMarker extends Marker {
     if (!subset(solutions, answers)) return { 'value': -2, 'max': 4 }
     if (!subset(answers, solutions)) return { 'value': answers.length, 'max': 4 }
     return { 'value': 4, 'max': 4 }
+  }
+}
+
+class JEEAdv2015Marker extends Marker {
+  constructor() {
+    super(3, 0, MarkingSchemeType.JEEADV2015)
+  }
+  mcq(solutions: number[], answers: number[]): Marks {
+    return single(solutions, answers, 'MCQ', this.right, -1)
+  }
+  maq(solutions: number[], answers: number[]): Marks {
+    super.maq(solutions, answers)// ONLY for checks
+    if (!subset(solutions, answers)) return { 'value': -2, 'max': 4 }
+    if (!subset(answers, solutions)) return { 'value': answers.length, 'max': 4 }
+    return { 'value': 4, 'max': 4 }
+  }
+  ncq(solutions: number[], answers: number[]): Marks {
+    return single(solutions, answers, 'NCQ', +4, 0)
   }
 }
 
