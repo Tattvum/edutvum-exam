@@ -101,6 +101,7 @@ export class ResultComponent implements OnInit {
     const timizesectotal = (arr: any[]) => Lib.timize(arr[9])
     const timePercent = (arr: any[]) => Math.round((arr[8] / arr[9]) * 100) + "%"
     const roundOffNote = "There could be round off errors."
+    const arrdef = [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null]
 
     let out = {
       cols: [
@@ -116,7 +117,7 @@ export class ResultComponent implements OnInit {
         { name: "*Total Time", style: "color: #0AF;", format: timizesectotal, note: roundOffNote },
         { name: "*Time %", style: "color: #069;", format: timePercent, note: roundOffNote },
       ],
-      totals: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
+      totals: [...arrdef],
       rows: [],
     }
 
@@ -127,19 +128,13 @@ export class ResultComponent implements OnInit {
       o.skipped, o.omitted, o.duration, o.maxTime, null,
     ]
 
-    const types: { [key: number]: number[] } = {
-      0: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
-      1: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
-      2: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
-      3: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
-      4: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
-      5: [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null],
-    }
+    const qtypes: { [key: number]: number[] } = {}
+    ANSWER_TYPES.forEach(type => qtypes[type] = [...arrdef])
 
     this.result.questions.forEach((q, qid) => {
       let ro = this.resultObj(qid)
       addArrays(out.totals, o2a(ro))
-      addArrays(types[q.type], o2a(ro))
+      addArrays(qtypes[q.type], o2a(ro))
       out.rows.push(...q.tags.map(t => t.title.split(":")).map(p => ({
         type: p[0].trim(), name: p[1].trim(),
         values: o2a(ro)
@@ -147,9 +142,9 @@ export class ResultComponent implements OnInit {
     })
 
     ANSWER_TYPES
-      .map((typ, i) => ({ name: ANSWER_TYPE_NAMES[i], arr: types[typ] }))
+      .map((typ, i) => ({ name: ANSWER_TYPE_NAMES[i], arr: qtypes[typ] }))
       .filter(obj => obj.arr[5] > 0).forEach(obj => {
-        out.rows.push({ type: "[Type]", name: obj.name, values: obj.arr })
+        out.rows.push({ type: ".Type", name: obj.name, values: obj.arr })
       })
 
     return out
