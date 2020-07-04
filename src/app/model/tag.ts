@@ -10,7 +10,7 @@ export class Tag {
   public static parse(title: string): ParseData {
     let out = { type: "", parts: [], paths: [] }
     let parts = title.split(":")
-    Lib.failif(parts.length !== 2, "ERROR: Should have exactly 1 colon (:)")
+    Lib.failif(parts.length !== 2, "ERROR: Should have exactly 1 colon (:)", title)
     out.type = parts[0].trim()
     out.parts = parts[1].split("/").map(p => p.trim())
     return out

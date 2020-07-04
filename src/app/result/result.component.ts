@@ -5,6 +5,8 @@ import { Lib } from '../model/lib';
 import { Marks } from 'app/model/marks';
 import { Bar } from 'app/common/chart.component';
 import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from 'app/model/answer-type';
+import { Question } from 'app/model/question';
+import { Tag } from 'app/model/tag';
 
 interface ResultObj {
   isOmitted: boolean,
@@ -77,6 +79,15 @@ export class ResultComponent implements OnInit {
     return color
   }
 
+  private questionIsSelected(prefix: string, q: Question) {
+    const parseData = Tag.parse(prefix)
+    if (parseData.type === '.Type') {
+      return ANSWER_TYPE_NAMES[q.type] === parseData.parts[0]
+    } else {
+      return q.tags.filter(t => t.title.startsWith(prefix)).length > 0
+    }
+  }
+
   get bars() {
     let out: Bar[] = []
     this.result.questions.forEach((q, qid) => {
@@ -89,7 +100,7 @@ export class ResultComponent implements OnInit {
         color: this.data2color(ro),
         flags: () => ["" + score, Lib.timize(ro.duration), "" + (qid + 1)],
         action: () => this.router.navigate(['/question', this.result.id, qid]),
-        selected: q.tags.filter(t => t.title.startsWith(prefix)).length > 0
+        selected: this.questionIsSelected(prefix, q)
       })
     })
     return out
