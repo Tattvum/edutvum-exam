@@ -7,6 +7,18 @@ export interface ParseData {
 
 export class Tag {
 
+  public static pathParts(path: string): string[] {
+    return path.split("/").map(p => p.trim())
+  }
+
+  public static partsPaths(parts: string[]) {
+    return parts.map((_, i, arr) => arr.slice(0, i + 1).join(" / "))
+  }
+
+  public static pathPaths(path: string) {
+    return this.partsPaths(Tag.pathParts(path))
+  }
+
   public static parse(title: string): ParseData {
     let out = { type: "", parts: [], paths: [] }
     let parts = title.split(":")

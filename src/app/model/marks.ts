@@ -127,7 +127,8 @@ export abstract class Marker {
 
 //------------------------------------------------------------------------------
 
-class OldMarker extends Marker {
+//NOTE: Exported only for testing
+export class OldMarker extends Marker {
   constructor() {
     super(1, 0, MarkingSchemeType.OLD)
   }
@@ -136,13 +137,15 @@ class OldMarker extends Marker {
   }
 }
 
-class GeneralMarker extends Marker {
+//NOTE: Exported only for testing
+export class GeneralMarker extends Marker {
   constructor() {
     super(1, 0, MarkingSchemeType.GENERAL)
   }
 }
 
-class JEEAdvMarker extends Marker {
+//NOTE: Exported only for testing
+export class JEEAdvMarker extends Marker {
   constructor() {
     super(3, 0, MarkingSchemeType.JEEADV)
   }
@@ -157,7 +160,8 @@ class JEEAdvMarker extends Marker {
   }
 }
 
-class JEEAdv2015Marker extends Marker {
+//NOTE: Exported only for testing
+export class JEEAdv2015Marker extends Marker {
   constructor() {
     super(3, 0, MarkingSchemeType.JEEADV2015)
   }
@@ -175,7 +179,8 @@ class JEEAdv2015Marker extends Marker {
   }
 }
 
-class NSEJSMarker extends Marker {
+//NOTE: Exported only for testing
+export class NSEJSMarker extends Marker {
   constructor() {
     super(3, 0, MarkingSchemeType.NSEJS)
   }
@@ -184,7 +189,8 @@ class NSEJSMarker extends Marker {
   }
 }
 
-class NSEPMarker extends Marker {
+//NOTE: Exported only for testing
+export class NSEPMarker extends Marker {
   constructor() {
     super(3, 0, MarkingSchemeType.NSEP)
   }
@@ -196,7 +202,8 @@ class NSEPMarker extends Marker {
   }
 }
 
-class JEEMainMarker extends Marker {
+//NOTE: Exported only for testing
+export class JEEMainMarker extends Marker {
   constructor() {
     super(4, 0, MarkingSchemeType.JEEMAIN)
   }

@@ -1,5 +1,5 @@
 
-import {of as observableOf,  Observable } from 'rxjs';
+import { of as observableOf, Observable } from 'rxjs';
 import {
   ComponentFixture, TestBed, getTestBed,
   async, fakeAsync, tick, flushMicrotasks,
@@ -14,9 +14,9 @@ import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { DataService } from '../model/data.service';
 import { GeneralContext, GeneralContextImpl } from '../model/general-context';
 import { NavComponent } from './nav.component';
-import { EMPTY_EXAM, Exam } from 'app/model/exam';
-import { EMPTY_QUESTION } from 'app/model/question';
-import { Lib, KEY } from 'app/model/lib';
+import { EMPTY_EXAM, Exam } from '../model/exam';
+import { EMPTY_QUESTION } from '../model/question';
+import { Lib, KEY } from '../model/lib';
 
 // ----------------------------------------------------------------------------
 // Mocks

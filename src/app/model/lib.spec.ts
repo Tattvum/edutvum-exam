@@ -52,6 +52,18 @@ describe('Lib tests:', () => {
     expect(Lib.isNil(null)).toBeTruthy()
     expect(Lib.isNil(undefined)).toBeTruthy()
   })
+  it('isNum', () => {
+    expect(Lib.isNum(0)).toBeTruthy()
+    expect(Lib.isNum(23)).toBeTruthy()
+    expect(Lib.isNum(-7)).toBeTruthy()
+    expect(Lib.isNum("Bingo")).toBeFalsy()
+    expect(Lib.isNum("")).toBeFalsy()
+    expect(Lib.isNum({ name: "Bingo" })).toBeFalsy()
+    expect(Lib.isNum({})).toBeFalsy()
+    expect(Lib.isNum(["Bingo"])).toBeFalsy()
+    expect(Lib.isNum([])).toBeFalsy()
+    expect(Lib.isNum(null)).toBeFalsy()
+  })
 
 })
 
@@ -165,6 +177,15 @@ describe('enum tests', () => {
     expect(Lib.enumK2V(MyTypeNum, 'Charlie')).toBe('24')
     expect(Lib.enumK2V(MyTypeStr, 'Charlie')).toBe('Three')
     expect(Lib.enumK2V(MyTypeHetro, 'Charlie')).toBe('Three')
+  })
+})
+
+describe('Lib', () => {
+  it('addArrays', () => {
+    expect(Lib.addArrays([2, null, 3], [1, 1, 1])).toEqual([3, null, 4])
+    expect(Lib.addArrays([2, null, 3], [1, 1729, 1])).toEqual([3, null, 4])
+    expect(Lib.addArrays([2, 3, 4], [1, 2, 3])).toEqual([3, 5, 7])
+    expect(Lib.addArrays([2, 3, "bingo", 4], [1, 2, null, 3])).toEqual([3, 5, "bingo", 7])
   })
 })
 

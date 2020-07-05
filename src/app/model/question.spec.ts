@@ -1,6 +1,6 @@
 import { AnswerType } from './answer-type';
 import { Question } from './question';
-import { QuestionGroup } from 'app/model/question-group';
+import { QuestionGroup } from '../model/question-group';
 
 describe('Question - declaration tests:', () => {
   let choices0: string[] = []

@@ -89,6 +89,10 @@ export class Lib {
     return obj == undefined
   }
 
+  static isNum(obj: any): boolean {
+    return typeof (obj) === "number"
+  }
+
   // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
   static isPlainKey(ev: KeyboardEvent, k: KEY): boolean {
     return ev.key === k && ev.metaKey === false
@@ -196,5 +200,9 @@ export class Lib {
   }
 
   //----------------------------------------------------------------------------
+
+  public static addArrays(d: any[], s: any[]): any[] {
+    return d.map((v, i, arr) => Lib.isNum(v) ? arr[i] += s[i] : arr[i])
+  }
 
 }
