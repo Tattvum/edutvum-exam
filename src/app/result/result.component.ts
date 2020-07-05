@@ -2,11 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ExamResult } from '../model/exam-result';
 import { Lib } from '../model/lib';
-import { Marks } from 'app/model/marks';
-import { Bar } from 'app/common/chart.component';
-import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from 'app/model/answer-type';
-import { Question } from 'app/model/question';
-import { Tag } from 'app/model/tag';
+import { Bar } from '../common/chart.component';
+import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
+import { Question } from '../model/question';
+import { Tag } from '../model/tag';
 
 interface ResultObj {
   isOmitted: boolean,
@@ -132,8 +131,6 @@ export class ResultComponent implements OnInit {
       rows: [],
     }
 
-    let isNum = (o: any) => typeof (o) === "number"
-    let addArrays = (d: any[], s: any[]) => d.forEach((v, i) => { if (isNum(v)) d[i] += s[i] })
     let o2a = (o: ResultObj) => [
       o.sure, o.guess, o.scored, null, o.max, o.count,
       o.skipped, o.omitted, o.duration, o.maxTime, null,
@@ -144,11 +141,10 @@ export class ResultComponent implements OnInit {
 
     this.result.questions.forEach((q, qid) => {
       let ro = this.resultObj(qid)
-      addArrays(out.totals, o2a(ro))
-      addArrays(qtypes[q.type], o2a(ro))
+      Lib.addArrays(out.totals, o2a(ro))
+      Lib.addArrays(qtypes[q.type], o2a(ro))
       out.rows.push(...q.tags.map(t => t.title.split(":")).map(p => ({
-        type: p[0].trim(), name: p[1].trim(),
-        values: o2a(ro)
+        type: p[0].trim(), name: p[1].trim(), values: o2a(ro), node: q.id,
       })))
     })
 

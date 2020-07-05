@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Lib } from '../model/lib';
+import { Tag } from '../model/tag';
 
 @Component({
   selector: 'app-tree-table',
@@ -16,15 +17,15 @@ export class TreeTableComponent implements OnInit {
     ],
     totals: [4, 16, null],
     rows: [
-      { type: "Topic", name: "Chemistry / Organic / Amines", values: [1, 10, null], node: "" },
-      { type: "Topic", name: "Mathematics / Calculus / Integration", values: [4, 10, null] },
-      { type: "Topic", name: "Mathematics / Calculus / Differentiation", values: [5, 10, null] },
-      { type: "Topic", name: "Chemistry / Organic / Alkanes", values: [1, 10, null] },
-      { type: "Difficulty", name: "Easy", values: [1, 10, null] },
-      { type: "Topic", name: "Chemistry / InOrganic / s-Block Elements", values: [1, 10, null] },
-      { type: "Topic", name: "Mathematics / Vectors", values: [2, 10, null] },
-      { type: "Difficulty", name: "Hard", values: [1, 10, null] },
-      { type: "Difficulty", name: "Medium", values: [1, 10, null] },
+      { type: "Topic", name: "Chemistry / Organic / Amines", values: [1, 10, "percent"] },
+      { type: "Topic", name: "Mathematics / Calculus / Integration", values: [4, 10, "percent"] },
+      { type: "Topic", name: "Mathematics / Calculus / Differentiation", values: [5, 10, "percent"] },
+      { type: "Topic", name: "Chemistry / Organic / Alkanes", values: [1, 10, "percent"] },
+      { type: "Difficulty", name: "Easy", values: [1, 10, "percent"] },
+      { type: "Topic", name: "Chemistry / InOrganic / s-Block Elements", values: [1, 10, "percent"] },
+      { type: "Topic", name: "Mathematics / Vectors", values: [2, 10, "percent"] },
+      { type: "Difficulty", name: "Hard", values: [1, 10, "percent"] },
+      { type: "Difficulty", name: "Medium", values: [1, 10, "percent"] },
     ],
   }
 
@@ -55,25 +56,36 @@ export class TreeTableComponent implements OnInit {
   cache = {}
   maxLevels = 1
 
+  makeArrZeros(arr: any[]): any[] {
+    return [...arr].map(v => typeof (v) === "number" ? 0 : v)
+  }
+
+  noteMaxLen(len: number): number {
+    if (len > this.maxLevels) this.maxLevels = len
+    return this.maxLevels
+  }
+
   ngOnInit() {
-    const zeros = [...this.data.totals].map(v => Lib.isNum(v) ? 0 : v)
+    console.log(this.data)
+    const zeros = this.makeArrZeros(this.data.totals)
     this.data.rows.forEach(r => {
       let parts = r.name.split("/").map(p => p.trim())
       let len = parts.length
       if (len > this.maxLevels) this.maxLevels = len
-      let paths = parts.map((_, i, arr) => [i + 1, arr.slice(0, i + 1).join(" / ")])
+      let paths = Tag.partsPaths(parts)
       paths.forEach(p => {
         let key: string = r.type + " : " + p[1]
         if (!(key in this.cache)) this.cache[key] = {
-          key: key, levels: p[0], type: r.type, name: p[1], values: [...zeros], node: "",
+          key: key,
+          levels: p[0],
+          ...r,
+          name: p[1],
+          values: [...zeros],
         }
-        if (this.cache[key].node !== r.node) {
-          Lib.addArrays(this.cache[key].values, r.values)
-          this.cache[key].node = r.node
-        }
+        Lib.addArrays(this.cache[key].values, r.values)
       })
     })
-    //console.log("onInit")
+    console.log(this.cache)
     this.selection = this._selection
     if (Lib.isNil(this.level)) this.level = 1
   }
@@ -108,7 +120,7 @@ export class TreeTableComponent implements OnInit {
   }
 
   clearSelections() {
-    this.selectionChange.emit("JUNK : u7JqNwfU3W");
+    this.selectionChange.emit("::");
   }
 
   hasSelections(): boolean {

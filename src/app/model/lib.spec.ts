@@ -189,5 +189,31 @@ describe('Lib', () => {
   })
 })
 
+describe('Lib', () => {
+  const cache = { "one": { key: "one", values: [4, 5] }, }
+  const defval = { key: "", values: [1, 2] }
+  const defvalgen = (k) => ({ ...defval, key: k })
+  it('getKinC', () => {
+    expect(Lib.getKinC("beep", cache, defvalgen)).toEqual({ key: "beep", values: [1, 2] })
+    expect(Lib.getKinC("beep", cache, defvalgen)).toEqual({ key: "beep", values: [1, 2] })
+    expect(Lib.getKinC("one", cache, defvalgen)).toEqual({ key: "one", values: [4, 5] })
+  })
+})
+
+describe('Lib', () => {
+  it('clone', () => {
+    const obj0 = { values: [4, 5] }
+    expect(Lib.clone(obj0)).toEqual({ values: [4, 5] })
+    const obj1 = { ...obj0 }
+    expect(Lib.clone(obj1)).toEqual(obj0)
+    obj1.values[0] = 10
+    expect(Lib.clone(obj1)).toEqual(obj0)//OOPS! obj1 not a deep clone
+    const obj2 = { values: [4, 5] }
+    const obj3 = Lib.clone(obj2)
+    obj3.values[0] = 10
+    expect(Lib.clone(obj3)).not.toEqual(obj2)//Deep clone, if obj is serializable
+  })
+})
+
 //To run this test file alone
 //npm run test -- --main src/app/model/lib.spec.ts

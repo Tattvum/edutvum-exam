@@ -17,5 +17,6 @@ export const environment = {
   emulatorConfig: {
     HOST: "http://localhost:9000/",
     DB: "xxx"
-  }
+  },
+  testComponent: "----",
 };

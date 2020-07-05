@@ -201,8 +201,18 @@ export class Lib {
 
   //----------------------------------------------------------------------------
 
-  public static addArrays(d: any[], s: any[]): any[] {
-    return d.map((v, i, arr) => Lib.isNum(v) ? arr[i] += s[i] : arr[i])
+  public static addArrays(dst: any[], src: any[]): any[] {
+    return dst.map((v, i, arr) => Lib.isNum(v) ? arr[i] += src[i] : arr[i])
+  }
+
+  public static getKinC<T>(key: string, cache: { [key: string]: T }, defval: (k: string) => T) {
+    let v = cache[key]
+    if (!v) v = cache[key] = defval(key)
+    return v
+  }
+
+  public static clone(obj: any): any {
+    return JSON.parse(JSON.stringify(obj))
   }
 
 }
