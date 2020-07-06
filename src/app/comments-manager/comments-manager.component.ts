@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import * as moment from 'moment';
-import { CommentList } from 'app/model/comment';
+import { CommentList } from '../model/comment';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
-import { GeneralContext } from 'app/model/general-context';
-import { DataService } from 'app/model/data.service';
+import { GeneralContext } from '../model/general-context';
+import { DataService } from '../model/data.service';
 
 @Component({
   selector: 'app-comments-manager',

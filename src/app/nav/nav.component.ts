@@ -8,8 +8,8 @@ import { ExamResult } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { Lib, KEY } from '../model/lib';
 
-import { MARKING_SCHEME_TYPE_NAMES, MarkingSchemeType } from 'app/model/marks';
-import { Question, EMPTY_QUESTION } from 'app/model/question';
+import { MARKING_SCHEME_TYPE_NAMES, MarkingSchemeType } from '../model/marks';
+import { Question, EMPTY_QUESTION } from '../model/question';
 
 @Component({
   selector: 'app-nav',

@@ -6,7 +6,7 @@ import { Bar } from '../common/chart.component';
 import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
 import { Question } from '../model/question';
 import { Tag } from '../model/tag';
-import { TreeTableData } from 'app/common/treetable.component';
+import { TreeTableData } from '../common/treetable.component';
 
 interface ResultObj {
   isOmitted: boolean,

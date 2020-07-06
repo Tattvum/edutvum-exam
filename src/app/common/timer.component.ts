@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Lib } from 'app/model/lib';
+import { Lib } from '../model/lib';
 
 @Component({
   selector: 'app-timer',

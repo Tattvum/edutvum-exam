@@ -1,6 +1,6 @@
 import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef, HostListener, OnInit } from '@angular/core'
-import { DataService, UploaderAPI } from 'app/model/data.service'
-import { Upload } from 'app/model/upload'
+import { DataService, UploaderAPI } from '../model/data.service'
+import { Upload } from '../model/upload'
 import { MatDialog } from '@angular/material/dialog'
 import { Overlay } from '@angular/cdk/overlay'
 

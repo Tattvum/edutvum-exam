@@ -9,8 +9,8 @@ import { Question } from './question';
 import { Exam } from './exam';
 import { User, UserRole } from './user';
 import { ExamResult } from './exam-result';
-import { QuestionGroup } from 'app/model/question-group';
-import { Comment } from 'app/model/comment';
+import { QuestionGroup } from '../model/question-group';
+import { Comment } from '../model/comment';
 import { Tag } from './tag';
 import { Chart } from './chart';
 

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DataService } from '../model/data.service';
 import { Lib } from '../model/lib';
-import { EMPTY_EXAM_RESULT, ExamResult } from 'app/model/exam-result';
-import { Question } from 'app/model/question';
-import { ExamStatus } from 'app/model/exam';
-import { AnswerType } from 'app/model/answer-type';
+import { EMPTY_EXAM_RESULT, ExamResult } from '../model/exam-result';
+import { Question } from '../model/question';
+import { ExamStatus } from '../model/exam';
+import { AnswerType } from '../model/answer-type';
 
 @Component({
   selector: 'app-exam',

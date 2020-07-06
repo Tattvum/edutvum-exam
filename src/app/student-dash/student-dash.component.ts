@@ -9,7 +9,7 @@ import { DataService } from '../model/data.service';
 import { Lib } from '../model/lib';
 
 import { trigger, transition, style, state, animate } from '@angular/animations';
-import { GeneralContext } from 'app/model/general-context';
+import { GeneralContext } from '../model/general-context';
 
 @Component({
   selector: 'app-student-dash',

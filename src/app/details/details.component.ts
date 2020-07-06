@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DataService, DetailsDisplayContext } from '../model/data.service';
 import { Question } from '../model/question';
-import { ExamResult } from 'app/model/exam-result';
+import { ExamResult } from '../model/exam-result';
 
 @Component({
   selector: 'app-details',

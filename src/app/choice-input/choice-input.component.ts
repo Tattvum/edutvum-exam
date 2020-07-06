@@ -3,9 +3,9 @@ import { DataService, ChoiceInputDisplayContext } from '../model/data.service';
 import { AnswerType, ANSWER_TYPE_NAMES, ANSWER_TYPES } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
-import { GeneralContext } from 'app/model/general-context';
-import { ExamStatus } from 'app/model/exam';
-import { MarkingSchemeType } from 'app/model/marks';
+import { GeneralContext } from '../model/general-context';
+import { ExamStatus } from '../model/exam';
+import { MarkingSchemeType } from '../model/marks';
 
 declare var MathJax: {
   Hub: {

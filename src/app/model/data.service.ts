@@ -10,11 +10,11 @@ import { Question } from './question';
 import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
 import { User, UserRole, EMPTY_USER } from './user';
-import { AnswerType } from 'app/model/answer-type';
-import { GeneralContext } from 'app/model/general-context';
-import { QuestionGroup } from 'app/model/question-group';
-import { Comment } from 'app/model/comment';
-import { Chart } from 'app/model/chart';
+import { AnswerType } from '../model/answer-type';
+import { GeneralContext } from '../model/general-context';
+import { QuestionGroup } from '../model/question-group';
+import { Comment } from '../model/comment';
+import { Chart } from '../model/chart';
 import { Tag } from './tag';
 import { Upload } from './upload';
 

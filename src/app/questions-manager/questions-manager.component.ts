@@ -1,9 +1,9 @@
 import { Component, Input, HostListener, Output, EventEmitter } from '@angular/core';
 import { ExamResult } from '../model/exam-result';
 import { Router } from '@angular/router';
-import { Lib, KEY } from 'app/model/lib';
-import { GeneralContext } from 'app/model/general-context';
-import { DataService, QuestionsManagerDisplayContext } from 'app/model/data.service';
+import { Lib, KEY } from '../model/lib';
+import { GeneralContext } from '../model/general-context';
+import { DataService, QuestionsManagerDisplayContext } from '../model/data.service';
 
 @Component({
   selector: 'app-questions-manager',

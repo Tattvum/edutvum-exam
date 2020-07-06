@@ -12,7 +12,7 @@ import { Question } from './question';
 import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
 import { User, UserRole } from './user';
-import { QuestionGroup } from 'app/model/question-group';
+import { QuestionGroup } from '../model/question-group';
 import { CommentList, Comment } from './comment';
 import { MarkingSchemeType } from './marks';
 import { Tag } from './tag';
