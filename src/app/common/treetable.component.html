@@ -12,34 +12,29 @@
 
   <table id="report" class="table table-bordered" style="width: 90%;">
     <tr class="maroon shade">
-      <!-- <th width="3%" class=""></th> -->
-      <th width="10%" class="left">Type</th>
       <th width="3%" class=""></th>
-      <th width="35%" class="left">Name</th>
+      <th width="45%" class="left">Tag</th>
       <th class="right" *ngFor="let col of data.cols; let i = index;"
           [style]="col.style" [title]="showNote(i)">
         {{ col.name }}
       </th>
     </tr>
+
     <tr *ngFor="let row of filteredRows" class="highlight" (click)="highlighted(row)">
-      <!-- <td [title]="row.levels" >
-        <span class="glyphicon glyphicon-plus glyph-ext"></span>
-      </td> -->
-      <td class="left" [class.selected]="row.selected">{{ row.type }}</td>
       <td>
         <span class="glyphicon"
           [class.selected]="row.selected"
           [class.glyphicon-bookmark]="row.selected"></span>
       </td>
-      <td class="left bold" [class.selected]="row.selected">{{ row.name }}</td>
+      <td class="left bold" [class.selected]="row.selected">{{ row.tag }}</td>
       <td class="right" *ngFor="let rv of row.values; let i = index;"
           [style]="data.cols[i].style">
         {{ show(row.values, i)}}
       </td>
     </tr>
+
     <tr class="shade maroon">
-      <!-- <td colspan="3"></td> -->
-      <td colspan="2"></td>
+      <td>.</td>
       <td class="left">Total</td>
       <td class="right" *ngFor="let t of data.totals; let i = index;"
           [style]="data.cols[i].style" [title]="showNote(i)">
@@ -47,4 +42,5 @@
       </td>
     </tr>
   </table>
+
 </div>

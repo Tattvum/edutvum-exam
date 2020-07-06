@@ -1,6 +1,25 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Lib } from '../model/lib';
 
+export interface TTCol {
+  name: string
+  style?: string
+  note?: string
+  format?: (arr: number[]) => string
+}
+
+export interface TTRow {
+  tag: string
+  values: number[]
+  node?: string
+}
+
+export interface TreeTableData {
+  cols: TTCol[]
+  totals: number[]
+  rows: TTRow[]
+}
+
 @Component({
   selector: 'app-tree-table',
   templateUrl: './treetable.component.html',
@@ -8,25 +27,7 @@ import { Lib } from '../model/lib';
 })
 export class TreeTableComponent implements OnInit {
 
-  @Input() data = {
-    cols: [
-      { name: "Marks", style: "color: red;", note: "This is a note!" },
-      { name: "Total", style: "color: blue;", },
-      { name: "%", style: "color: green;", format: (arr: any[]) => Math.round((arr[0] / arr[1]) * 100) },
-    ],
-    totals: [4, 16, null],
-    rows: [
-      { type: "Topic", name: "Chemistry / Organic / Amines", values: [1, 10, null], node: "" },
-      { type: "Topic", name: "Mathematics / Calculus / Integration", values: [4, 10, null] },
-      { type: "Topic", name: "Mathematics / Calculus / Differentiation", values: [5, 10, null] },
-      { type: "Topic", name: "Chemistry / Organic / Alkanes", values: [1, 10, null] },
-      { type: "Difficulty", name: "Easy", values: [1, 10, null] },
-      { type: "Topic", name: "Chemistry / InOrganic / s-Block Elements", values: [1, 10, null] },
-      { type: "Topic", name: "Mathematics / Vectors", values: [2, 10, null] },
-      { type: "Difficulty", name: "Hard", values: [1, 10, null] },
-      { type: "Difficulty", name: "Medium", values: [1, 10, null] },
-    ],
-  }
+  @Input() data: TreeTableData
 
   private _selection: string
   @Output() selectionChange: EventEmitter<string> = new EventEmitter<string>();
@@ -58,14 +59,14 @@ export class TreeTableComponent implements OnInit {
   ngOnInit() {
     const zeros = [...this.data.totals].map(v => Lib.isNum(v) ? 0 : v)
     this.data.rows.forEach(r => {
-      let parts = r.name.split("/").map(p => p.trim())
+      let parts = r.tag.split("/").map(p => p.trim())
       let len = parts.length
       if (len > this.maxLevels) this.maxLevels = len
       let paths = parts.map((_, i, arr) => [i + 1, arr.slice(0, i + 1).join(" / ")])
       paths.forEach(p => {
-        let key: string = r.type + " : " + p[1]
-        if (!(key in this.cache)) this.cache[key] = {
-          key: key, levels: p[0], type: r.type, name: p[1], values: [...zeros], node: "",
+        let key: string = "" + p[1]
+        if (!(key in this.cache)) {
+          this.cache[key] = { key: key, levels: p[0], tag: p[1], values: [...zeros], node: "" }
         }
         if (this.cache[key].node !== r.node) {
           Lib.addArrays(this.cache[key].values, r.values)
@@ -99,12 +100,9 @@ export class TreeTableComponent implements OnInit {
   }
 
   highlighted(row: any) {
-    const value = row.type + " : " + row.name
-    if (this._selection === value) {
-      this.clearSelections()
-    } else {
-      this.selectionChange.emit(value);
-    }
+    if (this._selection === row.tag) this.clearSelections()
+    else this.selectionChange.emit(row.tag);
+
   }
 
   clearSelections() {

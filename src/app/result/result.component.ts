@@ -6,6 +6,7 @@ import { Bar } from '../common/chart.component';
 import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
 import { Question } from '../model/question';
 import { Tag } from '../model/tag';
+import { TreeTableData } from 'app/common/treetable.component';
 
 interface ResultObj {
   isOmitted: boolean,
@@ -79,11 +80,12 @@ export class ResultComponent implements OnInit {
   }
 
   private questionIsSelected(prefix: string, q: Question) {
-    const parseData = Tag.parse(prefix)
-    if (parseData.type === '.Type') {
-      return ANSWER_TYPE_NAMES[q.type] === parseData.parts[0]
+    const parts = prefix.split("/").map(p => p.trim())
+    if (prefix.startsWith('.Type')) {
+      if (parts.length === 2) return ANSWER_TYPE_NAMES[q.type] === parts[1]
+      return true// select all!
     } else {
-      return q.tags.filter(t => t.title.startsWith(prefix)).length > 0
+      return q.tags.map(t => t.title.replace(":", "/")).filter(t => t.startsWith(prefix)).length > 0
     }
   }
 
@@ -105,7 +107,7 @@ export class ResultComponent implements OnInit {
     return out
   }
 
-  get tags() {
+  get tags(): TreeTableData {
     const marksPercent = (arr: any[]) => Math.round((arr[2] / arr[4]) * 100) + "%"
     const timizesec = (arr: any[]) => Lib.timize(arr[8])
     const timizesectotal = (arr: any[]) => Lib.timize(arr[9])
@@ -113,7 +115,7 @@ export class ResultComponent implements OnInit {
     const roundOffNote = "There could be round off errors."
     const arrdef = [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null]
 
-    let out = {
+    let out: TreeTableData = {
       cols: [
         { name: "Sure", style: "color: black;", },
         { name: "Guess", style: "color: gray;", },
@@ -143,15 +145,16 @@ export class ResultComponent implements OnInit {
       let ro = this.resultObj(qid)
       Lib.addArrays(out.totals, o2a(ro))
       Lib.addArrays(qtypes[q.type], o2a(ro))
-      out.rows.push(...q.tags.map(t => t.title.split(":")).map(p => ({
-        type: p[0].trim(), name: p[1].trim(), values: o2a(ro), node: q.id,
+      out.rows.push(...q.tags.map(t => t.title.replace(":", "/")).map(p => ({
+        tag: p, values: o2a(ro), node: q.id,
       })))
     })
 
     ANSWER_TYPES
       .map((typ, i) => ({ name: ANSWER_TYPE_NAMES[i], arr: qtypes[typ] }))
       .filter(obj => obj.arr[5] > 0).forEach(obj => {
-        out.rows.push({ type: ".Type", name: obj.name, values: obj.arr })
+        //NOTE: node is not q.id here, it just has to be unique for the roll up to .Type!
+        out.rows.push({ tag: ".Type / " + obj.name, values: obj.arr, node: "t" + obj.name })
       })
 
     return out
