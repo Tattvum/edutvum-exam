@@ -4,6 +4,7 @@
       [removable]="true"
       [disabled]="disabled"
       [selectable]="true"
+      (click)="editTag(tag.id)"
       (removed)="removeTag(tag.id)">
       {{tag.title}}
       <mat-icon matChipRemove>cancel</mat-icon>

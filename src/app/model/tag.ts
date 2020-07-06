@@ -51,6 +51,11 @@ export class Tag {
     return this._title
   }
 
+  public set title(value: string) {
+    let pd = this._parseData = Tag.parse(value)
+    this._title = Tag.join(pd)
+  }
+
   public get paths(): string[] {
     let out = []
     for (let i = 1; i <= this.parseData.parts.length; i++) {

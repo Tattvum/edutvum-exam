@@ -557,4 +557,10 @@ export class FirebaseDataSource implements DataSource {
     })
   }
 
+  public updateTag(user: User, tag: Tag): Promise<boolean> {
+    let url = TAGS_URL + tag.id + '/title/'
+    //console.log("updateTag:", url, tag.title)
+    return this.afbapi.objectSetBool(url, tag.title)
+  }
+
 }

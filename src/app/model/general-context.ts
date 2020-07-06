@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export abstract class GeneralContext {
   public abstract alert(msg: string)
   public abstract confirm(msg: string): boolean
-  public abstract prompt(msg: string): string
+  public abstract prompt(msg: string, _default?: string): string
 }
 
 @Injectable()
@@ -26,7 +26,7 @@ export class GeneralContextImpl extends GeneralContext {
   public confirm(msg: string): boolean {
     return confirm(msg)
   }
-  public prompt(msg: string): string {
-    return prompt(msg)
+  public prompt(msg: string, _default: string = ""): string {
+    return prompt(msg, _default)
   }
 }

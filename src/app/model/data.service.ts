@@ -76,6 +76,7 @@ export abstract class DataSource {
   abstract addGroup(user: User, eid: string, qgroup: QuestionGroup): Promise<boolean>
   abstract deleteQuestion(user: User, fullid: string): Promise<boolean>
   abstract createTag(user: User, title: string): Promise<Tag>
+  abstract updateTag(user: User, tag: Tag): Promise<boolean>
   abstract createChart(user: User): Promise<Chart>
   abstract updateChart(user: User, chart: Chart): Promise<boolean>
   abstract deleteChart(user: User, cid: string): Promise<boolean>
@@ -121,6 +122,7 @@ export interface TagsDisplayContext {
   getTag(tid: string): Tag
   editQuestionTagsAll(diff: Tag[], qidn: number): Promise<boolean>
   createTag(title: string): Promise<Tag>
+  updateTag(tag: Tag): Promise<boolean>
 }
 
 export interface QuestionDisplayContext {
@@ -557,6 +559,21 @@ export class DataService
       this.tagCache[tag.id] = tag
       return tag
     })
+  }
+
+  public async updateTag(tag: Tag): Promise<boolean> {
+    try {
+      let user = await this.userWait()
+      Lib.failif(Lib.isNil(user), 'user cannot be null')
+      if (!this.isAdmin) throw new Error("Only Admin can update Tag: " + this.activeUser.uid)
+      let ok = await this.dataSource.updateTag(this.activeUser, tag)
+      Lib.failif(!ok, "Some error while updating the tag", tag)
+      console.log("Tag Updated:", tag.id, tag.title)
+      return ok
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
 
   public addComment(title: string, qidn: number): Promise<boolean> {

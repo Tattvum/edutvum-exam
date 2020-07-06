@@ -6,11 +6,11 @@ import { map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { ExamResult } from 'app/model/exam-result';
-import { GeneralContext } from 'app/model/general-context';
-import { DataService, TagsDisplayContext } from 'app/model/data.service';
-import { Question } from 'app/model/question';
-import { Tag } from 'app/model/tag';
+import { ExamResult } from '../model/exam-result';
+import { GeneralContext } from '../model/general-context';
+import { DataService, TagsDisplayContext } from '../model/data.service';
+import { Question } from '../model/question';
+import { Tag } from '../model/tag';
 
 @Component({
   selector: 'app-tags-manager',
@@ -85,13 +85,20 @@ export class TagsManagerComponent implements OnInit {
     this.tagCtrl.setValue(null);
   }
 
+  editTag(tid: string): void {
+    if (!this.context.isAdmin) return
+    const tag = this.question.tags.find(t => t.id === tid)
+    //console.log("editTag:", tid, tag.title)
+    let title = this.generalContext.prompt('Edit Tag:', tag.title)
+    if (!title || title.length <= 0) return
+    tag.title = title
+    this.context.updateTag(tag)
+  }
+
   removeTag(tid: string): void {
     const index = this.question.tags.map(t => t.id).indexOf(tid);
-    if (index >= 0) {
-      this.question.tags.splice(index, 1);
-    }
+    if (index >= 0) this.question.tags.splice(index, 1);
     this.context.editQuestionTagsAll(this.question.tags, this.qid)
-
   }
 
   onFocus() {

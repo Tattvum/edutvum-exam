@@ -139,6 +139,10 @@ export class MockDataSource implements DataSource {
     return Promise.resolve(new Tag("00", title))
   }
 
+  public updateTag(user: User, tag: Tag): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
   public createChart(user: User): Promise<Chart> {
     let chart = new Chart("-", "Dummy Chart", new Date(), [])
     return Promise.resolve(chart)
