@@ -88,7 +88,6 @@ export class TagsManagerComponent implements OnInit {
   editTag(tid: string): void {
     if (!this.context.isAdmin) return
     const tag = this.question.tags.find(t => t.id === tid)
-    //console.log("editTag:", tid, tag.title)
     let title = this.generalContext.prompt('Edit Tag:', tag.title)
     if (!title || title.length <= 0) return
     tag.title = title
