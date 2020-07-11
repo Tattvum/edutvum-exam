@@ -54,7 +54,7 @@ export class TreeTableComponent implements OnInit {
   }
 
   cache = {}
-  maxLevels = 1
+  maxLevels = 2//Since we now have Topic and .Type level by default!
 
   ngOnInit() {
     const zeros = [...this.data.totals].map(v => Lib.isNum(v) ? 0 : v)

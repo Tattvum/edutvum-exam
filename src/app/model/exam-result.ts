@@ -241,7 +241,8 @@ export class ExamResult extends Exam {
   get selection(): string { return this.states['selection'] ?? "JUNK : u7JqNwfU3W" }
   set selection(val: string) { this.states['selection'] = val }
 
-  get level(): number { return this.states['level'] ?? 1 }
+  //Since we now have Topic and .Type level by default!
+  get level(): number { return this.states['level'] ?? 2 }
   set level(val: number) { this.states['level'] = val }
 
   getReveal(qidn: number): boolean {
