@@ -171,7 +171,7 @@ export class JEEAdv2015Marker extends Marker {
   maq(solutions: number[], answers: number[]): Marks {
     super.maq(solutions, answers)// ONLY for checks
     if (!subset(solutions, answers)) return { 'value': -2, 'max': 4 }
-    if (!subset(answers, solutions)) return { 'value': answers.length, 'max': 4 }
+    if (!subset(answers, solutions)) return { 'value': -2, 'max': 4 }
     return { 'value': 4, 'max': 4 }
   }
   ncq(solutions: number[], answers: number[]): Marks {
