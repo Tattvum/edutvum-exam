@@ -1,4 +1,4 @@
-import { AnswerType } from './answer-type';
+import { AnswerType, ANSWER_TYPE_NAMES } from './answer-type';
 import { Exam, ExamStatus, EMPTY_EXAM } from './exam';
 import { Question } from './question';
 import { Lib } from '../model/lib';
@@ -240,6 +240,18 @@ export class ExamResult extends Exam {
 
   get selection(): string { return this.states['selection'] ?? "JUNK : u7JqNwfU3W" }
   set selection(val: string) { this.states['selection'] = val }
+
+  public isMarked(qidn: number) {
+    let prefix = this.selection
+    let q = this.questions[qidn]
+    const parts = prefix.split("/").map(p => p.trim())
+    if (prefix.startsWith('.Type')) {
+      if (parts.length === 2) return ANSWER_TYPE_NAMES[q.type] === parts[1]
+      return true// select all!
+    } else {
+      return q.tags.map(t => t.title.replace(":", "/")).filter(t => t.startsWith(prefix)).length > 0
+    }
+  }
 
   //Since we now have Topic and .Type level by default!
   get level(): number { return this.states['level'] ?? 2 }

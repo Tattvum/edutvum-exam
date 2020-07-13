@@ -14,7 +14,11 @@
           type="button">
             {{i+1}}
         </span>
-        <span [class.selected]="i == qidn" class="nav-button num-bottom"></span>
+        <span fxLayout="row" fxLayoutGap="0px">
+          <span *ngIf="result.isMarked(i)"
+            [class.marked]="result.isMarked(i)" class="nav-button num-bottom" fxFlex="20"></span>
+          <span [class.selected]="i == qidn" class="nav-button num-bottom" fxFlex></span>
+        </span>
       </span>
       <span [class.selected]="i == qidn" class="nav-button num-right0"></span>
     </span>

@@ -79,29 +79,17 @@ export class ResultComponent implements OnInit {
     return color
   }
 
-  private questionIsSelected(prefix: string, q: Question) {
-    const parts = prefix.split("/").map(p => p.trim())
-    if (prefix.startsWith('.Type')) {
-      if (parts.length === 2) return ANSWER_TYPE_NAMES[q.type] === parts[1]
-      return true// select all!
-    } else {
-      return q.tags.map(t => t.title.replace(":", "/")).filter(t => t.startsWith(prefix)).length > 0
-    }
-  }
-
   get bars() {
     let out: Bar[] = []
-    this.result.questions.forEach((q, qid) => {
-      let ro = this.resultObj(qid)
+    this.result.questions.forEach((q, qidn) => {
+      let ro = this.resultObj(qidn)
       let score = ro.scored + '/' + ro.max
-      let prefix = this.result.selection
-      // console.log(qid, prefix, q.tags.map(t => t.title))
       out.push({
         value: ro.duration,
         color: this.data2color(ro),
-        flags: () => ["" + score, Lib.timize(ro.duration), "" + (qid + 1)],
-        action: () => this.router.navigate(['/question', this.result.id, qid]),
-        selected: this.questionIsSelected(prefix, q)
+        flags: () => ["" + score, Lib.timize(ro.duration), "" + (qidn + 1)],
+        action: () => this.router.navigate(['/question', this.result.id, qidn]),
+        selected: this.result.isMarked(qidn)
       })
     })
     return out
