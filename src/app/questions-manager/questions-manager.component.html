@@ -3,7 +3,7 @@
     <span fxLayout="row" fxLayoutGap="2px">
       <span (click)="select(i)" fxLayout="column">
         <span [class.selected]="isGrouped(i)" class="nav-button num-top"></span>
-        <span class="btn btn-info nav-button nav-number" id="b{{i}}"
+        <span class="btn nav-button nav-number" id="b{{i}}"
           [class.locked]="result.showSolution(i) || result.isLocked()"
           [class.partial]="result.isPartial(i)"
           [class.correct]="result.isCorrect(i)"
@@ -16,7 +16,7 @@
         </span>
         <span [class.selected]="i == qidn" class="nav-button num-bottom"></span>
       </span>
-        <span [class.selected]="i == qidn" class="nav-button num-right0"></span>
+      <span [class.selected]="i == qidn" class="nav-button num-right0"></span>
     </span>
   </span>
   <span>

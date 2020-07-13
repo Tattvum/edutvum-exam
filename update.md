@@ -343,3 +343,11 @@ Add only entry points to the 'files' or 'include' properties in your tsconfig
 For mudder lib in model/lib.ts require
 ---
 
+2020-07-13 Mon - on 4.16.3
+---
+Update available 8.4.3 → 8.5.0       │
+...Run npm i -g firebase-tools to update
+---
++ firebase-tools@8.5.0
+removed 2 packages and updated 9 packages in 90.652s
+---
