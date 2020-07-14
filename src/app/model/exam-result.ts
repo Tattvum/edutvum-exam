@@ -6,6 +6,7 @@ import { CommentList, Comment } from './comment';
 import { EMPTY_USER, User } from './user';
 import { Score } from './score';
 import { Marker, MarkingSchemeType, Marks } from './marks';
+import { NO_TAG, TYPE_TAG } from './tag';
 
 export class ExamResult extends Exam {
   private _secondsTotal = 0
@@ -245,7 +246,9 @@ export class ExamResult extends Exam {
     let prefix = this.selection
     let q = this.questions[qidn]
     const parts = prefix.split("/").map(p => p.trim())
-    if (prefix.startsWith('.Type')) {
+    if (prefix.startsWith(NO_TAG)) {
+      return q.tags.length === 0
+    } else if (prefix.startsWith(TYPE_TAG)) {
       if (parts.length === 2) return ANSWER_TYPE_NAMES[q.type] === parts[1]
       return true// select all!
     } else {

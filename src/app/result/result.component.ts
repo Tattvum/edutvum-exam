@@ -5,7 +5,7 @@ import { Lib } from '../model/lib';
 import { Bar } from '../common/chart.component';
 import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
 import { Question } from '../model/question';
-import { Tag } from '../model/tag';
+import { Tag, NO_TAG, TYPE_TAG } from '../model/tag';
 import { TreeTableData } from '../common/treetable.component';
 
 interface ResultObj {
@@ -129,12 +129,15 @@ export class ResultComponent implements OnInit {
     const qtypes: { [key: number]: number[] } = {}
     ANSWER_TYPES.forEach(type => qtypes[type] = [...arrdef])
 
+    const untagged = [...arrdef]
+
     this.result.questions.forEach((q, qid) => {
-      let ro = this.resultObj(qid)
-      Lib.addArrays(out.totals, o2a(ro))
-      Lib.addArrays(qtypes[q.type], o2a(ro))
-      out.rows.push(...q.tags.map(t => t.title.replace(":", "/")).map(p => ({
-        tag: p, values: o2a(ro), node: q.id,
+      let o2ao = o2a(this.resultObj(qid))
+      Lib.addArrays(out.totals, o2ao)
+      Lib.addArrays(qtypes[q.type], o2ao)
+      if (q.tags.length === 0) Lib.addArrays(untagged, o2ao)
+      else out.rows.push(...q.tags.map(t => t.title.replace(":", "/")).map(p => ({
+        tag: p, values: o2ao, node: q.id,
       })))
     })
 
@@ -142,8 +145,10 @@ export class ResultComponent implements OnInit {
       .map((typ, i) => ({ name: ANSWER_TYPE_NAMES[i], arr: qtypes[typ] }))
       .filter(obj => obj.arr[5] > 0).forEach(obj => {
         //NOTE: node is not q.id here, it just has to be unique for the roll up to .Type!
-        out.rows.push({ tag: ".Type / " + obj.name, values: obj.arr, node: "t" + obj.name })
+        out.rows.push({ tag: TYPE_TAG + " / " + obj.name, values: obj.arr, node: "t" + obj.name })
       })
+
+    out.rows.push({ tag: NO_TAG, values: untagged, node: "-" })
 
     return out
   }

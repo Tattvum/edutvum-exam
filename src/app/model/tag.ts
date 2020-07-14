@@ -53,3 +53,10 @@ export class Tag {
 //------------------------------------------------------------------------------
 
 export const EMPTY_TAG = new Tag("00", "Parent / Child / Grand Child")
+
+//------------------------------------------------------------------------------
+
+// System Tags
+export const NO_TAG = ".Untagged"
+export const TYPE_TAG = ".Type"
+
