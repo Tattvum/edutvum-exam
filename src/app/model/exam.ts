@@ -2,6 +2,7 @@ import { Question, EMPTY_QUESTION } from './question';
 import { AbstractThing } from './abstract-thing';
 import { Lib } from './lib';
 import { MarkingSchemeType, Marker } from './marks';
+import { Tag } from './tag';
 
 export enum ExamStatus {
   PENDING, DONE
@@ -18,6 +19,7 @@ export class Exam extends AbstractThing {
     public status = ExamStatus.DONE,
     public markingScheme = MarkingSchemeType.GENERAL,
     public maxDuration: number = 0,
+    public tags: Tag[] = [],
   ) {
     super(id, title, when)
     Lib.failif(Lib.isNil(questions), 'Exam questions cannot be undefined')

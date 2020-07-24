@@ -12,6 +12,13 @@
   <span class="practice-display" *ngIf="result.isPracticeMode">[Practice]</span>
 </div>
 
+<div>
+  <app-tags-manager
+    [disabled]="!context.isAdmin" [context]="tagsExamContext"
+    [id]="result.exam.id" [tags]="result.exam.tags">
+  </app-tags-manager>
+</div>
+
 <br>
 <div fxLayout="row" gdArea="content" fxLayoutGap="8px" fxLayoutAlign="start center">
   <span id="pause" (click)="pauseExam()"

@@ -2,7 +2,7 @@ import 'rxjs'
 
 import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService, NavDisplayContext } from '../model/data.service';
+import { DataService, NavDisplayContext, TagsDisplayContextImpl, TagsDisplayContext } from '../model/data.service';
 import { ExamStatus } from '../model/exam';
 import { ExamResult } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
@@ -26,6 +26,7 @@ export class NavComponent implements OnInit {
   @Input() snapshots: ExamResult[]
   @Output() snapshotSelected = new EventEmitter<number>();
   @Input() sidn: number = -1
+  @Input() tagsExamContext: TagsDisplayContext
 
   selectSnapshot(i: number) {
     this.sidn = i
@@ -79,6 +80,7 @@ export class NavComponent implements OnInit {
   constructor(private router: Router,
     private generalContext: GeneralContext, service: DataService) {
     this.context = service
+    this.tagsExamContext = new TagsDisplayContextImpl(service, "exam")
   }
 
   ngOnInit() {

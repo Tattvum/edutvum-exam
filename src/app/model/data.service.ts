@@ -789,7 +789,7 @@ export class TagsDisplayContextImpl implements TagsDisplayContext {
   updateTag(tag: Tag): Promise<boolean> { return this.service.updateTag(tag) }
   editTagsAll(diff: Tag[], id: number | string): Promise<boolean> {
     switch (this.type) {
-      case "exam": break
+      case "exam": return Promise.resolve(true)
       case "question": return this.service.editQuestionTagsAll(diff, +id)
     }
   }

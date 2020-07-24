@@ -25,11 +25,6 @@
   </div>
 
 <mat-tab-group>
-<mat-tab label="Tags">
-  <app-tree-table [data]="ttdata" [(level)]="level" [(selection)]="selection" >
-  </app-tree-table>
-  {{selection}}
-</mat-tab>
 <mat-tab label="List">
   <div style="margin: 10px;">
     <h3 class="bright" *ngIf="service.showAll">All Exams</h3>
@@ -76,6 +71,11 @@
   <div>
     <pagination-controls id='exams' (pageChange)="pageExam = $event"></pagination-controls>
   </div>
+</mat-tab>
+<mat-tab label="Tags">
+  <app-tree-table [data]="ttdata" [(level)]="level" [(selection)]="selection" >
+  </app-tree-table>
+  {{selection}}
 </mat-tab>
 </mat-tab-group>
 
