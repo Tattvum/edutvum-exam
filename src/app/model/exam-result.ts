@@ -242,7 +242,7 @@ export class ExamResult extends Exam {
   get selection(): string { return this.states['selection'] ?? "JUNK : u7JqNwfU3W" }
   set selection(val: string) { this.states['selection'] = val }
 
-  public isMarked(qidn: number) {
+  public isMarked(qidn: number): boolean {
     let prefix = this.selection
     let q = this.questions[qidn]
     const parts = prefix.split("/").map(p => p.trim())

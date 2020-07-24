@@ -780,6 +780,26 @@ export class DataService
     return n * 2
   }
 
+  //----------------------------------------------------------------------------
+  // Temporary browser session storage
+  //----------------------------------------------------------------------------
+
+  private states = {}
+
+  get tab(): number { return this.states['tab'] ?? 0 }
+  set tab(val: number) { this.states['tab'] = val }
+
+
+  private NO_SELECTION: string = "JUNK : u7JqNwfU3W"
+  get selection(): string { return this.states['selection'] ?? this.NO_SELECTION }
+  get isUnselected(): boolean { return this.selection === this.NO_SELECTION }
+  set selection(val: string) { this.states['selection'] = val }
+
+  //Since we now have Topic and .Type level by default!
+  get level(): number { return this.states['level'] ?? 2 }
+  set level(val: number) { this.states['level'] = val }
+
+
 }
 
 export class TagsDisplayContextImpl implements TagsDisplayContext {

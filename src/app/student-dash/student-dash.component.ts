@@ -11,6 +11,7 @@ import { Lib } from '../model/lib';
 import { trigger, transition, style, state, animate } from '@angular/animations';
 import { GeneralContext } from '../model/general-context';
 import { TreeTableData } from 'app/common/treetable.component';
+import { NO_TAG } from 'app/model/tag';
 
 @Component({
   selector: 'app-student-dash',
@@ -40,29 +41,6 @@ export class StudentDashComponent implements OnInit {
     this.ok = !this.ok
   }
 
-  ttdata = {
-    cols: [
-      { name: "Marks", style: "color: red;", note: "This is a note!" },
-      { name: "Total", style: "color: blue;", },
-      { name: "%", style: "color: green;", format: (arr: any[]) => Math.round((arr[0] / arr[1]) * 100) },
-    ],
-    totals: [4, 16, null],
-    rows: [
-      { tag: "Topic / Chemistry / Organic / Amines", values: [1, 10, null], node: "q1" },
-      { tag: "Topic / Mathematics / Calculus / Integration", values: [1, 10, null], node: "q2" },
-      { tag: "Topic / Mathematics / Calculus / Differentiation", values: [1, 10, null], node: "q2" },
-      { tag: "Topic / Chemistry / Organic / Alkanes", values: [1, 10, null], node: "q3" },
-      { tag: "Difficulty / Easy", values: [1, 10, null], node: "q3" },
-      { tag: "Topic / Chemistry / InOrganic / s-Block Elements", values: [1, 10, null], node: "q4" },
-      { tag: "Difficulty / Medium", values: [1, 10, null], node: "q4" },
-      { tag: "Topic / Mathematics / Vectors", values: [1, 10, null], node: "q5" },
-      { tag: "Difficulty / Hard", values: [1, 10, null], node: "q5" },
-    ],
-  }
-
-  selection = "4^324ee"
-  level = 3
-
   constructor(public service: DataService,
     private context: GeneralContext,
     private router: Router) { }
@@ -71,6 +49,22 @@ export class StudentDashComponent implements OnInit {
 
   showWhen(dt: Date): string {
     return moment(dt).fromNow();
+  }
+
+  public isMarked(eid: string): boolean {
+    let prefix = this.service.selection
+    if (this.service.isUnselected) return true
+    let e = this.service.getPureExam(eid)
+    const parts = prefix.split("/").map(p => p.trim())
+    if (prefix.startsWith(NO_TAG)) {
+      return e.tags.length === 0
+    } else {
+      return e.tags.map(t => t.title.replace(":", "/")).filter(t => t.startsWith(prefix)).length > 0
+    }
+  }
+
+  get tagFilteredExams(): Exam[] {
+    return this.service.filteredExams().filter(e => this.isMarked(e.id))
   }
 
   takeExam(exam: Exam, isPractice: boolean = false) {
@@ -116,11 +110,12 @@ export class StudentDashComponent implements OnInit {
   }
 
   get tags(): TreeTableData {
-    const arrdef = [0,]
+    const arrdef = [0, 0]
 
     let out: TreeTableData = {
       cols: [
-        { name: "Count", style: "color: green;", },
+        { name: "Available", style: "color: black;", },
+        { name: "Taken", style: "color: green; font-weight: bold;", },
       ],
       totals: [...arrdef],
       rows: [],
@@ -129,12 +124,15 @@ export class StudentDashComponent implements OnInit {
     const untagged = [...arrdef]
 
     this.service.filteredExams().forEach((ex, i) => {
-      Lib.addArrays(out.totals, [1])
-      if (ex.tags.length === 0) Lib.addArrays(untagged, [1])
+      const taken = this.service.listResults(ex.id).length
+      Lib.addArrays(out.totals, [1, taken])
+      if (ex.tags.length === 0) Lib.addArrays(untagged, [1, taken])
       else out.rows.push(...ex.tags.map(t => t.title.replace(":", "/")).map(p => ({
-        tag: p, values: [1], node: ex.id,
+        tag: p, values: [1, taken], node: ex.id,
       })))
     })
+
+    out.rows.push({ tag: NO_TAG, values: untagged, node: "-" })
 
     return out
   }

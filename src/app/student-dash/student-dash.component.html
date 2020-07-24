@@ -24,13 +24,13 @@
     </div>
   </div>
 
-<mat-tab-group>
+<mat-tab-group [(selectedIndex)]="service.tab">
 <mat-tab label="List">
   <div style="margin: 10px;">
     <h3 class="bright" *ngIf="service.showAll">All Exams</h3>
     <h3 class="bright" *ngIf="!service.showAll">My Recent Exams</h3>
     <mat-card
-      *ngFor="let ex of service.filteredExams() | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
+      *ngFor="let ex of tagFilteredExams | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
       [class.pending]="ex.isPending()" style="margin-bottom: 4px;">
       <div fxLayout="column">
         <div class="light">{{ex.id}}</div>
@@ -73,7 +73,7 @@
   </div>
 </mat-tab>
 <mat-tab label="Tags">
-  <app-tree-table [data]="tags" [(level)]="level" [(selection)]="selection" >
+  <app-tree-table [data]="tags" [(level)]="service.level" [(selection)]="service.selection" >
   </app-tree-table>
 </mat-tab>
 </mat-tab-group>
