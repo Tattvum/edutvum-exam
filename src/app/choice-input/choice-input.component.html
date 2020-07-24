@@ -69,7 +69,7 @@
 <div *ngIf="result.isLocked()">
 <hr>
 <app-tags-manager
-  [disabled]="!context.isAdmin"
-  [qid]="qid" [question]="question">
+  [disabled]="!context.isAdmin" [context]="tagsQuestionContext"
+  [id]="qid" [tags]="question.tags">
 </app-tags-manager>
 </div>

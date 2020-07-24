@@ -19,9 +19,11 @@ import { Tag } from '../model/tag';
 })
 export class TagsManagerComponent implements OnInit {
 
-  @Input() qid: number
-  @Input() question: Question
+  @Input() id: number
+  @Input() tags: Tag[]
   @Input() disabled: true
+  @Input() context: TagsDisplayContext
+
 
   filteredTags$: Observable<Tag[]>;
   tagCtrl = new FormControl();
@@ -29,10 +31,7 @@ export class TagsManagerComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  context: TagsDisplayContext
-
-  constructor(private generalContext: GeneralContext, private service: DataService) {
-    this.context = service
+  constructor(private generalContext: GeneralContext) {
     this.filteredTags$ = this.tagCtrl.valueChanges.pipe(
       startWith(''),
       map((title: string | null) => title ? this._filter(title) : this.context.tags.slice()))
@@ -47,13 +46,9 @@ export class TagsManagerComponent implements OnInit {
     // console.log("qid", this.qid, "question-id:", this.question.id, "exam-id:", this.exam.id)
   }
 
-  get tags(): Tag[] {
-    return this.question.tags
-  }
-
   private async addTag(tid: string) {
-    this.question.tags.push(this.context.getTag(tid));
-    await this.context.editQuestionTagsAll(this.question.tags, this.qid)
+    this.tags.push(this.context.getTag(tid));
+    await this.context.editTagsAll(this.tags, this.id)
   }
 
   private async createAndAddTag(title: string) {
@@ -70,7 +65,7 @@ export class TagsManagerComponent implements OnInit {
   addTagSelected(event: MatAutocompleteSelectedEvent): void {
     let tid = event.option.value.trim()
     let title = event.option.viewValue
-    if (!this.question.tags.map(t => t.id).includes(tid)) this.addTag(tid)
+    if (!this.tags.map(t => t.id).includes(tid)) this.addTag(tid)
     else console.log("tag already added:", title)
     this.tagInput.nativeElement.value = ''
     this.tagCtrl.setValue(null)
@@ -87,7 +82,7 @@ export class TagsManagerComponent implements OnInit {
 
   editTag(tid: string): void {
     if (!this.context.isAdmin) return
-    const tag = this.question.tags.find(t => t.id === tid)
+    const tag = this.tags.find(t => t.id === tid)
     let title = this.generalContext.prompt('Edit Tag:', tag.title)
     if (!title || title.length <= 0) return
     tag.title = title
@@ -95,16 +90,16 @@ export class TagsManagerComponent implements OnInit {
   }
 
   removeTag(tid: string): void {
-    const index = this.question.tags.map(t => t.id).indexOf(tid);
-    if (index >= 0) this.question.tags.splice(index, 1);
-    this.context.editQuestionTagsAll(this.question.tags, this.qid)
+    const index = this.tags.map(t => t.id).indexOf(tid);
+    if (index >= 0) this.tags.splice(index, 1);
+    this.context.editTagsAll(this.tags, this.id)
   }
 
   onFocus() {
-    this.service.disableHotkeys = true
+    this.context.disableHotkeys = true
   }
   onFocusOut() {
-    this.service.disableHotkeys = false
+    this.context.disableHotkeys = false
   }
 
 }

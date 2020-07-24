@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
-import { DataService, ChoiceInputDisplayContext } from '../model/data.service';
+import { DataService, ChoiceInputDisplayContext, TagsDisplayContext, TagsDisplayContextImpl } from '../model/data.service';
 import { AnswerType, ANSWER_TYPE_NAMES, ANSWER_TYPES } from '../model/answer-type';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
@@ -33,6 +33,7 @@ export class ChoiceInputComponent implements OnInit {
   }
 
   context: ChoiceInputDisplayContext
+  tagsQuestionContext: TagsDisplayContext
 
   AAA = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   mytype = ANSWER_TYPE_NAMES
@@ -48,6 +49,7 @@ export class ChoiceInputComponent implements OnInit {
 
   constructor(private generalContext: GeneralContext, service: DataService) {
     this.context = service
+    this.tagsQuestionContext = new TagsDisplayContextImpl(service, "question")
   }
 
   ngOnInit() {

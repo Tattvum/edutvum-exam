@@ -119,8 +119,9 @@ export interface UserDisplayContext {
 export interface TagsDisplayContext {
   tags: Tag[]
   isAdmin: boolean
+  disableHotkeys: boolean
   getTag(tid: string): Tag
-  editQuestionTagsAll(diff: Tag[], qidn: number): Promise<boolean>
+  editTagsAll(diff: Tag[], id: number | string): Promise<boolean>
   createTag(title: string): Promise<Tag>
   updateTag(tag: Tag): Promise<boolean>
 }
@@ -183,7 +184,7 @@ export interface UploadContext {
 export class DataService
   implements UserDisplayContext, QuestionDisplayContext, NavDisplayContext,
   ChoiceInputDisplayContext, DetailsDisplayContext,
-  TagsDisplayContext, QuestionsManagerDisplayContext, UploadContext {
+  QuestionsManagerDisplayContext, UploadContext {
 
   private userCache: UserCache = {}
   private tagCache: TagCache = {}
@@ -774,4 +775,22 @@ export class DataService
     return n * 2
   }
 
+}
+
+export class TagsDisplayContextImpl implements TagsDisplayContext {
+  constructor(private service: DataService, private type: "question" | "exam" = "question") { }
+  get tags(): Tag[] { return this.service.tags }
+  get isAdmin(): boolean { return this.service.isAdmin }
+  get disableHotkeys(): boolean { return this.service.disableHotkeys}
+  set disableHotkeys(value: boolean) { this.service.disableHotkeys = value }
+
+  getTag(tid: string): Tag { return this.service.getTag(tid) }
+  createTag(title: string): Promise<Tag> { return this.service.createTag(title) }
+  updateTag(tag: Tag): Promise<boolean> { return this.service.updateTag(tag) }
+  editTagsAll(diff: Tag[], id: number | string): Promise<boolean> {
+    switch (this.type) {
+      case "exam": break
+      case "question": return this.service.editQuestionTagsAll(diff, +id)
+    }
+  }
 }
