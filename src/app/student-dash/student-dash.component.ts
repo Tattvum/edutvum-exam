@@ -10,6 +10,7 @@ import { Lib } from '../model/lib';
 
 import { trigger, transition, style, state, animate } from '@angular/animations';
 import { GeneralContext } from '../model/general-context';
+import { TreeTableData } from 'app/common/treetable.component';
 
 @Component({
   selector: 'app-student-dash',
@@ -113,4 +114,29 @@ export class StudentDashComponent implements OnInit {
       })
     }
   }
+
+  get tags(): TreeTableData {
+    const arrdef = [0,]
+
+    let out: TreeTableData = {
+      cols: [
+        { name: "Count", style: "color: green;", },
+      ],
+      totals: [...arrdef],
+      rows: [],
+    }
+
+    const untagged = [...arrdef]
+
+    this.service.filteredExams().forEach((ex, i) => {
+      Lib.addArrays(out.totals, [1])
+      if (ex.tags.length === 0) Lib.addArrays(untagged, [1])
+      else out.rows.push(...ex.tags.map(t => t.title.replace(":", "/")).map(p => ({
+        tag: p, values: [1], node: ex.id,
+      })))
+    })
+
+    return out
+  }
+
 }
