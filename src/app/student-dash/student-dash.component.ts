@@ -39,6 +39,29 @@ export class StudentDashComponent implements OnInit {
     this.ok = !this.ok
   }
 
+  ttdata = {
+    cols: [
+      { name: "Marks", style: "color: red;", note: "This is a note!" },
+      { name: "Total", style: "color: blue;", },
+      { name: "%", style: "color: green;", format: (arr: any[]) => Math.round((arr[0] / arr[1]) * 100) },
+    ],
+    totals: [4, 16, null],
+    rows: [
+      { tag: "Topic / Chemistry / Organic / Amines", values: [1, 10, null], node: "q1" },
+      { tag: "Topic / Mathematics / Calculus / Integration", values: [1, 10, null], node: "q2" },
+      { tag: "Topic / Mathematics / Calculus / Differentiation", values: [1, 10, null], node: "q2" },
+      { tag: "Topic / Chemistry / Organic / Alkanes", values: [1, 10, null], node: "q3" },
+      { tag: "Difficulty / Easy", values: [1, 10, null], node: "q3" },
+      { tag: "Topic / Chemistry / InOrganic / s-Block Elements", values: [1, 10, null], node: "q4" },
+      { tag: "Difficulty / Medium", values: [1, 10, null], node: "q4" },
+      { tag: "Topic / Mathematics / Vectors", values: [1, 10, null], node: "q5" },
+      { tag: "Difficulty / Hard", values: [1, 10, null], node: "q5" },
+    ],
+  }
+
+  selection = "4^324ee"
+  level = 3
+
   constructor(public service: DataService,
     private context: GeneralContext,
     private router: Router) { }
