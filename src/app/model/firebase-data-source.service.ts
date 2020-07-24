@@ -144,7 +144,8 @@ export function createE(obj, ts: { [key: string]: Tag } = {}): Exam {
   let markingScheme = MarkingSchemeType.OLD
   if (obj.markingscheme) markingScheme = MarkingSchemeType['' + obj.markingscheme]
   let maxDuration = obj.maxduration
-  return new Exam(id, title, questions, when, notes, explanation, status, markingScheme, maxDuration)
+  let tags = fbObjToTArr(obj.tags, ts)
+  return new Exam(id, title, questions, when, notes, explanation, status, markingScheme, maxDuration, tags)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -461,6 +462,7 @@ export class FirebaseDataSource implements DataSource {
       case ExamEditType.ExamMarkingScheme: return editurl + '/markingscheme/'
       case ExamEditType.QuestionTagsAll: return editurl + '/tags/'
       case ExamEditType.ExamMaxDuration: return editurl + '/maxduration/'
+      case ExamEditType.ExamTagsAll: return editurl + '/tags/'
       default:
         console.log('editUrl', 'Unknown type', type)
         return null

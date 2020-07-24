@@ -48,6 +48,7 @@ export enum ExamEditType {
   QuestionGroupDisplay,
   ExamMarkingScheme,
   ExamMaxDuration,
+  ExamTagsAll,
   UNKNOWN_LAST // Just tag the end?
 }
 
@@ -551,6 +552,10 @@ export class DataService
   public editExamMaxDuration(diff: any, eid: string): Promise<boolean> {
     return this.editExamDetail(diff, eid, ExamEditType.ExamMaxDuration)
   }
+  public editExamTagsAll(diff: Tag[], eid: string): Promise<boolean> {
+    let objdiff = diff.map(t => t.id)
+    return this.editExamDetail(objdiff, eid, ExamEditType.ExamTagsAll)
+  }
 
   public createTag(title: string): Promise<Tag> {
     let call = u => this.dataSource.createTag(u, title)
@@ -789,7 +794,7 @@ export class TagsDisplayContextImpl implements TagsDisplayContext {
   updateTag(tag: Tag): Promise<boolean> { return this.service.updateTag(tag) }
   editTagsAll(diff: Tag[], id: number | string): Promise<boolean> {
     switch (this.type) {
-      case "exam": return Promise.resolve(true)
+      case "exam": return this.service.editExamTagsAll(diff, ''+id)
       case "question": return this.service.editQuestionTagsAll(diff, +id)
     }
   }
