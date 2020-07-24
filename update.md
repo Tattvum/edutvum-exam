@@ -351,3 +351,76 @@ Update available 8.4.3 → 8.5.0       │
 + firebase-tools@8.5.0
 removed 2 packages and updated 9 packages in 90.652s
 ---
+
+2020-07-24 Fri - on 4.16.7
+---
+`ng update`
+---
+The installed local Angular CLI version is older than the latest stable version.
+...
+An unhandled exception occurred: Package install failed.
+---
+`npm install @angular/cli@latest`
+---
++ @angular/cli@10.0.4
+added 1 package from 1 contributor, updated 11 packages and audited 2324 packages in 57.433s
+---
+`ng update`
+---
+@angular/cdk                       10.0.1 -> 10.1.0         ng update @angular/cdk
+@angular/core                      10.0.2 -> 10.0.5         ng update @angular/core
+@angular/material                  10.0.1 -> 10.1.0         ng update @angular/material
+rxjs                               6.5.5 -> 6.6.0           ng update rxjs
+---
+`ng update @angular/cdk @angular/core @angular/material rxjs --allow-dirty --force`
+---
+✖ Package install failed, see above.
+✖ Migration failed. See above for further details.
+(but package.json updated?!)
+---
+`ng update @angular/cdk @angular/core @angular/material rxjs --allow-dirty --force`
+---
+...
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package '@angular/cdk' is already up to date.
+Package '@angular/core' is already up to date.
+Package '@angular/material' is already up to date.
+Package 'rxjs' is already up to date.
+---
+`ng version`
+---
+Angular CLI: 10.0.4
+Node: 12.18.1
+OS: linux x64
+
+Angular: 10.0.5
+---
+`npm run build`
+---
+(works lot of warning as with 10..)
+WARNING in Unable to fully load .../node_modules/angularfire2/.../auth.d.ts for source-map flattening: Circular source file mapping dependency: .../node_modules/.../auth.d.ts.map -> .../node_modules/angularfire2/.../auth.d.ts.map
+...
+WARNING in .../src/app/model/data.service.ngtypecheck.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig.
+---
+`npm i @angular/flex-layout`
+---
++ @angular/flex-layout@9.0.0-beta.31
+removed 1 package, updated 1 package and audited 2328 packages in 41.474s
+---
+`npm i @angular/fire`
+---
++ @angular/fire@6.0.2
+updated 1 package and audited 2328 packages in 24.079s
+---
+`npm run dev`
+---
+(works!)
+Date: 2020-07-24T07:35:43.695Z - Hash: 02f7b05467f465c2df07
+5 unchanged chunks
+
+Time: 4728ms
+: Compiled successfully.
+---
