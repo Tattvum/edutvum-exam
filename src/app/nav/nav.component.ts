@@ -146,6 +146,8 @@ export class NavComponent implements OnInit {
       this.router.navigate(['/student-dash'])
     } else {
       if (this.result.isPracticeMode) {
+        // CAUTION: If allowed to cancel, there is no record of seeing the exam. So, will fail for now.
+        // TBD: practice cancel needs permenant solution. (4.9.2)
         this.generalContext.alert('Cancel Failed.')
       } else if (this.generalContext.confirm(`Cancel the exam: Sure?!`)) {
         this.context.cancelExam().then(ok => {
