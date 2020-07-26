@@ -241,12 +241,10 @@ export class DataService
     }
   }
 
-  public examStats(): { all: number, taken: number, timeTaken: number, pending: number } {
-    let examsAll = this.filterExams(true)
-    let examsTaken = this.filterExams(false)
+  public examStats() {
     return {
-      all: examsAll.length,
-      taken: examsTaken.length,
+      all: this.filterExams(true).length,
+      taken: this.results.length,
       timeTaken: this.results.map(r => r.durationTotal()).reduce((tot, d) => tot + d, 0),
       pending: this.results.filter(r => r.status === ExamStatus.PENDING).length,
     }

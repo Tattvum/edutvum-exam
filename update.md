@@ -61,6 +61,7 @@ Did all in the above link, and then I had to ...
     https://stackoverflow.com/questions/55398923/error-cant-resolve-core-js-es7-reflect-in-node-modules-angular-devkit-bui
 TBD: remove angularfire2 and use @angular/fire
 
+
 2020-03-29 Sun - on 4.0.2
 did global and then local
 `npm install -g @angular/cli`
@@ -84,6 +85,7 @@ Due to this, deleted package-lock.json and node_modules folder and did ...
 then
 `npm run prod`
 working clean
+
 
 2020-04-24 Sat - on 4.3.0
 did global and then local
@@ -112,11 +114,13 @@ then
 `npm run prod`
 working clean
 
+
 2020-05-01 Fri - on 4.6.8
 did global and then local
 `npm install -g @angular/cli`
 `npm install @angular/cli`
 Both came to 9.1.4
+
 
 2020-05-02 Sat - on 4.7.0
 svr@tnr:~/lindata/edutvum/edutvum-exam$ ng add @angular/material
@@ -148,6 +152,7 @@ Found 54 dependencies.
 ---
 `npm run stage`
 All working!
+
 
 2020-05-08 Fri - on 4.7.3 (after 4 alpha, 2 beta, 1 rc)
 svr@tnr:~/lindata/edutvum/edutvum-exam$ firebase init emulators
@@ -201,6 +206,7 @@ svr@tnr:~/lindata/edutvum/edutvum-exam$ curl http://localhost:9000/-M6qx7JtX-qW7
 null
 (if the path is non existant, null returned)
 
+
 2020-05-09 Sat - on 4.7.4-alpha.1
 svr@tnr:~/lindata/edutvum/edutvum-exam$ firebase emulators:export firebase-emulator-export
 i  Found running emulator hub for project edutvum-exam at http://localhost:4400
@@ -219,6 +225,7 @@ in the firebase rtdb (run time database) emulator window...
 i  emulators: Received export request. Exporting data to /home/svr/lindata/edutvum/edutvum-exam/firebase-emulator-export.
 ⚠  emulators: Export failed: No running emulators support import/export.
 ----
+
 
 2020-05-10 Sun - on 4.7.4-rc.1
 ```
@@ -343,6 +350,7 @@ Add only entry points to the 'files' or 'include' properties in your tsconfig
 For mudder lib in model/lib.ts require
 ---
 
+
 2020-07-13 Mon - on 4.16.3
 ---
 Update available 8.4.3 → 8.5.0       │
@@ -351,6 +359,7 @@ Update available 8.4.3 → 8.5.0       │
 + firebase-tools@8.5.0
 removed 2 packages and updated 9 packages in 90.652s
 ---
+
 
 2020-07-24 Fri - on 4.16.7
 ---
@@ -423,4 +432,33 @@ Date: 2020-07-24T07:35:43.695Z - Hash: 02f7b05467f465c2df07
 
 Time: 4728ms
 : Compiled successfully.
+---
+
+
+2020-07-26 Sun - on 5.0.0-rc1
+---
+`firebase emulators:start --only database`
+---
+...
+Update available 8.5.0 → 8.6.0       │
+   Run npm i -g firebase-tools to update
+---
+`npm i -g firebase-tools`
+---
++ firebase-tools@8.6.0
+updated 7 packages in 98.887s
+...
+New patch version of npm available! 6.14.5 → 6.14.7
+Run npm install -g npm to update!
+---
+`npm i -g npm`
+---
++ npm@6.14.7
+added 16 packages from 2 contributors, removed 17 packages and updated 19 packages in 10.503s
+---
+`firebase emulators:start --only database`
+---
+... 
+ui: downloading ui-v1.1.1.zip...
+...
 ---

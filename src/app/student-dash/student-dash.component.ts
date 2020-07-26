@@ -10,8 +10,8 @@ import { Lib } from '../model/lib';
 
 import { trigger, transition, style, state, animate } from '@angular/animations';
 import { GeneralContext } from '../model/general-context';
-import { TreeTableData } from 'app/common/treetable.component';
-import { NO_TAG } from 'app/model/tag';
+import { TreeTableData } from '../common/treetable.component';
+import { NO_TAG } from '../model/tag';
 
 @Component({
   selector: 'app-student-dash',
@@ -110,12 +110,15 @@ export class StudentDashComponent implements OnInit {
   }
 
   get tags(): TreeTableData {
-    const arrdef = [0, 0]
+    const timizesec = (arr: any[]) => Lib.timize(arr[3])
+    const arrdef = [0, 0, 0, 0]
 
     let out: TreeTableData = {
       cols: [
         { name: "Available", style: "color: black;", },
+        { name: "Questions", style: "color: maroon;", },
         { name: "Taken", style: "color: green; font-weight: bold;", },
+        { name: "Time", style: "color: blue;", format: timizesec },
       ],
       totals: [...arrdef],
       rows: [],
@@ -124,11 +127,16 @@ export class StudentDashComponent implements OnInit {
     const untagged = [...arrdef]
 
     this.service.filteredExams().forEach((ex, i) => {
+      const questions = ex.questions.length
       const taken = this.service.listResults(ex.id).length
-      Lib.addArrays(out.totals, [1, taken])
-      if (ex.tags.length === 0) Lib.addArrays(untagged, [1, taken])
+      const time = this.service.listResults(ex.id)
+        .map(er => er.durationTotal())
+        .reduce((sum, dur) => sum + dur, 0)
+      const values = [1, questions, taken, time]
+      Lib.addArrays(out.totals, [...values])
+      if (ex.tags.length === 0) Lib.addArrays(untagged, [...values])
       else out.rows.push(...ex.tags.map(t => t.title.replace(":", "/")).map(p => ({
-        tag: p, values: [1, taken], node: ex.id,
+        tag: p, values: [...values], node: ex.id,
       })))
     })
 

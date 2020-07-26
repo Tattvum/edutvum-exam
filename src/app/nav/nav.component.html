@@ -12,7 +12,7 @@
   <span class="practice-display" *ngIf="result.isPracticeMode">[Practice]</span>
 </div>
 
-<div>
+<div *ngIf="context.isAdmin">
   <app-tags-manager
     [disabled]="!context.isAdmin" [context]="tagsExamContext"
     [id]="result.exam.id" [tags]="result.exam.tags">
