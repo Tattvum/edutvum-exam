@@ -1,5 +1,5 @@
 import {
-  Marker, OldMarker, GeneralMarker, JEEAdvMarker, JEEAdv2015Marker,
+  Marker, OldMarker, GeneralMarker, JEEAdvMarker, JEEAdv2015Marker, JEEAdv2014Marker,
   NSEJSMarker, JEEMainMarker, NSEPMarker
 } from './marks';
 
@@ -77,6 +77,24 @@ describe('JEE Adv. 2015 Marker tests:', () => {
     expect(marker.maq([1, 2, 3], [2]).value).toBe(-2)
     expect(marker.maq([1, 2, 3], [2, 1]).value).toBe(-2)
     expect(marker.maq([1, 2, 3], [2, 5]).value).toBe(-2)
+  })
+})
+
+describe('JEE Adv. 2014 Marker tests:', () => {
+  let marker = new JEEAdv2014Marker()
+  it('mcq works', () => {
+    expect(marker.mcq([0], [0]).value).toBe(3)
+    expect(marker.mcq([0], [2]).value).toBe(0)
+  })
+  it('ncq works', () => {
+    expect(marker.ncq([23.1], [23.1]).value).toBe(3)
+    expect(marker.ncq([25], [23.1]).value).toBe(0)
+  })
+  it('maq works', () => {
+    expect(marker.maq([1, 2], [2, 1]).value).toBe(3)
+    expect(marker.maq([1, 2, 3], [2]).value).toBe(0)
+    expect(marker.maq([1, 2, 3], [2, 1]).value).toBe(0)
+    expect(marker.maq([1, 2, 3], [2, 5]).value).toBe(0)
   })
 })
 

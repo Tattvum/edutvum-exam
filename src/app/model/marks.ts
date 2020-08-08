@@ -11,6 +11,7 @@ export enum MarkingSchemeType {
   NSEP, // Like BITSAT and NSEJS, but for MAQ all corect +6, even one wrong 0
   JEEADV, // mcq +3/-1, numerical +3/0, maq +4**/-2
   JEEADV2015, //Same as JEEADV, but ncq is +4 instead of +3
+  JEEADV2014, //Plain Marker, with 3 for correct and no negative marking, only MAQ and NCQ
 }
 
 export const MARKING_SCHEME_TYPES = Lib.enumValues<MarkingSchemeType>(MarkingSchemeType)
@@ -65,6 +66,7 @@ const MARKER_MAKER = [
   () => new NSEPMarker(),
   () => new JEEAdvMarker(),
   () => new JEEAdv2015Marker(),
+  () => new JEEAdv2014Marker(),
 ]
 
 //------------------------------------------------------------------------------
@@ -176,6 +178,13 @@ export class JEEAdv2015Marker extends Marker {
   }
   ncq(solutions: number[], answers: number[]): Marks {
     return single(solutions, answers, 'NCQ', +4, 0)
+  }
+}
+
+//NOTE: Exported only for testing
+export class JEEAdv2014Marker extends Marker {
+  constructor() {
+    super(3, 0, MarkingSchemeType.JEEADV2014)
   }
 }
 
