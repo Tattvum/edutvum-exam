@@ -1,5 +1,6 @@
 {
-  "-": {
+  "OLD": {
+    "title": "OLD",
     "types": {
       "-": {
         "right": 1,
@@ -7,11 +8,14 @@
       }
     }
   },
-  "OLD": {
-    "title": "OLD"
-  },
   "GENERAL": {
-    "title": "GENERAL"
+    "title": "GENERAL",
+    "types": {
+      "-": {
+        "right": 1,
+        "wrong": 0
+      }
+    }
   },
   "NSEJS": {
     "title": "NSEJS",

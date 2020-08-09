@@ -347,7 +347,7 @@ export class FirebaseDataSource implements DataSource {
   private allcs: { [key: string]: Chart } = {}
 
   constructor(private afbapi: AbstractFirebaseAPI) {
-    this.tempMarkings();
+    //this.tempMarkings();
   }
 
   private async tempMarkings(): Promise<boolean> {
