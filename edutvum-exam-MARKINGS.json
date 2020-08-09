@@ -1,5 +1,6 @@
 {
-  "-": {
+  "OLD": {
+    "title": "OLD",
     "types": {
       "-": {
         "right": 1,
@@ -7,11 +8,14 @@
       }
     }
   },
-  "OLD": {
-    "title": "OLD"
-  },
   "GENERAL": {
-    "title": "GENERAL"
+    "title": "GENERAL",
+    "types": {
+      "-": {
+        "right": 1,
+        "wrong": 0
+      }
+    }
   },
   "NSEJS": {
     "title": "NSEJS",
@@ -38,7 +42,7 @@
         "right": 3,
         "wrong": -1
       },
-      "maq": {
+      "MAQ": {
         "right": 6,
         "wrong": 0
       }
@@ -51,7 +55,7 @@
         "right": 3,
         "wrong": -1
       },
-      "maq": {
+      "MAQ": {
         "right": 4,
         "wrong": -2,
         "partial": "len"
@@ -65,11 +69,11 @@
         "right": 3,
         "wrong": -1
       },
-      "maq": {
+      "MAQ": {
         "right": 4,
         "wrong": -2
       },
-      "ncq": {
+      "NCQ": {
         "right": 4,
         "wrong": 0
       }

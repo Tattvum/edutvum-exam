@@ -5,7 +5,7 @@ import { Lib } from '../model/lib';
 import { CommentList, Comment } from './comment';
 import { EMPTY_USER, User } from './user';
 import { Score } from './score';
-import { Marker, MarkingSchemeType, Marks } from './marks';
+import { Marker, Marks } from './marks';
 import { NO_TAG, TYPE_TAG } from './tag';
 
 export class ExamResult extends Exam {
