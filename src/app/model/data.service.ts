@@ -16,6 +16,7 @@ import { QuestionGroup } from '../model/question-group';
 import { Comment } from '../model/comment';
 import { Chart } from '../model/chart';
 import { Tag } from './tag';
+import { Marking } from './marking';
 import { Upload } from './upload';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
@@ -30,6 +31,7 @@ export class Holders {
     public users: User[] = [],
     public tags: Tag[] = [],
     public charts: Chart[] = [],
+    public markings: Marking[] = [],
   ) { }
 }
 
@@ -112,6 +114,10 @@ interface ChartCache {
   [id: string]: Chart
 }
 
+interface MarkingCache {
+  [id: string]: Marking
+}
+
 export interface UserDisplayContext {
   user(): User
   logout(): Promise<void>
@@ -191,6 +197,8 @@ export class DataService
   private tagCache: TagCache = {}
   private cache: Cache = {}
   private chartCache: ChartCache = {}
+  private markingCache: MarkingCache = {}
+
   private pendingResult: ExamResult
 
   public tags: Tag[] = []
@@ -198,6 +206,7 @@ export class DataService
   public results: ExamResult[] = []
   public users: User[] = []
   public charts: Chart[] = []
+  public markings: Marking[] = []
 
   public isAdmin = false
   public loading = false
@@ -273,6 +282,9 @@ export class DataService
       this.results.forEach(r => this.cache[r.id] = r)
       this.charts = hs.charts
       this.charts.forEach(c => this.chartCache[c.id] = c)
+      this.markings = hs.markings
+      this.markings.forEach(m => this.markingCache[m.id] = m)
+      console.log(this.markings)
       Lib.failifold(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
     }).then(dolast).then(() => this.loading = false)
   }

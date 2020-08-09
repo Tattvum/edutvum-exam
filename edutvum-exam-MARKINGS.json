@@ -1,0 +1,87 @@
+{
+  "-": {
+    "types": {
+      "-": {
+        "right": 1,
+        "wrong": 0
+      }
+    }
+  },
+  "OLD": {
+    "title": "OLD"
+  },
+  "GENERAL": {
+    "title": "GENERAL"
+  },
+  "NSEJS": {
+    "title": "NSEJS",
+    "types": {
+      "-": {
+        "right": 3,
+        "wrong": -1
+      }
+    }
+  },
+  "JEEMAIN": {
+    "title": "JEEMAIN",
+    "types": {
+      "-": {
+        "right": 4,
+        "wrong": -1
+      }
+    }
+  },
+  "NSEP": {
+    "title": "NSEP",
+    "types": {
+      "-": {
+        "right": 3,
+        "wrong": -1
+      },
+      "maq": {
+        "right": 6,
+        "wrong": 0
+      }
+    }
+  },
+  "JEEADV": {
+    "title": "JEEADV",
+    "types": {
+      "-": {
+        "right": 3,
+        "wrong": -1
+      },
+      "maq": {
+        "right": 4,
+        "wrong": -2,
+        "partial": "len"
+      }
+    }
+  },
+  "JEEADV2015": {
+    "title": "JEEADV2015",
+    "types": {
+      "-": {
+        "right": 3,
+        "wrong": -1
+      },
+      "maq": {
+        "right": 4,
+        "wrong": -2
+      },
+      "ncq": {
+        "right": 4,
+        "wrong": 0
+      }
+    }
+  },
+  "JEEADV2014": {
+    "title": "JEEADV2014",
+    "types": {
+      "-": {
+        "right": 3,
+        "wrong": 0
+      }
+    }
+  }
+}

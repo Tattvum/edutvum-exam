@@ -17,6 +17,7 @@ import { CommentList, Comment } from './comment';
 import { MarkingSchemeType } from './marks';
 import { Tag } from './tag';
 import { Chart } from './chart';
+import { Marking } from './marking';
 
 const URL_VER = 'ver5/'
 const EXAMS_URL = URL_VER + 'exams/'
@@ -24,6 +25,7 @@ const RESULTS_URL = URL_VER + 'results/'
 const USERS_URL = URL_VER + 'users/'
 const TAGS_URL = URL_VER + 'tags/'
 const CHARTS_URL = URL_VER + 'charts/'
+const MARKINGS_URL = URL_VER + 'markings/'
 
 // NOTE: PUBLIC for TEST sake ONLY
 export function fbObjToArr(obj): any[] {
@@ -31,6 +33,19 @@ export function fbObjToArr(obj): any[] {
   let arr = []
   Object.keys(obj).forEach((key, index) => {
     arr[+key] = obj[key]
+  })
+  return arr
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
+export function fbObjToKeyArr(obj): any[] {
+  if (Lib.isNil(obj)) return []
+  let arr = []
+  Object.keys(obj).forEach((key, index) => {
+    let ko = obj[key]
+    ko.id = key
+    arr[index] = ko
+    // console.log(index, key, obj[key].file, arr[index].file)
   })
   return arr
 }
@@ -214,6 +229,15 @@ export function createU(obj): User {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
+export function createM(obj): Marking {
+  let id = obj.id
+  let title = obj.title
+  let when = new Date(obj.when)
+  let types = obj.types
+  return new Marking(id, title, when, types)
+}
+
+// NOTE: PUBLIC for TEST sake ONLY
 export function convertQuestion(question: Question): any {
   let qo = {}
   qo['display'] = question.title
@@ -322,13 +346,29 @@ export class FirebaseDataSource implements DataSource {
   private allts: { [key: string]: Tag } = {}
   private allcs: { [key: string]: Chart } = {}
 
-  constructor(private afbapi: AbstractFirebaseAPI) { }
+  constructor(private afbapi: AbstractFirebaseAPI) {
+    this.tempMarkings();
+  }
+
+  private async tempMarkings(): Promise<boolean> {
+    //CAUTION:TEMP!
+    let mo = {}
+    mo['title'] = "Dummy"
+    mo = JSON.parse(JSON.stringify(mo))
+    let url = MARKINGS_URL
+    return this.afbapi.listPush(url, mo, call => {
+      let key = call.key
+      console.log(key)
+      return true
+    })
+  }
 
   async getHolders(user: User): Promise<Holders> {
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')
     this.holders = new Holders()
     //NOTE: the below order of calls is important
     //exams need tags, and results need exams
+    await this.fetchM()
     await this.fetchU()
     await this.fetchT()
     await this.fetchE()
@@ -343,6 +383,12 @@ export class FirebaseDataSource implements DataSource {
 
   private chartsUrl(user: User): string {
     return CHARTS_URL + user.uid + '/'
+  }
+
+  private async fetchM(): Promise<void> {
+    let mobjs = await this.afbapi.objectFirstMap(MARKINGS_URL)
+    mobjs = fbObjToKeyArr(mobjs)
+    mobjs.forEach(m => this.holders.markings.push(createM(m)))
   }
 
   private async fetchU(): Promise<void> {
