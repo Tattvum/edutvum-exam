@@ -24,15 +24,20 @@ export function isin<T>(arr: Array<T>, val: T): boolean {
   return arr.indexOf(val) > -1
 }
 
-export class Holders {
+export class ArrayCache<T> {
   constructor(
-    public exams: Exam[] = [],
-    public results: ExamResult[] = [],
-    public users: User[] = [],
-    public tags: Tag[] = [],
-    public charts: Chart[] = [],
-    public markings: Marking[] = [],
+    public array: T[] = [],
+    public cache: { [id: string]: T } = {},
   ) { }
+}
+
+export class Holders {
+  public exams = new ArrayCache<Exam>()
+  public results = new ArrayCache<ExamResult>()
+  public users = new ArrayCache<User>()
+  public tags = new ArrayCache<Tag>()
+  public charts = new ArrayCache<Chart>()
+  public markings = new ArrayCache<Marking>()
 }
 
 export enum ExamEditType {
@@ -96,26 +101,6 @@ export abstract class SecurityAPI {
 export abstract class UploaderAPI {
   abstract uploadUrl(upload: Upload): Promise<string>
   // abstract deleteFileStorage(eid: string, qidn: number, f: FileLink): Promise<boolean>
-}
-
-interface UserCache {
-  [id: string]: User
-}
-
-interface Cache {
-  [id: string]: Exam
-}
-
-interface TagCache {
-  [id: string]: Tag
-}
-
-interface ChartCache {
-  [id: string]: Chart
-}
-
-interface MarkingCache {
-  [id: string]: Marking
 }
 
 export interface UserDisplayContext {
@@ -193,20 +178,9 @@ export class DataService
   ChoiceInputDisplayContext, DetailsDisplayContext,
   QuestionsManagerDisplayContext, UploadContext {
 
-  private userCache: UserCache = {}
-  private tagCache: TagCache = {}
-  private cache: Cache = {}
-  private chartCache: ChartCache = {}
-  private markingCache: MarkingCache = {}
-
+  private holders: Holders // set it in constructor
+  private cache: { [id: string]: Exam } = {}
   private pendingResult: ExamResult
-
-  public tags: Tag[] = []
-  public exams: Exam[] = []
-  public results: ExamResult[] = []
-  public users: User[] = []
-  public charts: Chart[] = []
-  public markings: Marking[] = []
 
   public isAdmin = false
   public loading = false
@@ -215,8 +189,14 @@ export class DataService
   public titleFilter = ''
   public showAll = false
 
+  public get charts() { return this.holders.charts.array }
+  public get tags() { return this.holders.tags.array }
+  public get results() { return this.holders.results.array }
+  public get exams() { return this.holders.exams.array }
+  public get users() { return this.holders.users.array }
+
   public getTag(tid: string): Tag {
-    return this.tagCache[tid]
+    return this.holders.tags.cache[tid]
   }
 
   private globalTimerAction: (i: number) => void
@@ -229,10 +209,10 @@ export class DataService
     let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
     let tFilter = (e: Exam) => cistrcomp(e.title, filter)
     if (all) {
-      return this.exams.filter(tFilter)
+      return this.holders.exams.array.filter(tFilter)
     } else {
-      let eids = [...new Set(this.results.map(r => r.exam.id))]
-      let topr = eid => this.results.filter(r => r.exam.id === eid).sort(revChron)[0]
+      let eids = [...new Set(this.holders.results.array.map(r => r.exam.id))]
+      let topr = eid => this.holders.results.array.filter(r => r.exam.id === eid).sort(revChron)[0]
       return eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
     }
   }
@@ -242,10 +222,10 @@ export class DataService
     let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
     let tFilter = (e: Exam) => cistrcomp(e.title, filter)
     if (all) {
-      return this.exams.filter(tFilter)
+      return this.holders.exams.array.filter(tFilter)
     } else {
-      let eids = [...new Set(this.results.map(r => r.exam.id))]
-      let topr = eid => this.results.filter(r => r.exam.id === eid).sort(revChron)[0]
+      let eids = [...new Set(this.holders.results.array.map(r => r.exam.id))]
+      let topr = eid => this.holders.results.array.filter(r => r.exam.id === eid).sort(revChron)[0]
       return eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
     }
   }
@@ -253,9 +233,9 @@ export class DataService
   public examStats() {
     return {
       all: this.filterExams(true).length,
-      taken: this.results.length,
-      timeTaken: this.results.map(r => r.durationTotal()).reduce((tot, d) => tot + d, 0),
-      pending: this.results.filter(r => r.status === ExamStatus.PENDING).length,
+      taken: this.holders.results.array.length,
+      timeTaken: this.holders.results.array.map(r => r.durationTotal()).reduce((tot, d) => tot + d, 0),
+      pending: this.holders.results.array.filter(r => r.status === ExamStatus.PENDING).length,
     }
   }
 
@@ -268,23 +248,11 @@ export class DataService
     this.loading = true
     this.activeUser = user
     this.dataSource.getHolders(user).then(hs => {
-      this.tagCache = {}
-      this.tags = hs.tags
-      this.tags.forEach(t => this.tagCache[t.id] = t)
-      this.userCache = {}
-      this.cache = {}
-      this.users = hs.users
-      this.users.forEach(u => this.userCache[u.uid] = u)
-      this.exams = hs.exams
-      this.exams.forEach(e => this.cache[e.id] = e)
-      this.exams.filter(e => e.isPending()).forEach(e => this.shadowPendingExam(e.id))
-      this.results = hs.results
-      this.results.forEach(r => this.cache[r.id] = r)
-      this.charts = hs.charts
-      this.charts.forEach(c => this.chartCache[c.id] = c)
-      this.markings = hs.markings
-      this.markings.forEach(m => this.markingCache[m.id] = m)
-      console.log(this.markings)
+      this.holders = hs
+      this.holders.exams.array.forEach(e => this.cache[e.id] = e)
+      this.holders.exams.array.filter(e => e.isPending()).forEach(e => this.shadowPendingExam(e.id))
+      this.holders.results.array.forEach(r => this.cache[r.id] = r)
+      console.log(this.holders.markings.array)
       Lib.failifold(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
     }).then(dolast).then(() => this.loading = false)
   }
@@ -296,11 +264,11 @@ export class DataService
     this.isAdmin = false
     this.userWait().then(user => {
       this.init(user, () => {
-        let u = this.userCache[user.uid]
+        let u = this.holders.users.cache[user.uid]
         if (u) {
           this.isAdmin = u.role === UserRole.ADMIN
           this.showAll = this.isAdmin
-          this.exams = this.exams.filter(e => !e.isPending() || this.isAdmin)
+          this.holders.exams.array = this.holders.exams.array.filter(e => !e.isPending() || this.isAdmin)
         }
       })
     })
@@ -311,13 +279,13 @@ export class DataService
   }
 
   public listResults(eid: string): ExamResult[] {
-    return this.results
+    return this.holders.results.array
       .filter(r => r.exam.id === eid && !r.snapshot)
       .sort((a, b) => b.when.getTime() - a.when.getTime())
   }
 
   public switchUser(uid: string) {
-    this.init(this.userCache[uid])
+    this.init(this.holders.users.cache[uid])
   }
 
   public getExamResult(eid: string): ExamResult {
@@ -362,7 +330,7 @@ export class DataService
     return this.withUserPromise(call, result => {
       // console.log(result.id, 'exam started!')
       this.cache[result.id] = result
-      this.results.splice(0, 0, result)
+      this.holders.results.array.splice(0, 0, result)
       this.pendingResult = result
       return this.pendingResult.id
     })
@@ -389,7 +357,7 @@ export class DataService
       result.snapshot = true
       result.lock()
       this.cache[result.id] = result
-      this.results.splice(0, 0, result)
+      this.holders.results.array.splice(0, 0, result)
       //Save current result as is
       let ok = await this.dataSource.updateExam(user, result)
       Lib.failif(!ok, "Some error while saving the snapshot")
@@ -440,8 +408,8 @@ export class DataService
       // console.log(rid, 'exam canceled!')
       this.pendingResult = null
       delete this.cache[rid]
-      let i = this.results.findIndex(er => er.id === rid)
-      this.results.splice(i, 1)
+      let i = this.holders.results.array.findIndex(er => er.id === rid)
+      this.holders.results.array.splice(i, 1)
       return true
     })
   }
@@ -453,8 +421,8 @@ export class DataService
       if (this.isAdmin) user = this.activeUser
       let chart = await this.dataSource.createChart(user)
       Lib.failif(!chart, "Some error while updating the chart", chart)
-      this.chartCache[chart.id] = chart
-      this.charts.push(chart)
+      this.holders.charts.cache[chart.id] = chart
+      this.holders.charts.array.push(chart)
       console.log("Chart Created:", chart.id)
       return chart
     } catch (error) {
@@ -485,10 +453,10 @@ export class DataService
       if (this.isAdmin) user = this.activeUser
       let ok = await this.dataSource.deleteChart(user, cid)
       Lib.failif(!ok, "Some error while deleting the chart", cid)
-      const index = this.charts.indexOf(this.chartCache[cid]);
+      const index = this.holders.charts.array.indexOf(this.holders.charts.cache[cid]);
       Lib.failif(index < 0, "Some error, the chart is missing!!", cid)
-      this.charts.splice(index, 1);
-      delete this.chartCache[cid]
+      this.holders.charts.array.splice(index, 1);
+      delete this.holders.charts.cache[cid]
       console.log("Chart Deleted:", cid)
       return ok
     } catch (error) {
@@ -571,8 +539,8 @@ export class DataService
     let call = u => this.dataSource.createTag(u, title)
     return this.withUserPromise(call, tag => {
       console.log('global tag saved!')
-      this.tags.push(tag)
-      this.tagCache[tag.id] = tag
+      this.holders.tags.array.push(tag)
+      this.holders.tags.cache[tag.id] = tag
       return tag
     })
   }
@@ -610,7 +578,7 @@ export class DataService
     let er = new ExamResult(rid, exam.title, new Date(), exam)
     er.lock()
     this.cache[rid] = er
-    this.results.splice(0, 0, er)
+    this.holders.results.array.splice(0, 0, er)
   }
 
   validateExamId(eid: string) {
@@ -625,7 +593,7 @@ export class DataService
     let call = u => this.dataSource.defineExam(u, newExam)
     return this.withUserPromise(call, ok => {
       console.log('pure exam saved!')
-      this.exams.splice(0, 0, newExam)
+      this.holders.exams.array.splice(0, 0, newExam)
       this.cache[newExam.id] = newExam
       this.shadowPendingExam(newExam.id)
       return ok
@@ -816,7 +784,7 @@ export class TagsDisplayContextImpl implements TagsDisplayContext {
   constructor(private service: DataService, private type: "question" | "exam" = "question") { }
   get tags(): Tag[] { return this.service.tags }
   get isAdmin(): boolean { return this.service.isAdmin }
-  get disableHotkeys(): boolean { return this.service.disableHotkeys}
+  get disableHotkeys(): boolean { return this.service.disableHotkeys }
   set disableHotkeys(value: boolean) { this.service.disableHotkeys = value }
 
   getTag(tid: string): Tag { return this.service.getTag(tid) }
@@ -824,7 +792,7 @@ export class TagsDisplayContextImpl implements TagsDisplayContext {
   updateTag(tag: Tag): Promise<boolean> { return this.service.updateTag(tag) }
   editTagsAll(diff: Tag[], id: number | string): Promise<boolean> {
     switch (this.type) {
-      case "exam": return this.service.editExamTagsAll(diff, ''+id)
+      case "exam": return this.service.editExamTagsAll(diff, '' + id)
       case "question": return this.service.editQuestionTagsAll(diff, +id)
     }
   }

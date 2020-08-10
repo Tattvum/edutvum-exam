@@ -73,8 +73,8 @@ export class MockDataSource implements DataSource {
   private holders = new Holders()
 
   constructor() {
-    this.holders.exams = makeExamsRnd(10)
-    this.holders.users = USERS
+    this.holders.exams.array = makeExamsRnd(10)
+    this.holders.users.array = USERS
   }
 
   public getHolders(user: User): Promise<Holders> {

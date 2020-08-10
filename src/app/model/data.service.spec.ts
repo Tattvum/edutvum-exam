@@ -11,7 +11,15 @@ import { EMPTY_EXAM, Exam } from '../model/exam';
 import { EMPTY_QUESTION } from '../model/question';
 import { GeneralContext } from '../model/general-context';
 
-const HOLDERS = new Holders([EMPTY_EXAM], [EMPTY_EXAM_RESULT], [EMPTY_USER])
+const HOLDERS = new Holders()
+{
+  HOLDERS.exams.array = [EMPTY_EXAM]
+  HOLDERS.exams.array.forEach(e => HOLDERS.exams.cache[e.id] = e)
+  HOLDERS.results.array = [EMPTY_EXAM_RESULT]
+  HOLDERS.results.array.forEach(r => HOLDERS.results.cache[r.id] = r)
+  HOLDERS.users.array = [EMPTY_USER]
+  HOLDERS.users.array.forEach(u => HOLDERS.users.cache[u.uid] = u)
+}
 
 let dataSourceMock = {
   getHolders: (user: User) => Promise.resolve(HOLDERS),
@@ -55,9 +63,9 @@ describe('DataService tests:', () => {
     tick()
     expect(service).toBeTruthy();
     expect(service.exams.length).toBe(1)
-    expect(service.exams[0].id).toBe(HOLDERS.exams[0].id)
+    expect(service.exams[0].id).toBe(HOLDERS.exams.array[0].id)
     expect(service.results.length).toBe(1)
-    expect(service.results[0].id).toBe(HOLDERS.results[0].id)
+    expect(service.results[0].id).toBe(HOLDERS.results.array[0].id)
   })))
 
   it('primary flow works', fakeAsync(inject([DataService], (service: DataService) => {
@@ -106,8 +114,8 @@ describe('DataService tests:', () => {
     discardPeriodicTasks() // WOW! https://github.com/angular/angular/issues/8251
     tick()
     console.log = jasmine.createSpy('log').and.stub();
-    let eid = HOLDERS.exams[0].id
-    let qid = HOLDERS.exams[0].questions[0].id
+    let eid = HOLDERS.exams.array[0].id
+    let qid = HOLDERS.exams.array[0].questions[0].id
 
     expect(() => service.getExamResult('89')).toThrow()
     expect(console.log).toHaveBeenCalledTimes(1);

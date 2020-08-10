@@ -64,12 +64,12 @@ export function fbObjToFLArr(obj): FileLink[] {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function fbObjToTArr(obj, ts: { [key: string]: Tag } = {}): Tag[] {
+export function fbObjToTArr(obj): Tag[] {
   if (Lib.isNil(obj)) return []
   let arr = []
   Object.keys(obj).forEach((key, index) => {
     let tid = obj[key]
-    arr[+key] = ts[tid]
+    arr[+key] = holders.tags.cache[tid]
   })
   return arr
 }
@@ -97,7 +97,7 @@ export function createA(type: AnswerType, given): string[] {
 let qcache: { [key: string]: Question } = {}
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] = [], ts: { [key: string]: Tag } = {}): Question[] {
+export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] = []): Question[] {
   let qarr = []
   if (obj.kind === 'LINK') {
     let linkid = obj.eid.trim() + '.' + obj.qid.trim()
@@ -113,7 +113,7 @@ export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] =
       let qkeys = Object.keys(qobj).sort()
       for (let i = 0; i < qkeys.length; i++) {
         let k = qkeys[i]
-        let qs = createQ(qobj[k], k, eid, groups.slice(0), ts)
+        let qs = createQ(qobj[k], k, eid, groups.slice(0))
         qarr.push(...qs)
       }
     }
@@ -128,7 +128,7 @@ export function createQ(obj, key: string, eid: string, groups: QuestionGroup[] =
   let choices = createA(type, obj.choices)
   let solutions = fbObjToArr(obj.solutions)
   let files = fbObjToFLArr(obj.files)
-  let tags = fbObjToTArr(obj.tags, ts)
+  let tags = fbObjToTArr(obj.tags)
   let q = new Question(id, title, type, choices,
     solutions, notes, explanation, eid, files, groups.slice(0), tags)
   qcache[q.fullid()] = q
@@ -144,7 +144,7 @@ export function createT(obj): Tag {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createE(obj, ts: { [key: string]: Tag } = {}): Exam {
+export function createE(obj): Exam {
   let id = obj.$key
   let title = obj.name
   let notes = obj.notes
@@ -153,13 +153,14 @@ export function createE(obj, ts: { [key: string]: Tag } = {}): Exam {
   let questions = []
   let qobj = obj.questions
   let qkeys = Object.keys(qobj).sort()
-  qkeys.forEach(key => questions.push(...createQ(qobj[key], key, id, [], ts)))
+  qkeys.forEach(key => questions.push(...createQ(qobj[key], key, id, [])))
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
   let markingScheme = MarkingSchemeType.OLD
   if (obj.markingscheme) markingScheme = MarkingSchemeType['' + obj.markingscheme]
   let maxDuration = obj.maxduration
-  let tags = fbObjToTArr(obj.tags, ts)
+//  let tags = fbObjToTArr(obj.tags, ts)
+  let tags = fbObjToTArr(obj.tags)
   return new Exam(id, title, questions, when, notes, explanation, status, markingScheme, maxDuration, tags)
 }
 
@@ -179,9 +180,9 @@ export function asCList(obj): CommentList {
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
-export function createR(obj, es: { [key: string]: Exam }, rs: { [key: string]: ExamResult }, user: User): ExamResult {
+export function createR(obj, user: User): ExamResult {
   let id = obj.$key
-  let exam = es[obj.exam]
+  let exam = holders.exams.cache[obj.exam]
   let title = exam.title
   let when = new Date(obj.when)
   let isPracticeMode: boolean = obj.practice
@@ -337,14 +338,11 @@ export abstract class AbstractFirebaseAPI {
   abstract listPush<T>(url: string, obj: any, fn: (x) => T): Promise<T>
 }
 
+//NOTE: Global!
+const holders = new Holders()
+
 @Injectable()
 export class FirebaseDataSource implements DataSource {
-  private holders = new Holders()
-
-  private alles: { [key: string]: Exam } = {}
-  private allrs: { [key: string]: ExamResult } = {}
-  private allts: { [key: string]: Tag } = {}
-  private allcs: { [key: string]: Chart } = {}
 
   constructor(private afbapi: AbstractFirebaseAPI) {
     //this.tempMarkings();
@@ -365,7 +363,6 @@ export class FirebaseDataSource implements DataSource {
 
   async getHolders(user: User): Promise<Holders> {
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')
-    this.holders = new Holders()
     //NOTE: the below order of calls is important
     //exams need tags, and results need exams
     await this.fetchM()
@@ -374,7 +371,7 @@ export class FirebaseDataSource implements DataSource {
     await this.fetchE()
     await this.fetchR(user)
     await this.fetchC(user)
-    return this.holders
+    return holders
   }
 
   private resultsUrl(user: User): string {
@@ -388,48 +385,56 @@ export class FirebaseDataSource implements DataSource {
   private async fetchM(): Promise<void> {
     let mobjs = await this.afbapi.objectFirstMap(MARKINGS_URL)
     mobjs = fbObjToKeyArr(mobjs)
-    mobjs.forEach(m => this.holders.markings.push(createM(m)))
+    mobjs.forEach(m => {
+      let marking = createM(m)
+      holders.markings.cache[marking.id] = marking
+      holders.markings.array.push(marking)
+    })
   }
 
   private async fetchU(): Promise<void> {
     let uobjs = await this.afbapi.objectFirstMap(USERS_URL)
-    uobjs.forEach(u => this.holders.users.push(createU(u)))
+    uobjs.forEach(u => {
+      let user = createU(u)
+      holders.users.cache[user.uid] = user
+      holders.users.array.push(user)
+    })
   }
 
   private async fetchT(): Promise<void> {
     let tobjs = await this.afbapi.listFirstMap(TAGS_URL)
     tobjs.forEach(t => {
       let tag = createT(t)
-      this.allts[t.$key] = tag
-      this.holders.tags.push(tag)
+      holders.tags.cache[tag.id] = tag
+      holders.tags.array.push(tag)
     })
   }
 
   private async fetchE(): Promise<void> {
     let eobjs = await this.afbapi.listFirstMap(EXAMS_URL)
     eobjs.forEach(e => {
-      let exam = createE(e, this.allts)
-      this.alles[e.$key] = exam
-      this.holders.exams.push(exam)
+      let exam = createE(e)
+      holders.exams.cache[exam.id] = exam
+      holders.exams.array.push(exam)
     })
-    this.holders.exams.reverse()
+    holders.exams.array.reverse()
   }
 
   private async fetchR(user: User): Promise<void> {
     let robjs = await this.afbapi.listFirstMapR(this.resultsUrl(user))
     fbObjToArr(robjs).forEach(r => {
-      let result = createR(r, this.alles, this.allrs, user)
-      this.allrs[r.$key] = result
-      this.holders.results.push(result)
+      let result = createR(r, user)
+      holders.results.cache[result.id] = result
+      holders.results.array.push(result)
     })
   }
 
   private async fetchC(user: User): Promise<void> {
     let cobjs = await this.afbapi.listFirstMapR(this.chartsUrl(user))
     fbObjToArr(cobjs).forEach(c => {
-      let chart = createC(c, this.allrs)
-      this.allcs[c.$key] = chart
-      this.holders.charts.push(chart)
+      let chart = createC(c, holders.results.cache)
+      holders.charts.cache[chart.id] = chart
+      holders.charts.array.push(chart)
     })
   }
 
@@ -455,7 +460,7 @@ export class FirebaseDataSource implements DataSource {
     return this.afbapi.listPush<Chart>(url, co, call => {
       let key = call.key
       let chart = new Chart(key, c.title, c.when, c.results)
-      this.allcs[key] = chart
+      holders.charts.cache[key] = chart
       return chart
     })
   }
@@ -477,7 +482,7 @@ export class FirebaseDataSource implements DataSource {
 
   public createExam(user: User, eid: string, isPractice: boolean = false): Promise<ExamResult> {
     Lib.failifold(Lib.isNil(eid), 'eid cannot be undefined')
-    let exam = this.alles[eid]
+    let exam = holders.exams.cache[eid]
     Lib.failifold(Lib.isNil(exam), 'exam cannot be undefined', eid)
     let er = new ExamResult(eid, exam.title, new Date(), exam, isPractice)
     let ro = convertExamResult(er)
@@ -486,7 +491,7 @@ export class FirebaseDataSource implements DataSource {
       let key = call.key
       let result = new ExamResult(key, er.title, er.when, er.exam, er.isPracticeMode,
         er.answers, ExamStatus.PENDING, er.guessings)
-      this.alles[key] = result
+      holders.exams.cache[key] = result
       return result
     })
   }
@@ -531,8 +536,8 @@ export class FirebaseDataSource implements DataSource {
     let url = EXAMS_URL
     // console.log("defineExam", Object.keys(eocover))
     return this.afbapi.objectUpdate<boolean>(url, eocover, call => {
-      this.alles[exam.id] = exam
-      this.holders.exams.push(exam)
+      holders.exams.cache[exam.id] = exam
+      holders.exams.array.push(exam)
       return true
     })
   }
@@ -600,7 +605,7 @@ export class FirebaseDataSource implements DataSource {
       let key = call.key
       //console.log('saved tag', url, key)
       let tag = new Tag(key, title)
-      this.holders.tags.push(tag)
+      holders.tags.array.push(tag)
       return tag
     })
   }

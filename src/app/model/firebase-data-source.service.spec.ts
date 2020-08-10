@@ -153,9 +153,9 @@ describe('FirebaseDataSource -', () => {
   xit('Overall object checks -', fakeAsync(() => {
     let holders: Holders = resolvePromise(service.getHolders(EMPTY_USER))
     expect(holders).not.toBeNull()
-    expect(holders.users.length).toBe(2)
-    expect(holders.exams.length).toBe(2)
-    expect(holders.results.length).toBe(1)
+    expect(holders.users.array.length).toBe(2)
+    expect(holders.exams.array.length).toBe(2)
+    expect(holders.results.array.length).toBe(1)
   }))
 
   describe('ExamResult conversion -', () => {
