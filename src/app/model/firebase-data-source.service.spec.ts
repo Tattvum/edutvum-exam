@@ -170,13 +170,13 @@ describe('FirebaseDataSource -', () => {
     function rCheckForward(rkey) {
       let r = mockdata.ver5.results.u1[rkey]
       r['$key'] = rkey
-      let r_ = fbs.createR(r, exams, {}, EMPTY_USER)
+      let r_ = fbs.createR(r, EMPTY_USER, exams)
       expect(r_).not.toBeNull()
     }
     function rCheckReverse(rkey) {
       let r = mockdata.ver5.results.u1[rkey]
       r['$key'] = rkey
-      let r_ = fbs.createR(r, exams, {}, EMPTY_USER)
+      let r_ = fbs.createR(r, EMPTY_USER, exams)
       let r_r = fbs.convertExamResult(r_)
       expect(r_).not.toBeNull()
     }

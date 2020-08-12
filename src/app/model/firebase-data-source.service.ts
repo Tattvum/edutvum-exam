@@ -178,10 +178,12 @@ export function asCList(obj): CommentList {
   return arr
 }
 
+export type ExamCache = { [key: string]: Exam}
+
 // NOTE: PUBLIC for TEST sake ONLY
-export function createR(obj, user: User): ExamResult {
+export function createR(obj, user: User, ecache: ExamCache): ExamResult {
   let id = obj.$key
-  let exam = holders.exams.cache[obj.exam]
+  let exam = ecache[obj.exam]
   let title = exam.title
   let when = new Date(obj.when)
   let isPracticeMode: boolean = obj.practice
@@ -344,7 +346,7 @@ const holders = new Holders()
 export class FirebaseDataSource implements DataSource {
 
   constructor(private afbapi: AbstractFirebaseAPI) {
-    this.tempMarkings();
+    //this.tempMarkings();
   }
 
   private async tempMarkings(): Promise<boolean> {
@@ -422,7 +424,7 @@ export class FirebaseDataSource implements DataSource {
   private async fetchR(user: User): Promise<void> {
     let robjs = await this.afbapi.listFirstMapR(this.resultsUrl(user))
     fbObjToArr(robjs).forEach(r => {
-      let result = createR(r, user)
+      let result = createR(r, user, holders.exams.cache)
       holders.results.cache[result.id] = result
       holders.results.array.push(result)
     })

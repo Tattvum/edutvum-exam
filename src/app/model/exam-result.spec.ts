@@ -2,7 +2,7 @@ import { AnswerType } from './answer-type';
 import { Question } from './question';
 import { Exam, ExamStatus } from './exam';
 import { ExamResult } from './exam-result';
-import { MarkingSchemeType } from './marks';
+import { Marking } from './marking';
 
 let createQ = (type: AnswerType, choices: string[], sols: number[], title = 'TEST Q...'): Question => {
   return new Question('00', title, type, choices, sols)
@@ -270,11 +270,15 @@ describe('ExamResult2:', () => {
   })
 
   describe('ExamResult - marks :', () => {
-    let er = (q: Question, ans: number[], ms: MarkingSchemeType = MarkingSchemeType.GENERAL) => {
-      let e = new Exam('00', 'TEST E', [q], new Date(), "", "", ExamStatus.DONE, ms)
+    let er = (q: Question, ans: number[], m: Marking = Marking.GENERAL) => {
+      let e = new Exam('00', 'TEST E', [q], new Date(), "", "", ExamStatus.DONE, m)
       return new ExamResult(e.id, e.title, new Date(), e, false, [ans], ExamStatus.DONE)
     }
-    let JA = MarkingSchemeType.JEEADV
+    const jaTypes = {
+      "-": { "right": 3, "wrong": -1 },
+      "MAQ": { "right": 4, "wrong": -2, "partial": true }
+    }
+    const JA = new Marking("JEEADV", "", new Date(), jaTypes)
 
     it('isPartial works', () => {
       expect(er(tfq(), [0]).isPartial(0)).toBeFalse()

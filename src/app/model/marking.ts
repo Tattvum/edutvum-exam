@@ -42,6 +42,7 @@ export class Marking extends AbstractThing {
   }
 
   marks(type: AnswerType, solutions: number[], answers: number[]): Marks {
+    if (type === AnswerType.NAQ) return this.naq(solutions, answers)
     const def: QType = this.types["-"]
     let qt: QType = this.qtype(type)
     if (Lib.isNil(qt)) qt = def
@@ -56,5 +57,13 @@ export class Marking extends AbstractThing {
     if (!subset(solutions, answers)) return nope
     if (!subset(answers, solutions)) return { 'value': partialValue, 'max': qt.right }
     return { 'value': qt.right, 'max': qt.right }
+  }
+
+  private naq(solutions: number[], answers: number[]): Marks {
+    let nope = { 'value': 0, 'max': solutions[0] }
+    if (solutions.length !== 1) return nope // should have only one solution
+    if (answers.length > 1) return nope // should have maximum one answer
+    if (solutions[0] < answers[0]) return nope // NAQ solution should be grater than answer (it is marks)
+    return { 'value': answers[0], 'max': solutions[0] }
   }
 }
