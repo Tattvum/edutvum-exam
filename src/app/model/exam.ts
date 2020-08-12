@@ -57,6 +57,8 @@ export class Exam extends AbstractThing {
   }
 
   public isSolution(qid: number, n: number): boolean {
+    const q = this.questions[qid]
+    if(Lib.isNil(q)) return false //TBD: When will it be so?!
     return this.questions[qid].isSolution(n)
   }
 

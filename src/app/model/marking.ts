@@ -26,6 +26,7 @@ function subset(sup: number[], sub: number[]): boolean {
 export class Marking extends AbstractThing {
   public static readonly OLD: Marking = new Marking("OLD")
   public static readonly GENERAL: Marking = new Marking("GENERAL")
+  public static readonly Defaults: Marking[] = [Marking.OLD, Marking.GENERAL]
 
   constructor(
     id: string,
@@ -61,6 +62,7 @@ export class Marking extends AbstractThing {
 
   private naq(solutions: number[], answers: number[]): Marks {
     let nope = { 'value': 0, 'max': solutions[0] }
+    if (Lib.isNil(answers)) return nope// TBD: When will it be so?!
     if (solutions.length !== 1) return nope // should have only one solution
     if (answers.length > 1) return nope // should have maximum one answer
     if (solutions[0] < answers[0]) return nope // NAQ solution should be grater than answer (it is marks)

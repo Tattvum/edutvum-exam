@@ -18,6 +18,7 @@ import { Chart } from '../model/chart';
 import { Tag } from './tag';
 import { Marking } from './marking';
 import { Upload } from './upload';
+import { Thing } from './abstract-thing';
 
 // NOTE: Not used anywhere but in tests, just for sample testing
 export function isin<T>(arr: Array<T>, val: T): boolean {
@@ -31,13 +32,24 @@ export class ArrayCache<T> {
   ) { }
 }
 
+export class ThingArrayCache<T extends Thing> {
+  constructor(
+    public array: T[] = [],
+    public cache: { [id: string]: T } = {},
+  ) { }
+  add(t: T) {
+    this.cache[t.id] = t
+    this.array.push(t)
+  }
+}
+
 export class Holders {
-  public exams = new ArrayCache<Exam>()
-  public results = new ArrayCache<ExamResult>()
+  public exams = new ThingArrayCache<Exam>()
+  public results = new ThingArrayCache<ExamResult>()
   public users = new ArrayCache<User>()
   public tags = new ArrayCache<Tag>()
-  public charts = new ArrayCache<Chart>()
-  public markings = new ArrayCache<Marking>()
+  public charts = new ThingArrayCache<Chart>()
+  public markings = new ThingArrayCache<Marking>()
 }
 
 export enum ExamEditType {
@@ -149,6 +161,7 @@ export interface DetailsDisplayContext {
 }
 
 export interface NavDisplayContext {
+  markings: Marking[]
   isAdmin: boolean
   disableHotkeys: boolean
   timerOnlyMe(onlyMe: (i: number) => void): void
@@ -195,6 +208,7 @@ export class DataService
   public get results() { return this.holders.results.array }
   public get exams() { return this.holders.exams.array }
   public get users() { return this.holders.users.array }
+  public get markings() { return this.holders.markings.array }
 
   public getTag(tid: string): Tag {
     return this.holders.tags.cache[tid]

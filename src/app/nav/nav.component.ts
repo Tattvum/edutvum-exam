@@ -169,14 +169,13 @@ export class NavComponent implements OnInit {
   }
 
   get markingSchemes(): string[] {
-    return MARKING_SCHEME_TYPE_NAMES
+    return this.context.markings.map(m => m.id)
   }
 
   get markingScheme(): string {
     return this.result.exam.marking.id
   }
   set markingScheme(value: string) {
-    // console.log(value, (<any>MarkingSchemeType)[value])
     this.result.exam.marking = this.context.getMarking(value)
     this.context.editExamMarkingScheme(value, this.result.exam.id)
   }

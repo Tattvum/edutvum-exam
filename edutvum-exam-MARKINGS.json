@@ -1,4 +1,13 @@
 {
+  "TESTDOUBLE": {
+    "title": "TESTDOUBLE",
+    "types": {
+      "-": {
+        "right": 10,
+        "wrong": -10
+      }
+    }
+  },
   "NSEJS": {
     "title": "NSEJS",
     "types": {

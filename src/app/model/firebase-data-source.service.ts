@@ -346,7 +346,7 @@ const holders = new Holders()
 export class FirebaseDataSource implements DataSource {
 
   constructor(private afbapi: AbstractFirebaseAPI) {
-    //this.tempMarkings();
+    this.tempMarkings();
   }
 
   private async tempMarkings(): Promise<boolean> {
@@ -384,12 +384,13 @@ export class FirebaseDataSource implements DataSource {
   }
 
   private async fetchM(): Promise<void> {
+    holders.markings.add(Marking.OLD)
+    holders.markings.add(Marking.GENERAL)
     let mobjs = await this.afbapi.objectFirstMap(MARKINGS_URL)
     mobjs = fbObjToKeyArr(mobjs)
     mobjs.forEach(m => {
       let marking = createM(m)
-      holders.markings.cache[marking.id] = marking
-      holders.markings.array.push(marking)
+      holders.markings.add(marking)
     })
   }
 
@@ -415,8 +416,7 @@ export class FirebaseDataSource implements DataSource {
     let eobjs = await this.afbapi.listFirstMap(EXAMS_URL)
     eobjs.forEach(e => {
       let exam = createE(e)
-      holders.exams.cache[exam.id] = exam
-      holders.exams.array.push(exam)
+      holders.exams.add(exam)
     })
     holders.exams.array.reverse()
   }
@@ -425,8 +425,7 @@ export class FirebaseDataSource implements DataSource {
     let robjs = await this.afbapi.listFirstMapR(this.resultsUrl(user))
     fbObjToArr(robjs).forEach(r => {
       let result = createR(r, user, holders.exams.cache)
-      holders.results.cache[result.id] = result
-      holders.results.array.push(result)
+      holders.results.add(result)
     })
   }
 
@@ -434,8 +433,7 @@ export class FirebaseDataSource implements DataSource {
     let cobjs = await this.afbapi.listFirstMapR(this.chartsUrl(user))
     fbObjToArr(cobjs).forEach(c => {
       let chart = createC(c, holders.results.cache)
-      holders.charts.cache[chart.id] = chart
-      holders.charts.array.push(chart)
+      holders.charts.add(chart)
     })
   }
 
