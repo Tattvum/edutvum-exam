@@ -14,7 +14,6 @@ import { ExamResult } from './exam-result';
 import { User, UserRole } from './user';
 import { QuestionGroup } from '../model/question-group';
 import { CommentList, Comment } from './comment';
-import { MarkingSchemeType } from './marks';
 import { Tag } from './tag';
 import { Chart } from './chart';
 import { Marking } from './marking';
@@ -156,12 +155,12 @@ export function createE(obj): Exam {
   qkeys.forEach(key => questions.push(...createQ(qobj[key], key, id, [])))
   let status = ExamStatus.DONE
   if (obj.status) status = ExamStatus['' + obj.status]
-  let markingScheme = MarkingSchemeType.OLD
-  if (obj.markingscheme) markingScheme = MarkingSchemeType['' + obj.markingscheme]
+  let marking = Marking.OLD
+  if (obj.markingscheme) marking = holders.markings.cache['' + obj.markingscheme]
   let maxDuration = obj.maxduration
 //  let tags = fbObjToTArr(obj.tags, ts)
   let tags = fbObjToTArr(obj.tags)
-  return new Exam(id, title, questions, when, notes, explanation, status, markingScheme, maxDuration, tags)
+  return new Exam(id, title, questions, when, notes, explanation, status, marking, maxDuration, tags)
 }
 
 // NOTE: PUBLIC for TEST sake ONLY
@@ -265,7 +264,7 @@ export function convertPureExam(exam: Exam, user: User): any {
   exam.questions.forEach(q => qs[q.id] = convertQuestion(q))
   eo['questions'] = qs
   eo['status'] = ExamStatus[exam.status]
-  eo['markingscheme'] = MarkingSchemeType[exam.markingScheme]
+  eo['markingscheme'] = exam.marking.id
   eo['maxduration'] = exam.maxDuration
   return eo
 }
@@ -345,7 +344,7 @@ const holders = new Holders()
 export class FirebaseDataSource implements DataSource {
 
   constructor(private afbapi: AbstractFirebaseAPI) {
-    //this.tempMarkings();
+    this.tempMarkings();
   }
 
   private async tempMarkings(): Promise<boolean> {

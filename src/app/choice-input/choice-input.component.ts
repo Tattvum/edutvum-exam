@@ -5,7 +5,7 @@ import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { GeneralContext } from '../model/general-context';
 import { ExamStatus } from '../model/exam';
-import { MarkingSchemeType } from '../model/marks';
+import { Marking } from 'app/model/marking';
 
 declare var MathJax: {
   Hub: {
@@ -113,7 +113,7 @@ export class ChoiceInputComponent implements OnInit {
     return this.question.type == 5 && this.result.isLocked()
   }
   get schemeOLD(): boolean {
-    return this.result.exam.markingScheme === 0
+    return this.result.exam.marking === Marking.OLD
   }
 
   get marks(): number {
@@ -147,7 +147,7 @@ export class ChoiceInputComponent implements OnInit {
 
   setNaqDone() {
     this.result.setAnswer(+this.qid, 0)
-    if (this.result.exam.markingScheme !== MarkingSchemeType.OLD) {
+    if (this.result.exam.marking !== Marking.OLD) {
       this.result.setAnswer(+this.qid, this.result.marks(+this.qid).max)
     }
     this.context.saveExam()
@@ -179,7 +179,7 @@ export class ChoiceInputComponent implements OnInit {
     try {
       this.question.setType(newtext)
       this.context.editQuestionType(newtext, +this.qid)
-      if (this.result.exam.markingScheme !== MarkingSchemeType.OLD && newtext === 'NAQ') {
+      if (this.result.exam.marking !== Marking.OLD && newtext === 'NAQ') {
         this.editSolution('[1]');
       }
     } catch (error) {

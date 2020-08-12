@@ -158,6 +158,7 @@ export interface NavDisplayContext {
   saveExam(): Promise<boolean>
   cancelExam(): Promise<boolean>
   editExamTitle(diff: any, eid: string): Promise<boolean>
+  getMarking(mid: string): Marking
   editExamMarkingScheme(diff: any, eid: string): Promise<boolean>
   editExamMaxDuration(diff: any, eid: string): Promise<boolean>
   addQuestion(qidn: number, groups?: QuestionGroup[]): Promise<number>
@@ -197,6 +198,9 @@ export class DataService
 
   public getTag(tid: string): Tag {
     return this.holders.tags.cache[tid]
+  }
+  public getMarking(mid: string): Marking {
+    return this.holders.markings.cache[mid]
   }
 
   private globalTimerAction: (i: number) => void

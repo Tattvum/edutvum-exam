@@ -1,7 +1,7 @@
 import { Question, EMPTY_QUESTION } from './question';
 import { AbstractThing } from './abstract-thing';
 import { Lib } from './lib';
-import { MarkingSchemeType, Marker } from './marks';
+import { Marking } from './marking';
 import { Tag } from './tag';
 
 export enum ExamStatus {
@@ -17,7 +17,7 @@ export class Exam extends AbstractThing {
     public notes = '',
     public explanation = '',
     public status = ExamStatus.DONE,
-    public markingScheme = MarkingSchemeType.GENERAL,
+    public marking = Marking.GENERAL,
     public maxDuration: number = 0,
     public tags: Tag[] = [],
   ) {
@@ -40,14 +40,10 @@ export class Exam extends AbstractThing {
     return qidn - 1
   }
 
-  public get markingSchemeName(): string {
-    return MarkingSchemeType[this.markingScheme]
-  }
-
   public maxMarks(qid: number): number {
     let q = this.questions[qid]
     let sol = q.solutions
-    return Marker.get(this.markingScheme).marks(q.type, sol, []).max
+    return this.marking.marks(q.type, sol, []).max
   }
   private _totalMarks: number;
   public get totalMarks(): number {

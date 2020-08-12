@@ -5,7 +5,7 @@ import { Lib } from '../model/lib';
 import { CommentList, Comment } from './comment';
 import { EMPTY_USER, User } from './user';
 import { Score } from './score';
-import { Marker, Marks } from './marks';
+import { Marks } from './marks';
 import { NO_TAG, TYPE_TAG } from './tag';
 
 export class ExamResult extends Exam {
@@ -189,7 +189,7 @@ export class ExamResult extends Exam {
     let q = this.questions[qid]
     let sol = q.solutions
     let ans = this.answers[qid]
-    return Marker.get(this.exam.markingScheme).marks(q.type, sol, ans)
+    return this.exam.marking.marks(q.type, sol, ans)
   }
 
   public get score(): Score {

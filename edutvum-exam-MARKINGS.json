@@ -1,22 +1,4 @@
 {
-  "OLD": {
-    "title": "OLD",
-    "types": {
-      "-": {
-        "right": 1,
-        "wrong": 0
-      }
-    }
-  },
-  "GENERAL": {
-    "title": "GENERAL",
-    "types": {
-      "-": {
-        "right": 1,
-        "wrong": 0
-      }
-    }
-  },
   "NSEJS": {
     "title": "NSEJS",
     "types": {

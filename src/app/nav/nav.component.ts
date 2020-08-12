@@ -3,13 +3,12 @@ import 'rxjs'
 import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService, NavDisplayContext, TagsDisplayContextImpl, TagsDisplayContext } from '../model/data.service';
-import { ExamStatus } from '../model/exam';
 import { ExamResult } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { Lib, KEY } from '../model/lib';
 
 import { MARKING_SCHEME_TYPE_NAMES, MarkingSchemeType } from '../model/marks';
-import { Question, EMPTY_QUESTION } from '../model/question';
+import { Question } from '../model/question';
 
 @Component({
   selector: 'app-nav',
@@ -174,11 +173,11 @@ export class NavComponent implements OnInit {
   }
 
   get markingScheme(): string {
-    return MARKING_SCHEME_TYPE_NAMES[this.result.exam.markingScheme]
+    return this.result.exam.marking.id
   }
   set markingScheme(value: string) {
-    console.log(value, (<any>MarkingSchemeType)[value])
-    this.result.exam.markingScheme = (<any>MarkingSchemeType)[value]
+    // console.log(value, (<any>MarkingSchemeType)[value])
+    this.result.exam.marking = this.context.getMarking(value)
     this.context.editExamMarkingScheme(value, this.result.exam.id)
   }
 
