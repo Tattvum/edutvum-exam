@@ -37,6 +37,18 @@ export class Marking extends AbstractThing {
     super(id, title, when)
   }
 
+  private qttext(key: string, qt: QType): string {
+    const name = key === "-" ? "Default" : key
+    const marks = `${qt.right}/${qt.wrong}`
+    const partials = !Lib.isNil(qt.partial) ? "(with Partials)" : ""
+    return `${name} type carries ${marks} marks ${partials}. `
+  }
+
+  get description(): string {
+    const findqtt = (key: string) => this.qttext(key, this.types[key])
+    return `${this.id} -- ` + Object.keys(this.types).map(findqtt).join(' ')
+  }
+
   qtype(type: AnswerType): QType {
     const typeName = AnswerType[type]
     return this.types[typeName]
