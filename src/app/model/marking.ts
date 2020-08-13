@@ -60,9 +60,10 @@ export class Marking extends AbstractThing {
     let qt: QType = this.qtype(type)
     if (Lib.isNil(qt)) qt = def
     const nope = { 'value': qt.wrong, 'max': qt.right }
-    if (Lib.isNil(answers)) return nope
+    const zero = { 'value': 0, 'max': qt.right }
+    if (Lib.isNil(answers)) return zero
     const partialValue = Lib.isNil(qt.partial) ? qt.wrong : answers.length
-    if (answers.length == 0) return { 'value': 0, 'max': qt.right }
+    if (answers.length == 0) return zero
     if (solutions.length < 1) return nope //Question should have atleast one solution
     if (answers.length > solutions.length) return nope //Question cannot have more answers than solutions
     if (!isUnique(answers)) return nope // Question answers cannot have duplicates
@@ -74,7 +75,8 @@ export class Marking extends AbstractThing {
 
   private naq(solutions: number[], answers: number[]): Marks {
     let nope = { 'value': 0, 'max': solutions[0] }
-    if (Lib.isNil(answers)) return nope// TBD: When will it be so?!
+    const zero = { 'value': 0, 'max': solutions[0] }
+    if (Lib.isNil(answers)) return zero// TBD: When will it be so?!
     if (solutions.length !== 1) return nope // should have only one solution
     if (answers.length > 1) return nope // should have maximum one answer
     if (solutions[0] < answers[0]) return nope // NAQ solution should be grater than answer (it is marks)

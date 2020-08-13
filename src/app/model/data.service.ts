@@ -270,7 +270,6 @@ export class DataService
       this.holders.exams.array.forEach(e => this.cache[e.id] = e)
       this.holders.exams.array.filter(e => e.isPending()).forEach(e => this.shadowPendingExam(e.id))
       this.holders.results.array.forEach(r => this.cache[r.id] = r)
-      console.log(this.holders.markings.array)
       Lib.failifold(Object.keys(this.cache).length <= 0, 'cache cannot be empty')
     }).then(dolast).then(() => this.loading = false)
   }

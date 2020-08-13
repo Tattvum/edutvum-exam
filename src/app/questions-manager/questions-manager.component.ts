@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Lib, KEY } from '../model/lib';
 import { GeneralContext } from '../model/general-context';
 import { DataService, QuestionsManagerDisplayContext } from '../model/data.service';
+import { AnswerType } from 'app/model/answer-type';
 
 @Component({
   selector: 'app-questions-manager',
@@ -85,6 +86,13 @@ export class QuestionsManagerComponent {
 
   isGrouped(qidn: number): boolean {
     return this.result.exam.questions[qidn].groups.length > 0
+  }
+
+  info(qidn: number): string {
+    if (!this.result.isLocked()) return ""
+    const q = this.result.questions[qidn]
+    const marks = this.result.marks(qidn)
+    return `${qidn + 1} | ${q.id} | ${AnswerType[q.type]} -- Marks : ${marks.value}/${marks.max}`
   }
 
 }

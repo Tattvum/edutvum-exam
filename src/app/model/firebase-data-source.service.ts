@@ -346,7 +346,7 @@ const holders = new Holders()
 export class FirebaseDataSource implements DataSource {
 
   constructor(private afbapi: AbstractFirebaseAPI) {
-    this.tempMarkings();
+    //this.tempMarkings();
   }
 
   private async tempMarkings(): Promise<boolean> {

@@ -1,6 +1,6 @@
 <div fxLayout="row wrap">
   <span *ngFor="let q of result.questions; let i=index">
-    <span fxLayout="row" fxLayoutGap="2px">
+    <span fxLayout="row" fxLayoutGap="2px" [matTooltip]="info(i)" matTooltipClass="info">
       <span (click)="select(i)" fxLayout="column">
         <span [class.selected]="isGrouped(i)" class="nav-button num-top"></span>
         <span class="btn nav-button nav-number" id="b{{i}}"

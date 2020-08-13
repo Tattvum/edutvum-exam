@@ -462,3 +462,21 @@ added 16 packages from 2 contributors, removed 17 packages and updated 19 packag
 ui: downloading ui-v1.1.1.zip...
 ...
 ---
+
+
+2020-08-13 Thu - on 5.2.1
+---
+`firebase emulators:start --only database`
+...
+Error: TIMEOUT: Port 9000 on localhost was not active within 30000ms
+Update available 8.6.0 → 8.7.0
+Run npm i -g firebase-tools to update
+---
+`npm i -g firebase-tools`
++ firebase-tools@8.7.0
+added 62 packages from 15 contributors, updated 9 packages and moved 8 packages in 179.588s
+---
+`firebase emulators:start --only database`
+Database │ localhost:9000 │ http://localhost:4000/database 
+(all works)
+---
