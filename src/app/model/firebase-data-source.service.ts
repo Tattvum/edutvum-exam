@@ -340,7 +340,7 @@ export abstract class AbstractFirebaseAPI {
 }
 
 //NOTE: Global!
-const holders = new Holders()
+let holders = new Holders()
 
 @Injectable()
 export class FirebaseDataSource implements DataSource {
@@ -363,6 +363,8 @@ export class FirebaseDataSource implements DataSource {
   }
 
   async getHolders(user: User): Promise<Holders> {
+    //NOTE: Required to clear all before changing to a new user.
+    holders = new Holders()
     Lib.failifold(Lib.isNil(user), 'User should be authenticated')
     //NOTE: the below order of calls is important
     //exams need tags, and results need exams

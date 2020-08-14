@@ -240,7 +240,7 @@ export class DataService
     let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
     let tFilter = (e: Exam) => cistrcomp(e.title, filter)
     if (all) {
-      return this.holders.exams.array.filter(tFilter)
+      return this.holders.results.array.filter(tFilter)
     } else {
       let eids = [...new Set(this.holders.results.array.map(r => r.exam.id))]
       let topr = eid => this.holders.results.array.filter(r => r.exam.id === eid).sort(revChron)[0]
