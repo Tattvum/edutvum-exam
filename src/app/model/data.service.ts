@@ -225,26 +225,16 @@ export class DataService
   public filterExams(all: boolean = true, filter: string = ""): Exam[] {
     let revChron = (a, b) => b.when.getTime() - a.when.getTime()
     let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
+    let npFilter = (e: Exam) => !e.isPending()
     let tFilter = (e: Exam) => cistrcomp(e.title, filter)
     if (all) {
-      return this.holders.exams.array.filter(tFilter)
+      const out = this.holders.exams.array.filter(tFilter)
+      if (this.isAdmin) return out; else return out.filter(npFilter)
     } else {
       let eids = [...new Set(this.holders.results.array.map(r => r.exam.id))]
       let topr = eid => this.holders.results.array.filter(r => r.exam.id === eid).sort(revChron)[0]
-      return eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
-    }
-  }
-
-  public filterExamResults(all: boolean = true, filter: string = ""): Exam[] {
-    let revChron = (a, b) => b.when.getTime() - a.when.getTime()
-    let cistrcomp = (a, b) => a.toUpperCase().indexOf(b.toUpperCase()) !== -1
-    let tFilter = (e: Exam) => cistrcomp(e.title, filter)
-    if (all) {
-      return this.holders.results.array.filter(tFilter)
-    } else {
-      let eids = [...new Set(this.holders.results.array.map(r => r.exam.id))]
-      let topr = eid => this.holders.results.array.filter(r => r.exam.id === eid).sort(revChron)[0]
-      return eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
+      const out = eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
+      return out.filter(npFilter)
     }
   }
 
@@ -296,6 +286,7 @@ export class DataService
   }
 
   public listResults(eid: string): ExamResult[] {
+    if (this.getPureExam(eid).isPending()) return []
     return this.holders.results.array
       .filter(r => r.exam.id === eid && !r.snapshot)
       .sort((a, b) => b.when.getTime() - a.when.getTime())
