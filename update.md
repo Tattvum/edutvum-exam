@@ -480,3 +480,128 @@ added 62 packages from 15 contributors, updated 9 packages and moved 8 packages 
 Database │ localhost:9000 │ http://localhost:4000/database 
 (all works)
 ---
+
+
+2020-09-22 Tue - on 5.2.4
+---
+Update available 8.7.0 → 8.10.0       │
+Run npm i -g firebase-tools to update
+---
+`npm i -g firebase-tools`
++ firebase-tools@8.10.0
+added 51 packages from 21 contributors, removed 52 packages, updated 45 packages and moved 10 packages in 113.448s
+---
+`ng update`
+The installed local Angular CLI version is older than the latest stable version.
+Installing a temporary version to perform the update.
+Installing packages for tooling via npm.
+An unhandled exception occurred: Package install failed.
+See "/tmp/ng-3C9w9B/angular-errors.log" for further details.
+---
+`npm install @angular/cli@latest`
++ @angular/cli@10.1.2
+added 8 packages from 11 contributors, removed 4 packages, updated 28 packages and audited 2332 packages in 48.915s
+---
+`npm install -g @angular/cli@latest`
++ @angular/cli@10.1.2
+added 15 packages from 7 contributors, removed 7 packages and updated 35 packages in 17.505s
+---
+`ng update`
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+    We analyzed your package.json, there are some packages to update:
+    
+      Name                               Version                  Command to update
+     --------------------------------------------------------------------------------
+      @angular/cdk                       10.1.0 -> 10.2.2         ng update @angular/cdk
+      @angular/core                      10.0.5 -> 10.1.2         ng update @angular/core
+      @angular/material                  10.1.0 -> 10.2.2         ng update @angular/material
+      rxjs                               6.6.0 -> 6.6.3           ng update rxjs
+---
+`ng update @angular/cdk @angular/core @angular/material rxjs --allow-dirty --force`
+UPDATE package.json (2842 bytes)
+✖ Package install failed, see above.
+✖ Migration failed. See above for further details.
+(but package.json updated?!)
+---
+`ng update @angular/cdk @angular/core @angular/material rxjs --allow-dirty --force`
+Repository is not clean. Update changes will be mixed with pre-existing changes.
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package '@angular/cdk' is already up to date.
+Package '@angular/core' is already up to date.
+Package '@angular/material' is already up to date.
+Package 'rxjs' is already up to date.
+---
+`ng version`
+Angular CLI: 10.1.2
+Node: 12.18.4
+OS: linux x64
+
+Angular: 10.1.2
+---
+`firebase emulators:start --only database`
+(port taken)
+`fuser -k 9000/tcp`
+(killed)
+`firebase emulators:start --only database`
+Emulator │ Host:Port      │ View in Emulator UI            │
+Database │ localhost:9000 │ http://localhost:4001/database 
+---
+`npm run dev`
+(now all works!)
+(then I ctrl+c stopped)
+---
+`npm i @angular/flex-layout`
++ @angular/flex-layout@9.0.0-beta.31
+removed 1 package, updated 1 package and audited 2332 packages in 36.817s
+(oh same?!)
+---
+`npm i @angular/fire`
++ @angular/fire@6.0.2
+updated 1 package and audited 2332 packages in 15.462s
+(same again!?)
+---
+`npm outdated`
+Package                                 Current         Wanted          Latest  Location
+@angular/flex-layout              9.0.0-beta.31  9.0.0-beta.31  10.0.0-beta.32  edutvum-exam
+typescript                                3.9.6          3.9.7           4.0.3  edutvum-exam
+npm                                      6.14.4         6.14.8          6.14.8  edutvum-exam
+protractor                                5.4.4          5.4.4           7.0.0  edutvum-exam
+ngx-pagination                            4.1.0          4.1.0           5.0.0  edutvum-exam
+firebase                                 7.14.2         7.21.0          7.21.0  edutvum-exam
+firebase-admin                           8.12.1         8.13.0           9.2.0  edutvum-exam
+...
+(so no changes in angular firebase)
+---
+`ng typescript`
++ typescript@3.9.7
+updated 1 package and audited 2332 packages in 17.068s
+`ng typescript@latest`
++ typescript@4.0.3
+updated 1 package and audited 2332 packages in 18.332s
+`ng -g typescript@latest`
+/home/svr/.npm-global/bin/tsc -> /home/svr/.npm-global/lib/node_modules/typescript/bin/tsc
+/home/svr/.npm-global/bin/tsserver -> /home/svr/.npm-global/lib/node_modules/typescript/bin/tsserver
++ typescript@4.0.3
+updated 1 package in 1.186s
+---
+`npm run dev`
+...
+Compiling @angular/flex-layout : es2015 as esm2015
+(many warnings)
+WARNING in /home/svr/lindata/edutvum/edutvum-exam/src/app/details/details.component.ngtypecheck.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig.
+WARNING in /home/svr/lindata/edutvum/edutvum-exam/src/polyfills.ngtypecheck.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig.
+...
+Date: 2020-09-22T05:23:51.890Z - Hash: 39ba4da3194e531a04bc
+5 unchanged chunks
+
+Time: 3955ms
+: Compiled successfully.
+(all work fine!)
+---
