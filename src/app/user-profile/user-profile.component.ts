@@ -37,7 +37,7 @@ export class UserProfileComponent implements OnInit {
     return {
       value: Math.round(er.score.percent),
       color: "0,128,10",
-      flags: () => [er.score.percent + "", er.exam.id.substr(0, 5) + "..."],
+      flags: () => [Math.round(er.score.percent) + "%", er.exam.id.substr(0, 5) + "..."],
       action: () => this.router.navigate(['/results', er.id]),
       selected: false
     }
