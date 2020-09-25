@@ -30,8 +30,9 @@ export class ResultsChartComponent implements OnInit {
   @Output() added = new EventEmitter<string>()
   @Output() removed = new EventEmitter<string>()
   @Output() updated = new EventEmitter()
-
   @Output() deleted = new EventEmitter()
+
+  @Output() selected = new EventEmitter()
 
   constructor(private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
@@ -59,6 +60,10 @@ export class ResultsChartComponent implements OnInit {
   selectionRemove(sid: string) {
     this.removed.emit(sid)
     this.snackBar.open(`Selection (${sid}) Removed!`, "", { duration: 2000 })
+  }
+
+  chartSelected() {
+    this.selected.emit()
   }
 
 }

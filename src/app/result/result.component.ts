@@ -1,31 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ExamResult } from '../model/exam-result';
+import { ExamResult, ResultObj } from '../model/exam-result';
 import { Lib } from '../model/lib';
 import { Bar } from '../common/chart.component';
-import { AnswerType, ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
-import { Question } from '../model/question';
-import { Tag, NO_TAG, TYPE_TAG } from '../model/tag';
+import { ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
+import { NO_TAG, TYPE_TAG } from '../model/tag';
 import { TreeTableData } from '../common/treetable.component';
-
-interface ResultObj {
-  isOmitted: boolean,
-  isAttempted: boolean,
-  isGuessing: boolean,
-  isCorrect: boolean,
-  isPartial: boolean,
-
-  duration: number,
-  maxTime: number,
-  count: number,
-
-  max: number,
-  omitted: number,
-  skipped: number,
-  guess: number,
-  sure: number,
-  scored: number,
-}
 
 @Component({
   selector: 'app-result',
@@ -39,33 +19,6 @@ export class ResultComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() { }
-
-  private resultObj(qid: number): ResultObj {
-    let defbool = (a: boolean, b: boolean) => Lib.isNil(a) ? b : a
-    let defnum = (a: number, b: number) => Lib.isNil(a) ? b : a
-    let isOmitted = this.result.isOmitted(qid)
-    let isAttempted = defbool(this.result.isAttempted(qid), false)
-    let isCorrect = defbool(this.result.isCorrect(qid), false)
-    let isPartial = defbool(this.result.isPartial(qid), false)
-    let isGuessing = defbool(this.result.guessings[qid], false)
-    let marks = this.result.marks(qid)
-    let guess = (!isOmitted && isAttempted && isGuessing) ? marks.value : 0
-    let sure = (!isOmitted && isAttempted && !isGuessing) ? marks.value : 0
-    let duration = defnum(this.result.durations[qid], 0)
-    //CAUTION: TBD: simply result.maxDuration is 0! as it is silently inheritred, but broken!
-    let maxTime = this.result.exam.maxDuration * 60 * (marks.max / this.result.score.total)
-    let count = 1
-    let omitted = (isOmitted) ? marks.max : 0
-    let skipped = (!isOmitted && !isAttempted) ? marks.max : 0
-    let scored = sure + guess
-    return {
-      isOmitted: isOmitted, isAttempted: isAttempted, isCorrect: isCorrect,
-      isPartial: isPartial, isGuessing: isGuessing,
-      duration: duration, maxTime: maxTime, count: count,
-      max: marks.max, omitted: omitted, skipped: skipped,
-      guess: guess, sure: sure, scored: scored
-    }
-  }
 
   private data2color(ro: ResultObj): string {
     let color = '49,176,213,1' // blue
@@ -82,7 +35,7 @@ export class ResultComponent implements OnInit {
   get bars() {
     let out: Bar[] = []
     this.result.questions.forEach((q, qidn) => {
-      let ro = this.resultObj(qidn)
+      let ro = this.result.asObj(qidn)
       let score = ro.scored + '/' + ro.max
       out.push({
         value: ro.duration,
@@ -131,8 +84,8 @@ export class ResultComponent implements OnInit {
 
     const untagged = [...arrdef]
 
-    this.result.questions.forEach((q, qid) => {
-      let o2ao = o2a(this.resultObj(qid))
+    this.result.questions.forEach((q, qidn) => {
+      let o2ao = o2a(this.result.asObj(qidn))
       Lib.addArrays(out.totals, o2ao)
       Lib.addArrays(qtypes[q.type], o2ao)
       if (q.tags.length === 0) Lib.addArrays(untagged, o2ao)

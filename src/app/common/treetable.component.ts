@@ -27,7 +27,15 @@ export interface TreeTableData {
 })
 export class TreeTableComponent implements OnInit {
 
-  @Input() data: TreeTableData
+//  @Input() data: TreeTableData
+  private _data: TreeTableData
+  get data(): TreeTableData {
+    return this._data
+  }
+  @Input() set data(value: TreeTableData) {
+    this._data = value
+    this.refresh()
+  }
 
   private _selection: string
   @Output() selectionChange: EventEmitter<string> = new EventEmitter<string>();
@@ -57,7 +65,15 @@ export class TreeTableComponent implements OnInit {
   maxLevels = 2//Since we now have Topic and .Type level by default!
 
   ngOnInit() {
+    // this.refresh()
+    this.selection = this._selection
+    if (Lib.isNil(this.level)) this.level = 1
+  }
+
+  private refresh() {
     const zeros = [...this.data.totals].map(v => Lib.isNum(v) ? 0 : v)
+    this.cache = {}
+    this.maxLevels = 2
     this.data.rows.forEach(r => {
       let parts = r.tag.split("/").map(p => p.trim())
       let len = parts.length
@@ -74,9 +90,6 @@ export class TreeTableComponent implements OnInit {
         }
       })
     })
-    //console.log("onInit")
-    this.selection = this._selection
-    if (Lib.isNil(this.level)) this.level = 1
   }
 
   public get rows(): any[] {

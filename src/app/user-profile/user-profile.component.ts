@@ -75,5 +75,8 @@ export class UserProfileComponent implements OnInit {
   updateChart(n: number) {
     this.service.updateChart(this.service.charts[n])
   }
+  selectChart(n: number) {
+    this.service.selectChart(this.service.charts[n])
+  }
 
 }

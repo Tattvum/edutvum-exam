@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 // http://momentjs.com/docs/
 import * as moment from 'moment';
 import { Router } from '@angular/router';
 
 import { Exam } from '../model/exam';
-import { ExamResult } from '../model/exam-result';
+import { ExamResult, ResultObj } from '../model/exam-result';
 import { DataService } from '../model/data.service';
 import { Lib } from '../model/lib';
 
 import { trigger, transition, style, state, animate } from '@angular/animations';
 import { GeneralContext } from '../model/general-context';
 import { TreeTableData } from '../common/treetable.component';
-import { NO_TAG } from '../model/tag';
+import { NO_TAG, TYPE_TAG } from '../model/tag';
+import { ANSWER_TYPES, ANSWER_TYPE_NAMES } from 'app/model/answer-type';
 
 @Component({
   selector: 'app-student-dash',
@@ -34,7 +35,6 @@ export class StudentDashComponent implements OnInit {
 
   public pageExam
   public pageResult
-
   public ok = false
 
   toggleOK() {
@@ -139,6 +139,67 @@ export class StudentDashComponent implements OnInit {
         tag: p, values: [...values], node: ex.id,
       })))
     })
+
+    out.rows.push({ tag: NO_TAG, values: untagged, node: "-" })
+
+    return out
+  }
+
+  get chartTags(): TreeTableData {
+    const marksPercent = (arr: any[]) => Math.round((arr[2] / arr[4]) * 100) + "%"
+    const timizesec = (arr: any[]) => Lib.timize(arr[8])
+    const timizesectotal = (arr: any[]) => Lib.timize(arr[9])
+    const timePercent = (arr: any[]) => Math.round((arr[8] / arr[9]) * 100) + "%"
+    const roundOffNote = "There could be round off errors."
+    const arrdef = [0, 0, 0, null, 0, 0, 0, 0, 0, 0, null]
+
+    let out: TreeTableData = {
+      cols: [
+        { name: "Sure", style: "color: black;", },
+        { name: "Guess", style: "color: gray;", },
+        { name: "Marks", style: "color: green;", },
+        { name: "%", style: "color: maroon; font-weight: bold;", format: marksPercent },
+        { name: "Total Marks", style: "color: maroon;", },
+        { name: "Total #", style: "color: #609;", },
+        { name: "Skipped", style: "color: darkblue;", },
+        { name: "Omitted", style: "color: red;", },
+        { name: "Time", style: "color: blue;", format: timizesec },
+        { name: "*Total Time", style: "color: #0AF;", format: timizesectotal, note: roundOffNote },
+        { name: "*Time %", style: "color: #069;", format: timePercent, note: roundOffNote },
+      ],
+      totals: [...arrdef],
+      rows: [],
+    }
+
+    let o2a = (o: ResultObj) => [
+      o.sure, o.guess, o.scored, null, o.max, o.count,
+      o.skipped, o.omitted, o.duration, o.maxTime, null,
+    ]
+
+    const qtypes: { [key: number]: number[] } = {}
+    ANSWER_TYPES.forEach(type => qtypes[type] = [...arrdef])
+
+    const untagged = [...arrdef]
+
+    const chart = this.service.chartSelection
+    chart?.results?.forEach(cr => {
+      cr.questions.forEach((q, qidn) => {
+        let o2ao = o2a(cr.asObj(qidn))
+        Lib.addArrays(out.totals, o2ao)
+        Lib.addArrays(qtypes[q.type], o2ao)
+        if (q.tags.length === 0) Lib.addArrays(untagged, o2ao)
+        else out.rows.push(...q.tags.map(t => t.title.replace(":", "/")).map(p => ({
+          tag: p, values: o2ao, node: q.id,
+        })))
+      })
+    })
+
+    ANSWER_TYPES
+      .map((typ, i) => ({ name: ANSWER_TYPE_NAMES[i], arr: qtypes[typ] }))
+      .filter(obj => obj.arr[5] > 0).forEach(obj => {
+        //NOTE: node is not q.id here, it just has to be unique for the roll up to .Type!
+        out.rows.push({ tag: TYPE_TAG + " / " + obj.name, values: obj.arr, node: "t" + obj.name })
+      })
 
     out.rows.push({ tag: NO_TAG, values: untagged, node: "-" })
 

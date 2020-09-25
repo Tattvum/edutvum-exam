@@ -40,7 +40,8 @@
         [all]="service.filterExams(false)" [some]="chart.results"
         [convert]="convert" [show]="show"
         (added)="addExamResult($event, n)" (removed)="removeExamResult($event, n)"
-        (deleted)="deleteChart(n)" (updated)="updateChart(n)">
+        (deleted)="deleteChart(n)" (updated)="updateChart(n)"
+        (selected)="selectChart(n)">
       </app-results-chart>
       <button mat-raised-button (click)="addChart()" fxFlexAlign="end">
         Add Chart <sp></sp> <mat-icon>add</mat-icon>

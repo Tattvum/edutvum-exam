@@ -8,6 +8,25 @@ import { Score } from './score';
 import { Marks } from './marks';
 import { NO_TAG, TYPE_TAG } from './tag';
 
+export interface ResultObj {
+  isOmitted: boolean,
+  isAttempted: boolean,
+  isGuessing: boolean,
+  isCorrect: boolean,
+  isPartial: boolean,
+
+  duration: number,
+  maxTime: number,
+  count: number,
+
+  max: number,
+  omitted: number,
+  skipped: number,
+  guess: number,
+  sure: number,
+  scored: number,
+}
+
 export class ExamResult extends Exam {
   private _secondsTotal = 0
   constructor(id: string, title: string, when: Date,
@@ -301,6 +320,39 @@ export class ExamResult extends Exam {
   get name(): string {
     return this.isPracticeMode ? 'practice' : 'exam'
   }
+
+  //----------------------------------------------------------------------------
+  // Misc.
+  //----------------------------------------------------------------------------
+
+  public asObj(qid: number): ResultObj {
+    let defbool = (a: boolean, b: boolean) => Lib.isNil(a) ? b : a
+    let defnum = (a: number, b: number) => Lib.isNil(a) ? b : a
+    let isOmitted = this.isOmitted(qid)
+    let isAttempted = defbool(this.isAttempted(qid), false)
+    let isCorrect = defbool(this.isCorrect(qid), false)
+    let isPartial = defbool(this.isPartial(qid), false)
+    let isGuessing = defbool(this.guessings[qid], false)
+    let marks = this.marks(qid)
+    let guess = (!isOmitted && isAttempted && isGuessing) ? marks.value : 0
+    let sure = (!isOmitted && isAttempted && !isGuessing) ? marks.value : 0
+    let duration = defnum(this.durations[qid], 0)
+    //CAUTION: TBD: simply result.maxDuration is 0! as it is silently inheritred, but broken!
+    let maxTime = this.exam.maxDuration * 60 * (marks.max / this.score.total)
+    let count = 1
+    let omitted = (isOmitted) ? marks.max : 0
+    let skipped = (!isOmitted && !isAttempted) ? marks.max : 0
+    let scored = sure + guess
+    return {
+      isOmitted: isOmitted, isAttempted: isAttempted, isCorrect: isCorrect,
+      isPartial: isPartial, isGuessing: isGuessing,
+      duration: duration, maxTime: maxTime, count: count,
+      max: marks.max, omitted: omitted, skipped: skipped,
+      guess: guess, sure: sure, scored: scored
+    }
+  }
+
+  //----------------------------------------------------------------------------
 
 }
 

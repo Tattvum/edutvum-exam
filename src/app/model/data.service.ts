@@ -217,6 +217,8 @@ export class DataService
     return this.holders.markings.cache[mid]
   }
 
+  public get takenResults() { return this.holders.results.array.filter(r => !r.snapshot) }
+
   private globalTimerAction: (i: number) => void
   private globalTimer = observableInterval(1000).subscribe(t => {
     if (this.globalTimerAction) this.globalTimerAction(t)
@@ -231,8 +233,8 @@ export class DataService
       const out = this.holders.exams.array.filter(tFilter)
       if (this.isAdmin) return out; else return out.filter(npFilter)
     } else {
-      let eids = [...new Set(this.holders.results.array.map(r => r.exam.id))]
-      let topr = eid => this.holders.results.array.filter(r => r.exam.id === eid).sort(revChron)[0]
+      let eids = [...new Set(this.takenResults.map(r => r.exam.id))]
+      let topr = eid => this.takenResults.filter(r => r.exam.id === eid).sort(revChron)[0]
       const out = eids.map(topr).sort(revChron).map(r => r.exam).filter(tFilter)
       return out.filter(npFilter)
     }
@@ -241,9 +243,9 @@ export class DataService
   public examStats() {
     return {
       all: this.filterExams(true).length,
-      taken: this.holders.results.array.length,
-      timeTaken: this.holders.results.array.map(r => r.durationTotal()).reduce((tot, d) => tot + d, 0),
-      pending: this.holders.results.array.filter(r => r.status === ExamStatus.PENDING).length,
+      taken: this.takenResults.length,
+      timeTaken: this.takenResults.map(r => r.durationTotal()).reduce((tot, d) => tot + d, 0),
+      pending: this.takenResults.filter(r => r.status === ExamStatus.PENDING).length,
     }
   }
 
@@ -471,6 +473,11 @@ export class DataService
       console.log(error)
       return false
     }
+  }
+
+  public async selectChart(chart: Chart) {
+    this.chartSelection = chart
+    console.log("Chart Selected2:", this.chartSelection.id, this.chartSelection.title)
   }
 
   private editQuestionDetail(diff: any, qidn: number, type: ExamEditType, cid?: number): Promise<boolean> {
@@ -775,18 +782,21 @@ export class DataService
   get tab(): number { return this.states['tab'] ?? 0 }
   set tab(val: number) { this.states['tab'] = val }
 
-
   private NO_SELECTION: string = "JUNK : u7JqNwfU3W"
   get selection(): string { return this.states['selection'] ?? this.NO_SELECTION }
-  get isUnselected(): boolean { return this.selection === this.NO_SELECTION }
   set selection(val: string) { this.states['selection'] = val }
+  get isUnselected(): boolean { return this.selection === this.NO_SELECTION }
 
   //Since we now have Topic and .Type level by default!
   get level(): number { return this.states['level'] ?? 2 }
   set level(val: number) { this.states['level'] = val }
 
-
+  get chartSelection(): Chart { return this.states['chartSelection'] ?? 2 }
+  set chartSelection(val: Chart) { this.states['chartSelection'] = val }
 }
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 export class TagsDisplayContextImpl implements TagsDisplayContext {
   constructor(private service: DataService, private type: "question" | "exam" = "question") { }
