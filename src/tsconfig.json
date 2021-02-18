@@ -6,11 +6,12 @@
     "experimentalDecorators": true,
     "downlevelIteration": true,
     "mapRoot": "./",
-    "module": "es6",
     "moduleResolution": "node",
+    "importHelpers": true,
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "target": "ES2015",
+    "module": "es2020",
     "lib": [
       "es2018",
       "dom"

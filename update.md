@@ -1101,4 +1101,28 @@ TOTAL: 113 SUCCESS
 TOTAL: 113 SUCCESS
 (Tests working too!, though 8 file upgraded async-->waitForAsync)
 ---
+`npm run build`
+svr@tnr:~/lindata/edutvum/edutvum-exam$ npm run build
+...
+chunk {2} polyfills-es5.e958949e2d7c286bdd0c.js (polyfills-es5) 89.5 kB [initial] [rendered]
+chunk {0} runtime-es2015.b68caf476115faf9caf1.js (runtime) 2.24 kB [entry] [rendered]
+chunk {0} runtime-es5.b68caf476115faf9caf1.js (runtime) 2.23 kB [entry] [rendered]
+chunk {4} 4-es2015.ffd9b92b4e07a52ed4ce.js () 209 kB  [rendered]
+chunk {4} 4-es5.ffd9b92b4e07a52ed4ce.js () 209 kB  [rendered]
+chunk {1} main-es2015.e15eddbe6513e349a4f5.js (main) 1.88 MB [initial] [rendered]
+chunk {1} main-es5.e15eddbe6513e349a4f5.js (main) 2.05 MB [initial] [rendered]
+chunk {3} styles.690c881cad083da62077.css (styles) 184 kB [initial] [rendered]
+Date: 2021-02-18T04:24:53.971Z - Hash: 18155cafc389f275dcf2 - Time: 146273ms
 
+WARNING in /home/svr/lindata/edutvum/edutvum-exam/src/main.ngtypecheck.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig.
+...
+(around 43 such warnings...)
+---
+For the above warnings...
+https://stackoverflow.com/questions/57729518/how-to-get-rid-of-the-warning-ts-file-is-part-of-the-typescript-compilation-but
+Therefore they ('src/**/*.spec.ts' etc.) can be added to the exclude section in tsconfig.app.json or applicable TypeScript configuration file in your app like below:
+...
+Once these are added as above, the warning will not show anymore.
+(FAILED. nope!, still the warnings in both dev and build...)
+---
