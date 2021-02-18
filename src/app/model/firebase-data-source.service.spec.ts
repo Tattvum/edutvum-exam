@@ -1,7 +1,4 @@
-import {
-  TestBed, async, inject, fakeAsync,
-  discardPeriodicTasks, tick, getTestBed, flush
-} from '@angular/core/testing';
+import { TestBed, inject, fakeAsync, discardPeriodicTasks, tick, getTestBed, flush, waitForAsync } from '@angular/core/testing';
 
 import { Holders } from './data.service';
 import * as fbs from './firebase-data-source.service';

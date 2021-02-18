@@ -1,7 +1,4 @@
-import {
-  TestBed, async, inject, fakeAsync,
-  discardPeriodicTasks, tick, getTestBed,
-} from '@angular/core/testing';
+import { TestBed, inject, fakeAsync, discardPeriodicTasks, tick, getTestBed, waitForAsync } from '@angular/core/testing';
 
 import { Holders, DataService, DataSource, SecurityAPI, isin } from './data.service';
 import { User, UserRole, EMPTY_USER } from './user';

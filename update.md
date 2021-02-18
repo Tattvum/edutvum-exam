@@ -605,3 +605,500 @@ Time: 3955ms
 : Compiled successfully.
 (all work fine!)
 ---
+
+
+2021-02-18 Thu - on 5.3.0-alpha1
+---
+`ng`
+Available Commands:
+  add Adds support for an external library to your project.
+  ...
+  xi18n (i18n-extract) Extracts i18n messages from source code.
+
+For more detailed help run "ng [command name] --help"
+---
+`ng update`
+The installed local Angular CLI version is older than the latest stable version.
+Installing a temporary version to perform the update.
+Installing packages for tooling via npm.
+Installed packages for tooling via npm.
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+    We analyzed your package.json, there are some packages to update:
+    
+      Name                               Version                  Command to update
+     --------------------------------------------------------------------------------
+      @angular/cdk                       10.2.2 -> 11.2.1         ng update @angular/cdk
+      @angular/cli                       10.1.2 -> 11.2.1         ng update @angular/cli
+      @angular/core                      10.1.2 -> 11.2.1         ng update @angular/core
+      @angular/material                  10.2.2 -> 11.2.1         ng update @angular/material
+    
+    There might be additional packages which don't provide 'ng update' capabilities that are outdated.
+    You can update the additional packages by running the update command of your package manager.
+---
+`ng --version`
+...
+Angular CLI: 10.1.2
+Node: 14.15.4
+OS: linux x64
+
+Angular: 
+... 
+Ivy Workspace: 
+
+Package                      Version
+------------------------------------------------------
+@angular-devkit/architect    0.1001.2 (cli-only)
+@angular-devkit/core         10.1.2 (cli-only)
+@angular-devkit/schematics   10.1.2 (cli-only)
+@schematics/angular          10.1.2 (cli-only)
+@schematics/update           0.1001.2 (cli-only)
+---
+`npm install @angular/cli@latest`
+...
++ @angular/cli@11.2.1
+added 74 packages from 19 contributors, removed 38 packages, updated 48 packages and audited 2369 packages in 35.917s
+
+63 packages are looking for funding
+  run `npm fund` for details
+
+found 365 vulnerabilities (345 low, 1 moderate, 19 high)
+  run `npm audit fix` to fix them, or `npm audit` for details
+---
+`npm install -g @angular/cli@latest`
+...
++ @angular/cli@11.2.1
+added 55 packages from 19 contributors, removed 94 packages, updated 53 packages and moved 1 package in 16.148s
+---
+`ng --version`
+...
+Angular CLI: 11.2.1
+Node: 14.15.4
+OS: linux x64
+
+Angular: 
+... 
+Ivy Workspace: 
+
+Package                      Version
+------------------------------------------------------
+@angular-devkit/architect    0.1102.1 (cli-only)
+@angular-devkit/core         11.2.1 (cli-only)
+@angular-devkit/schematics   11.2.1 (cli-only)
+@schematics/angular          11.2.1 (cli-only)
+@schematics/update           0.1102.1 (cli-only)
+---
+(trying...)
+`ng update @angular/cdk @angular/core @angular/material rxjs`
+Repository is not clean. Please commit or stash any changes before updating.
+--
+(trying...)
+`ng update @angular/cdk @angular/core @angular/material rxjs --allow-dirty`
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package 'rxjs' is already up to date.
+  Package "@angular-devkit/build-angular" has an incompatible peer dependency to "@angular/compiler-cli" (requires ">=9.0.0 < 10" (extended), would install "12.0.0-next.1").
+  Package "@angular/animations" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+  Package "@angular/flex-layout" has an incompatible peer dependency to "@angular/cdk" (requires "^9.0.0-rc.8", would install "11.2.1").
+  Package "@angular/common" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+  Package "@angular/fire" has an incompatible peer dependency to "@angular/common" (requires "^9.0.0 || ^10.0.0" (extended), would install "12.0.0-next.1").
+  Package "codelyzer" has an incompatible peer dependency to "@angular/compiler" (requires ">=2.3.1 <10.0.0 || >9.0.0-beta <10.0.0 || >9.1.0-beta <10.0.0 || >9.2.0-beta <10.0.0" (extended), would install "12.0.0-next.1").
+  Package "codelyzer" has an incompatible peer dependency to "@angular/core" (requires ">=2.3.1 <10.0.0 || >9.0.0-beta <10.0.0 || >9.1.0-beta <10.0.0 || >9.2.0-beta <10.0.0" (extended), would install "11.2.1").
+  Package "@angular/forms" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+  Package "ngx-quill" has an incompatible peer dependency to "@angular/forms" (requires "^9.0.0" (extended), would install "12.0.0-next.1").
+  Package "@angular/platform-browser" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+  Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser" (requires "^9.0.0 || ^10.0.0" (extended), would install "12.0.0-next.1").
+  Package "@angular/platform-browser-dynamic" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+  Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser-dynamic" (requires "^9.0.0 || ^10.0.0" (extended), would install "12.0.0-next.1").
+  Package "@angular/platform-server" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+  Package "@angular/router" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+  Package "@angular/service-worker" has an incompatible peer dependency to "@angular/core" (requires "12.0.0-next.1", would install "11.2.1")
+✖ Migration failed: Incompatible peer dependencies found.
+Peer dependency warnings when installing dependencies means that those dependencies might not work correctly together.
+You can use the '--force' option to ignore incompatible peer dependencies and instead address these warnings later.
+  See "/tmp/ng-FO0rSM/angular-errors.log" for further details.
+---
+`ng update @angular/cdk @angular/core @angular/material rxjs --allow-dirty --force`
+...
+    Updating package.json with dependency @angular/compiler-cli @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/language-service @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/animations @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/cdk @ "11.2.1" (was "10.2.2")...
+    Updating package.json with dependency @angular/common @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/compiler @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/core @ "11.2.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/forms @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/material @ "11.2.1" (was "10.2.2")...
+    Updating package.json with dependency @angular/platform-browser @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/platform-browser-dynamic @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/platform-server @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/router @ "12.0.0-next.1" (was "10.1.2")...
+    Updating package.json with dependency @angular/service-worker @ "12.0.0-next.1" (was "10.1.2")...
+  UPDATE package.json (2919 bytes)
+✔ Packages installed successfully.
+** Executing migrations of package '@angular/cdk' **
+
+▸ Updates the Angular CDK to v11.
+    
+      ✓  Updated Angular CDK to version 11
+    
+  Migration completed.
+
+** Executing migrations of package '@angular/core' **
+
+▸ In Angular version 11, the type of `AbstractControl.parent` can be `null` to reflect the runtime value more accurately.
+  This migration automatically adds non-null assertions to existing accesses of the `parent` property on types like `FormControl`, `FormArray` and `FormGroup`.
+  Migration completed.
+
+▸ ViewEncapsulation.Native has been removed as of Angular version 11.
+  This migration replaces any usages with ViewEncapsulation.ShadowDom.
+  Migration completed.
+
+▸ NavigationExtras omissions migration.
+  In version 11, some unsupported properties were omitted from the `extras` parameter of the `Router.navigateByUrl` and `Router.createUrlTree` methods.
+  Migration completed.
+
+▸ Updates the `initialNavigation` property for `RouterModule.forRoot`.
+  Migration completed.
+
+▸ NavigationExtras.preserveQueryParams has been removed as of Angular version 11.
+   This migration replaces any usages with the appropriate assignment of the queryParamsHandling key.
+  Migration completed.
+
+▸ The default value for `relativeLinkResolution` is changing from 'legacy' to 'corrected'.
+This migration updates `RouterModule` configurations that use the default value to 
+now specifically use 'legacy' to prevent breakages when updating.
+  UPDATE src/app/app-routing.module.ts (1430 bytes)
+  Migration completed.
+
+▸ `async` to `waitForAsync` migration.
+  The `async` testing function has been renamed to `waitForAsync` to avoid confusion with the native `async` keyword.
+  UPDATE src/app/comments-manager/comments-manager.component.spec.ts (707 bytes)
+  UPDATE src/app/common/treetable.component.spec.ts (1185 bytes)
+  UPDATE src/app/model/data.service.spec.ts (4801 bytes)
+  UPDATE src/app/model/firebase-data-source.service.spec.ts (7696 bytes)
+  UPDATE src/app/model/firebase-upload.service.spec.ts (1694 bytes)
+  UPDATE src/app/nav/nav.component.spec.ts (8005 bytes)
+  UPDATE src/app/questions-manager/questions-manager.component.spec.ts (714 bytes)
+  UPDATE src/app/tags-manager/tags-manager.component.spec.ts (679 bytes)
+  Migration completed.
+
+▸ Removes `canActivate` from a `Route` config when `redirectTo` is also present.
+  Migration completed.
+
+** Executing migrations of package '@angular/material' **
+
+▸ Updates Angular Material to v11.
+    
+    ⚠  General notice: The HammerJS v9 migration for Angular Components is not able to migrate tests. Please manually clean up tests in your project if they rely on HammerJS.
+    Read more about migrating tests: https://git.io/ng-material-v9-hammer-migrate-tests
+    
+      ✓  Updated Angular Material to version 11
+    
+  Migration completed.
+(wow, first forceful try!)
+(Oops! gone to 12.0.0-next.1, but aimed 11.2.0)
+(ok, core, material, cdk still in 11.2.1)
+---
+(trying again to test...)
+`ng update @angular/cdk @angular/core @angular/material rxjs --allow-dirty --force`
+Repository is not clean. Update changes will be mixed with pre-existing changes.
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package '@angular/cdk' is already up to date.
+Package '@angular/core' is already up to date.
+Package '@angular/material' is already up to date.
+Package 'rxjs' is already up to date.\
+---
+(trying again to test...)
+`ng update`
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+    We analyzed your package.json and everything seems to be in order. Good work!
+---
+`firebase emulators:start --only database`
+firebase emulators:start --only database
+i  emulators: Starting emulators: database
+⚠  database: Did not find a Realtime Database rules file specified in a firebase.json config file. The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+i  database: Database Emulator logging to database-debug.log
+i  ui: Emulator UI logging to ui-debug.log
+...
+│ ✔  All emulators ready! View status and logs at http://localhost:4000 │
+...
+^C
+...
+   │                                          Update available 8.10.0 → 8.11.1                                           │
+   │                    To update to the latest version using npm, run npm install -g firebase-tools                     │
+...
+---
+`npm i -g firebase-tools`
+...
++ firebase-tools@9.4.0
+added 99 packages from 86 contributors, removed 44 packages, updated 85 packages and moved 4 packages in 90.774s
+---
+`npm outdated`
+Package                                  Current         Wanted          Latest  Location
+@angular-devkit/build-angular            0.900.7        0.900.7        0.1102.1  edutvum-exam
+@angular/animations                12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/common                    12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/compiler                  12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/compiler-cli              12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/fire                              6.0.2          6.1.4           6.1.4  edutvum-exam
+@angular/flex-layout               9.0.0-beta.31  9.0.0-beta.31  11.0.0-beta.33  edutvum-exam
+@angular/forms                     12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/language-service          12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/platform-browser          12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/platform-browser-dynamic  12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/platform-server           12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/pwa                             0.901.3       0.901.14        0.1102.1  edutvum-exam
+@angular/router                    12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@angular/service-worker            12.0.0-next.1  12.0.0-next.1          11.2.1  edutvum-exam
+@types/jasmine                            3.5.10          3.6.3           3.6.3  edutvum-exam
+@types/node                             13.13.12       13.13.42        14.14.28  edutvum-exam
+axios                                     0.19.2         0.19.2          0.21.1  edutvum-exam
+bootstrap                                  3.4.1          3.4.1           4.6.0  edutvum-exam
+codelyzer                                  5.2.2          5.2.2           6.0.1  edutvum-exam
+core-js                                   2.6.11         2.6.12           3.8.3  edutvum-exam
+firebase                                  7.14.2         7.24.0           8.2.7  edutvum-exam
+firebase-admin                            8.12.1         8.13.0           9.5.0  edutvum-exam
+jasmine-core                               3.5.0          3.6.0           3.6.0  edutvum-exam
+jasmine-spec-reporter                      5.0.2          5.0.2           6.0.0  edutvum-exam
+jsonfile                                   5.0.0          5.0.0           6.1.0  edutvum-exam
+jsonschema                                 1.2.6          1.4.0           1.4.0  edutvum-exam
+karma                                      5.0.2          5.2.3           6.1.1  edutvum-exam
+karma-coverage                             2.0.2          2.0.3           2.0.3  edutvum-exam
+karma-coverage-istanbul-reporter           2.1.1          2.1.1           3.0.3  edutvum-exam
+karma-jasmine                              3.1.1          3.3.1           4.0.1  edutvum-exam
+karma-jasmine-html-reporter                1.5.3          1.5.4           1.5.4  edutvum-exam
+katex                                     0.11.1         0.11.1          0.12.0  edutvum-exam
+moment                                    2.24.0         2.29.1          2.29.1  edutvum-exam
+mudder                                     1.0.9         1.0.10          1.0.10  edutvum-exam
+ngx-pagination                             4.1.0          4.1.0           5.0.0  edutvum-exam
+ngx-quill                                 11.0.0         11.1.0          13.2.0  edutvum-exam
+npm                                       6.14.4        6.14.11           7.5.4  edutvum-exam
+protractor                                 5.4.4          5.4.4           7.0.0  edutvum-exam
+puppeteer                                  3.0.2          3.3.0           7.1.0  edutvum-exam
+rxjs-compat                                6.5.5          6.6.3           6.6.3  edutvum-exam
+ts-node                                    8.9.0         8.10.2           9.1.1  edutvum-exam
+tsickle                                   0.35.0         0.35.0          0.39.1  edutvum-exam
+tslib                                     1.11.1         1.14.1           2.1.0  edutvum-exam
+tslint                                     6.1.1          6.1.3           6.1.3  edutvum-exam
+typescript                                 4.0.3          4.1.5           4.1.5  edutvum-exam
+webpack                                   4.43.0         4.46.0          5.22.0  edutvum-exam
+zone.js                                   0.10.3         0.10.3          0.11.4  edutvum-exam
+---
+`npm i @angular/flex-layout`
+...
++ @angular/flex-layout@9.0.0-beta.31
+updated 1 package and audited 2402 packages in 14.676s
+...
+(oh same!)
+---
+`npm i @angular/fire`
+...
++ @angular/fire@6.1.4
+added 1 package from 1 contributor, updated 1 package and audited 2403 packages in 16.157s
+...
+---
+`ng -g typescript@latest`
+The specified command ("typescript") is invalid. For a list of available options,
+run "ng help".
+
+Did you mean "test"?
+---
+`ng -g typescript@latest`
+The specified command ("typescript@latest") is invalid. For a list of available options,
+run "ng help".
+
+Did you mean "generate"?
+---
+`npm i @angular/pwa`
+...
++ @angular/pwa@0.901.14
+updated 15 packages and audited 2403 packages in 20.125s
+...
+---
+`npm i @types/jasmine`
+...
++ @types/jasmine@3.6.3
+updated 1 package and audited 2403 packages in 14.267s
+...
+---
+`npm i @types/node`
+...
++ @types/node@13.13.42
+updated 1 package and audited 2403 packages in 14.868s
+...
+---
+`npm update`
+...
++ karma-jasmine@3.3.1
++ jsonschema@1.4.0
++ karma-jasmine-html-reporter@1.5.4
++ jasmine-core@3.6.0
++ firebase-admin@8.13.0
++ karma@5.2.3
++ core-js@2.6.12
++ karma-coverage@2.0.3
++ moment@2.29.1
++ tslib@1.14.1
++ ts-node@8.10.2
++ tslint@6.1.3
++ rxjs-compat@6.6.3
++ puppeteer@3.3.0
++ firebase@7.24.0
++ webpack@4.46.0
++ npm@6.14.11
++ mudder@1.0.10
++ typescript@4.1.5
++ ngx-quill@11.1.0
+added 110 packages from 53 contributors, removed 47 packages, updated 150 packages, moved 1 package and audited 2469 packages in 100.27s
+...
+---
+(not recorded)
+`npm -v`
+6.14.11 (guessing)
+---
+`npm install -g npm@latest`
+home/svr/.npm-global/bin/npm -> /home/svr/.npm-global/lib/node_modules/npm/bin/npm-cli.js
+/home/svr/.npm-global/bin/npx -> /home/svr/.npm-global/lib/node_modules/npm/bin/npx-cli.js
++ npm@7.5.4
+added 59 packages from 24 contributors, removed 241 packages and updated 194 packages in 13.916s
+---
+`npm -v`
+7.5.4
+---
+`node -v`
+v14.15.4
+---
+`npm install -g ts-node@latest`
+added 4 packages, removed 11 packages, changed 5 packages, and audited 11 packages in 2s
+found 0 vulnerabilities
+---
+`ts-node -v`
+v9.1.1
+---
+(following steps in environment.dev.ts)
+---
+`firebase emulators:start --only database`
+...
+Error: Could not start Database Emulator, port taken.
+---
+`fuser 9000/tcp`
+9000/tcp:            59014
+---
+`fuser -k 9000/tcp`
+9000/tcp:            59014
+---
+`firebase emulators:start --only database`
+...
+i  database: downloading firebase-database-emulator-v4.7.2.jar...
+Progress: =====================================================================================================================> (100% of 29MB
+i  database: Removing outdated emulator files: firebase-database-emulator-v4.5.0.jar
+i  database: Database Emulator logging to database-debug.log
+⚠  ui: Emulator UI unable to start on port 4000, starting on 4001 instead.
+i  ui: downloading ui-v1.4.1.zip...
+Progress: ======================================================================================================================> (100% of 4MB
+i  ui: Removing outdated emulator files: ui-v1.1.1
+i  ui: Removing outdated emulator files: ui-v1.1.1.zip
+i  ui: Emulator UI logging to ui-debug.log
+...
+  Emulator Hub running at localhost:4400
+  Other reserved ports: 4500
+...
+^C 
+i  emulators: Received SIGINT (Ctrl-C) for the first time. Starting a clean shutdown.
+i  emulators: Please wait for a clean shutdown or send the SIGINT (Ctrl-C) signal again to stop right now.
+i  emulators: Shutting down emulators.
+i  ui: Stopping Emulator UI
+⚠  Emulator UI has exited upon receiving signal: SIGINT
+i  database: Stopping Database Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
+---
+`firebase emulators:start --only database`
+...
+⚠  ui: Emulator UI unable to start on port 4000, starting on 4001 instead.
+...
+  Emulator Hub running at localhost:4400
+  Other reserved ports: 4500
+...
+^C 
+...
+---
+`fuser -k 4000/tcp`
+4000/tcp:            59061
+(oops! what was 4000?!)
+(RESTART LINUX!! to be safe)
+---
+`firebase emulators:start --only database`
+...
+│ i  View Emulator UI at http://localhost:4000                │
+...
+│ Database │ localhost:9000 │ http://localhost:4000/database │
+...
+  Emulator Hub running at localhost:4400
+  Other reserved ports: 4500...
+(oh! all fine!)
+---
+import json from the browser from http://localhost:4000/database
+json: ~/Downloads/edutvum-exam-export-dev.json
+---
+`fshttp -d ../uploads`
+8000 /home/svr/lindata/edutvum/uploads
+Listening on port 8000
+(wow works, there is an empty folder in ~/.../edutvum)
+---
+`npm run dev`
+
+> edutvum-exam@0.0.0 dev
+> ng serve -c dev
+
+0% compiling
+Compiling @angular/fire : es2015 as esm2015
+
+Compiling @angular/fire/auth : es2015 as esm2015
+
+Compiling @angular/fire/database : es2015 as esm2015
+
+chunk {main} main.js, main.js.map (main) 644 kB [initial] [rendered]
+chunk {quill} quill.js, quill.js.map (quill) 430 kB  [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 8.98 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 858 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 8.25 MB [initial] [rendered]
+Date: 2021-02-18T03:55:36.289Z - Hash: c83d3ce1e4c0998c4910 - Time: 38085ms
+
+WARNING in /home/svr/lindata/edutvum/edutvum-exam/src/main.ngtypecheck.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig.
+...
+...
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+: Compiled successfully.
+
+Date: 2021-02-18T03:55:37.993Z - Hash: 9a4519e6d590534bc2d8
+5 unchanged chunks
+
+Time: 932ms
+: Compiled successfully.
+---
+http://localhost:4200
+(--> Login)
+(All working !!! though upgrade added {relativeLinkResolution: 'legacy'})
+---
+^C
+All three firebase emulator, fshttp, npm dev
+---
+`npm test`
+...
+secsChrome Headless 88.0.4324.150 (Linux x86_64): Executed 113 of 145 (skipped 30) SUCCESS (0 secs / 0.619 secsChrome Headless 88.0.4324.150 (Linux x86_64): Executed 113 of 145 (skipped 32) SUCCESS (0.868 secs / 0.619 secs)
+TOTAL: 113 SUCCESS
+TOTAL: 113 SUCCESS
+(Tests working too!, though 8 file upgraded async-->waitForAsync)
+---
+

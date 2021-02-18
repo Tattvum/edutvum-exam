@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CommentsManagerComponent } from './comments-manager.component';
 
@@ -6,7 +6,7 @@ xdescribe('CommentsManagerComponent', () => {
   let component: CommentsManagerComponent;
   let fixture: ComponentFixture<CommentsManagerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CommentsManagerComponent]
     })

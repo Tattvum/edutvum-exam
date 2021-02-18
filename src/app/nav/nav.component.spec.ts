@@ -1,10 +1,6 @@
 
 import { of as observableOf, Observable } from 'rxjs';
-import {
-  ComponentFixture, TestBed, getTestBed,
-  async, fakeAsync, tick, flushMicrotasks,
-  ComponentFixtureAutoDetect, discardPeriodicTasks
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, getTestBed, fakeAsync, tick, flushMicrotasks, ComponentFixtureAutoDetect, discardPeriodicTasks, waitForAsync } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
 import { DebugElement, Component } from '@angular/core';
@@ -120,7 +116,7 @@ xdescribe('Nav Component Tests:', () => {
 
   let fixture: ComponentFixture<NavComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [NavComponent],
       providers: [
