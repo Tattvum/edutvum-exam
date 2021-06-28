@@ -1195,3 +1195,51 @@ Found 60 dependencies.
 > Automatically migrates shadow-piercing selector from `/deep/` to the recommanded alternative `::ng-deep`.
   Migration completed.
 ---
+
+$ ng update
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+    We analyzed your package.json, there are some packages to update:
+
+      Name                               Version                  Command to update
+     --------------------------------------------------------------------------------
+      @angular/cdk                       11.2.1 -> 12.1.0         ng update @angular/cdk
+      @angular/material                  11.2.1 -> 12.1.0         ng update @angular/material
+
+    There might be additional packages which don't provide 'ng update' capabilities that are outdated.
+    You can update the additional packages by running the update command of your package manager.
+
+Ramu@DESKTOP-9RTVQBF MINGW64 /d/ramu/edutvum/edutvum-exam (master)
+$
+
+$ ng update @angular/cdk @angular/material --force
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+                  Package "@angular/flex-layout" has an incompatible peer dependency to "@angular/cdk" (requires
+"^9.0.0-rc.8", would install "12.1.0").
+    Updating package.json with dependency @angular/cdk @ "12.1.0" (was "11.2.1")...
+    Updating package.json with dependency @angular/material @ "12.1.0" (was "11.2.1")...
+  UPDATE package.json (3318 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/cdk' **
+
+> Updates the Angular CDK to v12.
+
+      ✓  Updated Angular CDK to version 12
+
+  Migration completed.
+
+** Executing migrations of package '@angular/material' **
+
+> Updates Angular Material to v12.
+
+    ⚠  General notice: The HammerJS v9 migration for Angular Components is not able to migrate tests. Please manually clean up tests in your project if they rely on HammerJS.
+    Read more about migrating tests: https://git.io/ng-material-v9-hammer-migrate-tests
+
+      ✓  Updated Angular Material to version 12
+
+  Migration completed.
+---
