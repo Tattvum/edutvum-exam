@@ -22,7 +22,7 @@ ng update --force @angular/cdk @angular/cli @angular/core @angular/material
 ```
 Upgraded to Angular 8.1. TBD cli and general pruning.
 Due to flex-layout isssue, it is kept in old version, hence --force.
-cli still not updated. 
+cli still not updated.
 
 
 2019-11-19,20 Wed - on 3.16.9
@@ -31,7 +31,7 @@ npm update
 npm run install (after changing package.json)
 
 ng update @angular/cli @angular/core
-npm install -g npm 
+npm install -g npm
 ```
 Upgraded ng2-pagination control, just a name change.
 TBD: again that layout issue in exam listisg marks right alignment
@@ -52,7 +52,7 @@ Did all in the above link, and then I had to ...
     https://stackoverflow.com/questions/51189388/typescript-spread-types-may-only-be-created-from-object-types/51193091
 3. Updated tsconfig.json and dummied tsconfig.app.json
     changed 'only keep entry points in files (main.ts and polyfills.ts)'
-    as in https://stackoverflow.com/a/57730727  
+    as in https://stackoverflow.com/a/57730727
     The main link...
     https://stackoverflow.com/questions/57729518/how-to-get-rid-of-the-warning-ts-file-is-part-of-the-typescript-compilation-but
 4. Reverted back core-js in package.json
@@ -163,7 +163,7 @@ Before we get started, keep in mind:
   * You are initializing in an existing Firebase project directory
 === Project Setup
 First, let's associate this project directory with a Firebase project.
-You can create multiple project aliases by running firebase use --add, 
+You can create multiple project aliases by running firebase use --add,
 but for now we'll just set up a default project.
 i  .firebaserc already has a default project, using edutvum-exam.
 === Emulators Setup
@@ -277,7 +277,7 @@ using https://update.angular.io/#9.0:10.0
 `svr@tnr:~$ npm list -g @angular/cli --depth=0`
 
 /home/svr/.npm-global/lib
-`-- @angular/cli@9.1.4 
+`-- @angular/cli@9.1.4
 ---
 https://angular.io/guide/ivy#speeding-up-ngcc-compilation
 In package.json...
@@ -458,7 +458,7 @@ added 16 packages from 2 contributors, removed 17 packages and updated 19 packag
 ---
 `firebase emulators:start --only database`
 ---
-... 
+...
 ui: downloading ui-v1.1.1.zip...
 ...
 ---
@@ -477,7 +477,7 @@ Run npm i -g firebase-tools to update
 added 62 packages from 15 contributors, updated 9 packages and moved 8 packages in 179.588s
 ---
 `firebase emulators:start --only database`
-Database │ localhost:9000 │ http://localhost:4000/database 
+Database │ localhost:9000 │ http://localhost:4000/database
 (all works)
 ---
 
@@ -511,7 +511,7 @@ Using package manager: 'npm'
 Collecting installed dependencies...
 Found 60 dependencies.
     We analyzed your package.json, there are some packages to update:
-    
+
       Name                               Version                  Command to update
      --------------------------------------------------------------------------------
       @angular/cdk                       10.1.0 -> 10.2.2         ng update @angular/cdk
@@ -549,7 +549,7 @@ Angular: 10.1.2
 (killed)
 `firebase emulators:start --only database`
 Emulator │ Host:Port      │ View in Emulator UI            │
-Database │ localhost:9000 │ http://localhost:4001/database 
+Database │ localhost:9000 │ http://localhost:4001/database
 ---
 `npm run dev`
 (now all works!)
@@ -626,14 +626,14 @@ Using package manager: 'npm'
 Collecting installed dependencies...
 Found 60 dependencies.
     We analyzed your package.json, there are some packages to update:
-    
+
       Name                               Version                  Command to update
      --------------------------------------------------------------------------------
       @angular/cdk                       10.2.2 -> 11.2.1         ng update @angular/cdk
       @angular/cli                       10.1.2 -> 11.2.1         ng update @angular/cli
       @angular/core                      10.1.2 -> 11.2.1         ng update @angular/core
       @angular/material                  10.2.2 -> 11.2.1         ng update @angular/material
-    
+
     There might be additional packages which don't provide 'ng update' capabilities that are outdated.
     You can update the additional packages by running the update command of your package manager.
 ---
@@ -643,9 +643,9 @@ Angular CLI: 10.1.2
 Node: 14.15.4
 OS: linux x64
 
-Angular: 
-... 
-Ivy Workspace: 
+Angular:
+...
+Ivy Workspace:
 
 Package                      Version
 ------------------------------------------------------
@@ -677,9 +677,9 @@ Angular CLI: 11.2.1
 Node: 14.15.4
 OS: linux x64
 
-Angular: 
-... 
-Ivy Workspace: 
+Angular:
+...
+Ivy Workspace:
 
 Package                      Version
 ------------------------------------------------------
@@ -742,9 +742,9 @@ You can use the '--force' option to ignore incompatible peer dependencies and in
 ** Executing migrations of package '@angular/cdk' **
 
 ▸ Updates the Angular CDK to v11.
-    
+
       ✓  Updated Angular CDK to version 11
-    
+
   Migration completed.
 
 ** Executing migrations of package '@angular/core' **
@@ -769,7 +769,7 @@ You can use the '--force' option to ignore incompatible peer dependencies and in
   Migration completed.
 
 ▸ The default value for `relativeLinkResolution` is changing from 'legacy' to 'corrected'.
-This migration updates `RouterModule` configurations that use the default value to 
+This migration updates `RouterModule` configurations that use the default value to
 now specifically use 'legacy' to prevent breakages when updating.
   UPDATE src/app/app-routing.module.ts (1430 bytes)
   Migration completed.
@@ -792,12 +792,12 @@ now specifically use 'legacy' to prevent breakages when updating.
 ** Executing migrations of package '@angular/material' **
 
 ▸ Updates Angular Material to v11.
-    
+
     ⚠  General notice: The HammerJS v9 migration for Angular Components is not able to migrate tests. Please manually clean up tests in your project if they rely on HammerJS.
     Read more about migrating tests: https://git.io/ng-material-v9-hammer-migrate-tests
-    
+
       ✓  Updated Angular Material to version 11
-    
+
   Migration completed.
 (wow, first forceful try!)
 (Oops! gone to 12.0.0-next.1, but aimed 11.2.0)
@@ -1012,7 +1012,7 @@ i  ui: Emulator UI logging to ui-debug.log
   Emulator Hub running at localhost:4400
   Other reserved ports: 4500
 ...
-^C 
+^C
 i  emulators: Received SIGINT (Ctrl-C) for the first time. Starting a clean shutdown.
 i  emulators: Please wait for a clean shutdown or send the SIGINT (Ctrl-C) signal again to stop right now.
 i  emulators: Shutting down emulators.
@@ -1029,7 +1029,7 @@ i  logging: Stopping Logging Emulator
   Emulator Hub running at localhost:4400
   Other reserved ports: 4500
 ...
-^C 
+^C
 ...
 ---
 `fuser -k 4000/tcp`
@@ -1125,4 +1125,73 @@ Therefore they ('src/**/*.spec.ts' etc.) can be added to the exclude section in 
 ...
 Once these are added as above, the warning will not show anymore.
 (FAILED. nope!, still the warnings in both dev and build...)
+---
+
+
+2021-06-28 Mon - on 5.3.2-alpha1
+---
+_upgrading in windows 10_
+
+`npm install -g @angular/cli`
+
+_works_
+
+`ng update @angular/core@12 @angular/cli@12 --force`
+
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 60 dependencies.
+...
+  UPDATE package.json (3258 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/cli' **
+
+> Remove deprecated options from 'angular.json' that are no longer present in v12.
+  UPDATE angular.json (4550 bytes)
+  Migration completed.
+
+> Update 'zone.js' to version 0.11.x.
+  Read more about this here: https://github.com/angular/angular/blob/master/packages/zone.js/CHANGELOG.md#breaking-changes-since-zonejs-v0111
+  UPDATE package.json (3259 bytes)
+  UPDATE src/polyfills.ts (591 bytes)
+  UPDATE src/test.ts (1007 bytes)
+✔ Packages installed successfully.
+  Migration completed.
+
+> Remove 'emitDecoratorMetadata' TypeScript compiler option.
+  Decorator metadata is no longer needed by Angular.
+  Read more about this here: https://www.typescriptlang.org/docs/handbook/decorators.html#metadata
+  UPDATE e2e/tsconfig.json (344 bytes)
+  UPDATE src/tsconfig.json (628 bytes)
+  Migration completed.
+
+> Lazy loading syntax migration.
+  Update lazy loading string syntax to use dynamic imports.
+  Migration completed.
+
+> Remove deprecated ViewEngine-based i18n build and extract options.
+  Options present in the configuration will be converted to use non-deprecated options.
+  Migration completed.
+
+> Updates Web Worker consumer usage to use the new syntax supported directly by Webpack 5.
+  Migration completed.
+
+> Remove invalid 'skipTests' option in '@schematics/angular:module' Angular schematic options.
+  Migration completed.
+
+> Replace the deprecated '--prod' in package.json scripts.
+  UPDATE package.json (3319 bytes)
+  Migration completed.
+
+** Executing migrations of package '@angular/core' **
+
+> In Angular version 12, the type of ActivatedRouteSnapshot.fragment is nullable.
+  This migration automatically adds non-null assertions to it.
+  Migration completed.
+
+> `XhrFactory` has been moved from `@angular/common/http` to `@angular/common`.
+  Migration completed.
+
+> Automatically migrates shadow-piercing selector from `/deep/` to the recommanded alternative `::ng-deep`.
+  Migration completed.
 ---
