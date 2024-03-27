@@ -283,3 +283,38 @@ UPDATE src/test.ts (885 bytes)
 ✖ Migration failed: Path "tsconfig.json" does not exist.
   See "/tmp/ng-mwgx5D/angular-errors.log" for further details.
 
+
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@15 --force
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+                  Package "@angular/flex-layout" has an incompatible peer dependency to "@angular/cdk" (requires "^9.0.0-rc.8", would install "15.2.9").
+    Updating package.json with dependency @angular/cdk @ "15.2.9" (was "14.2.7")...
+    Updating package.json with dependency @angular/material @ "15.2.9" (was "14.2.7")...
+UPDATE package.json (3332 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/cdk' **
+
+▸ Updates the Angular CDK to v15.
+    
+      ✓  Updated Angular CDK to version 15
+    
+  Migration completed (No changes made).
+
+** Executing migrations of package '@angular/material' **
+
+▸ Updates the Angular Material to v15.
+    
+      ✓  Updated Angular Material to version 15
+    
+UPDATE src/app/app.module.ts (8678 bytes)
+UPDATE src/app/tags-manager/tags-manager.component.ts (3493 bytes)
+UPDATE src/app/common/autoinput.component.ts (2233 bytes)
+UPDATE src/app/common/autochip.component.ts (2868 bytes)
+UPDATE src/app/results-chart/results-chart.component.ts (2088 bytes)
+UPDATE src/app/editor/editor.component.ts (4029 bytes)
+UPDATE src/app/model/general-context.ts (884 bytes)
+  Migration completed (7 files modified).
+
+

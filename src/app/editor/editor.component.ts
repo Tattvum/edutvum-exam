@@ -1,7 +1,7 @@
 import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef, HostListener, OnInit } from '@angular/core'
 import { DataService, UploaderAPI } from '../model/data.service'
 import { Upload } from '../model/upload'
-import { MatDialog } from '@angular/material/dialog'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { Overlay } from '@angular/cdk/overlay'
 
 //NOTE: Since the Quill component adds a p tag on any edit
