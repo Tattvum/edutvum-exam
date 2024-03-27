@@ -1,5 +1,8 @@
 https://update.angular.io/?l=2&v=12.0-17.0
 
+---
+6.0.0
+---
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@13 @angular/cli@13
 Workspace extension with invalid name (defaultProject) found.
 The installed Angular CLI version is outdated.
@@ -11,6 +14,7 @@ Found 6 dependencies.
 Package '@angular/core' is not a dependency.
 
 npm install
+
 
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@17 @angular/cli@17
 The installed local Angular CLI version is older than the latest stable version.
@@ -27,6 +31,9 @@ Run 'ng update @angular/core@13' in your workspace directory to update to latest
 For more information about the update process, see https://update.angular.io/?v=12.0-13.0
 
 
+---
+6.0.1
+---
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@13 @angular/cli@13
 The installed local Angular CLI version is older than the latest stable version.
 Installing a temporary version to perform the update.
@@ -45,6 +52,7 @@ Fetching dependency metadata from registry...
 Peer dependency warnings when installing dependencies means that those dependencies might not work correctly together.
 You can use the '--force' option to ignore incompatible peer dependencies and instead address these warnings later.
   See "/tmp/ng-h9kFsd/angular-errors.log" for further details.
+
 
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@13 @angular/cli@13 --force
 The installed local Angular CLI version is older than the latest stable version.
@@ -110,6 +118,9 @@ UPDATE src/test.ts (1054 bytes)
   Migration completed (No changes made).
 
 
+---
+6.0.2
+---
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@13
 Using package manager: 'npm'
 Collecting installed dependencies...
@@ -151,6 +162,9 @@ Fetching dependency metadata from registry...
   Migration completed.
 
 
+---
+6.0.3
+---
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@14 @angular/cli@14 --force
 The installed Angular CLI version is outdated.
 Installing a temporary Angular CLI versioned 14.2.13 to perform the update.
@@ -205,6 +219,9 @@ UPDATE angular.json (4301 bytes)
   See "/tmp/ng-jM5C0M/angular-errors.log" for further details.
 
 
+---
+6.0.4
+---
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@14 --force
 Using package manager: npm
 Collecting installed dependencies...
@@ -234,6 +251,9 @@ UPDATE package.json (3320 bytes)
   Migration completed.
 
 
+---
+6.0.5
+---
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@15 @angular/cli@15 --force
 The installed Angular CLI version is outdated.
 Installing a temporary Angular CLI versioned 15.2.11 to perform the update.
@@ -284,6 +304,9 @@ UPDATE src/test.ts (885 bytes)
   See "/tmp/ng-mwgx5D/angular-errors.log" for further details.
 
 
+---
+6.0.6
+---
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@15 --force
 Using package manager: npm
 Collecting installed dependencies...
@@ -317,4 +340,58 @@ UPDATE src/app/editor/editor.component.ts (4029 bytes)
 UPDATE src/app/model/general-context.ts (884 bytes)
   Migration completed (7 files modified).
 
+---
+6.0.7
+---
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@16 @angular/cli@16 --force
+The installed Angular CLI version is outdated.
+Installing a temporary Angular CLI versioned 16.2.13 to perform the update.
+✔ Packages successfully installed.
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+                  Package "@angular/fire" has an incompatible peer dependency to "@angular/common" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "16.2.12").
+                  Package "@angular/fire" has an incompatible peer dependency to "@angular/core" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "16.2.12").
+                  Package "ngx-quill" has an incompatible peer dependency to "@angular/forms" (requires "^9.0.0" (extended), would install "16.2.12").
+                  Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "16.2.12").
+                  Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser-dynamic" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "16.2.12").
+    Updating package.json with dependency @angular-devkit/build-angular @ "16.2.13" (was "15.2.11")...
+    Updating package.json with dependency @angular/cli @ "16.2.13" (was "15.2.11")...
+    Updating package.json with dependency @angular/compiler-cli @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/language-service @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/animations @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/common @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/compiler @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/core @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/forms @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/platform-browser @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/platform-browser-dynamic @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/platform-server @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/router @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency @angular/service-worker @ "16.2.12" (was "15.2.10")...
+    Updating package.json with dependency zone.js @ "0.13.3" (was "0.11.4")...
+UPDATE package.json (3332 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/cli' **
+
+▸ Remove 'defaultProject' option from workspace configuration.
+  The project to use will be determined from the current working directory.
+  Migration completed (No changes made).
+
+▸ Replace removed 'defaultCollection' option in workspace configuration with 'schematicCollections'.
+  Migration completed (No changes made).
+
+▸ Update the '@angular-devkit/build-angular:server' builder configuration to disable 'buildOptimizer' for non optimized builds.
+  Migration completed (No changes made).
+
+** Executing migrations of package '@angular/core' **
+
+▸ In Angular version 15.2, the guard and resolver interfaces (CanActivate, Resolve, etc) were deprecated.
+  This migration removes imports and 'implements' clauses that contain them.
+UPDATE src/app/auth.guard.ts (482 bytes)
+  Migration completed (1 file modified).
+
+▸ As of Angular v16, the `moduleId` property of `@Component` is deprecated as it no longer has any effect.
+  Migration completed (No changes made).
 
