@@ -424,3 +424,69 @@ Migration completed (No changes made).
       ✓  Updated Angular Material to version 16
 
 Migration completed (No changes made).
+
+---
+
+## 6.0.7
+
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@17 @angular/cli@17 --force
+The installed Angular CLI version is outdated.
+Installing a temporary Angular CLI versioned 17.3.2 to perform the update.
+✔ Packages successfully installed.
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package "@angular/fire" has an incompatible peer dependency to "@angular/common" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "17.3.1").
+Package "@angular/fire" has an incompatible peer dependency to "@angular/core" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "17.3.1").
+Package "ngx-quill" has an incompatible peer dependency to "@angular/forms" (requires "^9.0.0" (extended), would install "17.3.1").
+Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "17.3.1").
+Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser-dynamic" (requires "^9.0.0 || ^10.0.0 || ^11.0.0" (extended), would install "17.3.1").
+Updating package.json with dependency @angular-devkit/build-angular @ "17.3.2" (was "16.2.13")...
+Updating package.json with dependency @angular/cli @ "17.3.2" (was "16.2.13")...
+Updating package.json with dependency @angular/compiler-cli @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/language-service @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency typescript @ "5.4.3" (was "4.9.5")...
+Updating package.json with dependency @angular/animations @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/common @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/compiler @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/core @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/forms @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/platform-browser @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/platform-browser-dynamic @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/platform-server @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/router @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency @angular/service-worker @ "17.3.1" (was "16.2.12")...
+Updating package.json with dependency zone.js @ "0.14.4" (was "0.13.3")...
+UPDATE package.json (3320 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/cli' **
+
+▸ Replace usages of '@nguniversal/builders' with '@angular-devkit/build-angular'.
+Migration completed (No changes made).
+
+▸ Replace usages of '@nguniversal/' packages with '@angular/ssr'.
+Migration completed (No changes made).
+
+▸ Replace deprecated options in 'angular.json'.
+UPDATE angular.json (4289 bytes)
+Migration completed (1 file modified).
+
+▸ Add 'browser-sync' as dev dependency when '@angular-devkit/build-angular:ssr-dev-server' is used, as it is no longer a direct dependency of '@angular-devkit/build-angular'.
+Migration completed (No changes made).
+
+** Executing migrations of package '@angular/core' **
+
+▸ Angular v17 introduces a new control flow syntax that uses the @ and } characters.
+This migration replaces the existing usages with their corresponding HTML entities.
+Migration completed (No changes made).
+
+▸ Updates `TransferState`, `makeStateKey`, `StateKey` imports from `@angular/platform-browser` to `@angular/core`.
+Migration completed (No changes made).
+
+▸ CompilerOption.useJit and CompilerOption.missingTranslation are unused under Ivy.
+This migration removes their usage
+Migration completed (No changes made).
+
+▸ Updates two-way bindings that have an invalid expression to use the longform expression instead.
+Migration completed (No changes made).

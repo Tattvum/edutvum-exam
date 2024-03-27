@@ -80,28 +80,28 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "edutvum-exam:build"
+            "buildTarget": "edutvum-exam:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "edutvum-exam:build:production"
+              "buildTarget": "edutvum-exam:build:production"
             },
             "stage": {
-              "browserTarget": "edutvum-exam:build:stage"
+              "buildTarget": "edutvum-exam:build:stage"
             },
             "stage-tt2": {
-              "browserTarget": "edutvum-exam:build:stage-tt2"
+              "buildTarget": "edutvum-exam:build:stage-tt2"
             },
             "dev": {
-              "browserTarget": "edutvum-exam:build:dev",
-              "proxyConfig": "proxy.conf.json"
+              "proxyConfig": "proxy.conf.json",
+              "buildTarget": "edutvum-exam:build:dev"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "edutvum-exam:build"
+            "buildTarget": "edutvum-exam:build"
           }
         },
         "test": {
