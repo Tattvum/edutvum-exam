@@ -490,3 +490,48 @@ Migration completed (No changes made).
 
 ▸ Updates two-way bindings that have an invalid expression to use the longform expression instead.
 Migration completed (No changes made).
+
+---
+
+## 6.0.7
+
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@17 --force
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package "@angular/flex-layout" has an incompatible peer dependency to "@angular/cdk" (requires "^9.0.0-rc.8", would install "17.3.1").
+Updating package.json with dependency @angular/cdk @ "17.3.1" (was "16.2.14")...
+Updating package.json with dependency @angular/material @ "17.3.1" (was "16.2.14")...
+UPDATE package.json (3318 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/cdk' **
+
+▸ Updates the Angular CDK to v17.
+
+      ✓  Updated Angular CDK to version 17
+
+Migration completed (No changes made).
+
+** Executing migrations of package '@angular/material' **
+
+▸ Updates Angular Material to v17.
+Cannot update to Angular Material v17 because the project is using the legacy Material components
+that have been deleted. While Angular Material v16 is compatible with Angular v17, it is recommended
+to switch away from the legacy components as soon as possible because they no longer receive bug fixes,
+accessibility improvements and new features.
+
+    Read more about migrating away from legacy components: https://material.angular.io/guide/mdc-migration
+
+    Files in the project using legacy Material components:
+     - /src/app/app.module.ts
+     - /src/app/common/autochip.component.ts
+     - /src/app/common/autoinput.component.ts
+     - /src/app/editor/editor.component.ts
+     - /src/app/model/general-context.ts
+     - /src/app/results-chart/results-chart.component.ts
+     - /src/app/tags-manager/tags-manager.component.ts
+
+UPDATE package.json (3318 bytes)
+✔ Packages installed successfully.
+Migration completed (1 file modified).
