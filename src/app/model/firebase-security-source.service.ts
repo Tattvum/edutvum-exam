@@ -4,7 +4,7 @@ import 'rxjs'
 import { Subject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase/compat/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 

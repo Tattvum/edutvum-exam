@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import 'rxjs'
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase/compat/app';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { DataService, FileLink, UploaderAPI, UploadContext } from './data.service';
 import { Upload } from './upload';
-import 'firebase/storage';
+import undefined from 'firebase/compat/storage';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Lib } from './lib';
 

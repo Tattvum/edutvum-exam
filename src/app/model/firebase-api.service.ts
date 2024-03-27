@@ -4,10 +4,10 @@ import { Injectable } from '@angular/core';
 
 import 'rxjs'
 
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase/compat/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { ThenableReference } from '@firebase/database-types';
+import { ThenableReference } from 'firebase/database-types';
 import { AbstractFirebaseAPI } from './firebase-data-source.service';
 
 @Injectable()

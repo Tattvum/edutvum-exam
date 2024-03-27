@@ -1451,3 +1451,32 @@ Upgrade 12 to 17 Angular (see upgrade12to17.md)
 
 TBD: While Angular Material v16 is compatible with Angular v17, it is recommended
 to switch away from the legacy components as soon as possible (may not be supported in v18)
+
+## 6.0.15
+
+svr@tnr:~/edutvum/edutvum-exam$ ng update firebase @angular/fire@7 --force
+The installed Angular CLI version is outdated.
+Installing a temporary Angular CLI versioned 7.3.10 to perform the update.
+✔ Packages successfully installed.
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package "@angular/fire" has an incompatible peer dependency to "@angular/common" (requires "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", would install "17.3.1")
+Package "@angular/fire" has an incompatible peer dependency to "@angular/core" (requires "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", would install "17.3.1")
+Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser" (requires "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", would install "17.3.1")
+Package "@angular/fire" has an incompatible peer dependency to "@angular/platform-browser-dynamic" (requires "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", would install "17.3.1")
+Updating package.json with dependency @angular/fire @ "7.6.1" (was "6.1.4")...
+Updating package.json with dependency firebase @ "10.9.0" (was "7.24.0")...
+UPDATE package.json (3324 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/fire' **
+
+▸ Update @angular/fire to v7.
+UPDATE package.json (3324 bytes)
+UPDATE src/app/model/firebase-api.service.ts (2802 bytes)
+UPDATE src/app/model/firebase-security-source.service.ts (2110 bytes)
+UPDATE src/app/model/firebase-upload.service.ts (3244 bytes)
+UPDATE src/local-tests/fb-auth-users.ts (876 bytes)
+✔ Packages installed successfully.
+Migration completed (5 files modified).

@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import * as admin from "firebase/compat-admin";
 
 //https://firebase.google.com/docs/admin/setup#initialize-sdk
 //export GOOGLE_APPLICATION_CREDENTIALS="/home/svr/lindata/edutvum/...
