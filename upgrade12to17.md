@@ -205,5 +205,32 @@ UPDATE angular.json (4301 bytes)
   See "/tmp/ng-jM5C0M/angular-errors.log" for further details.
 
 
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@14 --force
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+(node:220981) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [TLSSocket]. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+                  Package "@angular/flex-layout" has an incompatible peer dependency to "@angular/cdk" (requires "^9.0.0-rc.8", would install "14.2.7").
+    Updating package.json with dependency @angular/cdk @ "14.2.7" (was "13.3.9")...
+    Updating package.json with dependency @angular/material @ "14.2.7" (was "13.3.9")...
+UPDATE package.json (3320 bytes)
+✔ Packages successfully installed.
+** Executing migrations of package '@angular/cdk' **
+
+▸ Updates the Angular CDK to v14.
+    
+      ✓  Updated Angular CDK to version 14
+    
+  Migration completed.
+
+** Executing migrations of package '@angular/material' **
+
+▸ Updates the Angular Material to v14.
+    
+      ✓  Updated Angular Material to version 14
+    
+  Migration completed.
 
 
