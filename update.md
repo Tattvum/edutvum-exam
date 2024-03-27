@@ -1480,3 +1480,40 @@ UPDATE src/app/model/firebase-upload.service.ts (3244 bytes)
 UPDATE src/local-tests/fb-auth-users.ts (876 bytes)
 ✔ Packages installed successfully.
 Migration completed (5 files modified).
+
+## 6.0.16
+
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/fire --force
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Updating multiple major versions of '@angular/fire' at once is not supported. Please migrate each major version individually.
+Run 'ng update @angular/fire@8' in your workspace directory to update to latest '8.x' version of '@angular/fire'.
+
+For more information about the update process, see https://update.angular.io/?v=7.0-8.0
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/fire@8 --force
+The installed Angular CLI version is outdated.
+Installing a temporary Angular CLI versioned 8.3.29 to perform the update.
+✔ Packages successfully installed.
+The installed Angular CLI version is older than the latest stable version.
+Installing a temporary version to perform the update.
+Installing packages for tooling via npm.
+Installed packages for tooling via npm.
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Package specified by '@angular/fire@8' does not exist within the registry.
+svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/fire@16 --force
+The installed Angular CLI version is outdated.
+Installing a temporary Angular CLI versioned 16.2.13 to perform the update.
+✔ Packages successfully installed.
+Using package manager: npm
+Collecting installed dependencies...
+Found 60 dependencies.
+Fetching dependency metadata from registry...
+Updating multiple major versions of '@angular/fire' at once is not supported. Please migrate each major version individually.
+Run 'ng update @angular/fire@8' in your workspace directory to update to latest '8.x' version of '@angular/fire'.
+
+For more information about the update process, see https://update.angular.io/?v=7.0-8.0
