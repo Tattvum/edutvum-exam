@@ -397,7 +397,7 @@ Migration completed (No changes made).
 
 ---
 
-## 6.0.7
+## 6.0.8
 
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@16 --force
 Using package manager: npm
@@ -427,7 +427,7 @@ Migration completed (No changes made).
 
 ---
 
-## 6.0.7
+## 6.0.9
 
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/core@17 @angular/cli@17 --force
 The installed Angular CLI version is outdated.
@@ -493,7 +493,7 @@ Migration completed (No changes made).
 
 ---
 
-## 6.0.7
+## 6.0.10
 
 svr@tnr:~/edutvum/edutvum-exam$ ng update @angular/material@17 --force
 Using package manager: npm
