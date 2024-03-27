@@ -125,7 +125,6 @@
       }
     }
   },
-  "defaultProject": "edutvum-exam",
   "schematics": {
     "@schematics/angular:class": {
       "spec": false
