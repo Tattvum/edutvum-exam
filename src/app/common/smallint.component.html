@@ -1,10 +1,12 @@
 <div>
-  <span *ngFor="let i of array;">
-    <button
-      class="btn smallint"
-      style="margin: 2px; color: black;"
-      (click)="changeValue(i)"
-      [class.btn-warning]="i == value"
+  @for (i of array; track i) {
+    <span>
+      <button
+        class="btn smallint"
+        style="margin: 2px; color: black;"
+        (click)="changeValue(i)"
+        [class.btn-warning]="i == value"
       >{{i}}</button>
-  </span>
+    </span>
+  }
 </div>

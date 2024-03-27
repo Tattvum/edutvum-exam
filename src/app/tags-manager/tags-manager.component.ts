@@ -3,17 +3,23 @@ import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { map, startWith } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
-import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent, MatLegacyAutocomplete as MatAutocomplete } from '@angular/material/legacy-autocomplete';
-import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { ExamResult } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { DataService, TagsDisplayContext } from '../model/data.service';
 import { Question } from '../model/question';
 import { Tag } from '../model/tag';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-tags-manager',
+  standalone: true,
+  imports: [
+    MatFormFieldModule, MatChipsModule, ReactiveFormsModule, MatAutocompleteModule, AsyncPipe,
+  ],
   templateUrl: './tags-manager.component.html',
   styleUrls: ['./tags-manager.component.scss']
 })

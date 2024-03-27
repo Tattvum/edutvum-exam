@@ -5,23 +5,29 @@
     [result]="result" [snapshots]="snapshots" (snapshotSelected)="setSnapshot($event)">
   </app-nav>
   <hr>
-  <app-questions-manager [qidn]="qidn" [result]="result" (clicked)="setQuestion($event)">
-  </app-questions-manager>
+    <app-questions-manager [qidn]="qidn" [result]="result" (clicked)="setQuestion($event)">
+    </app-questions-manager>
 
-  <div *ngIf="!isResultsPage">
-    <app-display [qid]="qidn" [question]="question"></app-display>
-    <hr>
-    <app-choice-input [qid]="qidn" [question]="question" [result]="result">
-    </app-choice-input>
-    <div *ngIf="result.showSolution(qidn)">
-      <app-details [qid]="qidn" [question]="question" [result]="result">
-      </app-details>
-    </div>
-  </div>
+    @if (!isResultsPage) {
+      <div>
+        <app-display [qid]="qidn" [question]="question"></app-display>
+        <hr>
+          <app-choice-input [qid]="qidn" [question]="question" [result]="result">
+          </app-choice-input>
+          @if (result.showSolution(qidn)) {
+            <div>
+              <app-details [qid]="qidn" [question]="question" [result]="result">
+              </app-details>
+            </div>
+          }
+        </div>
+      }
 
-  <div *ngIf="isResultsPage">
-    <app-result [result]="result"></app-result>
-  </div>
-  <hr>
+      @if (isResultsPage) {
+        <div>
+          <app-result [result]="result"></app-result>
+        </div>
+      }
+      <hr>
 
-</div>
+      </div>

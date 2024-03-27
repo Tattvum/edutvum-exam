@@ -1,16 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Lib } from '../model/lib';
+import { SpaceComponent } from './sp.component';
 
 @Component({
   selector: 'app-timer',
+  standalone: true,
+  imports: [SpaceComponent],
   template: `
     <div fxLayout="row" gdArea="content" style="margin-top: 1px;">
       <span style="margin-top: 2px;" id="qsec" class="qsec" [class.hidden]="!showQSec" >
         {{ timize(qSec) }} <sp></sp>
       </span>
       <span style="margin-top: 4px; padding: 0px 2px 0px 4px;" [class.descending]="showTSecToggleReally && isDescending"
-          (click)="toggleDescending()"
-          [class.actionable]="showTSecToggleReally">
+        (click)="toggleDescending()"
+        [class.actionable]="showTSecToggleReally">
         {{ timize(tSecShow) }}
       </span>
       <span style="margin-top: 5px;" >
@@ -21,12 +24,14 @@ import { Lib } from '../model/lib';
           (click)="toggleDescending()">
         </span>
       </span>
-      <span *ngIf="showMSec" style="color: blue; margin-top: 4px;">
-        <sp></sp><sp></sp><sp></sp><sp></sp>
-        <span>Max. Duration: <span>{{ timize(mSec) }}</span></span>
-      </span>
+      @if (showMSec) {
+        <span style="color: blue; margin-top: 4px;">
+          <sp></sp><sp></sp><sp></sp><sp></sp>
+          <span>Max. Duration: <span>{{ timize(mSec) }}</span></span>
+        </span>
+      }
     </div>
-`,
+    `,
   styles: [
     '.descending { background-color: yellow; }',
     '.actionable { cursor: pointer; }',

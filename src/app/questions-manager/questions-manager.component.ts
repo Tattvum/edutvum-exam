@@ -4,10 +4,18 @@ import { Router } from '@angular/router';
 import { Lib, KEY } from '../model/lib';
 import { GeneralContext } from '../model/general-context';
 import { DataService, QuestionsManagerDisplayContext } from '../model/data.service';
-import { AnswerType } from 'app/model/answer-type';
+import { AnswerType } from '../model/answer-type';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SpaceComponent } from '../common/sp.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-questions-manager',
+  standalone: true,
+  imports: [
+    SpaceComponent,
+    MatTooltipModule, MatSlideToggleModule,
+  ],
   templateUrl: './questions-manager.component.html',
   styleUrls: ['./questions-manager.component.scss']
 })

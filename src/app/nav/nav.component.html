@@ -9,90 +9,128 @@
   <span class="eid"> ({{result.id}})</span>
   <span class="when"> {{result.when | date: 'yyyy-MMM-dd H:mm EEE'}} </span>
   <sp></sp><sp></sp>
-  <span class="practice-display" *ngIf="result.isPracticeMode">[Practice]</span>
+  @if (result.isPracticeMode) {
+    <span class="practice-display">[Practice]</span>
+  }
 </div>
 
-<div *ngIf="context.isAdmin">
-  <app-tags-manager
-    [disabled]="!context.isAdmin" [context]="tagsExamContext"
-    [id]="result.exam.id" [tags]="result.exam.tags">
-  </app-tags-manager>
-</div>
+@if (context.isAdmin) {
+  <div>
+    <app-tags-manager
+      [disabled]="!context.isAdmin" [context]="tagsExamContext"
+      [id]="result.exam.id" [tags]="result.exam.tags">
+    </app-tags-manager>
+  </div>
+}
 
 <br>
-<div fxLayout="row" gdArea="content" fxLayoutGap="8px" fxLayoutAlign="start center">
-  <span id="pause" (click)="pauseExam()"
+  <div fxLayout="row" gdArea="content" fxLayoutGap="8px" fxLayoutAlign="start center">
+    <span id="pause" (click)="pauseExam()"
       [class.locked]="result.isLocked()"
       data-toggle="tooltip" title="Pause Exam"
       class="btn btn-small btn-danger btn-sm" >
-    <span class="glyphicon glyphicon-pause"></span>
-  </span>
+      <span class="glyphicon glyphicon-pause"></span>
+    </span>
 
-  <span id="cancel" (click)="gotoDash()"
+    <span id="cancel" (click)="gotoDash()"
       [class.locked]="result.isLocked()"
       class="btn btn-small btn-danger btn-sm" >
-    <span *ngIf="!result.isLocked()">Cancel</span>
-    <span *ngIf="result.isLocked()">Home</span>
-  </span>
-  <span id="done" (click)="results()"
+      @if (!result.isLocked()) {
+        <span>Cancel</span>
+      }
+      @if (result.isLocked()) {
+        <span>Home</span>
+      }
+    </span>
+    <span id="done" (click)="results()"
       [class.locked]="result.isLocked()"
       class="btn btn-small btn-success btn-sm" >
-    <span *ngIf="!result.isLocked()">Done</span>
-    <span *ngIf="result.isLocked()">Results</span>
-  </span>
+      @if (!result.isLocked()) {
+        <span>Done</span>
+      }
+      @if (result.isLocked()) {
+        <span>Results</span>
+      }
+    </span>
 
-  <span *ngIf="context.isAdmin && isPending">
-    <mat-form-field fxFlexOffset="20px">
-      <mat-label> <span style="color: red;">Duration (min):</span> </mat-label>
-      <input matInput type="number" placeholder="Ex. 60"
-        (change)="maxDurationChange($event.target.value)" [value]="maxDuration">
-      <sp></sp>
-    </mat-form-field>
-  </span>
+    @if (context.isAdmin && isPending) {
+      <span>
+        <mat-form-field fxFlexOffset="20px">
+          <mat-label> <span style="color: red;">Duration (min):</span> </mat-label>
+          <input matInput type="number" placeholder="Ex. 60"
+            (change)="maxDurationChange($event.target.value)" [value]="maxDuration">
+          <sp></sp>
+        </mat-form-field>
+      </span>
+    }
 
-  <app-timer *ngIf="!result.exam.isPending()"
-    [showQSec]="!isResultsPage" [qSec]="qsec"
-    [showTSecToggle]="!result.isLocked() && maxDuration >= 1" [tSec]="tsec"
-    [showMSec]="maxDuration >= 1" [mSec]="maxDuration*60">
-  </app-timer>
+    @if (!result.exam.isPending()) {
+      <app-timer
+        [showQSec]="!isResultsPage" [qSec]="qsec"
+        [showTSecToggle]="!result.isLocked() && maxDuration >= 1" [tSec]="tsec"
+        [showMSec]="maxDuration >= 1" [mSec]="maxDuration*60">
+      </app-timer>
+    }
 
-  <span *ngIf="!isPending" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
-    <mat-chip-list>
-      <!-- <mat-chip [disabled]="result.isLocked()" [class.actionable]="!result.isLocked()" -->
-      <mat-chip [disabled]="true" [class.actionable]="false"
-          (click)="snapshot()">
-        <span>Snapshots:</span>
-      </mat-chip>
-    </mat-chip-list>
-    <mat-chip-list *ngIf="snapshots.length > 1" selectable="false">
-      <mat-chip *ngFor="let snap of snapshots; let i=index"
-          [disabled]="!result.isLocked()" [class.actionable]="result.isLocked()"
-          [selected]="sidn < 0? i === snapshots.length-1 : i === sidn" color="accent"
-          [title]="snap.id" class="snapshot-show" (click)="selectSnapshot(i)">
-        <span>{{ timize(snap.durationTotal()) }}</span>
-      </mat-chip>
-    </mat-chip-list>
-    <span *ngIf="snapshots.length <=1">_</span>
-  </span>
+    @if (!isPending) {
+      <span fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+        <mat-chip-listbox>
+          <!-- <mat-chip [disabled]="result.isLocked()" [class.actionable]="!result.isLocked()" -->
+          <mat-chip-option [disabled]="true" [class.actionable]="false"
+            (click)="snapshot()">
+            <span>Snapshots:</span>
+          </mat-chip-option>
+        </mat-chip-listbox>
+        @if (snapshots.length > 1) {
+          <mat-chip-listbox selectable="false">
+            @for (snap of snapshots; track snap; let i = $index) {
+              <mat-chip-option
+                [disabled]="!result.isLocked()" [class.actionable]="result.isLocked()"
+                [selected]="sidn < 0? i === snapshots.length-1 : i === sidn" color="accent"
+                [title]="snap.id" class="snapshot-show" (click)="selectSnapshot(i)">
+                <span>{{ timize(snap.durationTotal()) }}</span>
+              </mat-chip-option>
+            }
+          </mat-chip-listbox>
+        }
+        @if (snapshots.length <=1) {
+          <span>_</span>
+        }
+      </span>
+    }
 
-  <span *ngIf="context.isAdmin">
-    <mat-form-field fxFlexOffset="20px">
-      <mat-label> <span style="color: red;">Marking Scheme:</span> </mat-label>
-      <mat-select [(value)]="markingScheme">
-        <mat-option *ngFor="let sc of markingSchemes;" [value]="sc">{{sc}}</mat-option>
-      </mat-select><sp></sp>
-    </mat-form-field>
-  </span>
+    @if (context.isAdmin) {
+      <span>
+        <mat-form-field fxFlexOffset="20px">
+          <mat-label> <span style="color: red;">Marking Scheme:</span> </mat-label>
+          <mat-select [(value)]="markingScheme">
+            @for (sc of markingSchemes; track sc) {
+              <mat-option [value]="sc">{{sc}}</mat-option>
+            }
+            </mat-select><sp></sp>
+          </mat-form-field>
+        </span>
+      }
 
-  <mat-slide-toggle *ngIf="result.isLocked() && !result.exam.isPending()"
-      color="primary" [(ngModel)]="result.review">Review Mode</mat-slide-toggle>
+      @if (result.isLocked() && !result.exam.isPending()) {
+        <mat-slide-toggle
+        color="primary" [(ngModel)]="result.review">Review Mode</mat-slide-toggle>
+      }
 
-</div>
+    </div>
 
-<div *ngIf="isPending">
-  <button mat-raised-button (click)="addQuestion()">Add Question!</button>
-  <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
-  <button mat-raised-button *ngIf="isResultsPage" class="gap" (click)="startGroup()">Add GROUP Question!</button>
-  <span class="gap" *ngIf="!isResultsPage"> {{question.fullid()}} </span>
-  <button mat-raised-button *ngIf="!isResultsPage" class="gap" (click)="deleteQuestion()">Delete Question!</button>
-</div>
+    @if (isPending) {
+      <div>
+        <button mat-raised-button (click)="addQuestion()">Add Question!</button>
+        <button mat-raised-button class="gap" (click)="addLinkQuestion()">Add LINK Question!</button>
+        @if (isResultsPage) {
+          <button mat-raised-button class="gap" (click)="startGroup()">Add GROUP Question!</button>
+        }
+        @if (!isResultsPage) {
+          <span class="gap"> {{question.fullid()}} </span>
+        }
+        @if (!isResultsPage) {
+          <button mat-raised-button class="gap" (click)="deleteQuestion()">Delete Question!</button>
+        }
+      </div>
+    }

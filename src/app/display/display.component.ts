@@ -2,9 +2,14 @@ import { Component, Input } from '@angular/core';
 
 import { DataService, QuestionDisplayContext } from '../model/data.service';
 import { Question } from '../model/question';
+import { EditorComponent } from '../editor/editor.component';
 
 @Component({
   selector: 'app-display',
+  standalone: true,
+  imports: [
+    EditorComponent,
+  ],
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.scss']
 })

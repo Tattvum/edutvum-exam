@@ -6,9 +6,21 @@ import { EMPTY_EXAM_RESULT, ExamResult } from '../model/exam-result';
 import { Question } from '../model/question';
 import { ExamStatus } from '../model/exam';
 import { AnswerType } from '../model/answer-type';
+import { NavComponent } from '../nav/nav.component';
+import { UserComponent } from '../user/user.component';
+import { QuestionsManagerComponent } from '../questions-manager/questions-manager.component';
+import { DisplayComponent } from '../display/display.component';
+import { ChoiceInputComponent } from '../choice-input/choice-input.component';
+import { DetailsComponent } from '../details/details.component';
+import { ResultComponent } from '../result/result.component';
 
 @Component({
   selector: 'app-exam',
+  standalone: true,
+  imports: [
+    NavComponent, UserComponent, QuestionsManagerComponent, DisplayComponent,
+    ChoiceInputComponent, DetailsComponent, ResultComponent,
+  ],
   templateUrl: './exam.component.html',
   styleUrls: ['./exam.component.scss']
 })

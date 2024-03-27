@@ -5,9 +5,21 @@ import { DataService } from '../model/data.service';
 import { Lib, Selection } from '../model/lib';
 import { ExamResult } from '../model/exam-result';
 import { Bar } from '../common/chart.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ResultsChartComponent } from '../results-chart/results-chart.component';
+import { SpaceComponent } from '../common/sp.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-profile',
+  standalone: true,
+  imports: [
+    MatProgressSpinnerModule, ResultsChartComponent, SpaceComponent, MatIconModule,
+    MatFormFieldModule, MatSelectModule, FormsModule,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss']
 })

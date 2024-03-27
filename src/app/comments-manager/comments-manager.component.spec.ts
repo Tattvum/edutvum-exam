@@ -8,8 +8,8 @@ xdescribe('CommentsManagerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CommentsManagerComponent]
-    })
+    declarations: [CommentsManagerComponent]
+})
       .compileComponents();
   }));
 

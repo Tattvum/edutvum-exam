@@ -3,6 +3,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-page-not-found',
+  standalone: true,
+  imports: [],
   templateUrl: './page-not-found.component.html',
   styleUrls: ['./page-not-found.component.scss']
 })

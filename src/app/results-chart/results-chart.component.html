@@ -27,14 +27,16 @@
     <app-auto-input placeholder="Pick an Exam" [list]="all" (added)="added.emit($event)" >
     </app-auto-input>
     <mat-list style="max-height: 200px; overflow: auto;">
-      <mat-list-item class="highlight" *ngFor="let sel of some; let i=index"
+      @for (sel of some; track sel; let i = $index) {
+        <mat-list-item class="highlight"
           [matTooltip]="sel.id + ' &nbsp;&nbsp; (Click to remove)'" (click)="selectionRemove(sel.id)">
-        <div mat-line >
-          <span class="blue">{{i+1}}.</span> <sp></sp><sp></sp>
-          <span class="gray">{{show(sel).id}}</span> <sp></sp><sp></sp>
-          <span>{{sel.title}}</span>
-        </div>
-      </mat-list-item>
+          <div mat-line >
+            <span class="blue">{{i+1}}.</span> <sp></sp><sp></sp>
+            <span class="gray">{{show(sel).id}}</span> <sp></sp><sp></sp>
+            <span>{{sel.title}}</span>
+          </div>
+        </mat-list-item>
+      }
     </mat-list>
   </div>
   <div mat-dialog-actions>

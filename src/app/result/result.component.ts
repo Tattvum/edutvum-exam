@@ -2,13 +2,18 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ExamResult, ResultObj } from '../model/exam-result';
 import { Lib } from '../model/lib';
-import { Bar } from '../common/chart.component';
+import { Bar, ChartComponent } from '../common/chart.component';
 import { ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
 import { NO_TAG, TYPE_TAG } from '../model/tag';
-import { TreeTableData } from '../common/treetable.component';
+import { TreeTableComponent, TreeTableData } from '../common/treetable.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { DecimalPipe } from '@angular/common';
+import { SpaceComponent } from '../common/sp.component';
 
 @Component({
   selector: 'app-result',
+  standalone: true,
+  imports: [MatTabsModule, DecimalPipe, TreeTableComponent, ChartComponent, SpaceComponent],
   templateUrl: './result.component.html',
   styleUrls: ['./result.component.scss']
 })

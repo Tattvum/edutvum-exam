@@ -1,8 +1,10 @@
 import { Component, ViewChild, EventEmitter, Output, Input, TemplateRef, HostListener, OnInit } from '@angular/core'
 import { DataService, UploaderAPI } from '../model/data.service'
 import { Upload } from '../model/upload'
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatDialog } from '@angular/material/dialog'
 import { Overlay } from '@angular/cdk/overlay'
+import { MatTabsModule } from '@angular/material/tabs'
+import { QuillModule } from 'ngx-quill'
 
 //NOTE: Since the Quill component adds a p tag on any edit
 function stripPIfSingle(txt: string): string {
@@ -16,6 +18,10 @@ function stripPIfSingle(txt: string): string {
 
 @Component({
   selector: 'app-editor',
+  standalone: true,
+  imports: [
+    MatTabsModule, QuillModule,
+  ],
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })

@@ -1,20 +1,24 @@
 <div class="light">
   (
-    <span>{{ qid }} - </span><span  style="color: red;">{{question.eid}}</span>
-    <span *ngFor="let qg of question.groups; let i=index">.{{ qg.id }}</span>
-    <span style="color: red;">.{{question.id}}</span>
+  <span>{{ qid }} - </span><span  style="color: red;">{{question.eid}}</span>
+  @for (qg of question.groups; track qg; let i = $index) {
+    <span>.{{ qg.id }}</span>
+  }
+  <span style="color: red;">.{{question.id}}</span>
   )
 </div>
 
-<div *ngFor="let qg of question.groups; let i=index">
-  <app-editor heading="Edit Question Group Display"
-    [content]="qg.title"
-    (onedit)="onQgEdit(i, $event)" >
-  </app-editor>
-  <hr>
-</div>
+@for (qg of question.groups; track qg; let i = $index) {
+  <div>
+    <app-editor heading="Edit Question Group Display"
+      [content]="qg.title"
+      (onedit)="onQgEdit(i, $event)" >
+    </app-editor>
+    <hr>
+    </div>
+  }
 
-<app-editor heading="Edit Question Display"
-  [content]="question.title"
-  (onedit)="onEdit($event)" >
-</app-editor>
+  <app-editor heading="Edit Question Display"
+    [content]="question.title"
+    (onedit)="onEdit($event)" >
+  </app-editor>

@@ -1,77 +1,81 @@
 <mat-tab-group [(selectedIndex)]="result.tab">
   <mat-tab label="{{ result.exam.marking.id }} Marking Scheme">
     <br>
-    <div class="green">{{ result.exam.marking.description }}</div>
-    <div *ngIf="result">
-      <table style="border-collapse: separate; border-spacing: 24px;">
-        <tr>
-          <td style="vertical-align: middle;">
-            <span id="percent">{{ result.score.percent | number:'1.0-0' }}%</span>
-          </td>
-          <td style="vertical-align: middle;">
-            <table id="report" class="table table-bordered" style="width: 30%;">
-              <tr>
-                <td></td>
-                <th class="sure">Sure</th>
-                <th class="guess">Guess</th>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Correct</td>
-                <td class="total sure">{{ result.score.sureCorrect | number:'1.0-0' }}</td>
-                <td class="total guess">{{ result.score.guessCorrect | number:'1.0-0' }}</td>
-                <td class="bglight">{{ (result.score.sureCorrect + result.score.guessCorrect)  | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <td>Partial</td>
-                <td class="total sure">{{ result.score.surePartial | number:'1.0-0' }}</td>
-                <td class="total guess">{{ result.score.guessPartial | number:'1.0-0' }}</td>
-                <td class="bglight">{{ (result.score.surePartial + result.score.guessPartial)  | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <td>Wrong</td>
-                <td class="total sure">{{ result.score.sureWrong | number:'1.0-0' }}</td>
-                <td class="total guess">{{ result.score.guessWrong | number:'1.0-0' }}</td>
-                <td class="bglight">{{ (result.score.sureWrong + result.score.guessWrong)  | number:'1.0-0' }}</td>
-              </tr>
-              <tr>
-                <th>Total</th>
-                <td class="total sure bglight">{{ result.score.sure | number:'1.0-0' }}</td>
-                <td class="total guess bglight">{{ result.score.guess | number:'1.0-0' }}</td>
-                <th class="bgdark">{{ result.score.marks | number:'1.0-0' }}</th>
+      <div class="green">{{ result.exam.marking.description }}</div>
+      @if (result) {
+        <div>
+          <table style="border-collapse: separate; border-spacing: 24px;">
+            <tr>
+              <td style="vertical-align: middle;">
+                <span id="percent">{{ result.score.percent | number:'1.0-0' }}%</span>
+              </td>
+              <td style="vertical-align: middle;">
+                <table id="report" class="table table-bordered" style="width: 30%;">
+                  <tr>
+                    <td></td>
+                    <th class="sure">Sure</th>
+                    <th class="guess">Guess</th>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Correct</td>
+                    <td class="total sure">{{ result.score.sureCorrect | number:'1.0-0' }}</td>
+                    <td class="total guess">{{ result.score.guessCorrect | number:'1.0-0' }}</td>
+                    <td class="bglight">{{ (result.score.sureCorrect + result.score.guessCorrect)  | number:'1.0-0' }}</td>
+                  </tr>
+                  <tr>
+                    <td>Partial</td>
+                    <td class="total sure">{{ result.score.surePartial | number:'1.0-0' }}</td>
+                    <td class="total guess">{{ result.score.guessPartial | number:'1.0-0' }}</td>
+                    <td class="bglight">{{ (result.score.surePartial + result.score.guessPartial)  | number:'1.0-0' }}</td>
+                  </tr>
+                  <tr>
+                    <td>Wrong</td>
+                    <td class="total sure">{{ result.score.sureWrong | number:'1.0-0' }}</td>
+                    <td class="total guess">{{ result.score.guessWrong | number:'1.0-0' }}</td>
+                    <td class="bglight">{{ (result.score.sureWrong + result.score.guessWrong)  | number:'1.0-0' }}</td>
+                  </tr>
+                  <tr>
+                    <th>Total</th>
+                    <td class="total sure bglight">{{ result.score.sure | number:'1.0-0' }}</td>
+                    <td class="total guess bglight">{{ result.score.guess | number:'1.0-0' }}</td>
+                    <th class="bgdark">{{ result.score.marks | number:'1.0-0' }}</th>
+                  </tr>
+                </table>
+              </td>
+              <td style="text-align: left;">
+                <div class="missed">
+                  <span>{{ result.score.total | number:'1.0-0' }}</span>
+                  <sp></sp> Total Marks
+                </div>
+                <div class="missed">
+                  <span>{{ result.score.skipped | number:'1.0-0' }}</span>
+                  <sp></sp> Skipped Marks
+                </div>
+                <div class="missed">
+                  <span>{{ result.score.omitted | number:'1.0-0' }}</span>
+                  <sp></sp> Omitted Marks
+                </div>
+                <br>
+                </td>
               </tr>
             </table>
-          </td>
-          <td style="text-align: left;">
-            <div class="missed">
-              <span>{{ result.score.total | number:'1.0-0' }}</span>
-              <sp></sp> Total Marks
-            </div>
-            <div class="missed">
-              <span>{{ result.score.skipped | number:'1.0-0' }}</span>
-              <sp></sp> Skipped Marks
-            </div>
-            <div class="missed">
-              <span>{{ result.score.omitted | number:'1.0-0' }}</span>
-              <sp></sp> Omitted Marks
-            </div>
-            <br>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </mat-tab>
-  <mat-tab label="Tag Distribution">
-    <div *ngIf="result">
-      <app-tree-table
-        [data]="tags"
-        [(level)]="result.level"
-        [(selection)]="result.selection" >
-      </app-tree-table>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+          </div>
+        }
+      </mat-tab>
+      <mat-tab label="Tag Distribution">
+        @if (result) {
+          <div>
+            <app-tree-table
+              [data]="tags"
+              [(level)]="result.level"
+              [(selection)]="result.selection" >
+            </app-tree-table>
+          </div>
+        }
+      </mat-tab>
+    </mat-tab-group>
 
-Question-wise <b>Time</b> distribution:
-<br>
-<app-chart [width]="800" [height]="200" [bars]="bars"></app-chart>
+    Question-wise <b>Time</b> distribution:
+    <br>
+      <app-chart [width]="800" [height]="200" [bars]="bars"></app-chart>

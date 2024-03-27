@@ -1,14 +1,15 @@
 <mat-form-field class="example-chip-list">
-  <mat-chip-list #chipList aria-label="Tag selection">
-    <mat-chip *ngFor="let tag of tags"
-      [removable]="true"
-      [disabled]="disabled"
-      [selectable]="true"
-      (click)="editTag(tag.id)"
-      (removed)="removeTag(tag.id)">
-      {{tag.title}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
+  <mat-chip-grid #chipList aria-label="Tag selection">
+    @for (tag of tags; track tag) {
+      <mat-chip-row
+        [removable]="true"
+        [disabled]="disabled"        
+        (click)="editTag(tag.id)"
+        (removed)="removeTag(tag.id)">
+        {{tag.title}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip-row>
+    }
     <input
       placeholder="Tags..."
       (focus)="onFocus()"
@@ -19,10 +20,12 @@
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
       (matChipInputTokenEnd)="addTagInput($event)">
-  </mat-chip-list>
+  </mat-chip-grid>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addTagSelected($event)">
-    <mat-option *ngFor="let tag of filteredTags$ | async" [value]="tag.id">
-      {{tag.title}}
-    </mat-option>
+    @for (tag of filteredTags$ | async; track tag) {
+      <mat-option [value]="tag.id">
+        {{tag.title}}
+      </mat-option>
+    }
   </mat-autocomplete>
 </mat-form-field>

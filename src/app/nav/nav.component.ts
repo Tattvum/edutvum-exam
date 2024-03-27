@@ -9,9 +9,25 @@ import { Lib, KEY } from '../model/lib';
 
 import { MARKING_SCHEME_TYPE_NAMES, MarkingSchemeType } from '../model/marks';
 import { Question } from '../model/question';
+import { SpaceComponent } from '../common/sp.component';
+import { EditorComponent } from '../editor/editor.component';
+import { TagsManagerComponent } from '../tags-manager/tags-manager.component';
+import { TimerComponent } from '../common/timer.component';
+import { DatePipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-nav',
+  standalone: true,
+  imports: [
+    SpaceComponent, EditorComponent, TagsManagerComponent, TimerComponent,
+    MatFormFieldModule, MatChipsModule, MatSelectModule, MatSlideToggleModule, DatePipe,
+    FormsModule,
+  ],
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
@@ -99,7 +115,7 @@ export class NavComponent implements OnInit {
     if (Lib.isNil(this.result)) return 0
     let s = this.result.duration(this.qidn)
     if (Lib.isNil(s)) return 0
-    if (s === NaN) return 0
+    if (Number.isNaN(s)) return 0
     return s
   }
   get qsec(): number {

@@ -1,5 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Lib } from '../model/lib';
+import { SpaceComponent } from './sp.component';
+import { MatSliderModule } from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
 
 export interface TTCol {
   name: string
@@ -22,6 +25,8 @@ export interface TreeTableData {
 
 @Component({
   selector: 'app-tree-table',
+  standalone: true,
+  imports: [SpaceComponent, MatSliderModule, FormsModule],
   templateUrl: './treetable.component.html',
   styleUrls: ['./treetable.component.scss']
 })

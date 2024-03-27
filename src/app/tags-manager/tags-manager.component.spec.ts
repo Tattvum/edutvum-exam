@@ -8,8 +8,8 @@ xdescribe('TagsManagerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [TagsManagerComponent]
-    })
+    declarations: [TagsManagerComponent]
+})
       .compileComponents();
   }));
 

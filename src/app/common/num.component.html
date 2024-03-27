@@ -3,34 +3,48 @@
     [class.btn-warning]="allowFractions"
     [class.btn-primary]="!allowFractions"
     [disabled]="!withinLimits(-1)"
-    >&lt;&lt;</button>
+  >&lt;&lt;</button>
   <sp></sp>
 
-  <button *ngIf="allowFractions==true" title="-1/4"
-    [disabled]="!withinLimits(-0.25)"
+  @if (allowFractions==true) {
+    <button title="-1/4"
+      [disabled]="!withinLimits(-0.25)"
     (click)="changeValue(-0.25)" class="btn btn-warning">&lt;</button>
+  }
 
   <span class="numshow">
     <span>{{signValue}}</span>
-    <span *ngIf="!isFracOnly"
-      [class.black]="allowFractions"
-      [class.red]="!allowFractions"
+    @if (!isFracOnly) {
+      <span
+        [class.black]="allowFractions"
+        [class.red]="!allowFractions"
       >{{intValue}}</span>
-    <span *ngIf="allowFractions==true">
-      <span *ngIf="fracValue == 1">&#188;</span>
-      <span *ngIf="fracValue == 2">&#189;</span>
-      <span *ngIf="fracValue == 3">&#190;</span>
-    </span>
+    }
+    @if (allowFractions==true) {
+      <span>
+        @if (fracValue == 1) {
+          <span>&#188;</span>
+        }
+        @if (fracValue == 2) {
+          <span>&#189;</span>
+        }
+        @if (fracValue == 3) {
+          <span>&#190;</span>
+        }
+      </span>
+    }
   </span>
 
-  <button *ngIf="allowFractions==true" title="+1/4"
-    [disabled]="!withinLimits(+0.25)"
+  @if (allowFractions==true) {
+    <button title="+1/4"
+      [disabled]="!withinLimits(+0.25)"
     (click)="changeValue(+0.25)" class="btn btn-warning">&gt;</button>
+  }
   <sp></sp>
 
   <button title="+1" (click)="changeValue(+1)" class="btn"
     [class.btn-warning]="allowFractions"
     [class.btn-primary]="!allowFractions"
     [disabled]="!withinLimits(+1)"
-    >&gt;&gt;</button>
+  >&gt;&gt;</button>
 </div>

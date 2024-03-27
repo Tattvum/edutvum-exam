@@ -1,15 +1,29 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
+import { TimerComponent } from './common/timer.component';
+import { ChartComponent } from './common/chart.component';
+import { AutoChipComponent } from './common/autochip.component'
+import { AutoInputComponent } from './common/autoinput.component';
+import { TreeTableComponent } from './common/treetable.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    TimerComponent, ChartComponent, AutoChipComponent, AutoInputComponent,
+    TreeTableComponent, RouterOutlet,
+  ],
   template: `
 
-    <router-outlet *ngIf="env.testComponent==='----'"></router-outlet>
+@if (env.testComponent==='----') {
+  <router-outlet></router-outlet>
+}
 
 <!-- --------------------- Component Testing Below ------------------------- -->
 
-  <div style="margin: 20px;" *ngIf="env.testComponent==='app-timer'">
+@if (env.testComponent==='app-timer') {
+  <div style="margin: 20px;">
     <app-timer style="margin: 20px;"
       [showQSec]="true" [qSec]="65"
       [showTSecToggle]="true" [tSec]="23*60 + 5"
@@ -51,39 +65,48 @@ import { environment } from '../environments/environment';
       [showMSec]="false" [mSec]="1*60*60 + 30*60">
     </app-timer>
   </div>
+}
 
 <!-- --------------------- Component Testing Below ------------------------- -->
 
-  <div style="margin: 20px;" *ngIf="env.testComponent==='app-chart'">
+@if (env.testComponent==='app-chart') {
+  <div style="margin: 20px;">
     <!-- oh! after clicking Add, move mouse our the chart component!!!! -->
     <button mat-button (click)="addBar()">Add</button>
     <app-chart [width]="800" [height]="400" [bars]="bars"></app-chart>
     {{bars.length}}
   </div>
+}
 
 <!-- --------------------- Component Testing Below ------------------------- -->
 
-  <div style="margin: 20px;" *ngIf="env.testComponent==='app-auto-chip'">
+@if (env.testComponent==='app-auto-chip') {
+  <div style="margin: 20px;">
     <app-auto-chip placeholder="Hola!" [old]="old" [all]="all"
       (removed)="removeSelection($event)" (added)="addSelection($event)" >
     </app-auto-chip>
   </div>
+}
 
 <!-- --------------------- Component Testing Below ------------------------- -->
 
-  <div style="margin: 20px;" *ngIf="env.testComponent==='app-auto-input'">
+@if (env.testComponent==='app-auto-input') {
+  <div style="margin: 20px;">
     <app-auto-input placeholder="Hola!" [list]="list"
       (added)="addedAutoInput($event)" >
     </app-auto-input> {{selectedFromList}}
   </div>
+}
 
 <!-- --------------------- Component Testing Below ------------------------- -->
 
-  <div *ngIf="env.testComponent==='app-tree-table'">
+@if (env.testComponent==='app-tree-table') {
+  <div>
     <app-tree-table [data]="ttdata" [(level)]="level" [(selection)]="selection" >
     </app-tree-table>
     {{selection}}
   </div>
+}
 
 <!-- --------------------- ----------------------- ------------------------- -->
 

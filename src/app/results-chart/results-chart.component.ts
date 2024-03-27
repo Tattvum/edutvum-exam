@@ -1,13 +1,24 @@
 import { Component, OnInit, TemplateRef, ViewChild, Input, Output, EventEmitter } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { Selection } from '../model/lib';
-import { Bar } from '../common/chart.component';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { Bar, ChartComponent } from '../common/chart.component';
+import { AutoInputComponent } from '../common/autoinput.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { SpaceComponent } from '../common/sp.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-results-chart',
+  standalone: true,
+  imports: [
+    ChartComponent, MatIconModule, MatListModule, MatFormFieldModule,
+    AutoInputComponent, FormsModule, SpaceComponent, MatDialogModule, MatTooltipModule,
+  ],
   templateUrl: './results-chart.component.html',
   styleUrls: ['./results-chart.component.scss']
 })
@@ -34,7 +45,7 @@ export class ResultsChartComponent implements OnInit {
 
   @Output() selected = new EventEmitter()
 
-  constructor(private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
+  constructor(private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void { }
 

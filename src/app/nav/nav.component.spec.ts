@@ -1,14 +1,13 @@
 
-import { of as observableOf, Observable } from 'rxjs';
-import { ComponentFixture, TestBed, getTestBed, fakeAsync, tick, flushMicrotasks, ComponentFixtureAutoDetect, discardPeriodicTasks, waitForAsync } from '@angular/core/testing';
+import { of as observableOf } from 'rxjs';
+import { ComponentFixture, TestBed, getTestBed, fakeAsync, tick, discardPeriodicTasks, waitForAsync } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
-import { DebugElement, Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { DataService } from '../model/data.service';
-import { GeneralContext, GeneralContextImpl } from '../model/general-context';
+import { GeneralContext } from '../model/general-context';
 import { NavComponent } from './nav.component';
 import { EMPTY_EXAM, Exam } from '../model/exam';
 import { EMPTY_QUESTION } from '../model/question';
@@ -118,14 +117,14 @@ xdescribe('Nav Component Tests:', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NavComponent],
-      providers: [
+    declarations: [NavComponent],
+    providers: [
         { provide: GeneralContext, useValue: contextMock },
         { provide: DataService, useValue: dataServiceMock },
         { provide: Router, useValue: routerMock },
         { provide: ActivatedRoute, useValue: routeParamMock },
-      ]
-    }).compileComponents().then(() => {
+    ]
+}).compileComponents().then(() => {
       fixture = TestBed.createComponent(NavComponent)
       CONFIRMATION = true
       NAV_EXAM = new Exam('00', 'Bingo', [EMPTY_QUESTION, EMPTY_QUESTION])

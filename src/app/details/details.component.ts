@@ -2,9 +2,14 @@ import { Component, Input } from '@angular/core';
 import { DataService, DetailsDisplayContext } from '../model/data.service';
 import { Question } from '../model/question';
 import { ExamResult } from '../model/exam-result';
+import { EditorComponent } from '../editor/editor.component';
 
 @Component({
   selector: 'app-details',
+  standalone: true,
+  imports: [
+    EditorComponent,
+  ],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss']
 })

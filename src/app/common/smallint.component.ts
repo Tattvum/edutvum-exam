@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'smallint',
+  standalone: true,
+  imports: [],
   templateUrl: './smallint.component.html',
   styles: []
 })

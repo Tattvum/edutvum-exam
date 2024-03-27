@@ -30,6 +30,7 @@
     <h3 class="bright" *ngIf="service.showAll">All Exams</h3>
     <h3 class="bright" *ngIf="!service.showAll">My Recent Exams</h3>
     <mat-card
+      appearance="outlined"
       *ngFor="let ex of tagFilteredExams | paginate: { id:'exams', itemsPerPage: 10, currentPage: pageExam }"
       [class.pending]="ex.isPending()" style="margin-bottom: 4px;">
       <div fxLayout="column">
@@ -46,18 +47,18 @@
           </div>
           <div fxLayout="row-reverse" gdArea="content">
             <button *ngIf="ex.isPending()" mat-raised-button (click)="publishExam(ex.id)">Publish</button>
-            <mat-chip-list>
-              <mat-chip *ngFor="let rs of service.listResults(ex.id); let j=index"
+            <mat-chip-listbox>
+              <mat-chip-option *ngFor="let rs of service.listResults(ex.id); let j=index"
                 [matBadge]="rs.snapshotIds.length" matBadgeSize="small" matBadgeColor="accent"
                 [matBadgeHidden]="rs.snapshotIds.length<=0"
                 [color]="rs.isPast ? 'primary' : 'warn'" selected (click)="showExamResult(rs)"
                 [class.locked]="rs.isLocked()" title="{{showWhen(rs.when)}}">
                 <span *ngIf="rs.isLocked()" class="actionable">{{rs.score.percent | number:'1.0-0'}}%</span>
                 <span *ngIf="!rs.isLocked()" class="actionable">...%</span>
-              </mat-chip>
-              <mat-chip *ngIf="!ex.isPending()" (click)="takeExam(ex, true)">Practice</mat-chip>
-              <mat-chip *ngIf="!ex.isPending()" (click)="takeExam(ex)">Take Exam</mat-chip>
-            </mat-chip-list>
+              </mat-chip-option>
+              <mat-chip-option *ngIf="!ex.isPending()" (click)="takeExam(ex, true)">Practice</mat-chip-option>
+              <mat-chip-option *ngIf="!ex.isPending()" (click)="takeExam(ex)">Take Exam</mat-chip-option>
+            </mat-chip-listbox>
           </div>
         </div>
         <div fxLayout="row" class="info" fxLayoutGap="16px">

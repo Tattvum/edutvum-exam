@@ -1,44 +1,56 @@
 <div>
   <hr>
-  <div class="explanationQ">
-    <div *ngIf="!result.showSolution(qid)">[Question Explantion HIDDEN]</div>
-    <app-editor *ngIf="result.showSolution(qid)"
-      heading="Edit Question Explantion"
-      [content]="question.explanation"
-      (onedit)="editExplanationQ($event)" >
-    </app-editor>
+    <div class="explanationQ">
+      @if (!result.showSolution(qid)) {
+        <div>[Question Explantion HIDDEN]</div>
+      }
+      @if (result.showSolution(qid)) {
+        <app-editor
+          heading="Edit Question Explantion"
+          [content]="question.explanation"
+          (onedit)="editExplanationQ($event)" >
+        </app-editor>
+      }
+    </div>
   </div>
-</div>
 
-<div>
-  <hr>
-  <div class="explanationE">
-    <div *ngIf="!result.showSolution(qid)">[Exam Explantion HIDDEN]</div>
-    <app-editor *ngIf="result.showSolution(qid)"
-      heading="Edit Exam Explantion"
-      [content]="result.exam.explanation"
-      (onedit)="editExplanationE($event)" >
-    </app-editor>
-  </div>
-</div>
+  <div>
+    <hr>
+      <div class="explanationE">
+        @if (!result.showSolution(qid)) {
+          <div>[Exam Explantion HIDDEN]</div>
+        }
+        @if (result.showSolution(qid)) {
+          <app-editor
+            heading="Edit Exam Explantion"
+            [content]="result.exam.explanation"
+            (onedit)="editExplanationE($event)" >
+          </app-editor>
+        }
+      </div>
+    </div>
 
-<div *ngIf="context.isAdmin">
-  <hr>
-  <div class="notesQ">
-    <app-editor heading="Edit Question Notes"
-      [content]="question.notes"
-      (onedit)="editNotesQ($event)" >
-    </app-editor>
-  </div>
-</div>
+    @if (context.isAdmin) {
+      <div>
+        <hr>
+          <div class="notesQ">
+            <app-editor heading="Edit Question Notes"
+              [content]="question.notes"
+              (onedit)="editNotesQ($event)" >
+            </app-editor>
+          </div>
+        </div>
+      }
 
-<div *ngIf="context.isAdmin">
-  <hr>
-  <div class="notesE">
-    <app-editor heading="Edit Exam Notes"
-      [content]="result.exam.notes"
-      (onedit)="editNotesE($event)" >
-  </app-editor>
-  </div>
-</div>
+      @if (context.isAdmin) {
+        <div>
+          <hr>
+            <div class="notesE">
+              <app-editor heading="Edit Exam Notes"
+                [content]="result.exam.notes"
+                (onedit)="editNotesE($event)" >
+              </app-editor>
+            </div>
+          </div>
+        }
 

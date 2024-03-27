@@ -2,18 +2,22 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'list',
+  standalone: true,
+  imports: [],
   template: `
     <div>
-      <span *ngFor="let txt of array; let i = index;">
-        <button
-          class="btn"
-          style="margin: 2px; color: black;"
-          [class.btn-warning]="i == value"
-          (click)="changeValue(i)"
+      @for (txt of array; track txt; let i = $index) {
+        <span>
+          <button
+            class="btn"
+            style="margin: 2px; color: black;"
+            [class.btn-warning]="i == value"
+            (click)="changeValue(i)"
           >{{txt}}</button>
-      </span>
+        </span>
+      }
     </div>
-  `,
+    `,
   styles: []
 })
 export class ListInputComponent {

@@ -1,12 +1,20 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Lib, Selection } from '../model/lib';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatLegacyAutocomplete as MatAutocomplete, MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AsyncPipe } from '@angular/common';
+import { SpaceComponent } from './sp.component';
 
 @Component({
   selector: 'app-auto-input',
+  standalone: true,
+  imports: [
+    MatAutocompleteModule, MatFormFieldModule, AsyncPipe, ReactiveFormsModule,
+    SpaceComponent,
+  ],
   template: `
     <mat-form-field style="width: 100%;">
       <input type="text" #inputElement matInput
@@ -15,13 +23,15 @@ import { MatLegacyAutocomplete as MatAutocomplete, MatLegacyAutocompleteSelected
         [formControl]="inputCtrl"
         [matAutocomplete]="auto" >
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addSelection($event)">
-        <mat-option *ngFor="let selection of filteredSelections$ | async" [value]="selection.id">
-          <span class="gray">{{selection.id}}</span> <sp></sp><sp></sp>
-          <span>{{selection.title}}</span>
-        </mat-option>
+        @for (selection of filteredSelections$ | async; track selection) {
+          <mat-option [value]="selection.id">
+            <span class="gray">{{selection.id}}</span> <sp></sp><sp></sp>
+            <span>{{selection.title}}</span>
+          </mat-option>
+        }
       </mat-autocomplete>
     </mat-form-field>
-  `,
+    `,
   styles: [
     '.gray { color: gray; }',
   ]

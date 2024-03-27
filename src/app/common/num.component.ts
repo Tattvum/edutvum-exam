@@ -2,15 +2,17 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'num',
+  standalone: true,
+  imports: [],
   templateUrl: './num.component.html',
   styles: [
     `.numshow {
-      background-color: lightyellow;
-      font-size: 200%;
-      padding: 0px 8px;
-      margin: 0px 8px;
-      vertical-align: middle;
-    }`,
+          background-color: lightyellow;
+          font-size: 200%;
+          padding: 0px 8px;
+          margin: 0px 8px;
+          vertical-align: middle;
+        }`,
     `.red {color: red;}`,
     `.black {color: black;}`,
     `.hidden {display: none;}`,

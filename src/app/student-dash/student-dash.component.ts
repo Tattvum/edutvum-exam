@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 // http://momentjs.com/docs/
 import * as moment from 'moment';
 import { Router } from '@angular/router';
@@ -10,12 +10,29 @@ import { Lib } from '../model/lib';
 
 import { trigger, transition, style, state, animate } from '@angular/animations';
 import { GeneralContext } from '../model/general-context';
-import { TreeTableData } from '../common/treetable.component';
+import { TreeTableComponent, TreeTableData } from '../common/treetable.component';
 import { NO_TAG, TYPE_TAG } from '../model/tag';
-import { ANSWER_TYPES, ANSWER_TYPE_NAMES } from 'app/model/answer-type';
+import { ANSWER_TYPES, ANSWER_TYPE_NAMES } from '../model/answer-type';
+import { UserProfileComponent } from '../user-profile/user-profile.component';
+import { UserComponent } from '../user/user.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { MatChipsModule } from '@angular/material/chips';
+import { DecimalPipe } from '@angular/common';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-student-dash',
+  standalone: true,
+  imports: [
+    MatCheckboxModule, MatFormFieldModule, MatTabsModule, MatCardModule, TreeTableComponent,
+    MatChipsModule, DecimalPipe, MatBadgeModule, FormsModule, NgxPaginationModule,
+    UserProfileComponent, UserComponent
+  ],
   templateUrl: './student-dash.component.html',
   styleUrls: ['./student-dash.component.scss'],
   animations: [

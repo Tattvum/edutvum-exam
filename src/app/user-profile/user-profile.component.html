@@ -1,52 +1,58 @@
 <div style="margin: 10px;">
-  <div *ngIf="service.loading">
-    <mat-spinner [diameter]="40"></mat-spinner>
-  </div>
-
-  <div *ngIf="!service.loading" fxLayout="column" fxLayoutGap="20px">
-
-    <div *ngIf="service.isAdmin" fxLayout="row"  fxLayoutGap="40px" style="background-color: antiquewhite; padding: 10px;">
-      <mat-form-field>
-        <mat-select [(ngModel)]="this.currentUser" (selectionChange)="userChanged()" placeholder="User">
-          <mat-option *ngFor="let u of service.users" [value]="u.uid">{{u.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+  @if (service.loading) {
+    <div>
+      <mat-spinner [diameter]="40"></mat-spinner>
     </div>
+  }
 
-    <div fxLayout="row"  fxLayoutGap="40px">
-      <div fxLayout="column">
-        <div style="font-size: xx-large;"> {{ service.examStats().all }} </div>
-        <div> Exams Available </div>
-      </div>
-      <div fxLayout="column">
-        <div style="font-size: xx-large;"> {{ service.examStats().taken }} </div>
-        <div> Exams Taken </div>
-      </div>
-      <div fxLayout="column">
-        <div style="font-size: xx-large;" title="hours : minutes : secs">
-          {{ timize(service.examStats().timeTaken) }}
+  @if (!service.loading) {
+    <div fxLayout="column" fxLayoutGap="20px">
+      @if (service.isAdmin) {
+        <div fxLayout="row"  fxLayoutGap="40px" style="background-color: antiquewhite; padding: 10px;">
+          <mat-form-field>
+            <mat-select [(ngModel)]="this.currentUser" (selectionChange)="userChanged()" placeholder="User">
+              @for (u of service.users; track u) {
+                <mat-option [value]="u.uid">{{u.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
         </div>
-        <div> Total Time Taken </div>
+      }
+      <div fxLayout="row"  fxLayoutGap="40px">
+        <div fxLayout="column">
+          <div style="font-size: xx-large;"> {{ service.examStats().all }} </div>
+          <div> Exams Available </div>
+        </div>
+        <div fxLayout="column">
+          <div style="font-size: xx-large;"> {{ service.examStats().taken }} </div>
+          <div> Exams Taken </div>
+        </div>
+        <div fxLayout="column">
+          <div style="font-size: xx-large;" title="hours : minutes : secs">
+            {{ timize(service.examStats().timeTaken) }}
+          </div>
+          <div> Total Time Taken </div>
+        </div>
+        <div fxLayout="column">
+          <div style="font-size: xx-large;"> {{ service.examStats().pending }} </div>
+          <div> Exams Pending </div>
+        </div>
       </div>
-      <div fxLayout="column">
-        <div style="font-size: xx-large;"> {{ service.examStats().pending }} </div>
-        <div> Exams Pending </div>
+      <div fxLayout="row wrap" fxLayoutGap="20px">
+        @for (chart of service.charts; track chart; let n = $index) {
+          <app-results-chart
+            [width]="200" [height]="100" [(title)]="chart.title"
+            [all]="service.filterExams(false)" [some]="chart.results"
+            [convert]="convert" [show]="show"
+            (added)="addExamResult($event, n)" (removed)="removeExamResult($event, n)"
+            (deleted)="deleteChart(n)" (updated)="updateChart(n)"
+            (selected)="selectChart(n)">
+          </app-results-chart>
+        }
+        <button mat-raised-button (click)="addChart()" fxFlexAlign="end">
+          Add Chart <sp></sp> <mat-icon>add</mat-icon>
+        </button>
       </div>
     </div>
-
-    <div fxLayout="row wrap" fxLayoutGap="20px">
-      <app-results-chart *ngFor="let chart of service.charts; let n=index"
-        [width]="200" [height]="100" [(title)]="chart.title"
-        [all]="service.filterExams(false)" [some]="chart.results"
-        [convert]="convert" [show]="show"
-        (added)="addExamResult($event, n)" (removed)="removeExamResult($event, n)"
-        (deleted)="deleteChart(n)" (updated)="updateChart(n)"
-        (selected)="selectChart(n)">
-      </app-results-chart>
-      <button mat-raised-button (click)="addChart()" fxFlexAlign="end">
-        Add Chart <sp></sp> <mat-icon>add</mat-icon>
-      </button>
-    </div>
-
-  </div>
+  }
 </div>

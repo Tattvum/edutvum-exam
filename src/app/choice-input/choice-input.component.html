@@ -4,72 +4,100 @@
 
 <form #f="ngForm" novalidate class="bg">
   <div class="btn-group-vertical" role="choices">
-    <div *ngFor="let ch of question.choices; let i=index">
-      <label [ngClass]="colors(i)">
-        <label (click)="removeChoice(i)" class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
-        <sp></sp>
-        <input [type]="ctype" name="choices" [id]="'rd'+i" #first (click)="choiceClicked($event, i)"
-          [disabled]="!result.allowEdit(qidn)"
-          [checked]="result.isAnswer(qidn, i) && result.showAnswer(qidn)" />
-        <sp></sp>
-        <label class="opt" [for]="'rd'+i">
-          <app-editor heading="Edit Choice Text" [content]="ch" (onedit)="editOption($event, i)">
-          </app-editor>
+    @for (ch of question.choices; track ch; let i = $index) {
+      <div>
+        <label [ngClass]="colors(i)">
+          <label (click)="removeChoice(i)" class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
+          <sp></sp>
+          <input [type]="ctype" name="choices" [id]="'rd'+i" #first (click)="choiceClicked($event, i)"
+            [disabled]="!result.allowEdit(qidn)"
+            [checked]="result.isAnswer(qidn, i) && result.showAnswer(qidn)" />
+          <sp></sp>
+          <label class="opt" [for]="'rd'+i">
+            <app-editor heading="Edit Choice Text" [content]="ch" (onedit)="editOption($event, i)">
+            </app-editor>
+          </label>
         </label>
-      </label>
-    </div>
-    <div class="ncq" *ngIf="question.type == 4">
-      <div>Type your answer here:</div>
-      <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors(null)"
-        [disabled]="!result.allowEdit(qidn)" />
-      <div *ngIf="result.showSolution(qidn)" [class.correct]="true">
-        ({{result.questions[qid].solutions[0]}})
       </div>
+    }
+    @if (question.type == 4) {
+      <div class="ncq">
+        <div>Type your answer here:</div>
+        <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors(null)"
+          [disabled]="!result.allowEdit(qidn)" />
+        @if (result.showSolution(qidn)) {
+          <div [class.correct]="true">
+            ({{result.questions[qid].solutions[0]}})
+          </div>
+        }
+      </div>
+    }
+  </div>
+  @if (question.type == 5) {
+    <div class="naq">
+      <button (click)="setNaqDone()" [class.hidden]="result.isLocked()">Done</button>
     </div>
-  </div>
-  <div class="naq" *ngIf="question.type == 5">
-    <button (click)="setNaqDone()" [class.hidden]="result.isLocked()">Done</button>
-  </div>
+  }
 </form>
 
-<div *ngIf="context.isAdmin">
-  <hr>
-  <button (click)="addChoice()">Add Choice</button>
-  <br>
-  <span style="color: red;">Solutions:</span>
-  <app-editor heading="Edit Question Solution" [content]="solutions" (onedit)="editSolution($event)">
-  </app-editor>
-  <br>
-  <mat-form-field>
-    <mat-label> <span style="color: red;">Type:</span> </mat-label>
-    <mat-select [value]="type" (selectionChange)="editType($event.value)">
-      <mat-option *ngFor="let item of mytype" value={{item}}>{{item}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <div *ngIf="!isPending">
-    <br>
-    <button (click)="toggleOmission()" class="btn btn-danger">
-      <span *ngIf="!omission">Omit Question</span>
-      <span *ngIf="omission"><b>Cancel Omission</b></span>
-    </button>
-    <div class="ncq" *ngIf="canEditMarks">
-      <div style="color: red;">Admin: Marks:</div>
-      <list *ngIf="schemeOLD" [(value)]="marks" [array]="['Correct','Wrong']"></list>
-      <smallint *ngIf="!schemeOLD"
-          [(value)]="marks" [min]="0" [max]="result.questions[qid].solutions[0]"></smallint>
-    </div>
-  </div>
-</div>
+@if (context.isAdmin) {
+  <div>
+    <hr>
+      <button (click)="addChoice()">Add Choice</button>
+      <br>
+        <span style="color: red;">Solutions:</span>
+        <app-editor heading="Edit Question Solution" [content]="solutions" (onedit)="editSolution($event)">
+        </app-editor>
+        <br>
+          <mat-form-field>
+            <mat-label> <span style="color: red;">Type:</span> </mat-label>
+            <mat-select [value]="type" (selectionChange)="editType($event.value)">
+              @for (item of mytype; track item) {
+                <mat-option value={{item}}>{{item}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          @if (!isPending) {
+            <div>
+              <br>
+                <button (click)="toggleOmission()" class="btn btn-danger">
+                  @if (!omission) {
+                    <span>Omit Question</span>
+                  }
+                  @if (omission) {
+                    <span><b>Cancel Omission</b></span>
+                  }
+                </button>
+                @if (canEditMarks) {
+                  <div class="ncq">
+                    <div style="color: red;">Admin: Marks:</div>
+                    @if (schemeOLD) {
+                      <list [(value)]="marks" [array]="['Correct','Wrong']"></list>
+                    }
+                    @if (!schemeOLD) {
+                      <smallint
+                      [(value)]="marks" [min]="0" [max]="result.questions[qid].solutions[0]"></smallint>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
 
-<div *ngIf="!result.exam.isPending()">
-  <hr>
-  <app-comments-manager [result]="result" [qid]="qid"></app-comments-manager>
-</div>
+        @if (!result.exam.isPending()) {
+          <div>
+            <hr>
+              <app-comments-manager [result]="result" [qid]="qid"></app-comments-manager>
+            </div>
+          }
 
-<div *ngIf="result.isLocked()">
-<hr>
-<app-tags-manager
-  [disabled]="!context.isAdmin" [context]="tagsQuestionContext"
-  [id]="qid" [tags]="question.tags">
-</app-tags-manager>
-</div>
+          @if (result.isLocked()) {
+            <div>
+              <hr>
+                <app-tags-manager
+                  [disabled]="!context.isAdmin" [context]="tagsQuestionContext"
+                  [id]="qid" [tags]="question.tags">
+                </app-tags-manager>
+              </div>
+            }

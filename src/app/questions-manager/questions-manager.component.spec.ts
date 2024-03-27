@@ -8,8 +8,8 @@ xdescribe('QuestionsManagerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [QuestionsManagerComponent]
-    })
+    declarations: [QuestionsManagerComponent]
+})
       .compileComponents();
   }));
 

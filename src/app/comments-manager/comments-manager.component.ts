@@ -4,9 +4,15 @@ import { CommentList } from '../model/comment';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';
 import { DataService } from '../model/data.service';
+import { EditorComponent } from '../editor/editor.component';
+import { SpaceComponent } from '../common/sp.component';
 
 @Component({
   selector: 'app-comments-manager',
+  standalone: true,
+  imports: [
+    EditorComponent, SpaceComponent,
+  ],
   templateUrl: './comments-manager.component.html',
   styleUrls: ['./comments-manager.component.scss']
 })

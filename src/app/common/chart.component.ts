@@ -25,6 +25,8 @@ const SELHEIGHT = 10
 
 @Component({
   selector: 'app-chart',
+  standalone: true,
+  imports: [],
   template: `
     <canvas #canvas></canvas>
   `,

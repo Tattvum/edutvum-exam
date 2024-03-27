@@ -5,7 +5,17 @@ import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { Question, EMPTY_QUESTION } from '../model/question';
 import { GeneralContext } from '../model/general-context';
 import { ExamStatus } from '../model/exam';
-import { Marking } from 'app/model/marking';
+import { Marking } from '../model/marking';
+import { SpaceComponent } from '../common/sp.component';
+import { EditorComponent } from '../editor/editor.component';
+import { SmallIntInputComponent } from '../common/smallint.component';
+import { ListInputComponent } from '../common/list.component';
+import { CommentsManagerComponent } from '../comments-manager/comments-manager.component';
+import { TagsManagerComponent } from '../tags-manager/tags-manager.component';
+import { NgClass } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 declare var MathJax: {
   Hub: {
@@ -15,6 +25,12 @@ declare var MathJax: {
 
 @Component({
   selector: 'app-choice-input',
+  standalone: true,
+  imports: [
+    NgClass, FormsModule, MatFormFieldModule, MatSelectModule,
+    SpaceComponent, EditorComponent, SmallIntInputComponent, CommentsManagerComponent,
+    TagsManagerComponent, ListInputComponent,
+  ],
   templateUrl: './choice-input.component.html',
   styleUrls: ['./choice-input.component.scss']
 })

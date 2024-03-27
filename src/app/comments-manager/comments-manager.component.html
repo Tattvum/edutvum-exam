@@ -1,17 +1,19 @@
 <div>
   <div style="color: coral;">Comments:</div>
   <app-editor heading="Add Comment" safe="true"
-      [content]="newcomment" (onedit)="addComment($event)">
+    [content]="newcomment" (onedit)="addComment($event)">
   </app-editor>
   <div>
-    <div *ngFor="let c of comments; let i=index">
-      <span class="comment-box-title" [innerHTML]="c.title" class="ql-editor"></span>
-      <sp></sp>
-      <sp></sp>
-      <span class="comment-box-user">{{ c.user?.name }}</span>
-      <sp></sp>
-      <sp></sp>
-      <span class="comment-box-when" title="{{ formatWhen(c.when) }}">{{ showWhen(c.when) }}</span>
-    </div>
+    @for (c of comments; track c; let i = $index) {
+      <div>
+        <span class="comment-box-title" [innerHTML]="c.title" class="ql-editor"></span>
+        <sp></sp>
+        <sp></sp>
+        <span class="comment-box-user">{{ c.user?.name }}</span>
+        <sp></sp>
+        <sp></sp>
+        <span class="comment-box-when" title="{{ formatWhen(c.when) }}">{{ showWhen(c.when) }}</span>
+      </div>
+    }
   </div>
 </div>
