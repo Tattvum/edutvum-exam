@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'list',
+  selector: 'list-input',
   standalone: true,
   imports: [],
   template: `
