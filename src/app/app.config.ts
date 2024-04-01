@@ -66,7 +66,10 @@ const UPLOADER_API = FirebaseUpload
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), provideClientHydration(),
-    importProvidersFrom(BrowserModule, ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    importProvidersFrom(
+      BrowserModule, 
+      // TODO:
+      // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
       //cant-bind-to-formcontrol-since-it-isnt-a-known-property-of-input-angular
       //https://stackoverflow.com/a/43220824
       //While using formControl, you have to import ReactiveFormsModule to your imports array.

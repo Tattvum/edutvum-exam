@@ -38,3 +38,5 @@ namespace muddertest4 {
   let ss = '000' + n
   console.log(ss.slice(-3))
 }
+
+// bun src/local-tests/treetable.test.ts

@@ -16,9 +16,10 @@ if (environment.production) {
 // I found that this was necessary when integrating the worker with AngularFire2.
 
 bootstrapApplication(AppComponent, appConfig)
-  .then(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/ngsw-worker.js');
-    }
-  })
-  .catch((err) => console.error(err));
+// TODO:
+  // .then(() => {
+  //   if ('serviceWorker' in navigator) {
+  //     navigator.serviceWorker.register('/ngsw-worker.js');
+  //   }
+  // })
+  // .catch((err) => console.error(err));

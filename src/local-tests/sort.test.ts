@@ -11,3 +11,5 @@ namespace sort.test {
   console.log(strs.sort().join(" "))
 
 }
+
+// bun src/local-tests/treetable.test.ts

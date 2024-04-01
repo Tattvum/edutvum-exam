@@ -1,3 +1,5 @@
+import mudder from 'mudder'
+
 // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
 export enum KEY {
   ENTER = 'Enter',
@@ -14,7 +16,6 @@ export interface Selection {
 }
 
 //E404 - '@types/mudder@latest' is not in the npm registry.
-const mudder = require('mudder');
 const mudnum = new mudder.SymbolTable('0123456789')
 const mudhex = new mudder.SymbolTable('0123456789abcdefg')
 

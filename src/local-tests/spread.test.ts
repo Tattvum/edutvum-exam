@@ -4,4 +4,5 @@ console.log(obj1)
 const obj2 = { ...obj1, name: "Ting", age: 10 }
 console.log(obj2)
 
-//ts-node src/local-tests/spread.test.ts
+// ts-node src/local-tests/spread.test.ts
+// bun src/local-tests/treetable.test.ts
