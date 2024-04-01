@@ -1,4 +1,3 @@
-import 'rxjs'
 import { fromEvent } from 'rxjs'
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core'
 

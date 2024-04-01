@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import 'rxjs'
-import { Subject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
-import * as firebase from 'firebase/compat/app';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { User as FBUser, GoogleAuthProvider } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { SecurityAPI } from './data.service';
 import { User, UserRole } from './user';
 import { Lib } from './lib';
 
 class UserFbImpl implements User {
-  constructor(private fbUser: firebase.User) { }
+  constructor(private fbUser: FBUser) { }
   get uid() {
     return this.fbUser.uid
   }
@@ -34,10 +31,10 @@ class UserFbImpl implements User {
 
 @Injectable()
 export class FirebaseSecuritySource implements SecurityAPI {
-  readonly fbProvider = new firebase.auth.GoogleAuthProvider()
+  readonly fbProvider = new GoogleAuthProvider()
 
   constructor(protected afAuth: AngularFireAuth, private router: Router) {
-    this.afAuth.auth.onAuthStateChanged(user => {
+    this.afAuth.onAuthStateChanged(user => {
       if (user) {
         this.router.navigate(['/student-dash'])
       } else {
@@ -47,9 +44,9 @@ export class FirebaseSecuritySource implements SecurityAPI {
   }
 
   // Used only in user.component.html
-  public user(): User {
-    let user: firebase.User = this.afAuth.auth.currentUser
-    if (user) return new UserFbImpl(user)
+  public async user() {
+    let usr = await this.afAuth.currentUser
+    if (usr) return new UserFbImpl(usr)
     else return null
   }
 
@@ -57,7 +54,7 @@ export class FirebaseSecuritySource implements SecurityAPI {
     if (this.isLoggedIn()) return Promise.resolve(this.user())
     else {
       return new Promise(resolve => {
-        this.afAuth.auth.onAuthStateChanged(user => {
+        this.afAuth.onAuthStateChanged(user => {
           Lib.failifold(user == null, 'User cannot be null')
           resolve(new UserFbImpl(user))
         })
@@ -66,17 +63,17 @@ export class FirebaseSecuritySource implements SecurityAPI {
   }
 
   // Used only in URL AuthGaurd
-  public isLoggedIn(): boolean {
-    return this.user() !== null
+  public async isLoggedIn(): Promise<boolean> {
+    return await this.user() !== null
   }
 
   // Used only in Login component
   public login(): Promise<any> {
-    return Promise.resolve(this.afAuth.auth.signInWithPopup(this.fbProvider))
+    return Promise.resolve(this.afAuth.signInWithPopup(this.fbProvider))
   }
 
   // Used only in user component
   public logout(): Promise<void> {
-    return Promise.resolve(this.afAuth.auth.signOut())
+    return Promise.resolve(this.afAuth.signOut())
   }
 }

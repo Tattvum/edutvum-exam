@@ -1,5 +1,3 @@
-import 'rxjs'
-
 import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService, NavDisplayContext, TagsDisplayContextImpl, TagsDisplayContext } from '../model/data.service';

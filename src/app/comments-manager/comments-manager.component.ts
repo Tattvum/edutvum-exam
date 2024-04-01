@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { CommentList } from '../model/comment';
 import { ExamResult, EMPTY_EXAM_RESULT } from '../model/exam-result';
 import { GeneralContext } from '../model/general-context';

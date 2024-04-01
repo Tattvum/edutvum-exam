@@ -1,7 +1,8 @@
-
-<span (click)="doPopup()" [MathJax]="content" class="ql-editor"></span>
+<!-- TODO: -->
+<!-- <span (click)="doPopup()" [MathJax]="content" class="ql-editor"></span> -->
+<span (click)="doPopup()" class="ql-editor"></span>
 @if (safe || service.isAdmin) {
-  <span (click)="doPopup()" class="link">[edit]</span>
+<span (click)="doPopup()" class="link">[edit]</span>
 }
 
 <!-- ----------------------------------------------------------------------- -->
@@ -10,11 +11,8 @@
   <h1 mat-dialog-title>{{ heading }}</h1>
   <mat-tab-group>
     <mat-tab label="Editor">
-      <quill-editor [(ngModel)]="content"
-        (onEditorCreated)="onEditorCreated($event)"
-        [styles]="{ 'font-size': '120%' }"
-        [modules]="modules"
-        preserveWhitespace="true">
+      <quill-editor [(ngModel)]="content" (onEditorCreated)="onEditorCreated($event)" [styles]="{ 'font-size': '120%' }"
+        [modules]="modules" preserveWhitespace="true">
       </quill-editor>
     </mat-tab>
     <mat-tab label="Raw">

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 // http://momentjs.com/docs/
-import * as moment from 'moment';
+import moment from 'moment';
 import { Router } from '@angular/router';
 
 import { Exam } from '../model/exam';

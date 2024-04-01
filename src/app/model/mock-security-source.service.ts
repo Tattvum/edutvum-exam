@@ -11,23 +11,23 @@ export class MockSecuritySource implements SecurityAPI {
     // console.log(this._user)
   }
 
-  public user(): User {
+  public async user() {
     return this._user
   }
 
-  public userWait(): Promise<User> {
-    return Promise.resolve(this._user)
+  public async userWait() {
+    return this._user
   }
 
-  public isLoggedIn(): boolean {
-    return this.user() !== null
+  public async isLoggedIn() {
+    return Promise.resolve(await this.user() !== null)
   }
 
-  public login(): Promise<any> {
-    return Promise.resolve(true)
+  public async login() {
+    return true
   }
 
-  public logout(): Promise<void> {
-    return Promise.resolve()
+  public async logout() {
+    return
   }
 }

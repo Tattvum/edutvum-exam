@@ -4,13 +4,10 @@ import { Observable } from 'rxjs';
 import { DataService } from './model/data.service';
 
 @Injectable()
-export class AuthGuard  {
+export class AuthGuard {
   constructor(private service: DataService) { }
 
-  canActivate(
-      next: ActivatedRouteSnapshot,
-      state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-
-    return this.service.isLoggedIn();
+  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    return await this.service.isLoggedIn();
   }
 }

@@ -1,13 +1,9 @@
 
 import { map, first } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Database, object } from '@angular/fire/database';
 
-import 'rxjs'
-
-import * as firebase from 'firebase/compat/app';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database';
-import { ThenableReference } from 'firebase/database-types';
 import { AbstractFirebaseAPI } from './firebase-data-source.service';
 
 @Injectable()
@@ -16,14 +12,16 @@ export class FirebaseAPI implements AbstractFirebaseAPI {
   //https://github.com/angular/angularfire2/blob/master/docs/version-5-upgrade.md
   private order = (child: string) => ref => ref.orderByChild(child)
 
-  constructor(private afDb: AngularFireDatabase) { }
+  constructor(private db: AngularFireDatabase) { }
 
   async objectFirstMap(url: string): Promise<any> {
-    return await this.afDb.object(url).valueChanges().pipe(first()).toPromise()
+    
+    return await this.db.object(url).valueChanges().pipe(first()).toPromise()
+    
   }
 
   async listFirstMapAF5(url: string, child: string): Promise<any> {
-    return await this.afDb.list(url, this.order(child)).snapshotChanges().pipe(first()).pipe(
+    return await this.db.list(url, this.order(child)).snapshotChanges().pipe(first()).pipe(
       map(actions => {
         return actions.map(action => ({ $key: action.key, ...action.payload.val() as {} }));
       })).toPromise()
@@ -53,24 +51,25 @@ export class FirebaseAPI implements AbstractFirebaseAPI {
   }
 
   objectRemoveBool(url: string): Promise<boolean> {
-    return this.promiseBool(this.afDb.object(url).remove())
+    return this.promiseBool(this.db.object(url).remove())
   }
 
   objectSetBool(url: string, obj: any): Promise<boolean> {
-    return this.promiseBool(this.afDb.object(url).set(obj))
+    return this.promiseBool(this.db.object(url).set(obj))
   }
 
   objectUpdate<T>(url: string, obj: any, fn: (x) => T): Promise<T> {
-    return this.promise<T>(this.afDb.object(url).update(obj), fn)
+    return this.promise<T>(this.db.object(url).update(obj), fn)
   }
 
   objectUpdateBool(url: string, obj: any): Promise<boolean> {
-    return this.promiseBool(this.afDb.object(url).update(obj))
+    return this.promiseBool(this.db.object(url).update(obj))
   }
 
   //angular-2-and-firebase-throwing-thenablereference-exception-on-form-submit
   //https://stackoverflow.com/a/44426633
-  private tr2p(tr: ThenableReference): Promise<any> {
+  // private tr2p(tr: ThenableReference): Promise<any> {
+  private tr2p(tr): Promise<any> {
     return new Promise(function (resolve, reject) {
       tr.then(x => resolve(x), x => reject(x));
     });
@@ -79,7 +78,7 @@ export class FirebaseAPI implements AbstractFirebaseAPI {
   listPush<T>(url: string, obj: any, fn: (x) => T): Promise<T> {
     //TBD: CHECK 3rd point
     //https://github.com/angular/angularfire2/blob/master/docs/version-5-upgrade.md
-    return this.promise<T>(this.tr2p(this.afDb.list(url).push(obj)), fn)
+    return this.promise<T>(this.tr2p(this.db.list(url).push(obj)), fn)
   }
 
 }

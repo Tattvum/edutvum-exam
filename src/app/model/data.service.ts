@@ -1,7 +1,5 @@
 
 import { interval as observableInterval } from 'rxjs';
-import 'rxjs';
-
 
 import { Injectable } from '@angular/core';
 
@@ -103,9 +101,9 @@ export abstract class DataSource {
 }
 
 export abstract class SecurityAPI {
-  abstract user(): User
+  abstract user(): Promise<User>
   abstract userWait(): Promise<User>
-  abstract isLoggedIn(): boolean
+  abstract isLoggedIn(): Promise<boolean>
   abstract login(): Promise<any>
   abstract logout(): Promise<void>
 }
@@ -116,7 +114,7 @@ export abstract class UploaderAPI {
 }
 
 export interface UserDisplayContext {
-  user(): User
+  user(): Promise<User>
   logout(): Promise<void>
 }
 
@@ -752,13 +750,13 @@ export class DataService
     })
   }
 
-  public user(): User {
+  public user(): Promise<User> {
     return this.securitySource.user()
   }
   private userWait(): Promise<User> {
     return this.securitySource.userWait()
   }
-  public isLoggedIn(): boolean {
+  public isLoggedIn(): Promise<boolean> {
     return this.securitySource.isLoggedIn()
   }
   public login(): Promise<any> {

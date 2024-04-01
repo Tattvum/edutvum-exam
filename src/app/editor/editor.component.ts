@@ -6,6 +6,7 @@ import { Overlay } from '@angular/cdk/overlay'
 import { MatTabsModule } from '@angular/material/tabs'
 import { QuillModule } from 'ngx-quill'
 import { FormsModule } from '@angular/forms'
+import { MathJaxDirective } from '../mathjax.directive'
 
 //NOTE: Since the Quill component adds a p tag on any edit
 function stripPIfSingle(txt: string): string {
@@ -21,7 +22,7 @@ function stripPIfSingle(txt: string): string {
   selector: 'app-editor',
   standalone: true,
   imports: [
-    MatTabsModule, QuillModule, FormsModule, MatDialogModule,
+    MatTabsModule, QuillModule, FormsModule, MatDialogModule, MathJaxDirective,
   ],
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']

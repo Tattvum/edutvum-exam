@@ -33,7 +33,7 @@ functions/index.js
 .c9/
 *.launch
 .settings/
-.vscode/
+*.sublime-workspace
 
 # IDE - VSCode
 .vscode/*
@@ -62,3 +62,8 @@ Thumbs.db
 .firebase/hosting.ZGl*zdA.cache
 edutvum-exam-export*.json
 *debug.log
+
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json

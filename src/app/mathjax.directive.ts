@@ -10,7 +10,8 @@ declare var MathJax: {
 // https://stackoverflow.com/questions/36370826/how-to-get-mathjax-working-with-angular2
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[MathJax]'
+  selector: '[MathJax]',
+  standalone: true,
 })
 export class MathJaxDirective implements OnChanges {
   @Input('MathJax') private MathJax = ''

@@ -35,9 +35,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireModule } from 'angularfire2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -53,6 +50,10 @@ import { FirebaseSecuritySource } from '../app/model/firebase-security-source.se
 import { MockSecuritySource } from '../app/model/mock-security-source.service';
 import { AbstractFirebaseAPI, FirebaseDataSource } from '../app/model/firebase-data-source.service';
 import { GeneralContext, GeneralContextImpl } from '../app/model/general-context';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 
 const DATA_API_SOURCE = environment.mock ? LocalFirebaseAPI : FirebaseAPI
 const firebaseConfig = environment.firebaseConfig
@@ -65,12 +66,11 @@ const UPLOADER_API = FirebaseUpload
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), provideClientHydration(),
-    importProvidersFrom(BrowserModule, ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }), FormsModule,
+    importProvidersFrom(BrowserModule, ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
       //cant-bind-to-formcontrol-since-it-isnt-a-known-property-of-input-angular
       //https://stackoverflow.com/a/43220824
       //While using formControl, you have to import ReactiveFormsModule to your imports array.
-      AngularFireModule.initializeApp(firebaseConfig), AngularFireDatabaseModule, AngularFireAuthModule,
-      ReactiveFormsModule, NgxPaginationModule, FlexLayoutModule,
+      FormsModule, ReactiveFormsModule, NgxPaginationModule, FlexLayoutModule,
       MatButtonModule, MatButtonToggleModule, MatInputModule, MatSelectModule, MatRadioModule,
       MatProgressBarModule, MatProgressSpinnerModule, MatTableModule, MatPaginatorModule,
       MatListModule, MatCardModule, MatChipsModule, MatTabsModule, MatCheckboxModule, MatIconModule,
@@ -88,6 +88,10 @@ export const appConfig: ApplicationConfig = {
     DataService,
     AuthGuard,
     provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    importProvidersFrom(provideFirebaseApp(() => initializeApp(firebaseConfig))),
+    importProvidersFrom(provideAuth(() => getAuth())),
+    importProvidersFrom(provideDatabase(() => getDatabase())),
+    importProvidersFrom(provideStorage(() => getStorage()))
   ]
 };

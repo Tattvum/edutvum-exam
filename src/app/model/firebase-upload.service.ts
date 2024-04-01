@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import 'rxjs'
-import * as firebase from 'firebase/compat/app';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { Storage, UploadTask, ref, uploadBytesResumable, getDownloadURL } from '@angular/fire/storage';
 import { DataService, FileLink, UploaderAPI, UploadContext } from './data.service';
 import { Upload } from './upload';
-import undefined from 'firebase/compat/storage';
-import { AngularFireAuth } from 'angularfire2/auth';
 import { Lib } from './lib';
 
 @Injectable()
@@ -17,8 +13,7 @@ export class FirebaseUpload implements UploaderAPI {
   // 'So even though I don't use auth and db,
   // I still had to include them in the constructor.'
   constructor(
-    private auth: AngularFireAuth,
-    private db: AngularFireDatabase,
+    private storage: Storage,
     service: DataService,
   ) {
     this.context = service
@@ -28,9 +23,9 @@ export class FirebaseUpload implements UploaderAPI {
     return `exams/${eid}/questions/${qid}/files/${name}`
   }
 
-  doUpload(uploadTask: firebase.storage.UploadTask): Promise<void> {
+  doUpload(uploadTask: UploadTask): Promise<void> {
     return new Promise((accept, reject) => {
-      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, {
+      uploadTask.on("state_changed", {
         'next': snap => console.log((snap.bytesTransferred / snap.totalBytes) * 100),
         'error': reject,
         'complete': accept,
@@ -39,11 +34,13 @@ export class FirebaseUpload implements UploaderAPI {
   }
 
   private async uploadUrlInternal(fullname: string, upload: Upload): Promise<string> {
-    const storageRef = firebase.storage().ref()
-    const uploadTask = storageRef.child(fullname).put(upload.file)
+    const storageRef = ref(this.storage, fullname)
+    // const uploadTask = storageRef.child(fullname).put(upload.file)
+    const uploadTask = uploadBytesResumable(storageRef, upload.file)
 
     await this.doUpload(uploadTask)
-    const downloadURL = await uploadTask.snapshot.ref.getDownloadURL()
+    // const downloadURL = await uploadTask.snapshot.ref.getDownloadURL()
+    const downloadURL = await getDownloadURL(storageRef)
     console.log('fullname:', fullname, 'downloadURL:', downloadURL)
     return downloadURL
   }
