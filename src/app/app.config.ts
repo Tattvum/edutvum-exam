@@ -92,9 +92,9 @@ export const appConfig: ApplicationConfig = {
     AuthGuard,
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
-    importProvidersFrom(provideFirebaseApp(() => initializeApp(firebaseConfig))),
-    importProvidersFrom(provideAuth(() => getAuth())),
-    importProvidersFrom(provideDatabase(() => getDatabase())),
-    importProvidersFrom(provideStorage(() => getStorage()))
+    provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+    provideStorage(() => getStorage())
   ]
 };

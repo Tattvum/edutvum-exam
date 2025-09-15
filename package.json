@@ -16,14 +16,13 @@
     "firebase": "firebase emulators:start --only database --import=../.devrtdb --export-on-exit >> output-db.txt 2>&1 &",
     "fshttp": "fshttp -d ../.uploads >> output-fs.txt 2>&1 &",
     "devstop": "fuser -k 8000/tcp ; fuser -k 4000/tcp ; fuser -k 4500/tcp ; fuser -k 9000/tcp ; fuser -k 4200/tcp",
-    "devstart": "rm output*.txt && npm run firebase && npm run fshttp && npm run dev",
+    "devstart": "rm output*.txt && npm run firebase && npm run fshttp && npm run start:dev",
     "build": "ng build --configuration production",
     "lint": "ng lint",
     "deploy": "ng build --configuration production && firebase deploy --only hosting",
     "export": "firebase database:get / edutvum-exam > cmd-line/edutvum-exam-export-$(date +%Y%m%d_%H).json",
     "verify": "tsc cmd-line/verify.ts && node cmd-line/verify.js cmd-line/edutvum-exam-import.json",
-    "backup": "gsutil -m cp -r gs://edutvum-exam.appspot.com/ .",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only"
+    "backup": "gsutil -m cp -r gs://edutvum-exam.appspot.com/ ."
   },
   "private": true,
   "dependencies": {
