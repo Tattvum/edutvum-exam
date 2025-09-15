@@ -32,7 +32,10 @@ declare var MathJax: {
     TagsManagerComponent, ListInputComponent,
   ],
   templateUrl: './choice-input.component.html',
-  styleUrls: ['./choice-input.component.scss']
+  styles: [
+    'div { font-size: 110%; }',
+    '#clear-all { @apply text-sm text-center text-gray-500 border border-slate-500 px-1.5 py-px; }',
+  ]
 })
 
 export class ChoiceInputComponent implements OnInit {
@@ -105,9 +108,9 @@ export class ChoiceInputComponent implements OnInit {
     let isans = this.result.isAnswer(this.qidn, ans)
     let issol = this.result.isSolution(this.qidn, ans)
     let result = {
-      'correct': issol,
-      'done': isans && issol,
-      'notcorrect': isans && !issol
+      'text-green-600': issol,
+      'text-teal-500': isans && issol,
+      'text-red-600': isans && !issol
     }
     return result
   }

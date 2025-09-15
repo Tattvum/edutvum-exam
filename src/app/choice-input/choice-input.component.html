@@ -2,17 +2,17 @@
   Clear answers
 </span>
 
-<form #f="ngForm" novalidate class="bg">
+<form #f="ngForm" novalidate class="bg-yellow-100">
   <div class="btn-group-vertical" role="choices">
     @for (ch of question.choices; track ch; let i = $index) {
     <div>
       <label [ngClass]="colors(i)">
-        <label (click)="removeChoice(i)" class="lighter" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
+        <label (click)="removeChoice(i)" class="text-blue-600" [for]="'rd'+i" [innerHTML]="AAA[i]+'.'"></label>
         <sp></sp>
         <input [type]="ctype" name="choices" [id]="'rd'+i" #first (click)="choiceClicked($event, i)"
           [disabled]="!result.allowEdit(qidn)" [checked]="result.isAnswer(qidn, i) && result.showAnswer(qidn)" />
         <sp></sp>
-        <label class="opt" [for]="'rd'+i">
+        <label class="text-sm" [for]="'rd'+i">
           <app-editor heading="Edit Choice Text" [content]="ch" (onedit)="editOption($event, i)">
           </app-editor>
         </label>
@@ -20,9 +20,9 @@
     </div>
     }
     @if (question.type == 4) {
-    <div class="ncq">
+    <div class="p-1">
       <div>Type your answer here:</div>
-      <input [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors(null)"
+      <input class="p-1" [(ngModel)]="ncqtext" type="number" name="choices" [ngClass]="colors(null)"
         [disabled]="!result.allowEdit(qidn)" />
       @if (result.showSolution(qidn)) {
       <div [class.correct]="true">
@@ -68,7 +68,7 @@
       }
     </button>
     @if (canEditMarks) {
-    <div class="ncq">
+    <div class="p-1">
       <div style="color: red;">Admin: Marks:</div>
       @if (schemeOLD) {
       <list-input [(value)]="marks" [array]="['Correct','Wrong']"></list-input>
